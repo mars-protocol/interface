@@ -1,0 +1,115 @@
+@use '../styles/master' as *;
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: $contentWidth;
+    margin: 0 auto;
+    height: $headerHeight;
+
+    .navBar {
+        display: flex;
+        flex: 0 0 auto;
+        justify-content: center;
+        align-items: center;
+        @include padding(0);
+
+        > div {
+            @include padding(0, 6);
+
+            &:first-child {
+                padding-left: 0;
+            }
+
+            > a {
+                white-space: nowrap;
+            }
+
+            &:hover {
+                > a {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    .connector {
+        display: flex;
+        flex: 0 0 rem-calc(308);
+        width: rem-calc(308);
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .active {
+        opacity: 1;
+        text-decoration: underline;
+    }
+
+    .mobileMenu {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: $bpMediumHigh) {
+    .header {
+        justify-content: flex-start;
+
+        .connector {
+            display: flex;
+            flex: 1;
+            width: auto;
+            align-items: flex-end;
+            justify-content: center;
+            flex-wrap: wrap;
+            flex-direction: column-reverse;
+        }
+    }
+}
+
+@media only screen and (max-width: $bpSmallHigh) {
+    .header {
+        height: auto;
+        flex-wrap: wrap;
+        .navBar {
+            > div {
+                padding: 0;
+            }
+        }
+        .mobileMenu {
+            display: block;
+            width: 100%;
+            @include padding(3, 0);
+            position: relative;
+
+            svg {
+                position: absolute;
+                left: 0;
+                top: rem-calc(11);
+                width: rem-calc(24);
+                height: rem-calc(24);
+                z-index: 1;
+            }
+
+            select {
+                appearance: none;
+                width: 100%;
+                background-color: transparent;
+                color: $fontColorLightPrimary;
+                border: none;
+                position: relative;
+                text-align: center;
+                @include padding(0, 9);
+                @include typoLcaps;
+                outline: none;
+                z-index: 2;
+
+                option {
+                    color: $colorAccent;
+                }
+            }
+        }
+    }
+}

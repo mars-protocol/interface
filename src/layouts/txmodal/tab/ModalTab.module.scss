@@ -1,0 +1,204 @@
+@use '../../../styles/master' as *;
+
+.container {
+    border-radius: $borderRadiusL;
+    display: flex;
+    flex-direction: column;
+
+    .available {
+        align-self: center;
+        margin-bottom: space(2);
+        margin-top: space(4);
+        opacity: 0.3;
+    }
+
+    .inputContainer {
+        display: flex;
+        align-self: center;
+
+        .zero {
+            align-content: center;
+            margin-inline-start: space(10);
+            margin-top: space(1.25);
+            margin-inline-end: space(2.5);
+        }
+
+        .input {
+            align-self: center;
+            display: flex;
+            margin-bottom: space(10);
+        }
+
+        .maxButton {
+            color: $fontColorLightPrimary;
+            opacity: 0.6;
+            height: rem-calc(34);
+        }
+    }
+
+    .inputWrapper {
+        align-self: center;
+        opacity: 1;
+        border: 1px solid $colorGreyHighlight;
+        width: rem-calc(448);
+        height: rem-calc(56);
+        border-radius: $borderRadiusS;
+        display: flex;
+        justify-content: center;
+
+        .inputPercentage {
+            text-align: center;
+            opacity: 1;
+            background: none;
+            border: none;
+            color: $fontColorLightPrimary;
+            @include typoXXL;
+
+            &:focus {
+                outline: none;
+            }
+        }
+
+        input::-webkit-inner-spin-button {
+            appearance: none;
+            @include margin(0);
+        }
+    }
+
+    .inputRaw {
+        align-self: center;
+        background: none;
+        margin-top: space(2);
+        opacity: 0.4;
+        margin-bottom: space(9);
+    }
+
+    .actionButton {
+        display: flex;
+        justify-content: center;
+        margin-bottom: space(3);
+    }
+}
+
+.feeTooltipContent {
+    display: flex;
+    flex-direction: column;
+}
+
+.fee {
+    cursor: pointer;
+}
+
+.tippyContainer {
+    @include layoutTooltip;
+}
+
+.newSituation {
+    text-align: start;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid $colorGrey;
+    border-bottom: 1px solid $colorGrey;
+    margin-top: space(7);
+
+    .borrowLimitContainer {
+        display: flex;
+        flex-direction: row;
+        margin-inline-start: space(14);
+        margin-inline-end: space(14);
+
+        > div:nth-child(1) {
+            border-right: 1px solid $colorGrey;
+        }
+
+        .borrowLimit {
+            flex-grow: 1;
+            @include padding(8, 8, 11, 8);
+
+            .borrowLimitTitle {
+                display: flex;
+                flex-direction: column;
+
+                .title {
+                    opacity: 0.4;
+                    margin-bottom: space(3);
+                }
+
+                .value {
+                    margin-bottom: space(6);
+                }
+            }
+        }
+    }
+
+    .portfolio {
+        display: flex;
+        flex-direction: row;
+        margin-inline-start: space(14);
+        margin-inline-end: space(14);
+
+        .portfolioWrapper {
+            flex-grow: 1;
+            @include padding(0, 8);
+            margin-bottom: space(10);
+            margin-inline-start: space(-1.25);
+            margin-inline-end: space(-1.25);
+
+            .portfolioTitle {
+                opacity: 0.4;
+                margin-bottom: space(4);
+            }
+        }
+    }
+}
+
+.showPortfolio {
+    display: flex;
+    justify-content: center;
+    margin-top: space(6);
+    margin-bottom: space(6);
+}
+
+@media only screen and (max-width: $bpSmallHigh) {
+    .newSituation {
+        .borrowLimitContainer {
+            flex: 0 0 100%;
+            flex-wrap: wrap;
+            justify-content: center;
+            @include margin(0);
+
+            > div:nth-child(1) {
+                border-right: none;
+            }
+
+            .borrowLimit {
+                flex: 0 0 rem-calc(258);
+                @include padding(6, 3);
+
+                .borrowLimitTitle {
+                    & + div {
+                        width: rem-calc(258) !important;
+
+                        div {
+                            max-width: rem-calc(258);
+                        }
+                    }
+                }
+            }
+        }
+
+        .portfolio {
+            display: flex;
+            flex: 0 0 rem-calc(258);
+            justify-content: space-between;
+            flex-wrap: wrap;
+            @include margin(0);
+
+            .portfolioWrapper {
+                flex: 0 0 rem-calc(258);
+                @include padding(0);
+                @include margin(0);
+            }
+        }
+    }
+}

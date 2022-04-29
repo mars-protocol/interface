@@ -1,0 +1,122 @@
+@use '../../../styles/master' as *;
+
+.container {
+    .header {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        height: rem-calc(68);
+
+        .tooltip {
+            position: absolute;
+            top: rem-calc(3);
+            right: rem-calc(5);
+        }
+    }
+
+    .separator {
+        display: flex;
+        opacity: 0.2;
+
+        .text {
+            @include margin(6, 0, 2.5);
+        }
+
+        .horizontalLine {
+            flex: auto;
+            @include devider20;
+            @include margin(0, 0, 8);
+        }
+    }
+
+    .footer {
+        height: rem-calc(56);
+    }
+}
+
+@media only screen and (max-width: $bpMediumHigh) {
+    .container {
+        table {
+            tr {
+                th,
+                td {
+                    &:nth-child(1) {
+                        width: 0 !important;
+                    }
+
+                    &:nth-child(2) {
+                        width: rem-calc(40) !important;
+                    }
+
+                    &:nth-child(6) {
+                        width: auto !important;
+                    }
+
+                    &:nth-child(7) {
+                        width: rem-calc(150) !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* PSEUDO */
+@media only screen and (max-width: rem-calc(600)) {
+    .container {
+        table {
+            tr {
+                th,
+                td {
+                    &:nth-child(5) {
+                        width: auto !important;
+                    }
+
+                    &:nth-child(6) {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* PSEUDO */
+@media only screen and (max-width: rem-calc(480)) {
+    .container {
+        table {
+            tr {
+                th,
+                td {
+                    &:nth-child(4) {
+                        width: auto !important;
+                    }
+
+                    &:nth-child(5) {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+/* PSEUDO */
+@media only screen and (max-width: rem-calc(320)) {
+    .container {
+        table {
+            tr {
+                th,
+                td {
+                    &:nth-child(1) {
+                        padding-inline-start: rem-calc(8);
+                    }
+                    &:nth-child(2) {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}

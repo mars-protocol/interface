@@ -1,0 +1,21 @@
+@use '../../../styles/master' as *;
+
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .title {
+        max-width: 115px;
+    }
+
+    .value {
+        word-break: normal;
+        word-wrap: normal;
+
+        .valueItem {
+            display: inline !important;
+            min-height: 0px !important;
+        }
+    }
+}

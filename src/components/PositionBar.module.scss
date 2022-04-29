@@ -1,0 +1,78 @@
+@use '../styles/master' as *;
+
+.position {
+    display: flex;
+    flex: 0 0 100%;
+    width: 100%;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    min-height: rem-calc(61);
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        width: rem-calc(200);
+        flex: 0 0 rem-calc(200);
+
+        .value {
+            word-wrap: normal;
+            word-break: normal;
+
+            h5 {
+                span {
+                    @include typoM;
+                }
+            }
+        }
+    }
+
+    .bar {
+        display: flex;
+        flex: 1;
+        justify-content: flex-start;
+        @include margin(2, 0, 0);
+        height: rem-calc(8);
+        flex-wrap: nowrap;
+
+        > .fraction {
+            border-radius: $borderRadiusXXS;
+            display: inline-block;
+            @include margin(0, 0, 0, -1);
+            @include padding(0, 0, 0, 1);
+            position: relative;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            &:first-child {
+                @include margin(0);
+                @include padding(0);
+            }
+        }
+    }
+}
+
+.box {
+    box-sizing: unset;
+    width: 100%;
+}
+
+.compact {
+    display: block;
+}
+
+@media only screen and (max-width: $bpMediumHigh) {
+    .compact {
+        display: flex;
+    }
+}
+
+@media only screen and (max-width: $bpSmallHigh) {
+    .position {
+        .container {
+            width: rem-calc(120);
+            flex: 0 0 rem-calc(120);
+        }
+    }
+}

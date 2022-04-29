@@ -1,0 +1,19 @@
+@use '../../styles/master' as *;
+
+.fields {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: inherit;
+    margin-bottom: space(16);
+    padding-top: rem-calc(32);
+
+    > div:not(:last-child) {
+        margin-bottom: space(10);
+    }
+
+    .link {
+        color: $colorPrimary;
+        text-decoration: none;
+    }
+}

@@ -1,0 +1,50 @@
+@use '../../../../styles/master' as *;
+
+.newSituation {
+    text-align: start;
+    display: flex;
+    flex-direction: row;
+    border-top: 1px solid $alphaWhite20;
+    margin-top: space(7);
+
+    > div:nth-child(1) {
+        border-right: 1px solid $alphaWhite20;
+    }
+    .valueContainer {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+        @include padding(8, 5, 8, 20);
+
+        .value {
+            display: flex;
+            flex-direction: column;
+            .title {
+                width: 100%;
+                opacity: 0.4;
+                margin-bottom: space(2);
+            }
+
+            .symbol {
+                min-height: 0px !important;
+                display: inline-block !important;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: $bpSmallHigh) {
+    .newSituation {
+        flex-wrap: wrap;
+
+        > div {
+            border-right: none !important;
+            @include devider20;
+        }
+
+        .valueContainer {
+            width: 100%;
+            @include padding(6, 3);
+        }
+    }
+}

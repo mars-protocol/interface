@@ -1,0 +1,87 @@
+@use '../../../styles/master' as *;
+
+.summary {
+    @include margin(0, 19);
+    position: relative;
+    .header {
+        display: flex;
+
+        h6 {
+            @include margin(8, 5);
+        }
+
+        .horizontalLine {
+            flex: auto;
+            @include devider20;
+            @include margin(0, 0, 11);
+        }
+    }
+    .container {
+        @include margin(-3.75, 0, 6);
+        display: flex;
+        flex-direction: row;
+
+        .balanceCardContainer {
+            @include padding(16, 7);
+            flex: 1 0 rem-calc(230);
+            max-width: 30%;
+
+            .vestedMarsContainer {
+                margin-top: 1rem;
+            }
+        }
+
+        > div:nth-child(1) {
+            border-right: 1px solid $alphaWhite20;
+        }
+
+        > div:nth-child(3) {
+            border-left: 1px solid $alphaWhite20;
+        }
+    }
+}
+.tooltip {
+    position: absolute;
+    top: rem-calc(4);
+    right: rem-calc(12);
+}
+
+@media only screen and (max-width: $bpSmallHigh) {
+    .summary {
+        @include margin(0, 3);
+        .header {
+            display: flex;
+
+            h6 {
+                @include margin(8, 3, 0);
+            }
+            .horizontalLine {
+                @include margin(0, 3, 0, 0);
+            }
+        }
+        .container {
+            @include margin(6, 0, 0);
+            flex-direction: column;
+
+            .balanceCardContainer {
+                @include padding(0);
+                flex: 0 0 100%;
+                max-width: 100%;
+                justify-content: center;
+
+                * {
+                    text-align: center;
+                }
+            }
+
+            > div:nth-child(1) {
+                border-right: none;
+            }
+
+            > div:nth-child(3) {
+                border-left: none;
+                @include margin(0, 0, 6);
+            }
+        }
+    }
+}

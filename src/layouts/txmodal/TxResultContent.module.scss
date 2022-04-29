@@ -1,0 +1,147 @@
+@use '../../styles/master' as *;
+
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    .close {
+        position: absolute;
+        left: rem-calc(24);
+        top: rem-calc(24);
+        opacity: 0.6;
+
+        > span {
+            position: absolute;
+            top: rem-calc(10);
+            margin-inline-start: space(2);
+        }
+
+        > img {
+            border-radius: $borderRadiusL;
+
+            &:hover {
+                background-color: darken($colorGrey, 5%);
+                cursor: pointer;
+            }
+        }
+    }
+    .title {
+        @include padding(7);
+        border-bottom: 1px solid $colorGrey;
+        text-align: center;
+
+        .text {
+            @include margin(1.5, 0, 0);
+        }
+
+        .icon {
+            svg {
+                color: $colorPrimary;
+            }
+        }
+    }
+
+    .result {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        @include padding(0, 8);
+
+        .infoContainer {
+            border-radius: $borderRadiusL;
+            margin-bottom: space(8);
+            display: flex;
+            flex-direction: column;
+
+            > img {
+                margin-top: space(8);
+                margin-bottom: space(8);
+                align-self: center;
+                width: rem-calc(80);
+                height: rem-calc(80);
+            }
+
+            .subTitle {
+                opacity: 0.6;
+                margin-bottom: space(8);
+            }
+
+            .info {
+                display: flex;
+                align-self: center;
+                flex-direction: column;
+                width: 100%;
+
+                .item {
+                    width: 100%;
+                    display: flex;
+                    margin-bottom: space(2);
+
+                    .label {
+                        opacity: 0.4;
+                        text-align: end;
+                        margin-inline-end: space(5);
+                        width: 49%;
+                    }
+                }
+            }
+
+            .amountValue {
+                width: 100%;
+                display: block;
+                text-align: start;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: $bpSmallHigh) {
+    .container {
+        .close {
+            left: unset;
+            top: rem-calc(10);
+            right: 0;
+
+            > span {
+                display: none;
+            }
+        }
+
+        .title {
+            @include padding(6, 8);
+        }
+
+        .result {
+            .infoContainer {
+                > img {
+                    width: rem-calc(60);
+                    height: rem-calc(60);
+                }
+
+                .subTitle {
+                    opacity: 0.6;
+                    margin-bottom: space(8);
+                }
+
+                .info {
+                    align-items: center;
+
+                    .item {
+                        @include typoS;
+                        max-width: rem-calc(300);
+
+                        .label {
+                            @include margin(0, 2, 0, 0);
+                            width: rem-calc(110);
+                        }
+                    }
+                }
+            }
+
+            & + div {
+                margin-bottom: 0 !important;
+            }
+        }
+    }
+}

@@ -1,0 +1,27 @@
+@use '../../../styles/master' as *;
+
+.textAreaWrapper {
+    border: 1px solid $alphaWhite30;
+    border-radius: $borderRadiusS;
+    @include margin(0, 0, 6);
+    display: flex;
+
+    textarea {
+        flex: 1;
+        background-color: transparent;
+        @include margin(2.5, 6);
+        border: none;
+        resize: vertical;
+        outline: none;
+    }
+}
+
+.textAreaWrapper.errored {
+    border: 1px solid $colorInfoWarning;
+    @include margin(0, 0, 2);
+}
+
+.error {
+    @include margin(0, 0, 6);
+    color: $colorInfoWarning !important;
+}

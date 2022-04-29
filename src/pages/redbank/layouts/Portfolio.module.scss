@@ -1,0 +1,82 @@
+@use '../../../styles/master' as *;
+
+.portfolio {
+    width: 100%;
+    @include padding(0, 19);
+    position: relative;
+
+    .tooltip {
+        position: absolute;
+        top: rem-calc(2);
+        right: rem-calc(4);
+    }
+
+    .header {
+        display: flex;
+        justify-content: center;
+
+        h6 {
+            @include margin(6, 0);
+        }
+    }
+
+    .container {
+        display: flex;
+        flex: 0 0 100%;
+        justify-content: center;
+        @include margin(4, 0, 16);
+
+        > div {
+            flex: 1;
+        }
+
+        .borrowLimit {
+            flex: 1.8;
+        }
+    }
+}
+
+@media only screen and (max-width: $bpMediumHigh) {
+    .portfolio {
+        display: flex;
+        flex: 0 0 100%;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        @include margin(0);
+        @include padding(0, 3);
+
+        .container {
+            flex-wrap: wrap;
+            justify-content: center;
+            @include margin(3, 0, 0);
+
+            > div {
+                @include margin(0, 0, 6);
+                text-align: center;
+                flex: 0 0 100%;
+                width: 100%;
+                align-items: center;
+            }
+        }
+
+        .header {
+            flex: 0 0 100%;
+        }
+    }
+}
+
+@media only screen and (max-width: $bpSmallHigh) {
+    .portfolio {
+        .borrowLimit {
+            > div {
+                > div {
+                    width: rem-calc(258) !important;
+
+                    div {
+                        max-width: rem-calc(258);
+                    }
+                }
+            }
+        }
+    }
+}

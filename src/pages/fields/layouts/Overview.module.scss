@@ -1,0 +1,96 @@
+@use '../../../styles/master' as *;
+
+.overview {
+    width: 100%;
+    @include margin(0);
+    display: flex;
+    flex-wrap: nowrap;
+    position: relative;
+
+    .tooltip {
+        position: absolute;
+        top: 4px;
+        right: 6px;
+    }
+
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        flex: 1;
+
+        .header {
+            width: 100%;
+
+            h6 {
+                width: 100%;
+                @include margin(6, 0, 0);
+                @include padding(0, 0, 0, 50);
+                text-align: center;
+            }
+        }
+
+        .summary {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            @include padding(0, 20);
+            align-content: flex-start;
+
+            > * {
+                @include margin(0, 0, 4);
+
+                &:last-child {
+                    @include margin(0);
+                }
+            }
+        }
+    }
+
+    .stats {
+        display: flex;
+        width: rem-calc(200);
+        @include padding(10);
+        flex: 0 0 rem-calc(200);
+        height: 100%;
+        @include bgInTile;
+        flex-wrap: wrap;
+        border-radius: 0 $borderRadiusXL $borderRadiusXL 0;
+
+        > * {
+            @include margin(0, 0, 7);
+
+            &:last-child {
+                @include margin(0);
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: $bpSmallHigh) {
+    .overview {
+        flex-wrap: wrap;
+
+        .container {
+            .header {
+                h6 {
+                    @include padding(0, 3);
+                    @include margin(6, 0);
+                }
+            }
+
+            .summary {
+                @include padding(0, 3);
+            }
+        }
+
+        .stats {
+            @include margin(6, 0, 0);
+            width: 100%;
+            @include padding(6, 3);
+            flex: 0 0 100%;
+            height: auto;
+            flex-wrap: wrap;
+            border-radius: 0 0 $borderRadiusXL $borderRadiusXL;
+        }
+    }
+}

@@ -1,0 +1,13 @@
+@use '../../../styles/master' as *;
+
+.container {
+    @include padding(1, 4);
+    display: flex;
+    flex: auto;
+    align-items: center;
+
+    &:hover {
+        background-color: $alphaWhite10;
+        cursor: pointer;
+    }
+}

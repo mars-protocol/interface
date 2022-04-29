@@ -1,0 +1,224 @@
+@use '../../../styles/master' as *;
+
+.container {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    min-height: inherit;
+    margin-top: space(8);
+    margin-bottom: space(16);
+
+    .cardContainer {
+        width: rem-calc(768);
+        @include margin(0, 0, 10);
+        max-width: 100%;
+    }
+
+    .body {
+        display: flex;
+        flex: 0 0 100%;
+        @include padding(6, 0);
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .subline {
+        @include typoScaps;
+        @include margin(0, 0, 2);
+        @include padding(0, 4);
+        text-align: center;
+    }
+
+    .amount {
+        display: flex;
+        flex: 0 0 100%;
+        justify-content: center;
+        flex-wrap: nowrap;
+        align-items: flex-end;
+        text-align: center;
+        @include margin(2.5, 0, 6);
+        @include typoH3;
+    }
+
+    .prefix {
+        @include typoM;
+        @include margin(0, 1.5, 0, 0);
+        opacity: 0.6;
+    }
+
+    .radioGroup {
+        display: flex;
+        flex: 0 0 80%;
+        margin: 0 10% space(2);
+        line-height: rem-calc(22);
+
+        input {
+            display: none;
+
+            &:checked {
+                & + label {
+                    border-color: $fontColorLightPrimary;
+
+                    strong {
+                        opacity: 1;
+                    }
+
+                    &:before {
+                        background-color: $fontColorLightPrimary;
+                        opacity: 1;
+                    }
+
+                    &:after {
+                        content: '';
+                        height: rem-calc(6);
+                        width: rem-calc(6);
+                        background-color: $colorAccent;
+                        border-radius: $borderRadiusRound;
+                        position: absolute;
+                        left: rem-calc(24);
+                        top: rem-calc(24);
+                    }
+                }
+            }
+        }
+
+        label {
+            width: 100%;
+            @include padding(4, 12);
+            border: 1px solid $alphaWhite20;
+            border-radius: $borderRadiusS;
+            position: relative;
+
+            &:before {
+                content: '';
+                opacity: 0.2;
+                border: 1px solid $colorWhite;
+                width: rem-calc(18);
+                height: rem-calc(18);
+                display: block;
+                border-radius: $borderRadiusRound;
+                position: absolute;
+                left: rem-calc(18);
+                top: rem-calc(18);
+            }
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            strong {
+                opacity: 0.8;
+            }
+
+            span {
+                opacity: 0.8;
+                @include typoM;
+            }
+
+            .primary {
+                @include margin(0, 0, 0, 2);
+                color: $colorPrimary;
+                opacity: 1;
+            }
+        }
+    }
+
+    .buttonRow {
+        display: flex;
+        flex: 0 0 100%;
+        justify-content: center;
+        @include margin(8, 0, 4);
+    }
+
+    .lpRow {
+        display: flex;
+        flex: 0 0 100%;
+        justify-content: center;
+        align-items: center;
+        @include margin(5, 0, 3);
+
+        .lpIcons {
+            @include margin(0, 2, 0, 0);
+            height: rem-calc(24);
+
+            img {
+                width: rem-calc(24);
+                height: rem-calc(24);
+                z-index: 2;
+                position: relative;
+
+                &:last-child {
+                    z-index: 1;
+                    @include margin(0, 0, 0, -2.5);
+                }
+            }
+        }
+
+        span {
+            @include typoS;
+        }
+    }
+
+    .valueRow {
+        display: flex;
+        flex: 0 0 100%;
+        justify-content: center;
+        align-items: center;
+        opacity: 0.4;
+        @include typoXXS;
+        letter-spacing: rem-calc(2);
+        font-weight: $fontWeightSemibold;
+    }
+
+    .infoBody {
+        display: flex;
+        flex: 0 0 100%;
+        @include margin(6, 0, 0);
+        border-top: 1px solid $alphaWhite20;
+        @include devider20;
+
+        .infoPart {
+            @include padding(7, 0);
+            display: flex;
+            flex: 0 0 50%;
+            flex-wrap: wrap;
+
+            .amount {
+                @include margin(0, 0, 2);
+            }
+
+            &:first-child {
+                border-right: 1px solid $alphaWhite20;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: $bpSmallHigh) {
+    .container {
+        .radioGroup {
+            flex: 0 0 90%;
+            margin: 0 5% space(2);
+            word-break: break-word;
+
+            span {
+                width: 100%;
+                margin: 0 !important;
+                display: block;
+            }
+        }
+
+        .infoBody {
+            flex-wrap: wrap;
+
+            .infoPart {
+                flex: 0 0 100%;
+
+                &:first-child {
+                    border-right: none;
+                    @include devider20;
+                }
+            }
+        }
+    }
+}

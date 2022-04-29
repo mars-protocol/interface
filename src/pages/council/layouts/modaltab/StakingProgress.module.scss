@@ -1,0 +1,88 @@
+@use '../../../../styles/master' as *;
+
+.staking {
+    display: flex;
+    flex-direction: column;
+    margin-top: space(4);
+    align-items: center;
+
+    .title {
+        opacity: 0.3;
+        max-width: rem-calc(384);
+        text-align: center;
+    }
+
+    .radialGaugeContainer {
+        display: flex;
+        width: 100%;
+        margin-top: space(10);
+        height: rem-calc(200);
+        margin-bottom: space(18);
+        justify-content: center;
+    }
+
+    .newCooldownContentWrapper {
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        justify-content: center;
+        .newCooldownContent {
+            color: $colorGreyMedium;
+            @include margin(4.5, 50);
+            text-align: center;
+
+            .link {
+                color: $colorPrimary;
+            }
+        }
+        .newCooldownBreakdown {
+            display: flex;
+            justify-content: center;
+        }
+    }
+
+    .buttonWrapper {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: space(11);
+
+        .actionButton {
+            display: flex;
+            justify-content: center;
+            align-self: center;
+        }
+    }
+
+    .timeRemaining {
+        @include typoH4;
+        margin: unset;
+    }
+}
+
+@media only screen and (max-width: $bpMediumHigh) {
+    .staking {
+        .radialGaugeContainer {
+            align-content: center;
+            align-items: center;
+            flex-direction: column;
+            @include margin(0);
+            height: auto;
+        }
+    }
+}
+
+@media only screen and (max-width: $bpSmallHigh) {
+    .staking {
+        .radialGaugeContainer {
+            @include margin(0);
+
+            > div {
+                > div {
+                    &:nth-of-type(3) {
+                        margin-top: space(21) !important;
+                    }
+                }
+            }
+        }
+    }
+}

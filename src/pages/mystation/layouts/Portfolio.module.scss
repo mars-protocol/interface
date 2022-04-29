@@ -1,0 +1,102 @@
+@use '../../../styles/master' as *;
+
+.portfolio {
+    width: 100%;
+    @include margin(0, 19);
+
+    .header {
+        justify-content: center;
+        display: flex;
+
+        h6 {
+            @include margin(8, 5);
+        }
+
+        .horizontalLine {
+            flex: auto;
+            @include devider20;
+            @include margin(0, 0, 11, 0);
+        }
+    }
+
+    .container {
+        .dials {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: space(8);
+            margin-bottom: space(2);
+        }
+
+        .metricsContainer {
+            display: flex;
+
+            .metrics {
+                display: flex;
+            }
+
+            // push the second item to the end.
+            > :nth-child(1) {
+                flex: auto;
+            }
+
+            > :nth-child(2) {
+                margin-inline-end: space(-2.5);
+            }
+
+            .slider {
+                margin-inline-start: space(12.5);
+                margin-inline-end: space(12.5);
+            }
+        }
+
+        .showDetailsButtonWrapper {
+            display: flex;
+            justify-content: center;
+            @include margin(5, 0);
+        }
+    }
+}
+
+@media only screen and (max-width: $bpSmallHigh) {
+    .portfolio {
+        @include margin(0, 3);
+
+        .container {
+            .metricsContainer {
+                justify-content: center;
+                flex-wrap: wrap;
+
+                .metrics {
+                    justify-content: center;
+                    max-width: 100%;
+                    @include margin(2, 0);
+                }
+
+                > :nth-child(2) {
+                    margin-inline-end: 0;
+                }
+            }
+
+            .overline {
+                text-align: center;
+                @include margin(13.5, 0);
+            }
+        }
+    }
+}
+
+/* PSEUDO */
+@media only screen and (max-width: rem-calc(840)) {
+    .portfolio {
+        .container {
+            .dials {
+                flex-wrap: wrap;
+
+                > * {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,67 @@
+@use '../../../../styles/master' as *;
+
+.container {
+    @include padding(8, 12);
+    display: flex;
+    flex-direction: column;
+    @include devider20;
+    position: relative;
+
+    .tooltip {
+        position: absolute;
+        top: rem-calc(4);
+        right: rem-calc(6);
+    }
+
+    .title {
+        opacity: 0.5;
+    }
+
+    .votedWrapper {
+        margin-top: space(8);
+    }
+
+    .voteBreakdown {
+        margin-top: space(10);
+        display: flex;
+        flex-direction: row;
+
+        .yesContainer {
+            padding-inline-end: rem-calc(64);
+            border-right: 1px solid $alphaWhite20;
+        }
+
+        .noContainer {
+            padding-inline-start: rem-calc(32);
+        }
+    }
+}
+.showDetailsBtn {
+    @include margin(6, 0);
+    display: flex;
+    justify-content: center;
+}
+
+@media only screen and (max-width: $bpMediumHigh) {
+    .container {
+        @include padding(6, 3);
+    }
+}
+
+@media only screen and (max-width: $bpSmallHigh) {
+    .container {
+        .voteBreakdown {
+            flex-wrap: wrap;
+
+            .yesContainer {
+                width: 100%;
+                @include padding(0, 0, 6);
+                border-right: none;
+            }
+
+            .noContainer {
+                @include padding(0);
+            }
+        }
+    }
+}

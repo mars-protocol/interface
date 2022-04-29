@@ -1,0 +1,45 @@
+@use '../../../styles/master' as *;
+
+.container {
+    display: flex;
+    flex-direction: row;
+    @include padding(0, 13);
+    @include margin(6, 0);
+
+    .balanceCardContainer {
+        @include margin(0, 0, 0, 2);
+        align-content: center;
+        flex-grow: 1;
+        border-right: 1px solid $alphaWhite20;
+    }
+
+    > div:nth-child(1) {
+        margin-inline-start: 0;
+    }
+
+    > div:nth-child(4) {
+        border-right: 0;
+    }
+}
+
+@media only screen and (max-width: $bpSmallHigh) {
+    .container {
+        @include margin(0);
+        @include padding(6, 3);
+        flex-direction: column;
+
+        .balanceCardContainer {
+            @include margin(0, 0, 3);
+            @include padding(0, 0, 3);
+            flex: 0 0 100%;
+            border-right: none;
+            @include devider20;
+        }
+
+        > div:nth-child(4) {
+            border-bottom: none;
+            @include margin(0);
+            @include padding(0);
+        }
+    }
+}

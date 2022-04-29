@@ -1,0 +1,38 @@
+@use 'styles/master' as *;
+@use 'styles/fonts' as *;
+@use-normalize;
+
+* {
+    @include layoutGlobal;
+}
+
+body {
+    overflow-y: scroll;
+    cursor: default;
+    @include bgBodyDark;
+}
+
+.tippyContainer {
+    @include layoutTooltip;
+}
+
+@media only screen and (max-width: $bpMediumHigh) {
+    body {
+        &.ReactModal__Body--open {
+            position: fixed;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+    }
+}
+@media only screen and (max-width: $bpSmallHigh) {
+    body {
+        &.ReactModal__Body--open {
+            #root {
+                @include glowL;
+            }
+        }
+    }
+}

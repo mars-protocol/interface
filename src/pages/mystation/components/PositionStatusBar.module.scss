@@ -1,0 +1,106 @@
+@use '../../../styles/master' as *;
+
+.container {
+    display: flex;
+
+    .title {
+        @include margin(0, 0, 3);
+    }
+
+    .progressbarContainer {
+        position: relative;
+        height: space(5.5);
+
+        .progressbar {
+            position: absolute;
+            height: 100%;
+            @include bgHatched;
+            box-shadow: $shadowInset;
+            border-radius: $borderRadiusXXXL;
+        }
+
+        .limit {
+            position: absolute;
+            height: 100%;
+            background: $colorGreyDark;
+            box-shadow: $shadowInset;
+            border-top-left-radius: $borderRadiusXXXL;
+            border-bottom-left-radius: $borderRadiusXXXL;
+            transition: width 2s;
+        }
+
+        .dot {
+            position: absolute;
+            width: rem-calc(4);
+            height: rem-calc(4);
+            background: $colorInfoWarning;
+            margin-top: space(-2);
+            border-radius: $borderRadiusRound;
+            transition: left 2s;
+        }
+
+        .dotGlow {
+            position: absolute;
+            width: rem-calc(7);
+            height: rem-calc(7);
+            background: $colorInfoWarning;
+            margin-top: space(-2.25);
+            margin-inline-start: space(-0.5);
+            border-radius: $borderRadiusRound;
+            @include glowM;
+            transition: left 2s;
+        }
+
+        .ltvContainer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+
+            .mask {
+                overflow-x: hidden;
+                height: 100%;
+                border-radius: $borderRadiusL;
+                transition: width 2s;
+
+                > span {
+                    transition: left 2s;
+                    z-index: 2;
+                }
+
+                .indicator {
+                    height: 100%;
+                    border-radius: inherit;
+                    @include bgLimit;
+                }
+
+                .glow {
+                    position: absolute;
+                    height: 100%;
+                    border-radius: inherit;
+                    @include bgLimit;
+                    opacity: 0.4;
+                    transition: width 2s;
+                    @include glowXXL;
+                    margin-top: space(-5.5);
+                }
+            }
+        }
+    }
+
+    .values {
+        display: flex;
+        opacity: 0.6;
+        margin-top: space(1.25);
+
+        .title {
+            flex: auto;
+            text-transform: none;
+        }
+
+        .percent {
+            flex: 0;
+            word-break: normal;
+            word-wrap: unset;
+        }
+    }
+}

@@ -1,0 +1,51 @@
+@use '../../../styles/master' as *;
+
+.pagination {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    .paginationButton {
+        width: rem-calc(32);
+        height: rem-calc(32);
+        @include typoXXL;
+        text-align: center;
+        align-self: center;
+        @include margin(0, 3);
+        border-radius: $borderRadiusRound;
+
+        &:hover {
+            cursor: pointer;
+            background-color: $colorGrey;
+        }
+    }
+
+    .inactive {
+        display: none;
+    }
+
+    .paginationGroup {
+        display: flex;
+        flex-direction: row;
+        @include padding(0);
+
+        .paginationItem {
+            justify-content: center;
+            width: rem-calc(32);
+            height: rem-calc(32);
+            text-align: center;
+            line-height: rem-calc(34);
+            justify-content: center;
+            @include margin(0, 3);
+            border-radius: $borderRadiusRound;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        .active {
+            background-color: $colorPrimary;
+        }
+    }
+}

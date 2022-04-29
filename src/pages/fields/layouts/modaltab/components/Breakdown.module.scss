@@ -1,0 +1,153 @@
+@use '../../../../../styles/master' as *;
+
+.container {
+    display: flex;
+    align-items: flex-start;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+    flex: 0 0 100%;
+    @include margin(0, 0, 1);
+    position: relative;
+    overflow: hidden;
+
+    .title,
+    .closingHint,
+    .profit {
+        @include typoScaps;
+        @include margin(10, 0, 4);
+        width: 100%;
+        text-align: center;
+    }
+
+    .close {
+        flex: 0 0 100%;
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        align-items: flex-start;
+        align-content: flex-start;
+        flex-wrap: wrap;
+
+        .closingHint {
+            @include margin(4, 0);
+        }
+
+        .closeWrapper {
+            display: flex;
+            align-items: center;
+            align-content: center;
+            flex-wrap: wrap;
+            height: rem-calc(320);
+        }
+
+        .profit {
+            @include margin(6, 0, 3);
+            opacity: 0.65;
+        }
+
+        .pnl {
+            @include margin(0);
+            @include typoH4;
+            width: 100%;
+
+            span {
+                &:first-of-type {
+                    @include typoM;
+                }
+            }
+        }
+        .pnlPercentage {
+            width: 100%;
+            @include typoXScaps;
+            @include margin(0, 0, 4);
+
+            &.negative {
+                color: $colorInfoWarning;
+            }
+
+            &.positive {
+                color: $colorPrimary;
+            }
+        }
+        .lastChange {
+            opacity: 0.6;
+            @include typoXScaps;
+            text-align: center;
+            width: 100%;
+        }
+    }
+
+    .info {
+        display: flex;
+        align-content: center;
+        width: 100%;
+        flex: 0 0 100%;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+        .infoContainer {
+            position: relative;
+            @include padding(0, 10, 10);
+            flex: 0 0 50%;
+            width: 50%;
+            display: flex;
+            flex-wrap: wrap;
+        }
+    }
+
+    .tooltip {
+        position: absolute;
+        top: rem-calc(3);
+        right: rem-calc(5);
+    }
+}
+
+/* PSUEDO */
+@media only screen and (max-width: rem-calc(1090)) {
+    .container {
+        .close {
+            .closeWrapper {
+                height: auto;
+            }
+        }
+
+        .info {
+            .infoContainer {
+                @include padding(0, 3, 6);
+                flex: 0 0 100%;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    }
+}
+
+/* PSUEDO */
+@media only screen and (max-width: rem-calc(1090)) {
+    .container {
+        .close {
+            .closeWrapper {
+                height: auto;
+            }
+        }
+
+        .info {
+            .infoContainer {
+                @include padding(0, 3, 6);
+                flex: 0 0 100%;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: $bpSmallHigh) {
+    .container {
+        .close {
+            flex: 0 0 100%;
+        }
+    }
+}

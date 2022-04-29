@@ -1,0 +1,38 @@
+@use '../../styles/master' as *;
+
+.container {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    @include layoutTooltip;
+    min-width: rem-calc(184);
+
+    .item {
+        margin-top: space(2);
+        display: flex;
+        width: rem-calc(175);
+        flex-direction: row;
+        @include typoXS;
+
+        &:last-child {
+            @include devider20;
+            font-weight: $fontWeightSemibold;
+        }
+
+        .label {
+            display: flex;
+            flex: 0 0 rem-calc(115);
+        }
+
+        .value {
+            display: flex;
+            justify-content: flex-end;
+            flex: 0 0 rem-calc(60);
+        }
+
+        &.leverage {
+            @include margin(2, 0, 0);
+            font-weight: $fontWeightSemibold;
+        }
+    }
+}

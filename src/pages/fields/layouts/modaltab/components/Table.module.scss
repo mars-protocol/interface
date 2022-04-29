@@ -1,0 +1,98 @@
+@use '../../../../../styles/master' as *;
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: space(4);
+
+    .mobileTitle {
+        display: none;
+        color: $tableLabel;
+        @include typoS;
+    }
+
+    .header {
+        text-align: start;
+        @include typoScaps;
+        border-top: 1px solid $tableBorderEnd;
+        padding-bottom: rem-calc(20);
+    }
+
+    .row {
+        border-bottom: 1px solid $tableBorder;
+        color: $tableLabel;
+        @include typoS;
+        letter-spacing: space(0.5);
+
+        &:last-child {
+            border-bottom: 1px solid $tableBorderEnd;
+        }
+
+        > td {
+            @include padding(2, 0.5);
+            line-height: rem-calc(16);
+            word-wrap: unset;
+            word-break: normal;
+        }
+
+        .title {
+            @include typoXS;
+        }
+
+        .amount,
+        .denom,
+        .change {
+            color: $fontColorLightPrimary;
+            width: 1%;
+        }
+
+        .amount,
+        .value {
+            text-align: end;
+        }
+
+        .title,
+        .value {
+            width: 50%;
+        }
+
+        .change {
+            .red {
+                color: $colorInfoWarning;
+            }
+
+            .primary {
+                color: $colorPrimary;
+            }
+
+            .invisible {
+                visibility: hidden;
+            }
+
+            .none {
+                display: none;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: $bpSmallHigh) {
+    .table {
+        .mobileTitle {
+            display: table-row;
+            @include typoS;
+
+            td:not(first-child) {
+                padding-top: rem-calc(10);
+            }
+        }
+
+        .title {
+            display: none;
+        }
+
+        .amount {
+            text-align: start;
+        }
+    }
+}

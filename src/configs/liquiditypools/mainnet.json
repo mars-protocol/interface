@@ -1,0 +1,19 @@
+{
+    "contracts": {
+        "redBankContractAddress": "terra19dtgj9j5j7kyf3pmejqv8vzfpxtejaypgzkz5u"
+    },
+    "whitelist": {
+        "terra1dj9jfrrjc0yckz8l5g3mmqd86e67msvfh3q30f": {
+            "denom": "ANC",
+            "decimals": 6
+        },
+        "terra1x4rrkxx5pyuce32wsdn8ypqnpx8n27klnegv0d": {
+            "denom": "uluna",
+            "decimals": 6
+        },
+        "terra1cuku0vggplpgfxegdrenp302km26symjk4xxaf": {
+            "denom": "uusd",
+            "decimals": 6
+        }
+    }
+}

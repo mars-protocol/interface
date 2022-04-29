@@ -1,0 +1,79 @@
+@use '../../../../styles/master' as *;
+
+.container {
+    display: flex;
+    flex-direction: column;
+
+    .importantInformation {
+        @include margin(14, 0, 10);
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        .imageContainer {
+            position: relative;
+            height: rem-calc(158);
+            display: flex;
+            justify-content: center;
+            .imageTitle {
+                position: absolute;
+                left: 0;
+                text-align: center;
+                width: 100%;
+                top: rem-calc(65);
+                @include typoXLcaps;
+
+                .imageTitleEmphasis {
+                    font-weight: $fontWeightSemibold;
+                }
+            }
+        }
+
+        .content {
+            @include margin(10, 20, 0);
+            text-align: center;
+
+            .learnMore {
+                margin-top: space(1);
+
+                .link {
+                    color: $colorPrimary;
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+
+    .buttonWrapper {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        margin-bottom: space(20);
+
+        .understoodButton {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .tickWrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            @include margin(4, 0, 0);
+
+            .check {
+                @include margin(0, 4, 0, 0);
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: $bpSmallHigh) {
+    .container {
+        .importantInformation {
+            .content {
+                @include margin(10, 5, 0);
+            }
+        }
+    }
+}

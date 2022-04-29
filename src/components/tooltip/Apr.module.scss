@@ -1,0 +1,50 @@
+@use '../../styles/master' as *;
+
+.container {
+    @include layoutTooltip;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    min-width: rem-calc(184);
+    .item {
+        @include margin(1, 0, 0);
+        display: flex;
+        flex-direction: row;
+        .dot {
+            border: 1px solid $colorWhite;
+            height: space(2);
+            border-radius: $borderRadiusXXS;
+            width: space(2);
+            @include margin(1.5, 2, 0, 0);
+        }
+        .content {
+            display: flex;
+            width: rem-calc(168);
+            flex-direction: column;
+            .titleContainer {
+                display: flex;
+                flex-direction: row;
+
+                :first-child {
+                    flex: auto;
+                }
+
+                .titleText {
+                    justify-content: start !important;
+                    min-height: 0 !important;
+                }
+            }
+
+            .subTitleContainer {
+                display: flex;
+                flex-direction: row;
+                :first-child {
+                    flex: auto;
+                }
+                .subTitleText {
+                    opacity: 0.6;
+                }
+            }
+        }
+    }
+}

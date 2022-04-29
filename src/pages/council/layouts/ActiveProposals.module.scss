@@ -1,0 +1,16 @@
+@use '../../../styles/master' as *;
+
+.activeProposals {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    > div {
+        width: 100%;
+        @include margin(0, 0, 6);
+
+        &:last-child {
+            @include margin(0);
+        }
+    }
+}

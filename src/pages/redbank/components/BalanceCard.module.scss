@@ -1,0 +1,12 @@
+@use '../../../styles/master' as *;
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.alignRight {
+    align-items: flex-end;
+    text-align: end;
+}

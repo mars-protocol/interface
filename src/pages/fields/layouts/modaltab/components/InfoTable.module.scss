@@ -1,0 +1,85 @@
+@use '../../../../../styles/master' as *;
+
+.container {
+    display: flex;
+    flex: 0 0 100%;
+    @include padding(0);
+    width: 100%;
+    flex-wrap: wrap;
+    max-width: rem-calc(484);
+    align-content: flex-start;
+    align-items: flex-start;
+
+    .overview {
+        @include margin(4, 0, 0);
+        width: 100%;
+        border-top: 1px solid $tableBorder;
+    }
+
+    .ltv {
+        @include margin(4, 0, 0);
+        width: 100%;
+    }
+
+    .data {
+        @include typoS;
+        color: $fontColorLightPrimary;
+    }
+
+    .row {
+        display: flex;
+        color: $tableLabel;
+        @include typoXS;
+        @include padding(2, 0);
+        letter-spacing: space(0.5);
+        flex: 0 0 100%;
+        width: 100%;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid $tableBorder;
+    }
+}
+
+.close {
+    align-content: flex-end;
+    align-items: flex-end;
+}
+
+@media only screen and (max-width: $bpSmallHigh) {
+    .container {
+        .ltv {
+            > div {
+                &:first-child {
+                    > div {
+                        width: rem-calc(258) !important;
+
+                        div {
+                            max-width: rem-calc(258);
+                        }
+                    }
+                }
+            }
+        }
+
+        .data {
+            @include typoXS;
+        }
+
+        .overview {
+            .row {
+                .cell {
+                    @include padding(0, 0, 1);
+                    display: flex;
+                    justify-content: space-between;
+                    flex: 0 0 100%;
+                    width: 100%;
+                }
+            }
+        }
+
+        .row {
+            flex-wrap: wrap;
+        }
+    }
+}

@@ -1,0 +1,25 @@
+@use 'master' as *;
+
+/* Color Index for Fields */
+
+/* Background Classes */
+.bgPrimary {
+    @include bgPrimary;
+}
+
+.bgSecondary {
+    @include bgSecondary;
+}
+
+.bgTertiary {
+    @include bgTertiary;
+}
+
+/* Text Colors */
+.colorInfoProfit {
+    color: $colorInfoProfit;
+}
+
+.colorInfoLoss {
+    color: $colorInfoLoss;
+}

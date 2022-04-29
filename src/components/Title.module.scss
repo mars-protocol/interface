@@ -1,0 +1,17 @@
+@use '../styles/master' as *;
+
+.title {
+    display: flex;
+    @include margin(8, 0);
+    opacity: 0.6;
+
+    h6 {
+        text-align: center;
+    }
+
+    .horizontalLine {
+        flex: auto;
+        @include devider60;
+        @include margin(0, 0, 3);
+    }
+}

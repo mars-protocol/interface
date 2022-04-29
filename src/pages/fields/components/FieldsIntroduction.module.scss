@@ -1,0 +1,40 @@
+@use '../../../styles/master' as *;
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    a {
+        &:hover,
+        &:focus,
+        &:active {
+            text-decoration: none;
+        }
+    }
+
+    .heading {
+        @include margin(4.5, 0, 0);
+    }
+
+    .paragraph {
+        @include margin(3.5, 0, 6);
+        text-align: center;
+    }
+}
+
+@media only screen and (max-width: $bpSmallHigh) {
+    .container {
+        .heading {
+            @include typoXL;
+        }
+
+        .paragraph {
+            @include typoL;
+        }
+
+        .link {
+            @include typoM;
+        }
+    }
+}

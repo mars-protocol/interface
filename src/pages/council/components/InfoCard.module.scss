@@ -1,0 +1,18 @@
+@use '../../../styles/master' as *;
+
+.container {
+    display: flex;
+    flex-direction: column;
+
+    .title {
+        opacity: 0.5;
+        margin-bottom: space(1);
+    }
+
+    .clickable {
+        &:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+}

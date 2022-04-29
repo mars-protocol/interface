@@ -1,0 +1,19 @@
+.container {
+    display: flex;
+    flex-direction: column;
+
+    .vestingBalanceCard {
+        margin-top: space(4);
+    }
+
+    .balanceCard {
+        display: flex;
+        flex: auto;
+    }
+
+    .buttonContainer {
+        margin-top: space(6);
+        display: flex;
+        flex-direction: row;
+    }
+}

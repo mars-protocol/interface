@@ -1,0 +1,37 @@
+@use '../styles/master' as *;
+
+.splash {
+    min-height: calc(100vh - #{$headerHeight} - #{$footerHeight});
+
+    .initializing {
+        min-height: inherit;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        flex-direction: column;
+    }
+
+    .head {
+        @include typoH4caps;
+        text-align: center;
+        opacity: 0.6;
+    }
+
+    .subhead,
+    .current {
+        @include typoLcaps;
+        @include margin(2, 0, 0);
+        text-align: center;
+        opacity: 0.6;
+    }
+
+    .current {
+        @include margin(8, 0);
+        opacity: 1;
+
+        span {
+            opacity: 0.6;
+        }
+    }
+}

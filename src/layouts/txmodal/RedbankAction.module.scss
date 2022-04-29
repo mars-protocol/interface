@@ -1,0 +1,20 @@
+@use '../../styles/master' as *;
+
+.cardContainer {
+    width: rem-calc(768);
+    align-self: center;
+    @include margin(0, 0, 10);
+
+    .container {
+        color: $fontColorLightPrimary;
+        display: flex;
+        flex-direction: column;
+        border-radius: $borderRadiusL;
+    }
+}
+
+@media only screen and (max-width: $bpSmallHigh) {
+    .cardContainer {
+        width: 100%;
+    }
+}

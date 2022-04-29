@@ -1,0 +1,9 @@
+@use '../../../styles/master' as *;
+
+.container {
+    @include layoutTooltip;
+}
+
+.buttonContainer {
+    margin-inline-start: space(1);
+}

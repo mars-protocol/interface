@@ -5,23 +5,18 @@
     display: flex;
     flex-direction: column;
     @include layoutTooltip;
-    min-width: rem-calc(184);
+    min-width: rem-calc(280);
 
     .item {
-        margin-top: space(2);
+        @include padding(1, 0);
         display: flex;
-        width: rem-calc(175);
+        width: 100%;
         flex-direction: row;
         @include typoXS;
 
-        &:last-child {
-            @include devider20;
-            font-weight: $fontWeightSemibold;
-        }
-
         .label {
             display: flex;
-            flex: 0 0 rem-calc(115);
+            flex: 1;
         }
 
         .value {
@@ -30,9 +25,13 @@
             flex: 0 0 rem-calc(60);
         }
 
-        &.leverage {
-            @include margin(2, 0, 0);
+        &.leverage,
+        &.total {
             font-weight: $fontWeightSemibold;
+        }
+
+        &.border {
+            @include devider20;
         }
     }
 }

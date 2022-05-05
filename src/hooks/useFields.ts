@@ -179,7 +179,7 @@ export const useFieldsState = (): FieldsState => {
         const totalRewardsApr =
             tradingFeesApy + astroRewardsApr + protocolRewardsApr
         return {
-            tradingFeesApr: tradingFeesApy,
+            tradingFeesApy: tradingFeesApy,
             astroRewardsApr,
             protocolRewardsApr,
             totalRewardsApr,
@@ -187,7 +187,7 @@ export const useFieldsState = (): FieldsState => {
     }
 
     const produceApy = (poolDetails: AstroPoolQueryResponse): StrategyRate => {
-        const { tradingFeesApr, protocolRewardsApr, astroRewardsApr } =
+        const { tradingFeesApy, protocolRewardsApr, astroRewardsApr } =
             getAprs(poolDetails)
 
         return poolDetails !== null
@@ -196,7 +196,7 @@ export const useFieldsState = (): FieldsState => {
                   astro: poolDetails.astro_rewards.apy * 100 || 0,
                   protocol: poolDetails.protocol_rewards.apy * 100 || 0,
                   total:
-                      tradingFeesApr * 100 +
+                      tradingFeesApy * 100 +
                       convertAprToApy(
                           (protocolRewardsApr + astroRewardsApr) * 100 || 0,
                           dailyCompoundingPeriod
@@ -209,13 +209,13 @@ export const useFieldsState = (): FieldsState => {
     const produceApr = (poolDetails: AstroPoolQueryResponse): StrategyRate => {
         const {
             totalRewardsApr,
-            tradingFeesApr,
+            tradingFeesApy,
             astroRewardsApr,
             protocolRewardsApr,
         } = getAprs(poolDetails)
         return poolDetails !== null
             ? {
-                  trading: tradingFeesApr * 100 || 0,
+                  trading: tradingFeesApy * 100 || 0,
                   astro: astroRewardsApr * 100 || 0,
                   protocol: protocolRewardsApr * 100 || 0,
                   total: totalRewardsApr * 100 || 0,

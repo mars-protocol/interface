@@ -13,6 +13,8 @@ import Button from '../../components/Button'
 import { ExternalSVG } from '../../components/Svg'
 import { ActionType } from '../../types/enums'
 
+import { useRedBank } from '../../hooks'
+
 export const activeStrategyGridColumns = [
     {
         Header: 'Color',
@@ -203,23 +205,35 @@ export const activeStrategyGridColumns = [
         width: '8%',
         Cell: ({ cell: { value, row } }) => {
             const apyData = row.original.apy
-            const aprData = row.original.apr
             const leverage = row.original.position.leverage
             const token = row.original.assets[0].symbol
+            const { findMarketInfo } = useRedBank()
+            const borrowRate =
+                Number(
+                    findMarketInfo(row.original.assets[1].denom)?.borrow_rate
+                ) * 100
+            const apy = row.original.apy.total - borrowRate
+
             return value > 0 ? (
                 <Tippy
                     content={
                         <Apy
-                            trueApy={value}
                             apyData={apyData}
-                            aprData={aprData}
                             token={token}
                             leverage={leverage}
                         />
                     }
                 >
                     <div>
-                        {formatValue(value, 2, 2, true, false, '%', true)}
+                        {formatValue(
+                            apy * leverage,
+                            2,
+                            2,
+                            true,
+                            false,
+                            '%',
+                            true
+                        )}
                     </div>
                 </Tippy>
             ) : (
@@ -399,21 +413,35 @@ export const strategyGridColumns = [
         sortDescFirst: true,
         Cell: ({ cell: { value, row } }) => {
             const apyData = row.original.apy
-            const aprData = row.original.apr
             const token = row.original.assets[0].symbol
+            const { findMarketInfo } = useRedBank()
+            const leverage = 2
+            const borrowRate =
+                Number(
+                    findMarketInfo(row.original.assets[1].denom)?.borrow_rate
+                ) * 100
+            const apy = row.original.apy.total - borrowRate
+
             return value > 0 ? (
                 <Tippy
                     content={
                         <Apy
-                            trueApy={value}
+                            leverage={leverage}
                             apyData={apyData}
-                            aprData={aprData}
                             token={token}
                         />
                     }
                 >
                     <div>
-                        {formatValue(value, 2, 2, true, false, '%', true)}
+                        {formatValue(
+                            apy * leverage,
+                            2,
+                            2,
+                            true,
+                            false,
+                            '%',
+                            true
+                        )}
                     </div>
                 </Tippy>
             ) : (
@@ -455,7 +483,7 @@ export const strategyGridColumns = [
                     </p>
                     <p
                         className={`caption ${
-                            percentageUsed === 100 ? 'red' : ''
+                            percentageUsed === 100 ? 'colorInfoLoss' : ''
                         }`}
                         style={{
                             opacity: percentageUsed === 100 ? 1 : 0.5,
@@ -483,7 +511,6 @@ export const strategyGridColumns = [
         ),
         accessor: 'provider',
         width: '8%',
-        textAlign: 'right',
         Cell: ({ cell: { value } }) => {
             return (
                 <img

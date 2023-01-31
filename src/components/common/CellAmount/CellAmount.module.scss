@@ -1,0 +1,11 @@
+@import 'src/styles/master';
+
+.noBalanceText {
+  display: none;
+}
+
+@media only screen and (min-width: 460px) {
+  .noBalanceText {
+    display: block;
+  }
+}

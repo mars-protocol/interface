@@ -1,0 +1,109 @@
+@import 'src/styles/master';
+
+.footer {
+  @include padding(8, 0, 24);
+  background-color: $backgroundFooter;
+  display: grid;
+  place-content: center;
+  position: absolute;
+  bottom: 0;
+  left: space(-1);
+  width: calc(100% - #{$spacingBase * 6});
+
+  .widthBox {
+    width: $contentWidth;
+    max-width: 100vw;
+    @include padding(0, 3);
+  }
+
+  .links {
+    flex: 0 0 100%;
+    display: flex;
+    flex-wrap: wrap;
+
+    .column1,
+    .column2,
+    .column3 {
+      flex: 0 0 100%;
+      display: flex;
+      flex-direction: column;
+      @include margin(0, 0, 6);
+    }
+    .placeholder {
+      flex: 2;
+    }
+
+    .header {
+      font-weight: $fontWeightSemibold;
+    }
+
+    .item {
+      opacity: 0.6;
+      transition: opacity 0.5s;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    .header,
+    .item {
+      text-decoration: none;
+      color: $fontColorLightPrimary;
+      @include margin(0, 0, 2);
+    }
+
+    .socials {
+      display: flex;
+      flex-wrap: wrap;
+      list-style: none;
+      @include margin(2, 0, 0);
+
+      li {
+        width: rem-calc(30);
+        height: rem-calc(30);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        @include margin(6, 8, 0, 0);
+
+        &:last-child {
+          @include margin(6, 0, 0);
+        }
+
+        a {
+          display: block;
+          opacity: 0.6;
+          transition: opacity 0.5s;
+
+          &:hover {
+            opacity: 1;
+          }
+        }
+
+        svg {
+          width: 100%;
+          height: auto;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: $bpMediumLow) {
+  .footer {
+    @include padding(8, 0);
+    left: space(-4);
+    width: calc(100% + (8 * #{$spacingBase}px));
+
+    .links {
+      flex-wrap: nowrap;
+
+      .column1,
+      .column2,
+      .column3 {
+        flex: 0 0 33%;
+      }
+    }
+  }
+}

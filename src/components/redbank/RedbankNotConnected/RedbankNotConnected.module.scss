@@ -1,0 +1,109 @@
+@import 'src/styles/master';
+
+.notConnected {
+  width: 100%;
+  margin-top: space(8);
+
+  .icon {
+    width: rem-calc(160);
+    height: rem-calc(160);
+  }
+
+  .welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    @include margin(0, 0, 18);
+
+    .logo {
+      @include margin(0, 0, 10);
+      width: rem-calc(168);
+      height: rem-calc(168);
+    }
+
+    .title {
+      font-weight: $fontWeightSemibold;
+      text-align: center;
+      @include typoH2caps;
+    }
+
+    .subTitle {
+      @include margin(2, 0, 0);
+      @include typoXLcaps;
+      text-align: center;
+      opacity: 0.89;
+    }
+
+    .desc {
+      @include margin(6, 0);
+      color: $buttonBorder;
+      text-align: center;
+
+      a {
+        color: $colorPrimary;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .connectButton {
+      display: flex;
+      align-items: center;
+
+      svg {
+        @include margin(-0.5, 2, 0, 0);
+        height: rem-calc(16);
+        width: auto;
+      }
+      span {
+        @include margin(0.25, 0, 0);
+      }
+    }
+  }
+
+  .grids {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: space(16);
+    @include shadowFade;
+
+    > div {
+      flex: 0 0 100%;
+    }
+
+    > div:first-child {
+      @include margin(0, 0, 6);
+    }
+
+    table {
+      tr {
+        th,
+        td {
+          display: table-cell;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: $bpMediumHigh) {
+  .notConnected {
+    .grids {
+      flex-wrap: nowrap;
+
+      > div {
+        flex: 1;
+      }
+
+      > div:first-child {
+        @include margin(0, 4, 0, 0);
+      }
+      > div:last-child {
+        @include margin(0, 0, 0, 4);
+      }
+    }
+  }
+}

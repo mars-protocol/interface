@@ -1,0 +1,3 @@
+interface ContractQueryResponse {
+  balance: string
+}

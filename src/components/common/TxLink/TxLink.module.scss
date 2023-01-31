@@ -1,0 +1,17 @@
+@import 'src/styles/master';
+
+.txLink {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+
+  span {
+    @include margin(0, 2, 0, 0);
+  }
+
+  svg {
+    @include margin(-1, 0, 0);
+    display: inline;
+    height: rem-calc(17);
+  }
+}

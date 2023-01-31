@@ -1,28 +1,47 @@
-# Mars Protocol Interface
+# Mars Protocol Osmosis Outpost Frontend
 
-## Terms of Use
+![mars-banner-1200w](https://marsprotocol.io/banner.png)
 
-To use this repository you have to agree to the terms of the [Mars Web App License](https://github.com/mars-protocol/interface/blob/main/Mars%20Web%20App%20License.pdf)
+## Web App
 
-## Available Scripts
+This project is a [NextJS](https://nextjs.org/). React application.
 
-In the project directory, you can run:
+The project utilises [React hooks](https://reactjs.org/docs/hooks-intro.html), functional components, Zustand for state management, and useQuery for general data fetching and management.
 
-### `npm run install`
+Typescript is added and utilised (but optional if you want to create .jsx or .tsx files).
 
-Installs all packages listed inside the [package.json](https://github.com/mars-protocol/interface/blob/main/package.json)
+SCSS with [CSS modules](https://create-react-app.dev/docs/adding-a-css-modules-stylesheet) (webpack allows importing css files into javascript, use the CSS module technique to avoid className clashes).
 
-### `npm run start`
+Sentry is used for front end error logging/exception & bug reporting.
 
-Runs the app in the development mode.
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Deployment
 
-The page will reload if you make edits.
+Start web server
 
-### `npm run build`
+```bash
+yarn && yarn dev
+```
 
-Builds the app for production to the `build` folder.
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Contributing
 
-The build is minified and the filenames include the hashes.
-Your app is ready to be deployed!
+We welcome and encourage contributions! Please create a pull request with as much information about the work you did and what your motivation/intention was.
+
+## Imports
+
+Local components are imported via index files, which can be automatically generated with `yarn index`. This command targets index.ts files with a specific pattern in order to automate component exports. This results in clean imports throughout the pages:
+
+```
+import { Button, Card, Titlte } from 'components/common'
+```
+
+or
+
+```
+import { Breakdown, RepayInput } from 'components/fields'
+```
+
+In order for this to work, components are place in a folder with UpperCamelCase with the respective Component.tsx file. The component cannot be exported at default, so rather export the `const` instead.
+
+## License
+
+Contents of this repository are open source under the [Mars Protocol Web Application License Agreement](./LICENSE).

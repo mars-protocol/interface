@@ -1,0 +1,26 @@
+@import 'src/styles/master';
+
+.container {
+  padding: space(10);
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: space(20);
+  @include bgLimitOpacity;
+
+  .innerContainer {
+    height: 100%;
+  }
+
+  .headline {
+    width: 100%;
+    @include typoScaps;
+    @include margin(0, 0, 2);
+  }
+}
+
+@media screen and (min-width: $bpMediumLow) {
+  .container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

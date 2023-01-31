@@ -1,0 +1,14 @@
+@import 'src/styles/master';
+
+.label {
+  color: $alphaWhite40;
+  @include typoScaps;
+}
+
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: left;
+}

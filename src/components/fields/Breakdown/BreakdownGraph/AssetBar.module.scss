@@ -1,0 +1,46 @@
+@import 'src/styles/master';
+
+$label-timing: 0.2s;
+
+.label {
+  position: absolute;
+  transform: translateX(calc(-50% + space(3))) rotate(-90deg);
+  bottom: space(12);
+  width: space(25);
+  word-break: keep-all;
+  height: space(6);
+  white-space: nowrap;
+  transition: opacity $label-timing ease-out;
+
+  &.alignRight {
+    text-align: right;
+    bottom: 0;
+    top: space(12);
+  }
+
+  &.show {
+    transition-delay: calc($animationSpeed - $label-timing);
+    opacity: 1;
+  }
+
+  &.hide {
+    opacity: 0;
+  }
+}
+
+.primary,
+.secondary,
+.name {
+  transition: height $animationSpeed ease-out;
+  position: relative;
+  border-radius: $borderRadiusXS;
+}
+
+.primary {
+  @include bgPrimary;
+}
+
+.secondary {
+  background-color: rgba($colorPrimary, 0.7);
+  color: $colorWhite;
+}

@@ -1,0 +1,14 @@
+@import 'src/styles/master';
+
+.txFee {
+  @include padding(0, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .label {
+    span {
+      @include margin(0, 1.5, 0, 0);
+    }
+  }
+}

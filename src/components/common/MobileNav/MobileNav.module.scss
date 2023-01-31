@@ -1,0 +1,51 @@
+@import 'src/styles/master';
+
+.mobileNav {
+  display: flex;
+  flex: 0 0 100%;
+  width: 100%;
+  height: $mobileNavHeight;
+  background-color: $alphaBlack30;
+  backdrop-filter: blur(16px);
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  z-index: 55;
+  bottom: 0;
+  left: 0;
+  @include padding(0, 4);
+
+  .nav {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    width: rem-calc(100);
+    align-items: center;
+    text-decoration: none;
+    @include margin(-8, 0, 0);
+    filter: grayscale(1);
+    opacity: 0.4;
+
+    &.active {
+      filter: grayscale(0);
+      opacity: 1;
+    }
+
+    span {
+      @include padding(1, 0, 0);
+      color: $fontColorLightPrimary;
+      @include typoXScaps;
+    }
+
+    svg {
+      width: rem-calc(50);
+      height: auto;
+    }
+  }
+}
+
+@media only screen and (min-width: $bpMediumLow) {
+  .mobileNav {
+    display: none;
+  }
+}

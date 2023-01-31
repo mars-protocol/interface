@@ -1,0 +1,402 @@
+import BigNumber from 'bignumber.js'
+import { findByDenom } from 'functions'
+import { getAmountsFromActiveVault, getLeverageFromValues } from 'functions/fields'
+import { convertAprToApy, leverageToLtv } from 'libs/parse'
+import moment from 'moment'
+import { Store } from 'store/interfaces/store.interface'
+import { Options, VaultsSlice } from 'store/interfaces/vaults.interface.'
+import {
+  LockingVaultAmount,
+  Positions,
+} from 'types/generated/mars-credit-manager/MarsCreditManager.types'
+import { VaultBaseForString } from 'types/generated/mars-mock-credit-manager/MarsMockCreditManager.types'
+import { MarsMockVaultClient } from 'types/generated/mars-mock-vault/MarsMockVault.client'
+import { GetState } from 'zustand'
+import { NamedSet } from 'zustand/middleware'
+
+export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsSlice => ({
+  isLoading: false,
+  availableVaults: [],
+  activeVaults: [],
+  getCreditAccounts: async (options?: Options) => {
+    const creditAccounts = get().creditAccounts
+    if (creditAccounts && !options?.refetch) return creditAccounts
+
+    const nftClient = get().accountNftClient!
+    const address = get().userWalletAddress
+
+    const accountIds = await nftClient
+      .tokens({ owner: address, limit: 100 })
+      .then((result) => result.tokens)
+
+    const creditManagerClient = get().creditManagerClient
+    const promises = accountIds?.map((id) => creditManagerClient?.positions({ accountId: id }))
+
+    const newCreditAccounts = await Promise.all(promises).then((result) =>
+      result.map((value) => value as Positions).filter((positions) => positions.vaults.length),
+    )
+
+    set({ creditAccounts: newCreditAccounts })
+    return newCreditAccounts
+  },
+  getVaultAssets: async (options?: Options) => {
+    const vaultAssets = get().vaultAssets
+
+    if (vaultAssets && !options?.refetch) return vaultAssets
+
+    const lpTokens = await get().getLpTokens(options)
+
+    const creditManagerClient = get().creditManagerClient!
+
+    const promises = lpTokens.map(async (lpToken) => {
+      // Needed as lpTokenValues are very large from vaults
+      BigNumber.config({ EXPONENTIAL_AT: [-7, 30] })
+
+      const amount = new BigNumber(lpToken.locked)
+        .plus(lpToken.unlocked || 0)
+        .plus(lpToken.unlocking || 0)
+        .toString()
+
+      return {
+        coins: await creditManagerClient.estimateWithdrawLiquidity({
+          lpToken: {
+            amount: amount,
+            denom: lpToken.denom,
+          },
+        }),
+        vaultAddress: lpToken.vaultAddress,
+      }
+    })
+
+    const newVaultAssets = await Promise.all(promises).then((results) =>
+      results.map((result) => result as VaultCoinsWithAddress),
+    )
+
+    set({ vaultAssets: newVaultAssets })
+
+    return newVaultAssets
+  },
+  getUnlockTimes: async (options?: Options) => {
+    const unlockTimes = get().unlockTimes
+    if (unlockTimes && !options?.refetch) return unlockTimes
+
+    const creditAccounts = await get().getCreditAccounts(options)
+
+    const client = get().client
+
+    const promises = creditAccounts.map(async (creditAccount) => {
+      const vaultAddress = creditAccount.vaults[0].vault.address
+      const vault = get().vaultConfigs.find((vault) => vault.address === vaultAddress)
+      const lockupId = (creditAccount.vaults[0].amount as { locking: LockingVaultAmount })?.locking
+        ?.unlocking[0]?.id
+
+      if (!client || !vault || isNaN(lockupId)) return null
+      return {
+        unlockAtTimestamp: Math.round(
+          Number(
+            (
+              await client.queryContractSmart(vault.address, {
+                vault_extension: { lockup: { unlocking_position: { lockup_id: lockupId } } },
+              })
+            ).release_at?.at_time,
+          ) / 1e6,
+        ),
+        vaultAddress: creditAccount.vaults[0].vault.address,
+      }
+    })
+
+    const newUnlockTimes = await Promise.all(promises).then((results) =>
+      results.map((result) => result as UnlockTimeWithAddress),
+    )
+
+    set({ unlockTimes: newUnlockTimes })
+
+    return newUnlockTimes
+  },
+  getAprs: async (options?: Options) => {
+    const aprs = get().aprs
+    if (aprs && !options?.refetch) return aprs
+
+    const networkConfig = get().networkConfig
+    if (!networkConfig) return null
+
+    const response = await fetch(networkConfig!.apolloAprUrl)
+
+    if (response.ok) {
+      const data: AprResponse[] = await response.json()
+
+      const newAprs = data.map((aprData) => {
+        const aprTotal = aprData.aprs.reduce((prev, curr) => (curr.value += prev), 0)
+        const feeTotal = aprData.fees.reduce((prev, curr) => (curr.value += prev), 0)
+
+        const finalApr = aprTotal - feeTotal
+
+        return { contractAddress: aprData.contract_address, apr: finalApr }
+      })
+
+      set({ aprs: newAprs })
+
+      return newAprs
+    }
+
+    return null
+  },
+  getCaps: async (options?: Options) => {
+    const caps = get().caps
+    if (caps && !options?.refetch) return caps
+
+    const creditManagerClient = get().creditManagerClient
+
+    if (!creditManagerClient) return []
+
+    let data: VaultCapData[] = []
+
+    const getBatch = async (startAfter?: VaultBaseForString): Promise<void> => {
+      const batch = await creditManagerClient?.vaultsInfo({ limit: 5, startAfter })
+
+      const batchProcessed = batch?.map(
+        (vaultInfo) =>
+          ({
+            address: vaultInfo.vault.address,
+            vaultCap: {
+              used: Number(vaultInfo.utilization.amount),
+              max: Number(vaultInfo.config.deposit_cap.amount),
+            },
+          } as VaultCapData),
+      )
+
+      data = [...data, ...batchProcessed]
+
+      if (batch.length === 5) {
+        await getBatch({
+          address: batchProcessed[batchProcessed.length - 1].address,
+        } as VaultBaseForString)
+      }
+    }
+
+    await getBatch()
+
+    return data
+  },
+  getLpTokens: async (options?: Options) => {
+    const lpTokens = get().lpTokens
+    if (lpTokens && !options?.refetch) return lpTokens
+
+    const creditAccounts = await get().getCreditAccounts(options)
+    const client = get().client!
+    const userWalletAddress = get().userWalletAddress
+
+    const promises = creditAccounts.map(async (creditAccount) => {
+      const vaultAddress = creditAccount.vaults[0].vault.address
+      const vault = get().vaultConfigs.find((vault) => vault.address === vaultAddress)
+
+      const vaultClient = new MarsMockVaultClient(client, userWalletAddress, vaultAddress)
+
+      const amounts = getAmountsFromActiveVault(creditAccount.vaults[0].amount)
+      return {
+        locked: Number(
+          await vaultClient.previewRedeem({
+            amount: amounts.locked,
+          }),
+        ),
+        unlocking: amounts.unlocking,
+        unlocked: amounts.unlocked,
+        denom: vault?.denoms.lpToken || '',
+        vaultAddress: creditAccount.vaults[0].vault.address,
+      }
+    })
+
+    const newLpTokens = await Promise.all(promises)
+    set({ lpTokens: newLpTokens })
+
+    return newLpTokens
+  },
+  getVaults: async (options?: Options) => {
+    if (get().isLoading) return
+
+    set({ isLoading: true })
+    const vaultAssets = get().getVaultAssets(options)
+    const unlockTimes = get().getUnlockTimes(options)
+    const aprs = get().getAprs(options)
+    const caps = get().getCaps(options)
+
+    return Promise.all([vaultAssets, unlockTimes, aprs, caps]).then(
+      ([vaultAssets, unlockTimes, aprs, caps]) => {
+        const { activeVaults, availableVaults } = get().vaultConfigs.reduce(
+          (prev, curr) => {
+            const lpTokens = get().lpTokens
+            const creditAccounts = get().creditAccounts
+
+            const creditAccountPosition = creditAccounts?.find(
+              (position) => position.vaults[0].vault.address === curr.address,
+            )
+
+            const apr = (aprs?.find((apr) => apr.contractAddress === curr.address)?.apr || 0) * 100
+
+            const fakeAprVaults = [
+              {
+                address: 'osmo1eht92w5dr0vx8dzl6dn9770yq0ycln50zfhzvz8uc6928mp8vvgqwcram9',
+                apy: 13.69,
+              },
+              {
+                address: 'osmo1g5hryv0gp9dzlchkp3yxk8fmcf5asjun6cxkvyffetqzkwmvy75qfmeq3f',
+                apy: 8.32,
+              },
+              {
+                address: 'osmo1rclt7lsfp0c89ydf9umuhwlg28maw6z87jak3ly7u2lefnyzdz2s8gsepe',
+                apy: 17.22,
+              },
+            ]
+
+            const fakeVault = fakeAprVaults.find((vault) => vault.address === curr.address)
+            if (fakeVault) {
+              curr.apy = fakeVault.apy
+            } else {
+              curr.apy = convertAprToApy(apr, 365)
+            }
+
+            curr.vaultCap = caps?.find((cap) => cap.address === curr.address)?.vaultCap
+
+            // No position = available vault
+            if (!creditAccountPosition) {
+              prev.availableVaults.push(curr)
+              return prev
+            }
+
+            // Position = active vault
+            const primaryAndSecondaryAmount = vaultAssets.find(
+              (vaultAsset) => vaultAsset.vaultAddress === curr.address,
+            )
+
+            const vaultTokenAmounts = getAmountsFromActiveVault(
+              creditAccountPosition.vaults[0].amount,
+            )
+
+            const lpTokenAmounts = lpTokens?.find(
+              (lpToken) => lpToken.vaultAddress === curr.address,
+            )
+
+            if (!primaryAndSecondaryAmount || !vaultTokenAmounts || !lpTokenAmounts) {
+              prev.availableVaults.push(curr)
+              return prev
+            }
+
+            let id: number | undefined
+            try {
+              id = (creditAccountPosition.vaults[0].amount as { locking: LockingVaultAmount })
+                .locking.unlocking[0].id
+            } catch {
+              id = undefined
+            }
+
+            // Should already filter out null values
+            const unlockTime = unlockTimes.find(
+              (unlockTime) => unlockTime?.vaultAddress === curr.address,
+            )?.unlockAtTimestamp
+
+            let primarySupplyAmount = Number(
+              findByDenom(primaryAndSecondaryAmount.coins, curr.denoms.primary)?.amount || 0,
+            )
+            const secondaryAmount = Number(
+              findByDenom(primaryAndSecondaryAmount.coins, curr.denoms.secondary)?.amount || 0,
+            )
+            const borrowedAmount = Number(creditAccountPosition.debts[0]?.amount || 0)
+
+            if (borrowedAmount > secondaryAmount) {
+              const swappedToPrimary = Math.round(
+                get().convertToBaseCurrency({
+                  denom: curr.denoms.secondary,
+                  amount: (borrowedAmount - secondaryAmount).toString(),
+                }),
+              )
+              primarySupplyAmount -= swappedToPrimary
+            }
+
+            const secondarySupplyAmount = Math.max(secondaryAmount - borrowedAmount, 0)
+
+            const convertToBaseCurrency = get().convertToBaseCurrency
+            const redBankAssets = get().redBankAssets
+            const primaryValue = convertToBaseCurrency({
+              denom: curr.denoms.primary,
+              amount: primarySupplyAmount.toString(),
+            })
+
+            const secondaryValue = convertToBaseCurrency({
+              denom: curr.denoms.secondary,
+              amount: secondarySupplyAmount.toString(),
+            })
+
+            const borrowedValue = convertToBaseCurrency({
+              denom: curr.denoms.secondary,
+              amount: borrowedAmount.toString(),
+            })
+
+            const values = {
+              primary: primaryValue,
+              secondary: secondaryValue,
+              borrowed: borrowedValue,
+              net: primaryValue + secondaryValue,
+              total: primaryValue + secondaryValue + borrowedValue,
+            }
+
+            const leverage = getLeverageFromValues(values)
+            const borrowRate =
+              redBankAssets.find((asset) => asset.denom === curr.denoms.secondary)?.borrowRate || 0
+
+            const trueBorrowRate = (borrowRate / 2) * (leverage - 1)
+            const apy = curr.apy * leverage - trueBorrowRate
+
+            const getPositionStatus = (unlockTime?: number) => {
+              if (!unlockTime) return 'active'
+
+              const isUnlocked = moment(unlockTime).isBefore(new Date())
+              if (isUnlocked) return 'unlocked'
+
+              return 'unlocking'
+            }
+
+            const position: Position = {
+              id: id,
+              accountId: creditAccountPosition.account_id,
+              amounts: {
+                primary: primarySupplyAmount,
+                secondary: secondarySupplyAmount,
+                borrowed: borrowedAmount,
+                lp: {
+                  amount: vaultTokenAmounts.unlocking,
+                  primary: Number(
+                    primaryAndSecondaryAmount.coins.find(
+                      (coin) => coin.denom === curr.denoms.primary,
+                    )?.amount || 0,
+                  ),
+                  secondary: Number(
+                    primaryAndSecondaryAmount.coins.find(
+                      (coin) => coin.denom === curr.denoms.secondary,
+                    )?.amount || 0,
+                  ),
+                },
+                vault: vaultTokenAmounts.locked,
+              },
+              values,
+              apy: apy,
+              currentLeverage: leverage,
+              ltv: leverageToLtv(leverage),
+              ...(unlockTime ? { unlockAtTimestamp: unlockTime } : {}),
+              status: getPositionStatus(unlockTime),
+            }
+
+            prev.activeVaults.push({ ...curr, position })
+
+            return prev
+          },
+          { activeVaults: [], availableVaults: [] } as {
+            activeVaults: ActiveVault[]
+            availableVaults: Vault[]
+          },
+        )
+
+        set({ activeVaults, availableVaults, isLoading: false })
+      },
+    )
+  },
+})

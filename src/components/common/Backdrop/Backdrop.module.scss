@@ -1,0 +1,22 @@
+@import 'src/styles/master';
+
+.backdrop {
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: $alphaBlack20;
+  opacity: 0;
+  transition: opacity 200ms ease-in-out 100ms;
+
+  &.show {
+    z-index: 20;
+    opacity: 1;
+  }
+
+  &.hide {
+    opacity: 0;
+    display: none;
+  }
+}

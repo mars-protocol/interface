@@ -1,0 +1,42 @@
+@import 'src/styles/master';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  @include margin(6, 0, 0);
+  text-align: center;
+
+  .indicator {
+    @include margin(6, 0);
+    align-self: center;
+    width: rem-calc(60);
+    height: rem-calc(60);
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .subTitle {
+    opacity: 0.6;
+    @include margin(0, 0, 8);
+  }
+}
+
+@media only screen and (min-width: $bpMediumLow) {
+  .container {
+    @include margin(20, 0, 0);
+
+    .indicator {
+      @include margin(8, 0);
+      width: rem-calc(80);
+      height: rem-calc(80);
+    }
+
+    .subTitle {
+      @include margin(0, 0, 12);
+    }
+  }
+}

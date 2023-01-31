@@ -1,0 +1,84 @@
+@import 'src/styles/master';
+
+.table {
+  @include margin(0, 0, 6, 0);
+  width: 100%;
+  border-collapse: collapse;
+  text-align: right;
+
+  .thead {
+    @include devider20;
+
+    .th {
+      @include typoXS;
+      @include padding(4, 0);
+      font-weight: $fontWeightRegular;
+      opacity: 0.6;
+
+      &:not(.disabled) {
+        &.canSort {
+          cursor: pointer;
+        }
+      }
+
+      .wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+          display: none;
+        }
+      }
+
+      &:not(:first-child) {
+        @include padding(4, 0, 4, 1);
+      }
+
+      &.noMobile {
+        display: none;
+      }
+    }
+  }
+}
+
+// PSEUDO
+@media only screen and (min-width: 460px) {
+  .table {
+    .thead {
+      .th {
+        &.noMobile {
+          display: table-cell;
+        }
+
+        .wrapper {
+          justify-content: flex-end;
+
+          svg {
+            display: block;
+          }
+
+          &.left {
+            flex-direction: row-reverse;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: $bpMediumHigh) {
+  .table {
+    .thead {
+      .th {
+        &:not(:first-child) {
+          @include padding(4, 2);
+        }
+
+        &:nth-child(3) {
+          @include padding(4, 2, 4, 0);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,86 @@
+@import 'src/styles/master';
+
+.header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  @include margin(4, 0, 8);
+
+  .connector {
+    display: flex;
+    flex: 0 0 100%;
+    justify-content: flex-end;
+  }
+
+  .nav {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: $bpMediumLow) {
+  .header {
+    max-width: $contentWidth;
+    margin: space(4) auto space(6);
+
+    .connector {
+      flex: 0 0 auto;
+    }
+
+    .nav {
+      display: block;
+      @include typoNav;
+      color: $fontColorLightPrimary;
+      text-decoration: none;
+      position: relative;
+      opacity: 0.5;
+      transition: opacity 0.5s;
+
+      &:hover,
+      &:focus,
+      &:active {
+        color: $fontColorLightPrimary;
+        text-decoration: none;
+      }
+    }
+
+    .navbar {
+      @include padding(0, 8);
+      display: flex;
+      align-items: center;
+      flex-grow: 1;
+      gap: space(5);
+    }
+
+    .disabled {
+      pointer-events: none;
+    }
+
+    .logo {
+      @include layoutLogo;
+      align-items: center;
+      display: flex;
+    }
+
+    .active {
+      opacity: 1;
+      pointer-events: none;
+
+      &:before {
+        content: '';
+        position: absolute;
+        width: calc(100% - 5px);
+        bottom: 0;
+        height: 1px;
+        background-color: $fontColorLightPrimary;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: $bpLargeLow) {
+  .header {
+    .navbar {
+      gap: space(8);
+    }
+  }
+}

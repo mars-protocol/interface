@@ -1,0 +1,39 @@
+@import 'src/styles/master';
+
+.card {
+  max-width: rem-calc(768);
+  width: 100%;
+}
+
+.actionsContainer {
+  display: flex;
+  justify-content: center;
+  padding: space(6);
+
+  .actions {
+    display: flex;
+    gap: space(2);
+    position: relative;
+
+    .tooltip {
+      position: absolute;
+      width: space(6);
+      height: space(6);
+      right: space(-8);
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: space(4);
+}
+
+@media screen and (min-width: $bpXSmallLow) {
+  .actionButtons {
+    display: none;
+  }
+}

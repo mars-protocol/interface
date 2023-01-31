@@ -1,0 +1,24 @@
+@import 'src/styles/master';
+
+.iconContainer {
+  position: absolute;
+  top: rem-calc(6);
+  right: rem-calc(8);
+  width: rem-calc(18);
+  height: rem-calc(18);
+
+  &.iconColor {
+    color: $alphaWhite40;
+  }
+
+  .icon {
+    width: 100%;
+    cursor: pointer;
+    outline: none;
+    z-index: 1;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}

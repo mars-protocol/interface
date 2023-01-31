@@ -1,0 +1,135 @@
+@import 'src/styles/master';
+
+$color: ':nth-child(1)';
+$logo: ':nth-child(2)';
+$name: ':nth-child(3)';
+$leverage: ':nth-child(4)';
+$apy: ':nth-child(5)';
+$cap: ':nth-child(6)';
+$provider: ':nth-child(7)';
+$description: ':nth-child(8)';
+$action: ':nth-child(9)';
+
+.table {
+  display: none;
+  @include margin(0, 0, 6, 0);
+  width: 100%;
+  border-collapse: collapse;
+  text-align: right;
+
+  .thead {
+    @include devider20;
+
+    .th {
+      @include typoXS;
+      @include padding(4, 0);
+      font-weight: $fontWeightRegular;
+      opacity: 0.6;
+      text-transform: capitalize;
+
+      &:not(.disabled) {
+        &.canSort {
+          cursor: pointer;
+        }
+      }
+
+      .wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+
+        &.left {
+          flex-direction: row-reverse;
+        }
+
+        &.center {
+          justify-content: center;
+        }
+      }
+
+      $number: 1;
+
+      &:not(#{$color}) {
+        @include padding(4, 2);
+      }
+
+      &#{$name} {
+        @include padding(4, 2, 4, 0);
+      }
+
+      &#{$provider} {
+        text-align: center;
+        @include padding(0, 2, 0, 0);
+      }
+
+      &#{$description} {
+        text-align: left;
+        width: rem-calc(300);
+        @include padding(0, 2, 0, 0);
+      }
+    }
+  }
+
+  .tr {
+    transition: background-color 0.2s;
+    height: space(16);
+    @include devider20;
+
+    &:hover,
+    &:focus {
+      cursor: pointer;
+      @include bgTableHover;
+
+      button {
+        color: $fontColorLightPrimary !important;
+        border-color: $fontColorLightPrimary !important;
+      }
+    }
+  }
+
+  .td {
+    position: relative;
+
+    &#{$logo} {
+      width: rem-calc(64);
+    }
+
+    &:not(#{$color}) {
+      @include padding(0, 2);
+    }
+
+    &#{$name} {
+      text-align: left;
+      @include padding(0, 2, 0, 0);
+    }
+
+    &#{$provider} {
+      text-align: center;
+      @include padding(0, 2, 0, 0);
+    }
+
+    &#{$description} {
+      text-align: left;
+      width: rem-calc(300);
+      @include padding(0, 2, 0, 0);
+    }
+  }
+}
+
+@media only screen and (max-width: $bpLargeLow) {
+  .table {
+    .td,
+    .th {
+      &#{$description},
+      &#{$provider} {
+        display: none;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: $bpMediumLow) {
+  .table {
+    display: table;
+  }
+}

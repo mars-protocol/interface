@@ -1,0 +1,120 @@
+@import 'src/styles/master';
+
+.container {
+  position: relative;
+  display: inline;
+
+  .details {
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    justify-content: flex-start;
+    max-width: calc(100vw - 2 * #{$spacingBase}px);
+    top: rem-calc(40);
+    width: rem-calc(240);
+    right: space(1);
+    z-index: 100;
+    @include layoutPopover;
+
+    .header {
+      display: flex;
+      flex: 0 0 100%;
+      flex-wrap: nowrap;
+      width: 100%;
+      @include padding(4, 0, 2);
+      @include margin(0);
+      position: relative;
+      border-bottom: 1px solid $alphaBlack20;
+      text-align: center;
+
+      .text {
+        @include margin(0);
+        @include typoScaps;
+        color: $colorSecondaryDark;
+        width: 100%;
+      }
+    }
+
+    .settings {
+      @include padding(2, 4, 4);
+
+      .setting {
+        color: $colorSecondaryDark;
+        flex: 0 0 100%;
+        flex-wrap: wrap;
+        display: flex;
+
+        .name {
+          @include margin(1, 0);
+          display: flex;
+          align-items: center;
+          @include typoS;
+          position: relative;
+          @include padding(0, 5, 0, 0);
+
+          .tooltip {
+            color: $alphaBlack90;
+            right: 0;
+            top: space(-1);
+            margin-left: space(2);
+            width: rem-calc(14);
+            position: relative;
+          }
+        }
+
+        .content {
+          @include margin(1, 0);
+          display: flex;
+          flex-wrap: wrap;
+          flex: 1;
+          justify-content: flex-end;
+          gap: space(2);
+
+          .button {
+            appearance: none;
+            background: none;
+            border-radius: $borderRadiusXL;
+            border: 1px solid $colorPrimary;
+            margin-left: 0;
+            @include padding(1, 4);
+            transition: all 200ms ease;
+            color: $colorPrimary;
+
+            &.solid {
+              background: $colorPrimary;
+              color: $colorWhite;
+            }
+
+            &:hover {
+              cursor: pointer;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.button {
+  @include margin(0, 0, 0, 2);
+}
+
+.customSlippageBtn {
+  height: rem-calc(16);
+  width: rem-calc(20);
+  color: unset;
+}
+
+.clickAway {
+  display: block;
+  position: fixed;
+  z-index: 99;
+  height: 100vh;
+  width: 100vw;
+  left: 0;
+  top: 0;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

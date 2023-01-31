@@ -1,0 +1,40 @@
+@import 'src/styles/master';
+
+.container {
+  display: flex;
+  flex-direction: column;
+
+  .grid {
+    display: grid;
+    grid-template-columns: rem-calc(64) 1fr 1fr;
+    grid-template-areas:
+      'logo name stats'
+      'desc desc desc';
+    @include padding(6, 3, 6, 0);
+
+    &:not(:last-child) {
+      @include devider20;
+    }
+  }
+
+  .logo {
+    grid-area: logo;
+    position: relative;
+    height: rem-calc(64);
+  }
+
+  .name {
+    grid-area: name;
+  }
+
+  .stats {
+    grid-area: stats;
+    text-align: right;
+    @include margin(0, 0, 4);
+  }
+
+  .description {
+    grid-area: desc;
+    @include padding(0, 0, 0, 4);
+  }
+}

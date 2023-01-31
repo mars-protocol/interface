@@ -1,0 +1,79 @@
+@import 'src/styles/master';
+
+.container {
+  width: 100%;
+  align-self: center;
+
+  .leverageLimit {
+    position: relative;
+    @include margin(0, 3);
+
+    .line {
+      position: absolute;
+      height: rem-calc(24);
+      width: rem-calc(1);
+      background: $alphaWhite60;
+    }
+
+    .outside {
+      position: absolute;
+      right: 0;
+      top: rem-calc(12);
+      height: rem-calc(4);
+      border-radius: $borderRadiusM;
+      @include bgHatched;
+    }
+  }
+
+  .labelComponentContainer {
+    position: relative;
+    .labelComponent {
+      @include typoS;
+      @include layoutTooltip;
+      color: $fontColorLightPrimary;
+      margin-inline-start: space(-9);
+      margin-top: space(5);
+      position: absolute;
+      z-index: 4;
+
+      span {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .slider {
+    @include padding(0, 3);
+  }
+
+  .labels {
+    @include margin(1, 0, 0, 0);
+    color: $alphaWhite60;
+    display: flex;
+    flex-wrap: wrap;
+    height: rem-calc(16);
+    overflow: hidden;
+
+    > * {
+      width: rem-calc(25);
+      text-align: left;
+      word-break: keep-all;
+      cursor: pointer;
+    }
+
+    .overLeveraged {
+      width: rem-calc(32);
+      text-align: right;
+      margin-left: auto;
+    }
+  }
+}
+
+@media only screen and (min-width: $bpMediumHigh) {
+  .container {
+    max-width: 100%;
+  }
+}

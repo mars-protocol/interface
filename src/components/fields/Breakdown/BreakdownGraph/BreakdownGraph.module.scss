@@ -1,0 +1,123 @@
+@import 'src/styles/master';
+
+$label-timing: 0.2s;
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+
+  .graph {
+    position: relative;
+    display: grid;
+    grid-template-areas:
+      'yAxis leftBorder bar1 bar2 bar3 b'
+      'c bottomBorder bottomBorder bottomBorder bottomBorder bottomBorder'
+      'd d label1 label2 label3 e';
+    grid-template-columns: space(22) rem-calc(20) repeat(3, rem-calc(64)) rem-calc(20);
+    grid-template-rows: rem-calc(240) rem-calc(1) rem-calc(24);
+    place-items: center;
+
+    .leftBorder {
+      grid-area: leftBorder;
+      height: 100%;
+      width: 100%;
+      border-left: 1px solid $graphAxis;
+    }
+
+    .bottomBorder {
+      grid-area: bottomBorder;
+      height: 100%;
+      width: 100%;
+      border-bottom: 1px solid $graphAxis;
+    }
+
+    .bar1,
+    .bar2,
+    .bar3 {
+      height: 100%;
+      transition: height $animationSpeed ease-out;
+      width: space(6);
+      border-radius: $borderRadiusXS;
+      position: relative;
+      @include typoXXScaps;
+      line-height: unset;
+    }
+
+    .bar1 {
+      grid-area: bar1;
+      align-self: flex-end;
+      background: $alphaWhite20;
+    }
+
+    .bar2 {
+      grid-area: bar2;
+      display: flex;
+      flex-direction: column;
+      background: none;
+      overflow: hidden;
+      align-self: baseline;
+    }
+
+    .bar3 {
+      grid-area: bar3;
+      align-self: flex-end;
+      @include bgSecondary;
+    }
+
+    .label1,
+    .label2,
+    .label3 {
+      margin-left: space(0.5);
+      place-self: center;
+    }
+
+    .label1 {
+      grid-area: label1;
+    }
+
+    .label2 {
+      grid-area: label2;
+    }
+
+    .label3 {
+      grid-area: label3;
+    }
+
+    .yAxis {
+      @include typoXXS;
+      place-self: normal;
+      margin-right: space(1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      opacity: 0.6;
+      line-height: rem-calc(12);
+      text-align: end;
+      letter-spacing: rem-calc(2);
+    }
+  }
+}
+
+@media only screen and (min-width: $bpXSmallLow) {
+  .container {
+    @include padding(0, 10);
+  }
+}
+
+@media only screen and (min-width: $bpMediumLow) {
+  .container {
+    @include padding(3, 10, 0, 5);
+  }
+}
+
+@media only screen and (min-width: $bpLargeLow) {
+  .container {
+    @include padding(6, 12);
+
+    &.isAfter {
+      background: rgba(0, 0, 0, 0.6);
+    }
+  }
+}

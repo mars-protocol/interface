@@ -1,0 +1,88 @@
+@import 'src/styles/master';
+
+.tr {
+  @include devider20;
+  height: space(16);
+  transition: background-color 0.2s;
+
+  &.disabled {
+    pointer-events: none;
+  }
+
+  &:hover,
+  &:focus {
+    @include bgTableHover;
+    cursor: pointer;
+
+    button {
+      color: $fontColorLightPrimary !important;
+      border-color: $fontColorLightPrimary !important;
+    }
+  }
+
+  &.expanded {
+    border-bottom: unset;
+
+    &:hover,
+    &:focus {
+      + tr,
+      + tr + tr {
+        @include bgTableHover;
+      }
+    }
+
+    > .td {
+      border-bottom: 1px solid $alphaWhite20;
+      &:nth-child(1),
+      &:nth-child(2) {
+        border-bottom: none;
+      }
+    }
+  }
+
+  .td {
+    position: relative;
+
+    // logo
+    &:nth-child(2) {
+      width: rem-calc(64);
+    }
+
+    &:not(:first-child) {
+      @include padding(0, 0.5);
+    }
+
+    &.left {
+      text-align: left;
+    }
+
+    &.noMobile {
+      display: none;
+    }
+  }
+}
+
+// PSEUDO
+@media only screen and (min-width: 460px) {
+  .tr {
+    .td {
+      &.noMobile {
+        display: table-cell;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: $bpMediumHigh) {
+  .tr {
+    .td {
+      &:not(:first-child) {
+        @include padding(0, 2);
+      }
+
+      &:nth-child(3) {
+        @include padding(0, 2, 0, 0);
+      }
+    }
+  }
+}

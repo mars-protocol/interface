@@ -1,0 +1,83 @@
+@import 'src/styles/master';
+
+.container {
+  @include layoutTile;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+
+  .header {
+    @include padding(4, 10);
+    min-height: rem-calc(80);
+    display: grid;
+    place-items: center;
+    position: relative;
+    @include typoXXL;
+
+    h6 {
+      width: 100%;
+      text-align: center;
+    }
+
+    .actions {
+      display: none;
+    }
+
+    .button {
+      color: $alphaWhite60;
+      background: none;
+      border: none;
+      position: absolute;
+      cursor: pointer;
+      top: space(3);
+      right: space(3);
+      transition: color linear 0.2s;
+      &:hover {
+        color: $colorWhite;
+      }
+
+      svg {
+        width: rem-calc(24);
+        height: rem-calc(24);
+      }
+
+      &.back {
+        top: 50%;
+        transform: translateY(-50%);
+        right: unset;
+        left: space(4);
+
+        svg {
+          width: rem-calc(32);
+          height: rem-calc(32);
+        }
+      }
+    }
+
+    &.border {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+  }
+}
+
+@media screen and (min-width: $bpXSmallLow) {
+  .container {
+    .header {
+      .actions {
+        display: block;
+        margin-top: space(2);
+      }
+    }
+  }
+}
+@media screen and (min-width: $bpLargeLow) {
+  .container {
+    .header {
+      .actions {
+        position: absolute;
+        display: block;
+        right: space(10);
+      }
+    }
+  }
+}

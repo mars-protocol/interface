@@ -1,0 +1,110 @@
+@import 'src/styles/master';
+
+.table {
+  display: none;
+  @include margin(0, 0, 6, 0);
+  width: 100%;
+  border-collapse: collapse;
+  text-align: right;
+
+  .thead {
+    @include devider20;
+
+    .th {
+      @include typoXS;
+      @include padding(4, 0);
+      font-weight: $fontWeightRegular;
+      opacity: 0.6;
+
+      &:not(.disabled) {
+        &.canSort {
+          cursor: pointer;
+        }
+      }
+
+      .wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+
+        &.left {
+          flex-direction: row-reverse;
+        }
+      }
+
+      // Not color indicator
+      &:not(:first-child) {
+        @include padding(4, 2);
+      }
+
+      // Name
+      &:nth-child(3) {
+        @include padding(4, 2, 4, 0);
+      }
+    }
+  }
+
+  .tr {
+    transition: background-color 0.2s;
+    height: space(16);
+    @include devider20;
+
+    &:hover,
+    &:focus {
+      cursor: pointer;
+      @include bgTableHover;
+
+      button {
+        color: $fontColorLightPrimary !important;
+        border-color: $fontColorLightPrimary !important;
+      }
+    }
+  }
+
+  .td {
+    position: relative;
+
+    // Logos
+    &:nth-child(2) {
+      width: rem-calc(64);
+    }
+
+    // Not color indicator
+    &:not(:first-child) {
+      @include padding(0, 2);
+    }
+
+    // Name
+    &:nth-child(3) {
+      text-align: left;
+      @include padding(0, 2, 0, 0);
+    }
+
+    // Leverage
+    &:nth-child(3) {
+      text-align: left;
+      @include padding(0, 2, 0, 0);
+    }
+  }
+}
+
+@media only screen and (max-width: $bpLargeLow) {
+  .table {
+    .td,
+    .th {
+      // Leverage
+      &:nth-child(5),
+      &:nth-child(6),
+      &:nth-child(8),
+      &:nth-child(9) {
+        display: none;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: $bpMediumLow) {
+  .table {
+    display: table;
+  }
+}

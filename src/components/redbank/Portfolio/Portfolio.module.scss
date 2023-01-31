@@ -1,0 +1,45 @@
+@import 'src/styles/master';
+
+.portfolio {
+  width: 100%;
+  @include padding(5, 5);
+  position: relative;
+  display: grid;
+  grid-gap: rem-calc(20);
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  align-items: center;
+  text-align: center;
+  place-items: center;
+
+  .deposit,
+  .borrow {
+    text-align: center;
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .capacity {
+    width: min(100%, rem-calc(400));
+  }
+}
+
+@media only screen and (min-width: $bpMediumHigh) {
+  .portfolio {
+    grid-template-columns: repeat(3, 1fr);
+    @include padding(12, 8);
+
+    .capacity {
+      text-align: left;
+      max-width: rem-calc(400);
+    }
+
+    .deposit {
+      text-align: left;
+    }
+
+    .borrow {
+      text-align: right;
+    }
+  }
+}

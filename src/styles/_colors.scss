@@ -1,25 +1,14 @@
 @use 'master' as *;
 
-/* Color Index for Fields */
-
-/* Background Classes */
-.bgPrimary {
-    @include bgPrimary;
-}
-
-.bgSecondary {
-    @include bgSecondary;
-}
-
-.bgTertiary {
-    @include bgTertiary;
-}
-
 /* Text Colors */
 .colorInfoProfit {
-    color: $colorInfoProfit;
+  color: $colorInfoProfit;
 }
 
 .colorInfoLoss {
-    color: $colorInfoLoss;
+  color: $colorInfoLoss;
+}
+
+.colorInfoVoteAgainst {
+  color: $colorInfoVoteAgainst;
 }

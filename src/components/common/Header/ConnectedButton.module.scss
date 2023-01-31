@@ -1,0 +1,247 @@
+@import 'src/styles/master';
+
+.wrapper {
+  position: relative;
+
+  .button {
+    display: flex;
+    flex: 1;
+    flex-wrap: nowrap;
+
+    > span {
+      display: flex;
+    }
+
+    .svg {
+      margin-top: rem-calc(-1);
+      height: rem-calc(14);
+      width: auto;
+    }
+
+    .address {
+      display: none;
+      font-weight: $fontWeightRegular;
+    }
+  }
+}
+
+.clickAway {
+  display: block;
+  position: fixed;
+  z-index: 99;
+  height: 100vh;
+  width: 100vw;
+  left: 0;
+  top: 0;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.details {
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  justify-content: flex-start;
+  top: rem-calc(38);
+  @include padding(6, 6, 5.5);
+  @include layoutPopover;
+  width: rem-calc(420);
+  max-width: calc(100vw - 24px);
+  right: 0;
+  z-index: 100;
+}
+
+.detailsHeader {
+  display: flex;
+  flex: 0 0 100%;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  width: 100%;
+  @include margin(0, 0, 4);
+}
+
+.detailsDenom {
+  @include margin(0, 2, 0, 0);
+  @include typoMcaps;
+  display: flex;
+  height: rem-calc(31);
+  align-items: flex-end;
+}
+
+.detailsBalance {
+  display: flex;
+  flex: 0 0 100%;
+  justify-content: space-between;
+  width: auto;
+}
+
+.detailsBalanceAmount {
+  display: flex;
+  flex: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  min-width: rem-calc(120);
+
+  > span {
+    @include typoH4;
+
+    + div {
+      @include margin(-1, 0, 0);
+      text-align: right;
+      width: 100%;
+    }
+  }
+}
+
+.detailsButton {
+  display: flex;
+  height: rem-calc(32);
+  justify-content: center;
+  flex: 0 0 100%;
+  width: 100%;
+  @include margin(2, 0, 0);
+
+  button {
+    width: 100%;
+  }
+}
+
+.detailsBody {
+  flex: 0;
+  width: 100%;
+
+  .address,
+  .addressMobile,
+  .addressLabel {
+    color: $colorSecondaryDark;
+    opacity: 1;
+    @include margin(0, 0, 1);
+    @include typoS;
+    word-break: break-all;
+  }
+
+  .address,
+  .addressMobile {
+    font-weight: $fontWeightSemibold;
+  }
+
+  .addressLabel {
+    @include typoScaps;
+    font-weight: $fontWeightRegular;
+  }
+
+  .address {
+    display: none;
+  }
+
+  svg {
+    height: rem-calc(16);
+    width: auto;
+    @include margin(0, 2, 0, 0);
+  }
+
+  .buttons {
+    display: flex;
+    flex: 0 0 100%;
+    flex-wrap: wrap;
+    @include padding(1, 0, 0);
+    > button {
+      font-weight: $fontWeightRegular;
+      @include typoM;
+
+      &:first-child {
+        width: rem-calc(160);
+      }
+    }
+  }
+
+  button {
+    display: flex;
+    flex: 0 0 auto;
+    width: auto;
+    align-items: center;
+    color: $colorSecondaryDark;
+    background: transparent;
+    border: none;
+    @include padding(2, 0);
+    opacity: 0.7;
+
+    &:hover {
+      cursor: pointer;
+      opacity: 1;
+    }
+  }
+}
+
+.network {
+  background-color: $colorSecondaryHighlight;
+  text-transform: uppercase;
+  border-radius: $borderRadiusL;
+  @include padding(0, 2);
+  @include margin(0);
+  @include typoNetwork;
+  position: absolute;
+  top: space(-4);
+  right: space(-3);
+  cursor: default;
+}
+
+@media only screen and (min-width: $bpMediumLow) {
+  .details {
+    transform: none;
+  }
+
+  .detailsBalance {
+    flex: 1;
+    justify-content: flex-start;
+  }
+
+  .detailsButton {
+    flex: 0 0 rem-calc(116);
+    width: rem-calc(116);
+    justify-content: flex-end;
+    margin: 0;
+  }
+
+  .detailsHeader {
+    flex-wrap: nowrap;
+  }
+
+  .detailsBody {
+    .addressMobile {
+      display: none;
+    }
+    .address {
+      display: block;
+    }
+  }
+}
+
+@media only screen and (min-width: $bpLargeHigh) {
+  .wrapper {
+    .button {
+      .address {
+        display: block;
+        font-weight: $fontWeightRegular;
+      }
+
+      .balance {
+        margin-inline-start: space(2);
+        position: relative;
+        @include padding(0, 0, 0, 2);
+
+        &:before {
+          content: '';
+          position: absolute;
+          top: space(0.5);
+          bottom: space(1.5);
+          height: calc(100% - #{$spacingBase}px);
+          left: 0;
+          border-left: 1px solid $fontColorLightPrimary;
+        }
+      }
+    }
+  }
+}

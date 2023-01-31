@@ -1,37 +1,40 @@
 @use 'master' as *;
 
 :export {
-    /* TOKENS */
-    anc: $colorTokenANC;
-    luna: $colorTokenLUNA;
-    mir: $colorTokenMIR;
-    ust: $colorTokenUST;
-    mars: $colorTokenMARS;
-    mine: $colorTokenMINE;
-    astro: $colorTokenASTRO;
-    stLuna: $colorTokenSTLUNA;
+  /* TOKENS */
+  mars: $colorTokenMARS;
+  osmo: $colorTokenOSMO;
+  atom: $colorTokenATOM;
+  axlusdc: $colorTokenAxlUSDC;
+  juno: $colorTokenJUNO;
 
-    /* COLORS */
-    success: $colorInfoProfit;
-    failure: $colorInfoWarning;
-    fontPrimary: $fontColorLightPrimary;
-    backgroundBody: $backgroundBody;
-    backgroundBodyDark: $backgroundBodyDark;
-    backgroundInTile: $backgroundInTile;
-    primary: $colorPrimary;
-    primaryHighlight: $colorPrimaryHighlight;
-    primaryAlpha: $colorPrimaryAlpha;
-    secondary: $colorSecondary;
-    secondaryHighlight: $colorSecondaryHighlight;
-    secondaryDark: $colorSecondaryDark;
-    secondaryAlpha: $colorSecondaryAlpha;
-    grey: $colorGrey;
-    greyLight: $colorGreyLight;
-    greyMedium: $colorGreyMedium;
-    white: $colorWhite;
-    transparentWhite: $alphaWhite20;
-    tableBorder: $tableBorder;
-    tableSortActive: $tableSortActive;
-    tableSort: $tableSort;
-    tableHeader: $tableHeader;
+  /* COLORS */
+  success: $colorInfoProfit;
+  failure: $colorInfoWarning;
+  fontPrimary: $fontColorLightPrimary;
+  backgroundBody: $backgroundBody;
+  backgroundBodyDark: $backgroundBodyDark;
+  backgroundInTile: $backgroundInTile;
+  primary: $colorPrimary;
+  primaryHighlight: $colorPrimaryHighlight;
+  primaryAlpha: $colorPrimaryAlpha;
+  secondary: $colorSecondary;
+  secondaryHighlight: $colorSecondaryHighlight;
+  secondaryDark: $colorSecondaryDark;
+  secondaryAlpha: $colorSecondaryAlpha;
+  grey: $colorGrey;
+  greyLight: $colorGreyLight;
+  greyMedium: $colorGreyMedium;
+  white: $colorWhite;
+  transparentWhite: $alphaWhite20;
+  tableBorder: $tableBorder;
+  tableSortActive: $tableSortActive;
+  tableSort: $tableSort;
+  tableHeader: $tableHeader;
+
+  /* BREAKPOINTS */
+  bpLargeLow: $bpLargeLow;
+  bpMediumHigh: $bpMediumHigh;
+  bpMediumLow: $bpMediumLow;
+  bpSmallHigh: $bpSmallHigh;
 }

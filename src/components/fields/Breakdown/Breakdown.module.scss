@@ -1,0 +1,74 @@
+@import 'src/styles/master';
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: 'title' 'afterTable';
+
+  .title {
+    grid-area: title;
+    text-align: center;
+    @include padding(6, 0);
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .beforeTable {
+    display: none;
+    grid-area: beforeTable;
+  }
+
+  .beforeGraph {
+    display: none;
+    grid-area: beforeGraph;
+  }
+
+  .afterTable {
+    padding-top: space(6);
+    grid-area: afterTable;
+  }
+
+  .afterGraph {
+    display: none;
+    grid-area: afterGraph;
+  }
+}
+
+@media only screen and (min-width: $bpMediumLow) {
+  .grid {
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      'title title'
+      'afterGraph afterTable';
+
+    .afterGraph {
+      display: flex;
+    }
+  }
+}
+
+@media only screen and (min-width: $bpLargeLow) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'title title'
+      'beforeTable afterTable'
+      'beforeGraph afterGraph';
+
+    .title {
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .beforeTable,
+    .beforeGraph,
+    .afterGraph,
+    .afterTable {
+      display: flex;
+    }
+
+    &.noChange {
+      grid-template-areas:
+        'title title'
+        'afterGraph afterTable';
+    }
+  }
+}

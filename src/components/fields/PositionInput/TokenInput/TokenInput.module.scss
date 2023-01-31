@@ -1,0 +1,95 @@
+@import 'src/styles/master';
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: space(2);
+  flex: 1;
+
+  .input {
+    display: flex;
+    width: 100%;
+  }
+
+  .maxBtn {
+    align-self: baseline;
+    @include margin(2, 0, 0);
+    @include typoXXS;
+    border: none;
+    min-height: unset;
+
+    &:hover,
+    &:focus,
+    &:active {
+      border: none;
+    }
+  }
+
+  .container {
+    display: flex;
+    flex: 1;
+    border: 1px solid;
+    border-radius: $borderRadiusS;
+    border-color: rgba($colorPrimary, 0.5);
+    min-width: rem-calc(160);
+
+    &.isBorrow {
+      border-color: rgba($colorSecondary, 0.8) !important;
+    }
+
+    .input,
+    .select {
+      color: $colorWhite;
+      border: none;
+      outline: none;
+      @include padding(1.5, 2);
+      background: $backgroundInTile;
+    }
+
+    .input:focus,
+    .select:focus {
+      background: rgba(white, 0.05);
+    }
+
+    .input::-webkit-inner-spin-button,
+    .input::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
+    .input {
+      border-top-left-radius: $borderRadiusS;
+      border-bottom-left-radius: $borderRadiusS;
+      width: 100%;
+    }
+
+    .singleToken {
+      border-top-right-radius: $borderRadiusS;
+      border-bottom-right-radius: $borderRadiusS;
+    }
+
+    .select {
+      border-top-right-radius: $borderRadiusS;
+      border-bottom-right-radius: $borderRadiusS;
+      border-right: rem-calc(8) solid transparent;
+
+      &.disabled {
+        pointer-events: none;
+        appearance: none;
+        border-right-width: 0;
+      }
+    }
+
+    .divider {
+      border-left: 1px solid $alphaWhite20;
+    }
+  }
+  .bottomInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: space(2);
+    line-height: 1rem;
+  }
+}

@@ -1,0 +1,59 @@
+@import 'src/styles/master';
+
+.grid {
+  display: grid;
+  grid-template-areas: 'supply' 'leverage' 'borrow';
+  grid-template-columns: 1fr;
+
+  .supply {
+    grid-area: supply;
+    @include padding(6, 4);
+    background: rgba($colorPrimary, 0.15);
+  }
+
+  .leverage {
+    grid-area: leverage;
+    @include padding(10, 4);
+    background: rgba($colorSecondary, 0.15);
+  }
+
+  .borrow {
+    grid-area: borrow;
+    @include padding(10, 4);
+    background: rgba($colorSecondary, 0.15);
+  }
+}
+
+@media only screen and (min-width: $bpXSmallLow) {
+  .grid {
+    .supply,
+    .leverage,
+    .borrow {
+      @include padding(10);
+    }
+  }
+}
+
+@media only screen and (min-width: $bpMediumLow) {
+  .grid {
+    grid-template-areas:
+      'supply supply'
+      'leverage borrow';
+    grid-template-columns: 1fr 1fr;
+
+    .leverage {
+      @include padding(10, 5, 10, 10);
+    }
+
+    .borrow {
+      @include padding(10, 10, 10, 5);
+    }
+  }
+}
+
+@media only screen and (min-width: $bpMediumHigh) {
+  .grid {
+    grid-template-areas: 'supply leverage borrow';
+    grid-template-columns: auto 2fr 1fr;
+  }
+}

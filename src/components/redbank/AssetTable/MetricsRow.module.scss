@@ -1,0 +1,50 @@
+@import 'src/styles/master';
+
+.tr {
+  @include devider20;
+  vertical-align: middle;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s;
+
+  &.expanded {
+    cursor: pointer;
+  }
+
+  .td {
+    .wrapper {
+      @include padding(6, 4);
+      width: 100%;
+
+      .body {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        flex: 0 0 100%;
+
+        @include padding(2, 4);
+        background-color: $backgroundInTile;
+        border-radius: $borderRadiusXL;
+
+        > div {
+          width: 50%;
+          @include padding(2, 4);
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: $bpSmallHigh) {
+  .tr {
+    .td {
+      .wrapper {
+        .body {
+          > div {
+            width: auto;
+          }
+        }
+      }
+    }
+  }
+}

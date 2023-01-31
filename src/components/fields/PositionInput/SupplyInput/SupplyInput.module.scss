@@ -1,0 +1,41 @@
+@import 'src/styles/master';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: space(2);
+
+  .inputs {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: space(12);
+
+    .button {
+      align-self: center;
+    }
+  }
+
+  .containerInner {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.headline {
+  width: 100%;
+  @include typoScaps;
+  @include margin(0, 0, 2);
+}
+
+@media only screen and (min-width: $bpMediumLow) {
+  .container {
+    .inputs {
+      flex-direction: row;
+      align-items: flex-end;
+    }
+  }
+}

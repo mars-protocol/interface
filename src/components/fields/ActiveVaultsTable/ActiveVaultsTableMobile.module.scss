@@ -1,0 +1,48 @@
+@import 'src/styles/master';
+
+.container {
+  display: flex;
+  flex-direction: column;
+
+  .grid {
+    display: grid;
+    grid-template-columns: rem-calc(64) 1fr 1fr;
+    grid-template-areas:
+      'logo name position'
+      'borrow borrow position';
+    @include padding(6, 3, 6, 0);
+
+    &:not(:last-child) {
+      @include devider20;
+    }
+  }
+
+  .logo {
+    grid-area: logo;
+    position: relative;
+    height: rem-calc(64);
+  }
+
+  .name {
+    grid-area: name;
+  }
+
+  .position {
+    grid-area: position;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .inline {
+      display: inline-block;
+    }
+  }
+
+  .borrowCapacity {
+    grid-area: borrow;
+    place-items: center;
+    @include margin(4, 0, 0);
+    @include padding(0, 0, 0, 4);
+  }
+}

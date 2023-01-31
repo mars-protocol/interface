@@ -1,0 +1,64 @@
+@import 'src/styles/master';
+
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  .close {
+    position: absolute;
+    right: 1.5rem;
+    top: 1.5rem;
+
+    > button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: $fontColorLightPrimary;
+      background-color: $colorGreyDark;
+      border: none;
+      border-radius: $borderRadiusRound;
+      width: 2rem;
+      height: 2rem;
+
+      &:hover {
+        background-color: darken($colorGrey, 5%);
+        cursor: pointer;
+      }
+    }
+  }
+
+  .failure {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+
+    .title {
+      @include padding(6);
+      text-align: center;
+
+      .text {
+        margin-top: space(1.5);
+      }
+    }
+
+    .message {
+      overflow-wrap: anywhere;
+      padding-bottom: space(5);
+      margin-inline-start: space(7.5);
+      margin-inline-end: space(7.5);
+    }
+  }
+}
+
+@media only screen and (max-width: $bpSmallHigh) {
+  .container {
+    .failure {
+      .message {
+        @include margin(0);
+        @include typoS;
+      }
+    }
+  }
+}

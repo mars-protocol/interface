@@ -1,0 +1,176 @@
+@use 'styles/master' as *;
+@use 'styles/colors';
+@use 'styles/mui-overrides';
+
+* {
+  box-sizing: border-box;
+  @include padding(0);
+  @include margin(0);
+}
+
+.app {
+  min-height: 100vh;
+  max-width: 100%;
+  width: 100%;
+  position: relative;
+  @include padding(0, 1, 0);
+  overflow-x: hidden;
+
+  .appContainer {
+    display: flex;
+    justify-content: center;
+    overflow-x: visible;
+    position: relative;
+    z-index: 0;
+    min-height: 100vh;
+    padding: 0 0 $footerHeightSmall;
+
+    > .widthBox {
+      width: 100%;
+      overflow-x: hidden;
+
+      > .body {
+        min-height: calc(100vh - #{$headerHeight});
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .body {
+        animation-name: bodyFade;
+        animation-duration: 0.3s;
+      }
+      @keyframes bodyFade {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .ellipsis-anim span {
+    opacity: 0;
+    animation: ellipsis-dot $animationSpeed infinite;
+
+    &:nth-child(1) {
+      animation-delay: 0s;
+    }
+    &:nth-child(2) {
+      animation-delay: 0.1s;
+    }
+    &:nth-child(3) {
+      animation-delay: 0.2s;
+    }
+  }
+}
+
+.background {
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  top: 0;
+  left: 0;
+  background-repeat: no-repeat;
+  @include bgBody;
+  filter: brightness(1) hue-rotate(0deg);
+  transition: 3s filter linear, 3s -webkit-filter linear;
+  z-index: -1;
+
+  &.night {
+    filter: brightness(0.3) hue-rotate(-82deg);
+  }
+}
+
+.no-motion {
+  * {
+    transition: none !important;
+    animation: unset !important;
+
+    &:before,
+    &:after {
+      transition: none !important;
+      animation: unset !important;
+    }
+  }
+}
+
+@media only screen and (min-width: $bpMediumLow) {
+  .app {
+    @include padding(0, 3, 0);
+
+    .appContainer {
+      padding: 0 0 $footerHeightMedium;
+
+      .widthBox {
+        width: $contentWidth;
+        max-width: 100vw;
+      }
+    }
+  }
+
+  .background {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+  }
+}
+
+@media only screen and (min-width: $bpLargeLow) {
+  .app {
+    .appContainer {
+      padding: 0 0 $footerHeight;
+    }
+  }
+
+  .no-large {
+    display: none;
+  }
+}
+
+/* MEDIUM ONLY */
+@media only screen and (max-width: $bpMediumHigh) and (min-width: $bpMediumLow) {
+  .no-medium {
+    display: none;
+  }
+}
+
+/* SMALL ONLY */
+@media only screen and (max-width: $bpSmallHigh) {
+  .no-small {
+    display: none;
+  }
+
+  .app {
+    .appContainer {
+      padding: 0 0 $footerHeightSmall;
+    }
+  }
+}
+
+@-webkit-keyframes ellipsis-dot {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes ellipsis-dot {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

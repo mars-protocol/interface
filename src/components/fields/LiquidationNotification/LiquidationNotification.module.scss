@@ -1,0 +1,15 @@
+@import 'src/styles/master';
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  flex-direction: column;
+}
+
+@media only screen and (min-width: $bpMediumLow) {
+  .container {
+    flex-direction: row;
+  }
+}

@@ -1,61 +1,61 @@
 @use 'master' as *;
 
 html {
-    .MuiButton {
-        &-label {
-            color: $fontColorLightPrimary;
-        }
+  .MuiButton {
+    &-label {
+      color: $fontColorLightPrimary;
+    }
+  }
+
+  .MuiSlider {
+    &-markLabel {
+      margin-top: space(4);
+      color: $colorWhite !important;
+      font-size: rem-calc(13) !important;
+      font-weight: $fontWeightRegular;
     }
 
-    .MuiSlider {
-        &-markLabel {
-            margin-top: space(4);
-            color: $colorWhite !important;
-            font-size: rem-calc(13) !important;
-            font-weight: $fontWeightRegular;
-        }
-
-        &-thumb {
-            border-radius: $borderRadiusRound;
-            background-color: $sliderThumb;
-        }
-
-        &-mark {
-            background-color: transparent;
-            @include padding(2);
-            @include margin(2, 0, 0, -3);
-
-            &:before {
-                content: '';
-                width: rem-calc(8);
-                height: rem-calc(8);
-                opacity: 0.6;
-                @include margin(0);
-                background-color: $sliderMark;
-                display: block;
-                border-radius: $borderRadiusRound;
-            }
-
-            &:hover {
-                &:before {
-                    background-color: $fontColorLightPrimary;
-                }
-            }
-        }
-
-        &-markActive {
-            &:before {
-                background-color: $fontColorLightPrimary;
-            }
-        }
-
-        &-marked {
-            margin-bottom: 0 !important;
-        }
-
-        &-root {
-            @include padding(3, 0, 0);
-            margin: 0 0 space(3) !important;
-        }
+    &-thumb {
+      border-radius: $borderRadiusRound;
+      background-color: $sliderThumb;
     }
+
+    &-mark {
+      background-color: transparent;
+      @include padding(2);
+      @include margin(2, 0, 0, -3);
+
+      &:before {
+        content: '';
+        width: rem-calc(6);
+        height: rem-calc(6);
+        opacity: 0.6;
+        @include margin(0);
+        background-color: $sliderMark;
+        display: block;
+        border-radius: $borderRadiusRound;
+      }
+
+      &:hover {
+        &:before {
+          background-color: $fontColorLightPrimary;
+        }
+      }
+    }
+
+    &-markActive {
+      &:before {
+        background-color: $fontColorLightPrimary;
+      }
+    }
+
+    &-marked {
+      margin-bottom: 0 !important;
+    }
+
+    &-root {
+      @include padding(3, 0, 0);
+      margin: 0 0 space(3) !important;
+    }
+  }
 }

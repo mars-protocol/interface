@@ -1,0 +1,113 @@
+@import 'src/styles/master';
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+
+    .limitText {
+      display: flex;
+      align-items: flex-end;
+      opacity: 0;
+      transition: opacity 0.8s;
+      transition-delay: 1.6s;
+
+      &.show {
+        opacity: 0.6;
+      }
+    }
+  }
+
+  .progressbarContainer {
+    position: relative;
+    height: rem-calc(22);
+
+    .progressbar {
+      width: 100%;
+      position: absolute;
+      height: 100%;
+      @include bgHatched;
+      box-shadow: $shadowInset;
+      border-radius: $borderRadiusXXXL;
+    }
+
+    .limitLine {
+      position: absolute;
+      bottom: 0;
+      height: 120%;
+      width: 1px;
+      background: $colorWhite;
+      transition: left $animationSpeed linear;
+      z-index: 2;
+    }
+
+    .limit {
+      position: absolute;
+      max-width: 100%;
+      height: 100%;
+      background: $colorGreyDark;
+      box-shadow: $shadowInset;
+      border-top-left-radius: $borderRadiusXXXL;
+      border-bottom-left-radius: $borderRadiusXXXL;
+      transition: width $animationSpeed linear;
+    }
+
+    .limitBar {
+      position: absolute;
+      left: 0;
+      max-width: 100%;
+      height: 100%;
+      background: $backgroundBodyDark;
+      border-top-left-radius: $borderRadiusXXXL;
+      border-bottom-left-radius: $borderRadiusXXXL;
+      transition: right $animationSpeed linear;
+    }
+
+    .ltvContainer {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+
+      .indicator {
+        z-index: 1;
+        height: 100%;
+        transition: width $animationSpeed linear;
+        border-radius: $borderRadiusL;
+        mask: linear-gradient(#fff 0 0);
+      }
+
+      .percentage {
+        position: absolute;
+        width: 100%;
+        left: 0;
+        text-align: center;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .gradient {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        @include bgLimit;
+      }
+    }
+  }
+
+  .values {
+    display: flex;
+    opacity: 0.6;
+    margin-top: space(2);
+
+    & > *:not(:last-child) {
+      margin-right: space(1);
+    }
+  }
+}

@@ -1,0 +1,177 @@
+@import 'src/styles/master';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  @include padding(0, 4);
+  background: rgba(0, 0, 0, 0.2);
+
+  .title {
+    display: none;
+    @include padding(2, 0, 6);
+  }
+
+  .stats {
+    display: flex;
+    border-top: 1px solid $alphaWhite40;
+    border-bottom: 1px solid $alphaWhite40;
+    gap: space(2);
+    align-items: center;
+    @include padding(2, 0);
+    justify-content: space-between;
+
+    .price {
+      text-align: right;
+    }
+  }
+
+  .values {
+    width: 100%;
+    border-collapse: collapse;
+
+    tr {
+      td:nth-child(2) {
+        width: 20px;
+      }
+
+      td:nth-child(4) {
+        word-break: initial;
+      }
+    }
+
+    div {
+      min-height: space(6);
+    }
+
+    .supplyRow {
+      border-bottom: 1px solid $alphaWhite20;
+
+      td {
+        padding-bottom: space(0.5);
+      }
+    }
+
+    .debtRow {
+      border-bottom: 1px solid $alphaWhite20;
+
+      td {
+        padding-top: space(0.5);
+        padding-bottom: space(0.5);
+      }
+    }
+
+    .posValueRow {
+      td {
+        padding-top: space(0.5);
+      }
+    }
+
+    td:not(last-child) {
+      padding-right: space(1);
+    }
+
+    .labelRow {
+      border-top: 1px solid $alphaWhite20;
+
+      td {
+        padding-top: space(1);
+      }
+    }
+
+    tr:last-child {
+      border-bottom: 1px solid $alphaWhite40;
+    }
+
+    tr {
+      td:last-child:not(.alignLeft) {
+        text-align: right;
+      }
+    }
+
+    .alignLeft {
+      text-align: left;
+    }
+
+    .showDesktop {
+      display: none;
+    }
+  }
+
+  .reduceMessage {
+    text-align: center;
+
+    .warning {
+      margin-top: space(2);
+      color: $colorInfoVoteAgainst;
+    }
+
+    .repay {
+      text-decoration: underline;
+      color: $colorInfoProfit;
+      cursor: pointer;
+    }
+  }
+
+  .borrowCapacity {
+    @include margin(7, 0);
+  }
+}
+
+@media only screen and (min-width: $bpXSmallLow) {
+  .container {
+    @include padding(0, 10);
+  }
+}
+
+@media only screen and (min-width: $bpMediumLow) {
+  .container {
+    @include padding(3, 10, 0, 5);
+  }
+}
+
+@media only screen and (min-width: $bpLargeLow) {
+  .container {
+    @include padding(6, 12);
+
+    &.isAfter {
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .title {
+      display: flex;
+      justify-content: center;
+    }
+
+    .reduceMessage {
+      order: 2;
+    }
+
+    .values {
+      order: 1;
+
+      // td {
+      //   min-width: space(12);
+      // }
+
+      .debtRow {
+        border-bottom: 1px solid $alphaWhite40;
+      }
+
+      tr:last-child {
+        border: none;
+      }
+
+      .labelRow {
+        display: none;
+      }
+
+      .alignRight {
+        text-align: right;
+      }
+
+      .showDesktop {
+        display: table-cell;
+      }
+    }
+  }
+}

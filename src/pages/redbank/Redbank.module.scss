@@ -1,77 +1,77 @@
-@use '../../styles/master' as *;
+@import 'src/styles/master';
 
 .markets {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: inherit;
+
+  .notificationLink {
+    @include margin(0, 1);
+    cursor: pointer;
+    color: $colorSecondaryDark;
+  }
+
+  .summaryContainer {
+    .summary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .grids {
     display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-height: inherit;
-    margin-top: space(8);
+    margin-bottom: space(16);
 
-    .notificationLink {
-        @include margin(0, 1);
-        cursor: pointer;
+    > div {
+      flex: 1;
     }
 
-    .summaryContainer {
-        .summary {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    > div:first-child {
+      margin-inline-end: space(4);
+    }
+    > div:last-child {
+      margin-inline-start: space(4);
     }
 
-    .grids {
-        display: flex;
-        margin-bottom: space(16);
+    .notInvested {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
 
-        > div {
-            flex: 1;
+      > div {
+        &:first-child {
+          margin-bottom: space(1);
         }
+      }
 
-        > div:first-child {
-            margin-inline-end: space(4);
+      .notInvestedLink {
+        color: $colorPrimary;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
         }
-        > div:last-child {
-            margin-inline-start: space(4);
-        }
-
-        .notInvested {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-
-            > div {
-                &:first-child {
-                    margin-bottom: space(1);
-                }
-            }
-
-            .notInvestedLink {
-                color: $colorPrimary;
-                text-decoration: none;
-
-                &:hover {
-                    text-decoration: underline;
-                }
-            }
-        }
+      }
     }
+  }
 }
 @media only screen and (max-width: $bpMediumHigh) {
-    .markets {
-        .grids {
-            flex-wrap: wrap;
+  .markets {
+    .grids {
+      flex-wrap: wrap;
 
-            > div {
-                flex: 0 0 100%;
-                margin: 0 0 space(4) !important;
-            }
-        }
-
-        .notInvested {
-            @include padding(2);
-        }
+      > div {
+        flex: 0 0 100%;
+        margin: 0 0 space(4) !important;
+      }
     }
+
+    .notInvested {
+      @include padding(2);
+    }
+  }
 }

@@ -23,19 +23,21 @@ $colorAccentDark: $colorGreyDark;
 $colorAccentInverted: $colorGreyLight;
 
 /* Info Colors */
-$colorInfoProfit: #41a4a9;
-$colorInfoLoss: #f96363;
-$colorInfoWarning: #c83333;
+$colorInfoProfit: #c4e7e9;
+$colorInfoLoss: #c8aaaa;
+$colorInfoWarning: #ffb5b5;
+$colorInfoVoteAgainst: #6c5a46;
 
 /* Token Colors */
-$colorTokenLUNA: #f7df7f;
-$colorTokenUST: #0000ff;
-$colorTokenANC: #14a693;
-$colorTokenMIR: #fffffe;
 $colorTokenMARS: #dd5b65;
-$colorTokenMINE: #00eefa;
-$colorTokenASTRO: #1b73ec;
-$colorTokenSTLUNA: #6dc0db;
+$colorTokenOSMO: #9f1ab9;
+$colorTokenATOM: #6f7390;
+$colorTokenAxlUSDC: #478edc;
+$colorTokenJUNO: black;
+
+$colorGradientOSMO: linear-gradient(to bottom, #3a02e2, #e700ca);
+$colorGradientATOM: linear-gradient(to bottom, #2e3148, #6f7390);
+$colorGradientAxlUSDC: linear-gradient(to bottom, #1f5c9e, #478edc);
 
 /* Alpha Colors */
 $alphaWhite10: rgba(255, 255, 255, 0.1);
@@ -86,132 +88,140 @@ $graphAxis: $alphaBlack40;
 $shadowInset: inset 0px 2px 2px rgba(0, 0, 0, 0.25);
 
 @mixin shadowFade {
-    mask-image: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1) 40%);
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1) 40%);
 }
 
 /* Devider */
 @mixin devider10 {
-    border-bottom: 1px solid $alphaBlack10;
+  border-bottom: 1px solid $alphaBlack10;
 }
 
 @mixin devider20 {
-    border-bottom: 1px solid $alphaBlack20;
+  border-bottom: 1px solid $alphaBlack20;
 }
 
 @mixin devider40 {
-    border-bottom: 1px solid $alphaBlack40;
+  border-bottom: 1px solid $alphaBlack40;
 }
 
 @mixin devider60 {
-    border-bottom: 1px solid $alphaBlack60;
+  border-bottom: 1px solid $alphaBlack60;
 }
 
 /* Backgrounds */
 @mixin bgBody {
-    background-color: $backgroundBody;
+  background-color: $backgroundBody;
+}
+
+@mixin bgTableHover {
+  background-color: transparent;
 }
 
 @mixin bgBodyDark {
-    background-color: $backgroundBodyDark;
+  background-color: $backgroundBodyDark;
 }
 
 @mixin bgProposalActive {
-    background: $colorPrimary;
+  background: linear-gradient(90deg, #10aa93 2.6%, #248aa9 97.92%);
 }
 
 @mixin bgProposalHover {
-    background-color: $colorGreyMedium;
+  background-color: $colorGreyMedium;
 }
 
 @mixin bgTile($deg: 99.79) {
-    background: linear-gradient(
-        #{$deg}deg,
-        rgba(8, 11, 30, 0.79) 8.17%,
-        rgba(52, 20, 33, 0.9) 94.54%
-    );
+  background: linear-gradient(
+    #{$deg}deg,
+    rgba(8, 11, 30, 0.79) 8.17%,
+    rgba(52, 20, 33, 0.9) 94.54%
+  );
 }
 
 @mixin bgInTile {
-    background: $backgroundInTile;
+  background: $backgroundInTile;
 }
 
 @mixin bgOverlay {
-    background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 @mixin bgTooltip {
-    background: linear-gradient(
-        77.47deg,
-        rgba(20, 24, 57, 0.9) 11.58%,
-        rgba(34, 16, 57, 0.9) 93.89%
-    );
+  background: linear-gradient(77.47deg, rgba(20, 24, 57, 0.9) 11.58%, rgba(34, 16, 57, 0.9) 93.89%);
 }
 
 @mixin bgPopover {
-    background: linear-gradient(180deg, #fef4ed -2.1%, #ecdbe0 97.53%);
-    color: $fontColorDarkPrimary;
+  background: linear-gradient(180deg, #fef4ed -2.1%, #ecdbe0 97.53%);
+  color: $fontColorDarkPrimary;
 }
 
 @mixin bgTileDevider {
-    background-color: $alphaBlack60;
+  background-color: $alphaBlack60;
 }
 
 @mixin bgDevider {
-    background-color: $alphaBlack20;
+  background-color: $alphaBlack20;
 }
 
 @mixin bgInput {
-    background-color: #282a33;
+  background-color: #282a33;
 }
 
 @mixin bgPrimary {
-    background-color: $colorPrimary;
-    color: $colorWhite;
+  background-color: $colorPrimary;
+  color: $colorWhite;
 }
 
 @mixin bgSecondary {
-    background-color: $colorSecondary;
-    color: $colorWhite;
+  background-color: $colorSecondary;
+  color: $colorWhite;
 }
 
 @mixin bgTertiary {
-    background-color: $alphaBlack60;
-    color: $colorWhite;
+  background-color: $alphaBlack60;
+  color: $colorWhite;
 }
 
 @mixin bgLimit {
-    background: $colorPrimary;
+  background: $colorPrimary;
+}
+
+@mixin bgLimitOpacity {
+  background: $colorPrimary;
 }
 
 @mixin bgHatched {
-    background-image: linear-gradient(
-        135deg,
-        #1a1c25 33.33%,
-        rgba(255, 255, 255, 0.2) 33.33%,
-        rgba(255, 255, 255, 0.2) 50%,
-        #1a1c25 50%,
-        #1a1c25 83.33%,
-        rgba(255, 255, 255, 0.2) 83.33%,
-        rgba(255, 255, 255, 0.2) 100%
-    );
-    background-size: 5px 5px;
+  background-image: linear-gradient(
+    135deg,
+    #1a1c25 33.33%,
+    rgba(255, 255, 255, 0.2) 33.33%,
+    rgba(255, 255, 255, 0.2) 50%,
+    #1a1c25 50%,
+    #1a1c25 83.33%,
+    rgba(255, 255, 255, 0.2) 83.33%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+  background-size: 5px 5px;
 }
 
 /* GLOWS */
+/* GLOWS */
+@mixin glowXS {
+  display: none;
+}
 @mixin glowS {
-    display: none;
+  display: none;
 }
 @mixin glowM {
-    display: none;
+  display: none;
 }
 @mixin glowL {
-    display: none;
+  display: none;
 }
 @mixin glowXL {
-    display: none;
+  display: none;
 }
 @mixin glowXXL {
-    display: none;
+  display: none;
 }
 
 /* Typography */
@@ -227,233 +237,234 @@ $fontColorLightTertiary: $colorSecondaryDark;
 $fontColorLtv: $colorWhite;
 
 @mixin typoH1 {
-    font-weight: $fontWeightLight;
-    font-size: rem-calc(60.84);
-    line-height: space(20);
+  font-weight: $fontWeightLight;
+  font-size: rem-calc(60.84);
+  line-height: space(20);
 }
 
 @mixin typoH2 {
-    font-size: rem-calc(38.49);
-    line-height: space(14);
+  font-size: rem-calc(38.49);
+  line-height: space(14);
 }
 
 @mixin typoH2caps {
-    @include typoH2;
+  @include typoH2;
 }
 
 @mixin typoH3 {
-    font-size: rem-calc(30.42);
-    line-height: space(10);
+  font-size: rem-calc(30.42);
+  line-height: space(10);
 }
 
 @mixin typoH3caps {
-    font-size: rem-calc(30.42);
+  font-size: rem-calc(30.42);
 }
 
 @mixin typoH4 {
-    font-size: rem-calc(24.03);
-    line-height: space(9);
-    font-weight: $fontWeightRegular;
+  font-size: rem-calc(24.03);
+  line-height: space(9);
+  font-weight: $fontWeightRegular;
 }
 
 @mixin typoH4caps {
-    @include typoH4;
+  @include typoH4;
 }
 
 @mixin typoXXL {
-    font-size: rem-calc(21.36);
-    line-height: space(8);
+  font-size: rem-calc(21.36);
+  line-height: space(8);
 }
 
 @mixin typoXXLcaps {
-    @include typoXXL;
-    font-weight: $fontWeightLight;
+  @include typoXXL;
+  font-weight: $fontWeightLight;
 }
 
 @mixin typoXL {
-    font-size: rem-calc(18.98);
-    line-height: space(7);
+  font-size: rem-calc(18.98);
+  line-height: space(7);
 }
 
 @mixin typoXLcaps {
-    @include typoXL;
-    font-weight: $fontWeightLight;
+  @include typoXL;
+  font-weight: $fontWeightLight;
 }
 
 @mixin typoL {
-    font-size: rem-calc(16.88);
-    line-height: space(6);
+  font-size: rem-calc(16.88);
+  line-height: space(6);
 }
 
 @mixin typoLcaps {
-    @include typoL;
-    font-weight: $fontWeightSemibold;
+  @include typoL;
+  font-weight: $fontWeightSemibold;
 }
 
 @mixin typoM {
-    font-size: rem-calc(15);
-    line-height: space(5);
+  font-size: rem-calc(15);
+  line-height: space(5);
+}
+
+@mixin typoMcaps {
+  @include typoM;
 }
 
 @mixin typoS {
-    font-size: rem-calc(13.33);
-    line-height: space(5);
+  font-size: rem-calc(13.33);
+  line-height: space(5);
 }
 
 @mixin typoScaps {
-    @include typoS;
-    font-weight: $fontWeightSemibold;
+  @include typoS;
+  font-weight: $fontWeightSemibold;
 }
 
 @mixin typoXS {
-    font-size: rem-calc(11.85);
-    line-height: space(4);
+  font-size: rem-calc(11.85);
+  line-height: space(4);
 }
 
 @mixin typoXScaps {
-    @include typoXS;
-    font-weight: $fontWeightSemibold;
+  @include typoXS;
+  font-weight: $fontWeightSemibold;
 }
 
 @mixin typoXXS {
-    font-size: rem-calc(10.53);
-    line-height: space(4);
+  font-size: rem-calc(10.53);
+  line-height: space(4);
 }
 
 @mixin typoXXScaps {
-    @include typoXXS;
-    font-weight: $fontWeightSemibold;
+  @include typoXXS;
+  font-weight: $fontWeightSemibold;
 }
 
 @mixin typoXXXS {
-    font-size: rem-calc(9.36);
-    line-height: space(2);
+  font-size: rem-calc(9.36);
+  line-height: space(2);
 }
 
 @mixin typoXXXScaps {
-    @include typoXXXS;
-    font-weight: $fontWeightSemibold;
+  @include typoXXXS;
+  font-weight: $fontWeightSemibold;
 }
 
 @mixin typoButton {
-    @include typoS;
-    font-weight: $fontWeightSemibold;
+  @include typoS;
+  font-weight: $fontWeightSemibold;
 }
 
 @mixin typoNav {
-    @include typoL;
+  @include typoL;
 }
 
 @mixin typoNetwork {
-    font-size: rem-calc(10.53);
-    font-weight: $fontWeightSemibold;
+  font-size: rem-calc(10.53);
+  font-weight: $fontWeightSemibold;
 }
 
 /* Spacing */
 $spacingBase: 4;
 
 @function space($multiplier) {
-    $space: rem-calc($spacingBase * $multiplier);
-    @return $space;
+  $space: rem-calc($spacingBase * $multiplier);
+  @return $space;
 }
 
 @mixin padding($top: 1, $right: null, $bottom: null, $left: null) {
-    @if $left {
-        padding: space($top) space($right) space($bottom) space($left);
+  @if $left {
+    padding: space($top) space($right) space($bottom) space($left);
+  } @else {
+    @if $bottom {
+      padding: space($top) space($right) space($bottom);
     } @else {
-        @if $bottom {
-            padding: space($top) space($right) space($bottom);
-        } @else {
-            @if $right {
-                padding: space($top) space($right);
-            } @else {
-                padding: space($top);
-            }
-        }
+      @if $right {
+        padding: space($top) space($right);
+      } @else {
+        padding: space($top);
+      }
     }
+  }
 }
 
 @mixin margin($top: 1, $right: null, $bottom: null, $left: null) {
-    @if $left {
-        margin: space($top) space($right) space($bottom) space($left);
+  @if $left {
+    margin: space($top) space($right) space($bottom) space($left);
+  } @else {
+    @if $bottom {
+      margin: space($top) space($right) space($bottom);
     } @else {
-        @if $bottom {
-            margin: space($top) space($right) space($bottom);
-        } @else {
-            @if $right {
-                margin: space($top) space($right);
-            } @else {
-                margin: space($top);
-            }
-        }
+      @if $right {
+        margin: space($top) space($right);
+      } @else {
+        margin: space($top);
+      }
     }
+  }
 }
 
 @function strip-unit($num) {
-    @return math.div($num, $num * 0 + 1);
+  @return math.div($num, $num * 0 + 1);
 }
 
 @function convert-to-rem($value, $base-value: $rem-base) {
-    $value: math.div(strip-unit($value), strip-unit($base-value)) * 1rem;
-    @if ($value == 0rem) {
-        $value: 0;
-    }
-    @return $value;
+  $value: math.div(strip-unit($value), strip-unit($base-value)) * 1rem;
+  @if ($value == 0rem) {
+    $value: 0;
+  }
+  @return $value;
 }
 
 @function rem-calc($values, $base-value: $rem-base) {
-    $max: length($values);
-    @if $max == 1 {
-        @return convert-to-rem(nth($values, 1), $base-value);
-    }
-    $remValues: ();
-    @for $i from 1 through $max {
-        $remValues: append(
-            $remValues,
-            convert-to-rem(nth($values, $i), $base-value)
-        );
-    }
-    @return $remValues;
+  $max: length($values);
+  @if $max == 1 {
+    @return convert-to-rem(nth($values, 1), $base-value);
+  }
+  $remValues: ();
+  @for $i from 1 through $max {
+    $remValues: append($remValues, convert-to-rem(nth($values, $i), $base-value));
+  }
+  @return $remValues;
 }
 
 /* LAYOUTS */
 @mixin layoutTile {
-    padding: space(1);
-    background: $colorGreyHighlight;
-    border: 2px solid $colorWhite;
-    box-shadow: 0 0 0 3px $colorGreyHighlight, 12px 12px 0 0 rgb(0 0 0 / 50%) !important;
-    height: fit-content;
+  padding: space(1);
+  background: $colorGreyHighlight;
+  border: 2px solid $colorWhite;
+  box-shadow: 0 0 0 3px $colorGreyHighlight, 12px 12px 0 0 rgb(0 0 0 / 50%) !important;
+  height: fit-content;
 }
 
 @mixin layoutTooltip {
-    padding: space(3);
-    background: $colorGreyLight;
-    border: 1px solid $colorSecondaryDark;
+  padding: space(3);
+  background: $colorGreyLight;
+  border: 1px solid $colorSecondaryDark;
 }
 
 @mixin layoutPopover {
-    padding: space(3);
-    background: $colorGreyLight;
-    border: 1px solid $colorSecondaryDark;
+  padding: space(3);
+  background: $colorGreyLight;
+  border: 1px solid $colorSecondaryDark;
 }
 
 @mixin layoutIncentiveButton {
 }
 
 @mixin layoutLogo {
-    > svg {
-        width: rem-calc(57);
-        height: rem-calc(57);
+  > svg {
+    width: rem-calc(57);
+    height: rem-calc(57);
 
-        path {
-            stroke: $fontColorLightPrimary;
-        }
+    path {
+      stroke: $fontColorLightPrimary;
     }
+  }
 }
 
 @mixin layoutGlobal {
-    opacity: 1 !important;
-    box-shadow: none !important;
+  opacity: 1 !important;
+  box-shadow: none !important;
 }
 
 /* Buttons */
@@ -461,70 +472,70 @@ $buttonBorder: $alphaBlack40;
 $buttonBorderHover: $colorSecondaryDark;
 
 @mixin buttonS {
-    @include typoS;
-    @include padding(1.5, 5);
-    height: rem-calc(32);
+  @include typoS;
+  @include padding(1.5, 5);
+  height: rem-calc(32);
 }
 
 @mixin buttonM {
-    @include typoM;
-    @include padding(2.5, 6);
-    height: rem-calc(40);
+  @include typoM;
+  @include padding(2.5, 6);
+  height: rem-calc(40);
 }
 
 @mixin buttonL {
-    @include typoL;
-    @include padding(2.5, 6);
-    height: rem-calc(56);
+  @include typoL;
+  @include padding(2.5, 6);
+  height: rem-calc(56);
 }
 
 @mixin buttonSolidPrimary {
-    &.primary {
-        background-color: $colorPrimary;
-        color: $colorWhite;
+  &.primary {
+    background-color: $colorPrimary;
+    color: $colorWhite;
 
-        &:hover,
-        &:focus {
-            background-color: $colorPrimaryHighlight;
-        }
-
-        &:active {
-            background-color: lighten($colorPrimary, 10%);
-        }
+    &:hover,
+    &:focus {
+      background-color: $colorPrimaryHighlight;
     }
+
+    &:active {
+      background-color: lighten($colorPrimary, 10%);
+    }
+  }
 }
 
 @mixin buttonSolidSecondary {
-    &.secondary {
-        background-color: $colorSecondary;
-        color: $colorWhite;
+  &.secondary {
+    background-color: $colorSecondary;
+    color: $colorWhite;
 
-        &:hover,
-        &:focus {
-            background-color: $colorSecondaryHighlight;
-        }
-
-        &:active {
-            background-color: lighten($colorSecondary, 10%);
-        }
+    &:hover,
+    &:focus {
+      background-color: $colorSecondaryHighlight;
     }
+
+    &:active {
+      background-color: lighten($colorSecondary, 10%);
+    }
+  }
 }
 
 @mixin buttonSolidTertiary {
-    &.tertiary {
-        background-color: $colorSecondaryDark;
-        color: $colorWhite;
-        border: 1px solid $alphaBlack30;
+  &.tertiary {
+    background-color: $colorSecondaryDark;
+    color: $colorWhite;
+    border: 1px solid $alphaBlack30;
 
-        &:hover,
-        &:focus {
-            border: 1px solid $alphaBlack20;
-        }
-
-        &:active {
-            background-color: lighten($colorSecondaryDark, 10%);
-        }
+    &:hover,
+    &:focus {
+      border: 1px solid $alphaBlack20;
     }
+
+    &:active {
+      background-color: lighten($colorSecondaryDark, 10%);
+    }
+  }
 }
 
 /* Border Radius */
@@ -542,13 +553,20 @@ $borderRadiusRound: 0;
 
 /* Dimensions */
 $headerHeight: rem-calc(86);
-$footerHeight: rem-calc(314);
-$footerHeightMedium: rem-calc(314);
-$footerHeightSmall: rem-calc(526);
-$contentWidth: rem-calc(1248);
+$mobileNavHeight: rem-calc(64);
+$footerHeight: rem-calc(300);
+$footerHeightMedium: rem-calc(300);
+$footerHeightSmall: rem-calc(800);
+$contentWidth: 1248px;
 
 /* Breakpoints */
-$bpDesktopLow: rem-calc(1280);
-$bpMediumHigh: rem-calc(1279);
-$bpMediumLow: rem-calc(841);
-$bpSmallHigh: rem-calc(840);
+$bpLargeHigh: $contentWidth;
+$bpLargeLow: 1025px;
+$bpMediumHigh: 1024px;
+$bpMediumLow: 801px;
+$bpSmallHigh: 800px;
+$bpXSmallHigh: 719px;
+$bpXSmallLow: 480px;
+
+/* Animation Timings */
+$animationSpeed: 1s;

@@ -1,0 +1,27 @@
+@import 'src/styles/master';
+
+.color {
+  position: absolute;
+  top: 0;
+  width: rem-calc(7);
+  height: space(16);
+  margin-left: rem-calc(-7);
+
+  &.OSMO {
+    background-image: $colorGradientOSMO;
+  }
+
+  &.ATOM {
+    background-image: $colorGradientATOM;
+  }
+
+  &.axlUSDC {
+    background-image: $colorGradientAxlUSDC;
+  }
+}
+
+.logo {
+  display: grid;
+  margin: auto;
+  width: rem-calc(32);
+}

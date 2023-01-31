@@ -1,0 +1,36 @@
+@import 'src/styles/master';
+
+.container {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  @include layoutTooltip;
+  min-width: rem-calc(280);
+
+  .item {
+    @include padding(1, 0);
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    @include typoXS;
+
+    .label {
+      display: flex;
+      flex: 1;
+    }
+
+    .value {
+      display: flex;
+      justify-content: flex-end;
+      flex: 0 0 rem-calc(60);
+    }
+
+    &.total {
+      font-weight: $fontWeightSemibold;
+    }
+
+    &.border {
+      @include devider20;
+    }
+  }
+}

@@ -1,0 +1,461 @@
+            MARS PROTOCOL WEB APPLICATION LICENSE AGREEMENT
+                    Version 1, 24 January 2023
+
+This Mars Protocol Web Application License Agreement (this “Agreement”)is
+a legally binding agreement with Delphi Labs Ltd., a British Virgin Islands
+company limited by shares (“Licensor”) pertaining to all software and
+technologies contained in this repository (whether in source code,
+object code or other form).
+
+YOU ARE NOT PERMITTED TO USE THIS SOFTWARE EXCEPT FOR PURPOSES OF FACILITATING
+USE OF DEPLOYED INSTANCES OF THE PROTOCOL THAT ARE ENDORSED BY THE MARTIAN
+COUNCIL, UPON THE TERMS AND CONDITIONS SET FORTH BELOW.
+
+YOU ARE NOT PERMITTED TO USE THIS SOFTWARE IN CONNECTION WITH FORKS OF
+THE PROTOCOL NOT ENDORSED BY THE MARTIAN COUNCIL, OR IN CONNECTION WITH
+OTHER PROTOCOLS.
+
+1.  RESERVATION OF PROPRIETARY RIGHTS.
+    Except to the extent provided in Section 2:
+
+        a.  all intellectual property (including all trade secrets, source
+            code, designs and protocols) relating to the Web Application has
+            been published or made available for informational purposes only
+            (e.g., to enable users of the Web Application to conduct their
+            own due diligence into the security and other risks thereof);
+
+        b.  no license, right of reproduction or distribution or other right
+            with respect to the Web Application or any other intellectual
+            property is granted or implied; andc.all moral, intellectual
+            property and other rights relating to the Web Application and
+            other intellectual property are hereby reserved by Licensor
+            (and the other contributors to such intellectual property or
+            holders of such rights, as applicable).
+
+2.  LIMITED LICENSE.
+    Upon the terms and subject to the conditions set forth in this Agreement
+    (including the conditions set forth in Section 3), Licensor hereby grants
+    a non-transferable, personal, non-sub-licensable, global, royalty-free,
+    revocable license in Licensor’s intellectual property rights relating to
+    the Web Application:
+
+        a.  to each Authorized Site Operator, to run the Web Application for
+            use by each Authorized User solely in connection with the Endorsed
+            Smart Contracts (and not for any of the purposes described in
+            ection 3);
+
+        b.  to each Authorized User, to use the Web Application run by an
+            Authorized Site Operatorsolely in connection with the Endorsed
+            Smart Contracts (and not for any of the purposes described in
+            Section 3); and
+
+    The following capitalized terms have the definitions that are ascribed
+    to them below:
+
+    Defined Terms Relating to Relevant Persons
+
+        “Authorized Site Operator” means a person who makes the un-modified
+        Web Application available to persons in good faith on commercially
+        reasonable terms for purposes of facilitating their use of the
+        Endorsed Smart Contracts for their intended purposes and complies
+        with the conditions set forth in Section 3.
+
+        “Authorized User” means a person who uses the un-modified Web
+        Application in good faith for purposes of using the Endorsed Smart
+        Contracts for their intended purposes and complies with the conditions
+        set forth in Section 3.
+
+        “Web Application” means the software at
+        <https://github.com/mars-protocol/webapp>, as it may be updated from
+        time to time by Licensor.
+
+    Defined Terms Relating to Mars Hub & Martian Council
+
+        “$MARS” means the native token unit of Mars Hub the bonding, staking
+        or delegation of which determines which Mars Hub Core Nodes have the
+        ability to propose and validate new blocks on the Mars Hub blockchain.
+
+        “Mars Hub” means, at each time, the canonical blockchain and virtual
+        machine environment of the Mars Hub ‘mainnet’, as recognized by at
+        least a majority of the Mars Core Nodes then being operated in good
+        faith in the ordinary course of the network.
+
+        “Mars Hub Core” means the reference implementation of the Mars
+        blockchain hub protocol currently stored at
+        <https://github.com/mars-protocol/hub> or any successor thereto
+        expressly determined by the Martian Council to constitute the
+        reference implementation for Mars blockchain hub protocol.
+
+        “Mars Hub Core Nodes” means, at each time, the internet-connected
+        computers then running unaltered and correctly configured instances
+        of the most up-to-date production release of Mars Hub Core.
+
+        “Martian Council” means at each time, all persons holding $MARS that
+        is staked with or delegated or bonded to Mars Hub Core Nodes in the
+        active validator set for Mars Hub at such time and has the power to
+        vote such $MARS tokens on governance proposals in accordance with
+        the Mars Protocol.
+
+    Defined Terms Relating to Mars Protocol & Smart Contracts
+
+        “Endorsed Smart Contracts” means the Mainnet Smart Contracts and the
+        Testnet Smart Contracts.
+
+        “Mainnet Smart Contracts” means all runtime object code that satisfies
+        all of the following conditions precedent: (a) an instance of such code
+        is deployed to a production-grade, commercial-grade “mainnet”
+        blockchain-based network environment; (b) such code constitutes a part
+        of the Mars Protocol; and (c) such instance of such code has been
+        approved by the Martian Council to be governed by the Martian Council
+        through Mars Hub on such blockchain-based network environment.
+
+        “Mars Protocol” means the software code at <https://github.com/mars-protocol>
+        or any successor thereto expressly determined by the Martian Council to
+        constitute or form a part of the “Mars Protocol”.
+
+        “Testnet Smart Contracts” means all runtime object code that satisfies
+        all of the following conditions precedent: (a) an instance of such code
+        is deployed to a nonproduction-grade, non-commercial-grade “testnet”
+        blockchain-based network environment solely for testing purposes;
+        (b) such code constitutes a part of the Mars Protocol; and (c) such
+        deployment is in reasonable anticipation of, or follows, approval by
+        the Martian Council of Mainnet Smart Contracts for the corresponding
+        “mainnet” blockchain network environment.
+
+3.  CONDITIONS/PROHIBITED USES.
+    Notwithstanding Section 2, it is a condition precedent and condition
+    subsequent of the licenses granted hereunder that the Web Application must
+    not be used in connection with or in furtherance of:
+
+        a.  developing, making available, running or operating the Web
+            Application for use by any person in connection with any smart
+            contracts other than the Endorsed Smart Contracts;
+
+        b.  any device, plan, scheme or artifice to defraud, or otherwise
+            materially mislead, any person;
+
+        c.  any fraud, deceit, material misrepresentation or other crime, tort
+            or illegal conduct againstany person or device, plan, scheme or
+            artifice for accomplishing the foregoing;
+
+        d.  any violation, breach or failure to comply with any term or
+            condition of this Agreement(including any inaccuracy in a
+            epresentation of set forth in Section 4) or any other terms of
+            service, privacy policy, trading policy or other contract
+            governing the use of the Web Application or any Endorsed Smart
+            Contract;
+
+        e.  any fork, copy, derivative or alternative instance of any Endorsed
+            Smart Contract;
+
+        f.  any smart contract, platform or service that competes in any
+            material respect with any Endorsed Smart Contract;
+
+        g.  any device, plan, scheme or artifice to obtain any unfair
+            competitive advantage over Licensor or other persons with an
+            economic or beneficial interest in the Mainnet Smart Contracts;
+
+        h.  any device, plan, scheme or artifice to interfere  with, damage,
+            impair or subvert the intended functioning of any Endorsed Smart
+            Contract,including in connection with any “sybil attack”,
+            “reentrancy attack”, “DoS attack,” “eclipse attack,” “consensus
+            attack,” “reentrancy attack,” “griefing attack”, “economic
+            incentive attack” or theft, conversion or
+            misappropriation of tokens or other similar action;
+
+        i.  any “front-running,” “wash trading,” “pump and dump trading,”
+            “ramping,” “cornering” or other illegal, fraudulent, deceptive
+            or manipulative trading activities ;
+
+        j.  any device, plan, scheme or artifice to unfairly or deceptively
+            influence the market price of any token; or
+
+        k.  modifying or making derivative works based on the Web Application.
+
+4.  REPRESENTATIONS OF LICENSEES.
+    Each person making use of or relying on any license granted under Section 2
+    (each, a “Licensee”) hereby represents and warrants to Licensor that the
+    following statements and information are accurate and complete at all times
+    that such person makes use of or relies on the license.
+
+        a.  Status. If Licensee is an individual, Licensee is of legal age in
+            the jurisdiction in which Licensee resides (and in any event is
+            older than thirteen years of age) and is of sound mind. If
+            Licensee is a business entity, Licensee is duly organized, validly
+            existing and in good standing under the laws of the jurisdiction
+            in which it is organized and has all requisite power and authority
+            for a business entity of its type to carry on its business as now
+            conducted.
+
+        b.  Power and Authority. Licensee has all requisite capacity, power and
+            authority to accept this Agreement and to carry out and perform its
+            obligations under this Agreement. This Agreement constitutes a
+            legal, valid and binding obligation of Licensee, enforceable
+            against Licensee.
+
+        c.  No Conflict; Compliance with Law. Licensee agreeing to this
+            Agreement and using the Web Application does not constitute, and
+            would not reasonably be expected to result in (with or without
+            notice, lapse of time, or both), a breach, default, contravention
+            or violation of any law applicable to Licensee, or contract or
+            agreement to which Licensee is a party or by which Licensee is
+            bound.
+
+        d.  Absence of Sanctions. Licensee is not, (and, if Licensee is an
+            entity, Licensee is not owned or controlled by any other person
+            who is), and is not acting on behalf of any other person who is,
+            identified on any list of prohibited parties under any law or by
+            any nation or government, state or other political subdivision
+            thereof, any entity exercising legislative, judicial or
+            administrative functions of or pertaining to government such as
+            the lists maintained by the United Nations Security Council, the
+            United Kingdom, the British Virgin Islands, the United States
+            (including the U.S. Treasury Department’s Specially Designated
+            Nationals list and Foreign Sanctions Evaders list), the European
+            Union (EU) or its member states, and the government of a Licensee
+            home country. Licensee is not, (and, if Licensee is an entity,
+            Licensee is not owned or controlled by any other person who is),
+            and is not acting on behalf of any other person who is, located,
+            ordinarily resident, organized, established, or domiciled in Cuba,
+            Iran, North Korea, Sudan, Syria, the Crimea region (including
+            Sevastopol) or any other country or jurisdiction against which the
+            United Nations, the United Kingdom, the British Virgin Islands or
+            the United States maintains economic sanctions or an arms embargo.
+            The tokens or other funds a Licensee use to participate in the Web
+            Application are not derived from, and do not otherwise represent
+            the proceeds of, any activities done in violation or contravention
+            of any law.
+
+        e.  No Claim, Loan, Ownership Interest or Investment Purpose. Licensee
+            understands and agrees that the Licensee’s use of the Web
+            Application does not: (i) represent or constitute a loan or a
+            contribution of capital to, or other investment in Licensor or any
+            business or venture; (ii) provide Licensee with any ownership
+            interest, equity, security, or right to or interest in the assets,
+            rights, properties, revenues or profits of, or voting rights
+            whatsoever in, Licensor or any other business or venture; or (iii)
+            create or imply or entitle Licensee to the benefits of any
+            fiduciary or other agency relationship between Licensor or any of
+            its directors, officers, employees, agents or affiliates, on the
+            on hand, and Licensee, on the other hand. Licensee is not entering
+            into this Agreement or using the Web Application for the purpose
+            of making an investment with respect to Licensor or its securities,
+            but solely wishes to use the Web Application for their
+            intended purposes. Licensee understands and agrees that Licensor
+            will not accept or take custody over any tokens or money or other
+            assets of Licensee and has no responsibility or control over the
+            foregoing.
+
+        f.  Non-Reliance. Licensee is knowledgeable, experienced and
+            sophisticated in using and evaluating blockchain and related
+            technologies and assets, including all technologies referenced
+            herein. Licensee has conducted its own thorough independent
+            investigation and analysis of the Web Application and the other
+            matters contemplated by this Agreement, and has not relied upon
+            any information, statement, omission, representation or warranty,
+            express or implied, written or oral, made by or on behalf of
+            Licensor in connection therewith.
+
+5.  RISKS, DISCLAIMERS AND LIMITATIONS OF LIABILITY.
+    THE WEB APPLICATION IS PROVIDED "AS IS" AND “AS-AVAILABLE,” AND ANY
+    EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE
+    HEREBY DISCLAIMED. IN NO EVENT SHALL LICENSOR OR ANY OTHER CONTRIBUTOR TO
+    THE WEB APPLICATION BE LIABLE FOR ANY DAMAGES, INCLUDING ANY DIRECT,
+    INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES ARISING
+    IN ANY WAY OUT OF THE USE OF THIS SOFTWARE OR INTELLECTUAL PROPERTY
+    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION),
+    HOWEVER CAUSED OR CLAIMED (WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    (INCLUDING NEGLIGENCE OR OTHERWISE)), EVEN IF SUCH DAMAGES WERE REASONABLY
+    FORESEEABLE OR THE COPYRIGHT HOLDERS AND CONTRIBUTORS WERE ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+
+6.  GENERAL PROVISIONS
+
+        a.  Governing Law. This Agreement shall be governed by and construed
+            under the internal laws of the British Virgin Islands, regardless
+            of the laws that might otherwise govern under applicable
+            principles of conflicts of laws.
+
+        b.  Dispute Resolution. Licensee (i) hereby irrevocably and
+            unconditionally submits to the jurisdiction of the relevant courts
+            of the British Virgin Islands for the purpose of any dispute,
+            suit, action or other proceeding arising out of or based upon this
+            Agreement or the matters contemplated by this Agreement
+            (“Disputes”), (ii) agrees not to commence any suit, action or
+            other proceeding arising in connection with or based upon this
+            Agreement or the matters contemplated by this Agreement except
+            before the relevant courts of the British Virgin Islands, and
+            (iii) hereby waives, and agrees not to assert, by way of motion,
+            as a defense, or otherwise, in any such suit, action or
+            proceeding, any claim that it is not subject personally to the
+            jurisdiction of the above-named courts, that its property is
+            exempt or immune from attachment or execution, that the suit,
+            action or proceeding is brought in an inconvenient forum, that the
+            venue of the suit, action or proceeding is improper or that this
+            Agreement or the subject matter hereof or thereof may not be
+            enforced in or by such court.
+
+            Each party will bear its own costs in respect of any Disputes.
+
+            Notwithstanding the foregoing, at the Licensor’s sole option and
+            commencing within a reasonable period from the date of
+            notification to the other party of such Dispute, any Dispute may
+            be resolved by confidential, binding arbitration to be seated in
+            the British Virgin Islands and conducted in the English language
+            by a single arbitrator pursuant to the rules of the International
+            Chamber of Commerce (the “Rules”). The arbitrator shall be
+            appointed in accordance with the procedures set out in the Rules.
+            The award or decision of the arbitrator shall be final and binding
+            upon the parties and the parties expressly waive any right under
+            the laws of any jurisdiction to appeal or otherwise challenge the
+            award, ruling or decision of the arbitrator. The judgment of any
+            award or decision may be entered in any court having competent
+            jurisdiction to the extent necessary. If the Licensor elects to
+            have a Dispute resolved by arbitration pursuant to this provision,
+            no party hereto shall (or shall permit its representatives to)
+            commence, continue or pursue any Dispute in any court.
+
+            Notwithstanding anything to the contrary set forth in this
+            Agreement, the Licensor shall at all times be entitled to obtain
+            an injunction or injunctions to prevent breaches of this Agreement
+            and to enforce specifically the terms and provisions thereof, this
+            being in addition to any other remedy to which the Licensor is
+            entitled at law or in equity, and the parties hereto hereby waive
+            the requirement of any undertaking in damages or posting of a bond
+            in connection with such injunctive relief or specific performance.
+
+            EACH PARTY HEREBY WAIVES ITS RIGHTS TO A JURY TRIAL OF ANY CLAIM
+            OR CAUSE OF ACTION BASED UPON OR ARISING OUT OF THIS AGREEMENT OR
+            THE SUBJECT MATTER HEREOF. THE SCOPE OF THIS WAIVER IS INTENDED TO
+            BE ALL-ENCOMPASSING OF ANY AND ALL DISPUTES THAT MAY BE FILED IN
+            ANY COURT AND THAT RELATE TO THE SUBJECT MATTER OF ANY OF THE
+            TRANSACTIONS CONTEMPLATED BY THIS AGREEMENT, INCLUDING, WITHOUT
+            LIMITATION, CONTRACT CLAIMS, TORT CLAIMS (INCLUDING NEGLIGENCE),
+            BREACH OF DUTY CLAIMS, AND ALL OTHER COMMON LAW AND STATUTORY
+            CLAIMS. THIS SECTION HAS BEEN FULLY DISCUSSED BY EACH OF THE
+            PARTIES HERETO AND THESE PROVISIONS WILL NOT BE SUBJECT TO ANY
+            EXCEPTIONS. EACH PARTY HERETO HEREBY FURTHER WARRANTS AND
+            REPRESENTS THAT SUCH PARTY HAS REVIEWED THIS WAIVER WITH ITS LEGAL
+            COUNSEL, AND THAT SUCH PARTY KNOWINGLY AND VOLUNTARILY WAIVES ITS
+            JURY TRIAL RIGHTS FOLLOWING CONSULTATION WITH LEGAL COUNSEL.
+
+        c.  Class Action Waiver. No Class Actions Permitted. All Licensees
+            hereby agree that any arbitration or other permitted action with
+            respect to any Dispute shall be conducted in their individual
+            capacities only and not as a class action or other representative
+            action, and the Licensees expressly waive their right to file a
+            class action or seek relief on a class basis. LICENSEES SHALL
+            BRING CLAIMS AGAINST LICENSOR ONLY IN THEIR INDIVIDUAL CAPACITY,
+            AND NOT AS A PLAINTIFF OR CLASS MEMBER IN ANY PURPORTED CLASS OR
+            REPRESENTATIVE PROCEEDING.
+
+            Agreements if Class Action Waiver Unenforceable. If any court or
+            arbitrator makes a final, binding and non-appealable determination
+            that the class action waiver set forth herein is void or
+            unenforceable for any reason or that a Dispute can proceed on a
+            class basis, then the arbitration provision set forth above shall
+            be deemed null and void with respect to any Dispute that would
+            thus be required to be resolved by arbitration on a class basis,
+            and the parties shall be deemed to have not agreed to arbitrate
+            such Dispute. In the event that, as a result of the application of
+            the immediately preceding sentence or otherwise, any Dispute is
+            not subject to arbitration, the parties hereby agree to submit to
+            the personal and exclusive jurisdiction of and venue in the
+            federal and state courts located in the British Virgin Islands and
+            to accept service of process by mail with respect to such Dispute,
+            and hereby waive any and all jurisdictional and venue defenses
+            otherwise available with respect to such Dispute.
+
+        d.  Amendment; Waiver. This Agreement may be amended and provisions
+            may be waived (either generally or in a particular instance and
+            either retroactively or prospectively), only with the written
+            consent of the Licensor.
+
+        e.  Severability. Any term or provision of this Agreement that is
+            found invalid or unenforceable in any situation in any
+            jurisdiction shall not affect the validity or enforceability of
+            the remaining terms and provisions hereof or the validity or
+            enforceability of the offending term or provision in any other
+            situation or in any other jurisdiction. If a final judgment of a
+            court of competent jurisdiction declares that any term or
+            provision hereof is  invalid or unenforceable, the parties hereto
+            agree that the court making such  determination shall have the
+            power to limit such term or provision, to delete specific  words
+            or phrases, or to replace any invalid or unenforceable term or
+            provision with a  term or provision that is valid and enforceable
+            and that comes closest to expressing  the intention of the invalid
+            or unenforceable term or provision, and this Agreement shall be
+            enforceable as so modified. In the event such court does not
+            exercise the power granted to it in the prior sentence, the
+            parties hereto agree to replace such invalid or unenforceable term
+            or provision with a valid and enforceable term or provision that
+            will achieve, to the extent possible, the economic, business and
+            other purposes of such invalid  or unenforceable term or provision.
+
+        f.  Entire Agreement. This Agreement constitutes the entire agreement
+            and understanding of the parties with respect to the subject matter
+            hereof and supersede any and all prior negotiations,
+            correspondence, warrants, agreements, understandings duties or
+            obligations between or involving the parties with respect to the
+            subject matter hereof.
+
+        g.  Delays or Omissions. No delay or omission to exercise any right,
+            power, or remedy accruing to any party under this Agreement, upon
+            any breach or default of any other party under this Agreement,
+            shall impair any such right, power, or remedy of such
+            non-breaching or non-defaulting party, nor shall it be construed
+            to be a waiver of or acquiescence to any such breach or default,
+            or to any similar breach or default thereafter occurring, nor
+            shall any waiver of any single breach or default be deemed a
+            waiver of any other breach or default theretofore or thereafter
+            occurring. Any waiver, permit, consent or approval of any kind or
+            character on the part of any party of any breach or default under
+            this Agreement, or any waiver on the part of any party of any
+            provisions or conditions of this Agreement, must be in writing and
+            shall be effective only to the extent specifically set forth in
+            such writing. All remedies, whether under this Agreement or by law
+            or otherwise afforded to any party, shall be cumulative and not
+            alternative.
+
+        h.  Successors and Assigns. The terms and conditions of this Agreement
+            shall inure to the benefit of and be binding upon the respective
+            successors and assigns of the parties hereto. This Agreement shall
+            not have third-party beneficiaries, other than the Martian Council.
+
+        i.  Rules of Construction. Gender; Etc. For purposes of this
+            Agreement, whenever the context requires: the singular number
+            shall include the plural, and vice versa; the masculine gender
+            shall include the feminine and neuter genders; the feminine gender
+            shall include the masculine and neuter genders; and the neuter
+            gender shall include the masculine and feminine genders.
+
+            Ambiguities. The Parties hereto agree that any rule of
+            construction to the effect that ambiguities are to be resolved
+            against the drafting Party shall not be applied in the
+            construction or interpretation of this Agreement.
+
+            No Limitation. As used in this Agreement, the words “include,”
+            “including,” “such as” and variations thereof, shall not be deemed
+            to be terms of limitation, but rather shall be deemed to be
+            followed by the words “without limitation.” The word “or” shall
+            mean the non-exclusive “or”. References. Except as otherwise
+            indicated, all references in this Agreement to “Sections,”
+            “Schedules” and “Exhibits” are intended to refer to Sections of
+            this Agreement and Schedules and Exhibits to this Agreement.
+
+            Hereof. The terms “hereof,” “herein,” “hereunder,” “hereby” and
+            “herewith” and words of similar import will, unless otherwise
+            stated, be construed to refer to this Agreement as a whole and not
+            to any particular provision of this Agreement.
+
+            Captions/Headings. The captions, headings and similar labels
+            contained in this Agreement are for convenience of reference only,
+            shall not be deemed to be a part of this Agreement and shall not
+            be referred to in connection with the construction or
+            interpretation of this Agreement.
+
+            Person. The term “person” refers to any natural born or legal
+            person, entity, governmental body or incorporated or
+            unincorporated association, partnership or joint venture.

@@ -1,0 +1,13 @@
+.highlight {
+  transition: all 200ms ease-in-out 100ms;
+  position: relative;
+
+  &.show {
+    z-index: 21;
+    opacity: 1;
+  }
+
+  &.hide {
+    opacity: 0.4;
+  }
+}

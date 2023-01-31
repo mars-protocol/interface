@@ -1,0 +1,219 @@
+@import 'src/styles/master';
+
+.container {
+  border-radius: $borderRadiusL;
+  display: flex;
+  flex-direction: column;
+
+  .available {
+    align-self: center;
+    margin-bottom: space(2);
+    margin-top: space(4);
+    opacity: 0.3;
+  }
+
+  .inputContainer {
+    display: flex;
+    align-self: center;
+
+    .zero {
+      align-content: center;
+      margin-inline-start: space(10);
+      margin-top: space(1.25);
+      margin-inline-end: space(2.5);
+    }
+
+    .input {
+      align-self: center;
+      display: flex;
+      margin-bottom: space(10);
+    }
+
+    .maxButton {
+      color: $fontColorLightPrimary;
+      opacity: 0.6;
+      height: rem-calc(34);
+    }
+  }
+
+  .inputWrapper {
+    align-self: center;
+    opacity: 1;
+    border: 1px solid $colorGreyHighlight;
+    width: rem-calc(448);
+    height: rem-calc(56);
+    border-radius: $borderRadiusS;
+    display: flex;
+    justify-content: center;
+
+    .inputPercentage {
+      text-align: center;
+      opacity: 1;
+      background: none;
+      border: none;
+      color: $fontColorLightPrimary;
+      @include typoXXL;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    input::-webkit-inner-spin-button {
+      appearance: none;
+      @include margin(0);
+    }
+  }
+
+  .inputRaw {
+    align-self: center;
+    background: none;
+    margin-top: space(2);
+    opacity: 0.4;
+    margin-bottom: space(9);
+  }
+
+  .actionButton {
+    display: flex;
+    justify-content: center;
+    margin-bottom: space(3);
+  }
+}
+
+.feeTooltipContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.fee {
+  cursor: pointer;
+}
+.collapsable {
+  height: auto;
+  width: 100%;
+  overflow: hidden;
+  &.collapsed {
+    height: 0;
+  }
+}
+
+.newSituation {
+  text-align: start;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  border-top: 1px solid $colorGrey;
+  border-bottom: 1px solid $colorGrey;
+  margin-top: space(7);
+
+  .borrowCapacityContainer {
+    flex: 0 0 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .borrowCapacity {
+      flex: 0 0 100%;
+      @include padding(8, 8, 10);
+      border-bottom: 1px solid $colorGrey;
+
+      .borrowCapacityTitle {
+        display: flex;
+        flex-direction: column;
+
+        .title {
+          opacity: 0.4;
+          margin-bottom: space(3);
+        }
+
+        .value {
+          margin-bottom: space(6);
+        }
+      }
+    }
+  }
+
+  .portfolio {
+    display: flex;
+    flex: 0 0 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+
+    .portfolioWrapper {
+      flex: 0 0 100%;
+      display: flex;
+      flex-wrap: wrap;
+      max-width: 100%;
+
+      .title {
+        @include padding(5, 8, 0);
+        opacity: 0.4;
+      }
+
+      .chartWrapper {
+        display: flex;
+        flex: 0 0 100%;
+        @include padding(5, 8);
+        box-sizing: border-box;
+        max-width: 100%;
+      }
+
+      > canvas {
+        max-width: 100%;
+      }
+
+      &:nth-of-type(1) {
+        border-bottom: 1px solid $colorGrey;
+      }
+
+      .portfolioTitle {
+        opacity: 0.4;
+        margin-bottom: space(4);
+      }
+    }
+  }
+}
+
+.showPortfolio {
+  display: flex;
+  justify-content: center;
+  margin-top: space(6);
+  margin-bottom: space(6);
+}
+
+.submitButton {
+  min-width: rem-calc(90);
+}
+
+@media only screen and (min-width: $bpMediumHigh) {
+  .newSituation {
+    flex-direction: column;
+
+    .borrowCapacityContainer {
+      .borrowCapacity {
+        &:nth-of-type(1) {
+          border-right: 1px solid $colorGrey;
+        }
+
+        flex: 0 0 50%;
+        border-bottom: none;
+      }
+    }
+
+    .portfolio {
+      .portfolioWrapper {
+        flex: 0 0 50%;
+        width: 50%;
+        > canvas {
+          max-width: 100%;
+        }
+
+        &:nth-of-type(1) {
+          border-right: 1px solid $colorGrey;
+          border-bottom: none;
+        }
+      }
+    }
+  }
+}

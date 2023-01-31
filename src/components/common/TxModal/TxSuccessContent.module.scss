@@ -1,0 +1,138 @@
+@import 'src/styles/master';
+
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  .close {
+    position: absolute;
+    top: rem-calc(10);
+    right: 0;
+    opacity: 0.6;
+
+    > img {
+      border-radius: $borderRadiusL;
+
+      &:hover {
+        background-color: darken($colorGrey, 5%);
+        cursor: pointer;
+      }
+    }
+  }
+  .title {
+    @include padding(6, 8);
+    border-bottom: 1px solid $colorGrey;
+    text-align: center;
+
+    .text {
+      @include margin(1.5, 0, 0);
+    }
+
+    .icon {
+      svg {
+        color: $colorPrimary;
+      }
+    }
+  }
+
+  .result {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    @include padding(0, 2);
+
+    .infoContainer {
+      border-radius: $borderRadiusL;
+      margin-bottom: space(8);
+      display: flex;
+      flex-direction: column;
+
+      > img {
+        @include margin(8, 0);
+        align-self: center;
+        width: rem-calc(60);
+        height: rem-calc(60);
+      }
+
+      .subTitle {
+        opacity: 0.6;
+        @include margin(0, 0, 8);
+      }
+
+      .info {
+        display: flex;
+        align-self: center;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+
+        .item {
+          width: 100%;
+          display: flex;
+          margin-bottom: space(2);
+
+          @include typoS;
+          max-width: rem-calc(300);
+
+          .label {
+            opacity: 0.4;
+            text-align: end;
+
+            @include margin(0, 2, 0, 0);
+            width: rem-calc(110);
+          }
+          .value {
+            text-align: left;
+          }
+        }
+      }
+
+      .amountValue {
+        width: 100%;
+        display: block;
+        text-align: start;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: $bpMediumLow) {
+  .container {
+    .close {
+      right: unset;
+      left: rem-calc(24);
+      top: rem-calc(24);
+    }
+
+    .title {
+      @include padding(7);
+    }
+
+    .result {
+      @include padding(0, 8);
+
+      .infoContainer {
+        > img {
+          width: rem-calc(80);
+          height: rem-calc(80);
+        }
+
+        .info {
+          align-items: flex-start;
+
+          .item {
+            @include typoM;
+            max-width: 100%;
+
+            .label {
+              @include margin(0, 5, 0, 0);
+
+              width: 49%;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,185 +1,193 @@
-@use '../styles/master' as *;
+@use 'styles/master' as *;
 
 @font-face {
-    font-family: Inter;
-    src: url('../fonts/Inter-ExtraLight.woff2') format('woff2'),
-        url('../fonts/Inter-ExtraLight.woff') format('woff');
-    font-weight: $fontWeightLight;
-    font-style: normal;
-    font-display: swap;
+  font-family: Inter;
+  src: url('../fonts/Inter-ExtraLight.woff2') format('woff2'),
+    url('../fonts/Inter-ExtraLight.woff') format('woff');
+  font-weight: $fontWeightLight;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: Inter;
-    src: url('../fonts/Inter-Regular.woff2') format('woff2'),
-        url('../fonts/Inter-Regular.woff') format('woff');
-    font-weight: $fontWeightRegular;
-    font-style: normal;
-    font-display: swap;
+  font-family: Inter;
+  src: url('../fonts/Inter-Regular.woff2') format('woff2'),
+    url('../fonts/Inter-Regular.woff') format('woff');
+  font-weight: $fontWeightRegular;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: Inter;
-    src: url('../fonts/Inter-SemiBold.woff2') format('woff2'),
-        url('../fonts/Inter-SemiBold.woff') format('woff');
-    font-weight: $fontWeightSemibold;
-    font-style: normal;
-    font-display: swap;
+  font-family: Inter;
+  src: url('../fonts/Inter-SemiBold.woff2') format('woff2'),
+    url('../fonts/Inter-SemiBold.woff') format('woff');
+  font-weight: $fontWeightSemibold;
+  font-style: normal;
+  font-display: swap;
 }
 
 html,
 body {
-    font-family: Inter, sans-serif;
-    font-weight: $fontWeightRegular;
-    font-style: normal;
-    font-size: $rem-base;
-    line-height: space(6);
-    color: $fontColorLightPrimary;
-    word-wrap: break-word;
-    word-break: break-word;
+  font-family: Inter, sans-serif;
+  font-weight: $fontWeightRegular;
+  font-style: normal;
+  font-size: $rem-base;
+  line-height: space(6);
+  color: $fontColorLightPrimary;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 a {
-    color: $colorPrimary;
-    text-decoration: none;
+  color: $colorPrimary;
+  text-decoration: none;
 
-    &:hover,
-    &:focus,
-    &:active {
-        color: $colorPrimaryHighlight;
-        text-decoration: underline;
-    }
+  &:hover,
+  &:focus,
+  &:active {
+    color: $colorPrimaryHighlight;
+    text-decoration: underline;
+  }
 }
 
 b,
 strong {
-    font-weight: $fontWeightSemibold;
+  font-weight: $fontWeightSemibold;
 }
 
 h1,
 .h1 {
-    @include typoH1;
+  @include typoH1;
 }
 
 h2,
 .h2 {
-    @include typoH2;
+  @include typoH2;
 }
 
 .h2Caps {
-    @include typoH2caps;
+  @include typoH2caps;
 }
 
 h3,
 .h3 {
-    @include typoH3;
+  @include typoH3;
 }
 
 .h3Caps {
-    @include typoH3caps;
+  @include typoH3caps;
 }
 
 h4,
 .h4 {
-    @include typoH4;
+  @include typoH4;
 }
 
 h5,
 .h5,
 .xxl {
-    @include typoXXL;
+  @include typoXXL;
 }
 
 h6,
 .h6,
 .xxlCaps {
-    @include typoXXLcaps;
+  @include typoXXLcaps;
 }
 
 .xl {
-    @include typoXL;
+  @include typoXL;
 }
 
 .lCaps {
-    @include typoLcaps;
+  @include typoLcaps;
 }
 
 .m {
-    @include typoM;
+  @include typoM;
 }
 
 .s {
-    @include typoS;
+  @include typoS;
 }
 
 .sCaps {
-    @include typoScaps;
+  @include typoScaps;
 }
 
 .xs {
-    @include typoXS;
+  @include typoXS;
 }
 
 .xxs {
-    @include typoXXS;
+  @include typoXXS;
 }
 
 .xxsCaps {
-    @include typoXXScaps;
-    font-weight: $fontWeightRegular;
+  @include typoXXScaps;
+  font-weight: $fontWeightRegular;
 }
 
 .xxxs {
-    @include typoXXXS;
-    font-weight: $fontWeightRegular;
+  @include typoXXXS;
+  font-weight: $fontWeightRegular;
 }
 
 .xxxsCaps {
-    @include typoXXXScaps;
+  @include typoXXXScaps;
 }
 
 button,
 .button {
-    @include typoButton;
-    font-weight: $fontWeightRegular;
-}
-
-.nav {
-    @include typoNav;
-    color: $fontColorLightPrimary;
-    text-decoration: none;
-    position: relative;
-    opacity: 0.5;
-    transition: opacity 0.5s;
-
-    &:hover,
-    &:focus,
-    &:active {
-        color: $fontColorLightPrimary;
-        text-decoration: none;
-    }
+  @include typoButton;
+  font-weight: $fontWeightRegular;
 }
 
 input,
 textarea {
-    font-family: Inter, sans-serif;
-    color: $fontColorLightPrimary;
-    @include typoL;
+  font-family: Inter, sans-serif;
+  color: $fontColorLightPrimary;
+  @include typoL;
 }
 
 .sub2 {
-    @include typoScaps;
-    opacity: 0.3;
-}
-
-.body2 {
-    @include typoS;
+  @include typoScaps;
+  opacity: 0.3;
 }
 
 .caption {
-    @include typoXS;
+  @include typoXS;
 }
 
 .overline {
-    @include typoXXScaps;
+  @include typoXXScaps;
+}
+
+.faded {
+  opacity: 0.6;
+}
+
+.number {
+  white-space: nowrap;
+  font-feature-settings: 'tnum' on;
+}
+
+.tooltip {
+  border-bottom: 1px dashed $alphaWhite60;
+  transition: border 0.2s;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    border-bottom-color: transparent;
+  }
+}
+
+.prefix {
+  @include margin(0, 1, 0, 0);
+}
+
+.suffix {
+  @include margin(0, 0, 0, 1);
 }

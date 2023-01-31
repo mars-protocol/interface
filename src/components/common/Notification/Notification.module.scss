@@ -1,0 +1,77 @@
+@import 'src/styles/master';
+
+.notification {
+  width: 100%;
+  min-height: rem-calc(48);
+  display: flex;
+  align-items: center;
+  @include layoutPopover;
+  margin-bottom: space(8) !important;
+  @include padding(2, 3);
+  position: relative;
+  justify-content: flex-start;
+
+  p {
+    @include margin(0);
+    text-align: center;
+  }
+
+  .content {
+    flex: 1;
+    @include padding(2, 0);
+  }
+
+  .icon {
+    @include margin(0, 4);
+  }
+
+  &.info {
+    color: $colorAccent;
+  }
+
+  &.warning {
+    color: $colorWhite;
+    font-weight: $fontWeightRegular;
+    background: linear-gradient(0deg, $colorInfoWarning, $colorInfoLoss);
+
+    .closeNotification {
+      color: $colorWhite;
+    }
+  }
+
+  &.closeBtnSpace {
+    @include padding(0, 10, 0, 0);
+  }
+
+  a {
+    display: inline-block;
+    @include margin(0, 1);
+    color: $colorSecondary;
+    text-decoration: underline;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+  }
+
+  .closeNotification {
+    position: absolute;
+    right: 0;
+    top: 0;
+    @include margin(4, 4, 0, 0);
+    border: none;
+    background: transparent;
+    @include padding(0);
+    opacity: 0.6;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    svg {
+      width: rem-calc(14);
+      height: rem-calc(13);
+    }
+  }
+}

@@ -1,0 +1,34 @@
+@import 'src/styles/master';
+
+.tr {
+  vertical-align: middle;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s;
+
+  &.expanded {
+    cursor: pointer;
+  }
+
+  .td {
+    .wrapper {
+      @include padding(6, 0, 0);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: space(2);
+      flex: 0 0 100%;
+      height: 100%;
+
+      p {
+        width: 100%;
+        text-align: center;
+        @include padding(2, 2, 0);
+      }
+
+      button {
+        margin: 0;
+      }
+    }
+  }
+}

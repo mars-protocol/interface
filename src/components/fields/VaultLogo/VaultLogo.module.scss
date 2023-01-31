@@ -1,0 +1,24 @@
+@import 'src/styles/master';
+
+.primary {
+  position: absolute;
+  left: 20%;
+  z-index: 1;
+}
+
+.secondary {
+  position: absolute;
+  right: 20%;
+  top: 20%;
+}
+
+@media only screen and (min-width: $bpMediumLow) {
+  .primary {
+    top: 20%;
+  }
+
+  .secondary {
+    top: unset;
+    bottom: 20%;
+  }
+}

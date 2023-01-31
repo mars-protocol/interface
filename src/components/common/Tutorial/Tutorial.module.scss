@@ -1,0 +1,48 @@
+@import 'src/styles/master';
+
+.container {
+  background: $colorWhite;
+  padding: space(4) 0;
+  border-radius: $borderRadiusXS;
+  color: $colorSecondaryDark;
+  opacity: 0;
+  transition: all 1s linear;
+
+  &.show {
+    opacity: 1;
+  }
+
+  &.hide {
+    opacity: 0;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: space(6);
+    border-bottom: 1px solid black;
+
+    @include padding(0, 4, 4, 4);
+
+    .closeBtn {
+      border: none;
+      width: space(5);
+      height: space(5);
+      cursor: pointer;
+      background: none;
+    }
+  }
+
+  .content {
+    @include padding(4, 4, 0, 4);
+    display: flex;
+    flex-direction: column;
+
+    .btn {
+      z-index: 21;
+      margin-top: space(2);
+      align-self: flex-end;
+    }
+  }
+}

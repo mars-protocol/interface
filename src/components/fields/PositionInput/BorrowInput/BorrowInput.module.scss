@@ -1,0 +1,7 @@
+@import 'src/styles/master';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: space(2);
+}

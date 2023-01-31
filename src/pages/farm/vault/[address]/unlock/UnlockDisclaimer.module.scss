@@ -1,0 +1,29 @@
+@import 'src/styles/master';
+
+.card {
+  max-width: rem-calc(768);
+  width: 100%;
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: space(8);
+    max-width: rem-calc(560);
+    margin: auto;
+    text-align: center;
+    gap: space(4);
+
+    .title {
+      margin-top: space(12);
+    }
+
+    .btn {
+      @include margin(4, 0, 0);
+    }
+
+    a {
+      display: inline-block;
+    }
+  }
+}

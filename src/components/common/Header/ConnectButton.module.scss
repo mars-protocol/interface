@@ -1,0 +1,29 @@
+@import 'src/styles/master';
+
+.wrapper {
+  position: relative;
+
+  .button {
+    display: flex;
+
+    &.outline {
+      border: 1px solid $fontColorLightPrimary;
+      color: $fontColorLightPrimary;
+
+      &:hover,
+      &:focus {
+        background-color: $alphaWhite40;
+      }
+
+      &:active {
+        background-color: $alphaWhite60;
+      }
+    }
+
+    .svg {
+      @include margin(0);
+      height: rem-calc(16) !important;
+      width: auto !important;
+    }
+  }
+}

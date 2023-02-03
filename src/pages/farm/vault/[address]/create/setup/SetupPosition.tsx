@@ -4,7 +4,6 @@ import { useCreateCreditAccount, useUpdateAccount } from 'hooks/mutations'
 import { useEditPosition, useEstimateFarmFee } from 'hooks/queries'
 import { getTimeAndUnit } from 'libs/parse'
 import router from 'next/router'
-import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import styles from './SetupPosition.module.scss'
@@ -22,7 +21,6 @@ const SetupPosition = (props: Props) => {
     data: accountId,
     isLoading: isLoadingCreate,
   } = useCreateCreditAccount()
-
   const {
     mutate: enterVault,
     data: enterVaultData,
@@ -57,11 +55,10 @@ const SetupPosition = (props: Props) => {
     enterVault({ accountId, actions: editActions, fee: editFee, funds: editFunds })
   }
 
-  if (isLoadingEnterVault || enterVaultError || enterVaultData) {
+  if (isLoadingEnterVault || enterVaultData) {
     return (
       <SetUpResponse
         data={enterVaultData}
-        error={enterVaultError}
         isLoading={isLoadingEnterVault}
         accountId={accountId || ''}
       />

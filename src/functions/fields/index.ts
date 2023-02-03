@@ -1,6 +1,5 @@
 // @index(['./*.ts'], f => `export { ${f.name} } from '${f.path}'`)
 export { coinsToActionCoins } from './coinsToActionCoins'
-export { getAmountFromUnlockRes } from './getAmountFromUnlockRes'
 export { getAmountsFromActiveVault } from './getAmountsFromActiveVault'
 export { getClosePositionActions } from './getClosePositionActions'
 export { getCoinFromPosition } from './getCoinFromPosition'

@@ -1,10 +1,9 @@
 import { MsgExecuteContractEncodeObject } from '@cosmjs/cosmwasm-stargate'
-import { toUtf8 } from '@cosmjs/encoding'
 import { Coin } from '@cosmjs/proto-signing'
-import { GasPrice } from '@cosmjs/stargate'
+import { MsgExecuteContract } from '@marsprotocol/wallet-connector'
 import { useQuery } from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
-import { GAS_ADJUSTMENT, GAS_PRICE } from 'constants/appConstants'
+import { GAS_ADJUSTMENT } from 'constants/appConstants'
 import useStore from 'store'
 import { QUERY_KEYS } from 'types/enums/queryKeys'
 import { ContractMsg } from 'types/types'
@@ -22,37 +21,35 @@ export const useEstimateFee = (props: Props) => {
   const client = useStore((s) => s.client)
 
   return useQuery(
-    [QUERY_KEYS.ESTIMATE_FEE],
+    [QUERY_KEYS.ESTIMATE_FEE, props.msg],
     async () => {
       const sender = props.sender ? props.sender : userWalletAddress
-      const gasPrice = GasPrice.fromString(GAS_PRICE)
       const gasAdjustment = GAS_ADJUSTMENT
 
-      if (!client) return
-
-      const msg = props.executeMsg
-        ? props.executeMsg
-        : {
-            typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
-            value: {
-              sender: sender,
-              contract: props.contract,
-              msg: toUtf8(JSON.stringify(props.msg)),
-              funds: props.funds,
-            },
-          }
+      if (!client || !props.contract || !props.msg) return
 
       try {
-        const gasUsed = await client.simulate(sender, [msg], undefined)
-
-        const fee = new BigNumber(Number(gasPrice.amount))
-          .multipliedBy(gasUsed)
-          .multipliedBy(gasAdjustment)
-
-        return {
-          amount: [{ denom: 'uosmo', amount: fee.toFixed(0) }],
-          gas: new BigNumber(gasUsed).multipliedBy(gasAdjustment).toFixed(0),
+        const simulateOptions = {
+          messages: [
+            new MsgExecuteContract({
+              sender: sender,
+              contract: props.contract,
+              msg: props.msg,
+              funds: props.funds,
+            }),
+          ],
+          wallet: client.recentWallet,
         }
+
+        const result = await client.simulate(simulateOptions)
+        return result.success
+          ? {
+              amount: result.fee ? result.fee.amount : [],
+              gas: new BigNumber(result.fee ? result.fee.gas : 0)
+                .multipliedBy(gasAdjustment)
+                .toFixed(0),
+            }
+          : null
       } catch {
         return null
       }

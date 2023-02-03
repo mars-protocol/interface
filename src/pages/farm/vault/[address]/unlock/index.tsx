@@ -5,7 +5,6 @@ import { useActiveVault } from 'hooks/data'
 import { useUpdateAccount } from 'hooks/mutations'
 import { useRequestUnlockPosition } from 'hooks/queries/useRequestUnlockPosition'
 import { useRouter } from 'next/router'
-import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import styles from './UnlockDisclaimer.module.scss'
@@ -49,12 +48,7 @@ const Unlock = () => {
 
   if (unlockData || unlockError || isLoadingUnlock) {
     return (
-      <UnlockResponse
-        data={unlockData}
-        error={unlockError}
-        isLoading={isLoadingUnlock}
-        activeVault={activeVault}
-      />
+      <UnlockResponse data={unlockData} isLoading={isLoadingUnlock} activeVault={activeVault} />
     )
   }
 

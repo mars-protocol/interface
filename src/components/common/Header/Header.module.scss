@@ -63,7 +63,6 @@
 
     .active {
       opacity: 1;
-      pointer-events: none;
 
       &:before {
         content: '';
@@ -73,6 +72,10 @@
         height: 1px;
         background-color: $fontColorLightPrimary;
       }
+    }
+
+    .unclickable {
+      pointer-events: none;
     }
   }
 }

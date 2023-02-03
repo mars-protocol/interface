@@ -25,7 +25,9 @@ const CloseVaultPosition = () => {
   }
 
   useEffect(() => {
-    if (!closeFee || !closeActions || !activeVault || isLoading || data || error) return
+    if (!closeFee || !closeActions || !activeVault || isLoading || data?.error || data?.result)
+      return
+
     mutate({
       accountId: activeVault.position.accountId,
       actions: closeActions,
@@ -46,7 +48,6 @@ const CloseVaultPosition = () => {
   return (
     <ClosePositionResponse
       data={data}
-      error={error}
       isLoading={isLoading}
       accountId={ref.current.position.accountId}
     />

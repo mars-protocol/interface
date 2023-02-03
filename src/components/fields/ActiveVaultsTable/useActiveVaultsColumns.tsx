@@ -1,20 +1,28 @@
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import Tippy from '@tippyjs/react'
 import BigNumber from 'bignumber.js'
-import classNames from 'classnames/bind'
+import classNames from 'classnames'
 import {
   AnimatedNumber,
+  Apy,
   BorrowCapacity,
   Button,
   DisplayCurrency,
   SVG,
+  TextTooltip,
   TokenBalance,
 } from 'components/common'
 import { VaultLogo, VaultName } from 'components/fields'
 import { VAULT_DEPOSIT_BUFFER } from 'constants/appConstants'
 import { convertPercentage } from 'functions'
 import { getLiqBorrowValue, getMaxBorrowValue } from 'functions/fields'
-import { convertApyToDailyApy, formatUnlockDate, formatValue, ltvToLeverage } from 'libs/parse'
+import {
+  convertApyToDailyApy,
+  formatUnlockDate,
+  formatValue,
+  getTimeAndUnit,
+  ltvToLeverage,
+} from 'libs/parse'
 import { useRouter } from 'next/router'
 import { ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -43,11 +51,38 @@ export const useActiveVaultsColumns = () => {
       columnHelper.accessor('name', {
         enableSorting: true,
         header: t('fields.position'),
-        cell: ({ row }) => <VaultName vault={row.original} />,
+        cell: ({ row }) => {
+          return (
+            <Tippy
+              appendTo={() => document.body}
+              animation={false}
+              render={(attrs) => {
+                return (
+                  <div className='tippyContainer' {...attrs}>
+                    {t('fields.tooltips.name', {
+                      asset1: row.original.symbols.primary,
+                      asset2: row.original.symbols.secondary,
+                      ...getTimeAndUnit(row.original.lockup),
+                    })}
+                  </div>
+                )
+              }}
+            >
+              <div>
+                <VaultName vault={row.original} />
+              </div>
+            </Tippy>
+          )
+        },
       }),
       columnHelper.accessor('position.values.total', {
         enableSorting: true,
-        header: t('fields.positionValueShort'),
+        header: () => (
+          <TextTooltip
+            text={t('fields.positionValueShort')}
+            tooltip={t('fields.tooltips.positionValue')}
+          />
+        ),
         cell: ({ row }) => {
           const primaryCoin = {
             denom: row.original.denoms.primary,
@@ -89,7 +124,9 @@ export const useActiveVaultsColumns = () => {
       }),
       columnHelper.accessor('position.values.primary', {
         enableSorting: true,
-        header: t('fields.netValue'),
+        header: () => (
+          <TextTooltip text={t('fields.netValue')} tooltip={t('fields.tooltips.netValue')} />
+        ),
         cell: ({ row }) => {
           const position = row.original.position
           const netValue = position.values.primary + position.values.secondary
@@ -129,7 +166,9 @@ export const useActiveVaultsColumns = () => {
       }),
       columnHelper.accessor('position.values.borrowed', {
         enableSorting: true,
-        header: t('common.borrowed'),
+        header: () => (
+          <TextTooltip text={t('common.borrowed')} tooltip={t('fields.tooltips.borrowValue')} />
+        ),
         cell: (info) => {
           const borrowAsset = whitelistedAssets.find(
             (asset) => asset.denom === info.row.original.denoms.secondary,
@@ -169,7 +208,9 @@ export const useActiveVaultsColumns = () => {
       }),
       columnHelper.accessor('vaultCap', {
         enableSorting: true,
-        header: t('fields.vaultCap'),
+        header: () => (
+          <TextTooltip text={t('fields.vaultCap')} tooltip={t('fields.tooltips.vaultCap')} />
+        ),
         cell: ({ row }) => {
           if (!row.original.vaultCap) {
             return null
@@ -217,7 +258,9 @@ export const useActiveVaultsColumns = () => {
       columnHelper.accessor('position.apy', {
         id: 'apy',
         enableSorting: true,
-        header: t('common.apy'),
+        header: () => (
+          <TextTooltip text={t('common.apy')} tooltip={t('fields.tooltips.apy.active')} />
+        ),
         cell: ({ row }) => {
           switch (row.original.position.status) {
             case 'unlocked':
@@ -228,13 +271,28 @@ export const useActiveVaultsColumns = () => {
                 </>
               )
             case 'active':
-              const apy = new BigNumber(row.original.position.apy).decimalPlaces(2).toNumber()
+              const apy = new BigNumber(row.original.position.apy.net).decimalPlaces(2).toNumber()
+
+              const apyData = {
+                total: row.original.apy || 0,
+                borrow: row.original.position.apy.borrow,
+              }
               return (
                 <>
-                  <AnimatedNumber amount={apy} className='m' suffix='%' />
-                  <p className='s faded'>
-                    {convertApyToDailyApy(row.original.position.apy)}%/{t('common.day')}
-                  </p>
+                  <Tippy
+                    appendTo={() => document.body}
+                    animation={false}
+                    content={
+                      <Apy apyData={apyData} leverage={row.original.position.currentLeverage} />
+                    }
+                  >
+                    <span className='tooltip'>
+                      <AnimatedNumber amount={apy} className='m' suffix='%' />
+                      <p className='s faded'>
+                        {convertApyToDailyApy(row.original.position.apy.net)}%/{t('common.day')}
+                      </p>
+                    </span>
+                  </Tippy>
                 </>
               )
             case 'unlocking':
@@ -242,7 +300,6 @@ export const useActiveVaultsColumns = () => {
                 <>
                   <p className='m'>{t('fields.unlocking')}</p>
                   <p className='s faded'>
-                    {/* {new Date(row.original.position?.unlockAtTimestamp || 0).} */}
                     {formatUnlockDate(row.original.position?.unlockAtTimestamp || 0)}
                   </p>
                 </>
@@ -252,7 +309,9 @@ export const useActiveVaultsColumns = () => {
       }),
       columnHelper.accessor('ltv', {
         enableSorting: true,
-        header: t('fields.leverage'),
+        header: () => (
+          <TextTooltip text={t('fields.leverage')} tooltip={t('fields.tooltips.leverage.active')} />
+        ),
         cell: ({ row }) => {
           return (
             <>
@@ -275,7 +334,12 @@ export const useActiveVaultsColumns = () => {
       }),
       columnHelper.accessor('position.amounts.borrowed', {
         enableSorting: false,
-        header: t('common.borrowingCapacity'),
+        header: () => (
+          <TextTooltip
+            text={t('common.borrowingCapacity')}
+            tooltip={t('fields.tooltips.borrowCapacity')}
+          />
+        ),
         cell: ({ row }) => {
           const maxBorrowValue = getMaxBorrowValue(row.original, row.original.position)
 

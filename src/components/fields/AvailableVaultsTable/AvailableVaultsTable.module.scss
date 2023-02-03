@@ -47,8 +47,6 @@ $action: ':nth-child(9)';
         }
       }
 
-      $number: 1;
-
       &:not(#{$color}) {
         @include padding(4, 2);
       }
@@ -111,7 +109,7 @@ $action: ':nth-child(9)';
     &#{$description} {
       text-align: left;
       width: rem-calc(300);
-      @include padding(0, 2, 0, 0);
+      @include padding(2, 2, 2, 0);
     }
   }
 }

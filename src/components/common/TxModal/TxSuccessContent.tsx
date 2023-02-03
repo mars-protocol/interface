@@ -1,8 +1,6 @@
-import { ExecuteResult } from '@cosmjs/cosmwasm-stargate'
 import { Coin } from '@cosmjs/stargate'
-import { ChainInfoID, SimpleChainInfoList } from '@marsprotocol/wallet-connector'
-import { Button, TxFee, TxLink } from 'components/common'
-import { InfoTitle } from 'components/common'
+import { ChainInfoID, SimpleChainInfoList, TxBroadcastResult } from '@marsprotocol/wallet-connector'
+import { Button, InfoTitle, TxFee, TxLink } from 'components/common'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
 import { TxStatus } from 'types/enums/RedBankAction'
@@ -11,7 +9,7 @@ import styles from './TxSuccessContent.module.scss'
 
 interface Props {
   title: string
-  response?: ExecuteResult
+  response?: TxBroadcastResult | null
   txFee?: Coin
   txStatus: TxStatus
   actions: { label: string; values: string[] }[]
@@ -68,8 +66,8 @@ export const TxSuccessContent = ({
               <div className={styles.item}>
                 <div className={styles.label}>{t('common.txHash')}</div>
                 <TxLink
-                  hash={response?.transactionHash || ''}
-                  link={`${explorerUrl}txs/${response?.transactionHash}`}
+                  hash={response?.response.transactionHash || ''}
+                  link={`${explorerUrl}txs/${response?.response.transactionHash}`}
                 />
               </div>
             </div>

@@ -1,4 +1,4 @@
-import { useWallet, WalletConnectionStatus } from '@marsprotocol/wallet-connector'
+import { useWalletManager, WalletConnectionStatus } from '@marsprotocol/wallet-connector'
 import classNames from 'classnames'
 import { Footer, Header, MobileNav } from 'components/common'
 import { FieldsNotConnected } from 'components/fields'
@@ -21,13 +21,11 @@ export const Layout = ({ children }: Props) => {
   const enableAnimations = useStore((s) => s.enableAnimations)
   const backgroundClasses = classNames('background', !userWalletAddress && 'night')
   const vaultConfigs = useStore((s) => s.vaultConfigs)
-  const wallet = useWallet()
-  const wasConnectedBefore = !!localStorage.getItem(SESSION_WALLET_KEY)
-  const connectionSuccess = !!(
-    (wallet.status === WalletConnectionStatus.Connecting && wasConnectedBefore) ||
-    wallet.status === WalletConnectionStatus.Connected
-  )
-  const isConnected = !!userWalletAddress || connectionSuccess
+  const { status } = useWalletManager()
+  const isConnected = status === WalletConnectionStatus.Connected
+  const wasConnectedBefore =
+    localStorage.getItem(SESSION_WALLET_KEY) !== null &&
+    localStorage.getItem(SESSION_WALLET_KEY) !== '[]'
 
   useEffect(() => {
     if (!userWalletAddress) {
@@ -41,7 +39,7 @@ export const Layout = ({ children }: Props) => {
       <Header />
       <div className='appContainer'>
         <div className='widthBox'>
-          {isConnected ? (
+          {isConnected || wasConnectedBefore ? (
             <div className={'body'}>{children}</div>
           ) : router.route.includes('farm') ? (
             <FieldsNotConnected />

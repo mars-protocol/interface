@@ -14,6 +14,8 @@ import { CreateOrUpdateConfig, InitOrUpdateAssetParams, Uint128 } from './MarsMo
 export interface MarsMockRedBankMessage {
   contractAddress: string
   sender: string
+  updateOwner: (funds?: Coin[]) => MsgExecuteContractEncodeObject
+  updateEmergencyOwner: (funds?: Coin[]) => MsgExecuteContractEncodeObject
   updateConfig: (
     {
       config,
@@ -124,6 +126,8 @@ export class MarsMockRedBankMessageComposer implements MarsMockRedBankMessage {
   constructor(sender: string, contractAddress: string) {
     this.sender = sender
     this.contractAddress = contractAddress
+    this.updateOwner = this.updateOwner.bind(this)
+    this.updateEmergencyOwner = this.updateEmergencyOwner.bind(this)
     this.updateConfig = this.updateConfig.bind(this)
     this.initAsset = this.initAsset.bind(this)
     this.updateAsset = this.updateAsset.bind(this)
@@ -136,6 +140,36 @@ export class MarsMockRedBankMessageComposer implements MarsMockRedBankMessage {
     this.updateAssetCollateralStatus = this.updateAssetCollateralStatus.bind(this)
   }
 
+  updateOwner = (funds?: Coin[]): MsgExecuteContractEncodeObject => {
+    return {
+      typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
+      value: MsgExecuteContract.fromPartial({
+        sender: this.sender,
+        contract: this.contractAddress,
+        msg: toUtf8(
+          JSON.stringify({
+            update_owner: {},
+          }),
+        ),
+        funds,
+      }),
+    }
+  }
+  updateEmergencyOwner = (funds?: Coin[]): MsgExecuteContractEncodeObject => {
+    return {
+      typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
+      value: MsgExecuteContract.fromPartial({
+        sender: this.sender,
+        contract: this.contractAddress,
+        msg: toUtf8(
+          JSON.stringify({
+            update_emergency_owner: {},
+          }),
+        ),
+        funds,
+      }),
+    }
+  }
   updateConfig = (
     {
       config,

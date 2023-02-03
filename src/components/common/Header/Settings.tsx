@@ -1,6 +1,6 @@
-import { useWallet, WalletConnectionStatus } from '@marsprotocol/wallet-connector'
+import { useWalletManager, WalletConnectionStatus } from '@marsprotocol/wallet-connector'
 import BigNumber from 'bignumber.js'
-import classNames from 'classnames/bind'
+import classNames from 'classnames'
 import { Button, NumberInput, SVG, Toggle, Tooltip } from 'components/common'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -19,11 +19,11 @@ export const Settings = () => {
   const [inputRef, setInputRef] = useState<React.RefObject<HTMLInputElement>>()
   const [isCustom, setIsCustom] = useState(false)
   const enableAnimations = useStore((s) => s.enableAnimations)
-  const { status } = useWallet()
+  const { status } = useWalletManager()
 
   const onInputChange = (value: number) => {
     setCustomSlippage(value.toString())
-    if (value.toString() === '') {
+    if (!value.toString()) {
       return
     }
   }

@@ -16,4 +16,5 @@ export { useUnlockMessages } from './useUnlockMessages'
 export { useUserBalance } from './useUserBalance'
 export { useUserDebt } from './useUserDebt'
 export { useUserDeposit } from './useUserDeposit'
+export { useUserIcns } from './useUserIcns'
 // @endindex

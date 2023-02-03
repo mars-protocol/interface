@@ -3,6 +3,12 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 import HttpApi from 'i18next-http-backend'
 import { initReactI18next } from 'react-i18next'
 
+declare module 'i18next' {
+  interface CustomTypeOptions {
+    returnNull: false
+  }
+}
+
 i18next
   .use(HttpApi)
   .use(LanguageDetector)
@@ -11,7 +17,7 @@ i18next
     backend: {
       crossDomain: true,
       loadPath() {
-        return 'https://raw.githubusercontent.com/mars-protocol/translations/develop/{{lng}}.json'
+        return 'https://raw.githubusercontent.com/mars-protocol/translations/main/{{lng}}.json'
       },
     },
     react: {

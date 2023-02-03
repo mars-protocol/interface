@@ -27,7 +27,7 @@ export const useBorrowColumns = () => {
         header: '',
         cell: (info) => (
           <div className={styles.logo}>
-            <Image alt='logo' height='100%' src={info.getValue().src} width='100%' />
+            <Image alt='logo' src={info.getValue().src} width={32} height={32} />
           </div>
         ),
       }),

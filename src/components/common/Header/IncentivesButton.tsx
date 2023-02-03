@@ -1,5 +1,4 @@
-import { ExecuteResult } from '@cosmjs/cosmwasm-stargate'
-import { ChainInfoID, SimpleChainInfoList } from '@marsprotocol/wallet-connector'
+import { ChainInfoID, SimpleChainInfoList, TxBroadcastResult } from '@marsprotocol/wallet-connector'
 import { useQueryClient } from '@tanstack/react-query'
 import classNames from 'classnames'
 import { AnimatedNumber, Button, DisplayCurrency, SVG, Tooltip, TxLink } from 'components/common'
@@ -38,7 +37,7 @@ export const IncentivesButton = () => {
   const [showDetails, setShowDetails] = useState(false)
   const [disabled, setDisabled] = useState(true)
   const [submitted, setSubmitted] = useState(false)
-  const [response, setResponse] = useState<ExecuteResult>()
+  const [response, setResponse] = useState<TxBroadcastResult>()
   const [error, setError] = useState<string>()
   const [hasUnclaimedRewards, setHasUnclaimedRewards] = useState(false)
 
@@ -77,7 +76,7 @@ export const IncentivesButton = () => {
       setSubmitted(false)
       return
     }
-    if (response?.transactionHash) {
+    if (response?.hash) {
       setDisabled(true)
       setSubmitted(false)
       return
@@ -156,8 +155,8 @@ export const IncentivesButton = () => {
                 <div className={`${styles.container} ${styles.info}`}>
                   <p className='m'>{t('incentives.successfullyClaimed')}</p>
                   <TxLink
-                    hash={response?.transactionHash || ''}
-                    link={`${explorerUrl}txs/${response?.transactionHash}`}
+                    hash={response?.hash || ''}
+                    link={`${explorerUrl}txs/${response?.hash}`}
                   />
                 </div>
               ) : (

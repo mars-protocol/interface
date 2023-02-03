@@ -1,15 +1,14 @@
-import { ExecuteResult } from '@cosmjs/cosmwasm-stargate'
-import { decodeTxRaw } from '@cosmjs/proto-signing'
 import { Coin } from '@cosmjs/stargate'
-import { Card } from 'components/common'
-import { TxFailedContent, TxSuccessContent } from 'components/common'
+import { TxBroadcastResult } from '@marsprotocol/wallet-connector'
+import { Card, TxFailedContent, TxSuccessContent } from 'components/common'
+import { getFeeFromResponse } from 'functions'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
 import { TxStatus } from 'types/enums/RedBankAction'
 
 interface Props {
-  response?: ExecuteResult
+  response?: TxBroadcastResult
   error?: string
   title: string
   actions?: FieldsAction[]
@@ -33,18 +32,18 @@ export const TxResponse = ({
   const rpc = useStore((s) => s.chainInfo?.rpc)
   const chainID = useStore((s) => s.chainInfo?.chainId)
   const client = useStore((s) => s.client)
+  const baseCurrency = useStore((s) => s.baseCurrency)
 
   useEffect(() => {
-    const getTxInfo = async (hash: string) => {
+    const getTxInfo = async (hash?: string) => {
       if (txStatus !== TxStatus.LOADING) return
-      if (!rpc || !chainID) return
+      if (!rpc || !chainID || !hash || !response) return
 
       try {
-        const txInfoResponse = await client?.getTx(hash)
+        const coin = getFeeFromResponse(response)
 
-        if (txInfoResponse) {
-          const decoded = decodeTxRaw(txInfoResponse?.tx)
-          setTxFee(decoded.authInfo.fee?.amount[0])
+        if (coin) {
+          setTxFee(coin)
         }
 
         setTxStatus(TxStatus.SUCCESS)
@@ -56,8 +55,8 @@ export const TxResponse = ({
       }
     }
 
-    getTxInfo(response?.transactionHash || '')
-  }, [client, response, rpc, chainID, checkTxStatus, onSuccess, txStatus])
+    getTxInfo(response?.hash || undefined)
+  }, [client, response, rpc, chainID, checkTxStatus, onSuccess, txStatus, baseCurrency.denom])
 
   // reset scroll
   useEffect(() => {
@@ -79,7 +78,7 @@ export const TxResponse = ({
       {txStatus === TxStatus.FAILURE ? (
         <TxFailedContent
           handleClose={handleClose}
-          hash={response?.transactionHash || ''}
+          hash={response?.response.transactionHash || ''}
           message={error}
         />
       ) : (

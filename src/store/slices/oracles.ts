@@ -90,7 +90,7 @@ const oraclesSlice = (set: NamedSet<Store>, get: GetState<Store>): OraclesSlice 
         const denom = asset.denom
 
         if (denom === get().baseCurrency.denom) {
-          updateExchangeRate({ denom, amount: '1' }, exchangeRates)
+          exchangeRates.push({ denom, amount: '1' })
           return
         }
 

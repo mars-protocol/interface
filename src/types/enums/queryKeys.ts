@@ -7,6 +7,7 @@ export enum QUERY_KEYS {
   USER_BALANCE = 'userBalance',
   USER_DEBT = 'userDebt',
   USER_DEPOSIT = 'userDeposits',
+  USER_ICNS = 'userIcns',
   ATOM_PRICE = 'atomPrice',
   SAFETY_FUND_BALANCE = 'safetyFundBalance',
   MARKET_DEPOSITS = 'marketDeposits',

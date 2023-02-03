@@ -4,6 +4,15 @@
   display: flex;
   flex-direction: column;
 
+  .inline {
+    display: inline;
+  }
+
+  .link {
+    color: unset;
+    text-decoration: none;
+  }
+
   .grid {
     display: grid;
     grid-template-columns: rem-calc(64) 1fr 1fr;

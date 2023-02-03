@@ -53,7 +53,7 @@ export const AvailableVaultsTable = () => {
       title={t('fields.availableVaults')}
       hideHeaderBorder
       styleOverride={{ marginBottom: 40 }}
-      tooltip={<Trans i18nKey='fields.tooltips.activeVaults' />}
+      tooltip={<Trans i18nKey='fields.tooltips.availableVaults.desktop' />}
     >
       <table className={styles.table}>
         <thead className={styles.thead}>
@@ -68,7 +68,7 @@ export const AvailableVaultsTable = () => {
                 const wrapperClasses = classes({
                   wrapper: true,
                   left: header.id === 'name' || header.id === 'description',
-                  center: header.id === 'provider_name',
+                  center: header.id === 'provider',
                 })
 
                 return (

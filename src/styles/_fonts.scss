@@ -49,6 +49,14 @@ a {
     color: $colorPrimaryHighlight;
     text-decoration: underline;
   }
+
+  &:has(button) {
+    &:hover,
+    &:focus,
+    &:active {
+      text-decoration: none;
+    }
+  }
 }
 
 b,

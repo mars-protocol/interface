@@ -1,4 +1,4 @@
-import classNames from 'classnames/bind'
+import classNames from 'classnames'
 import { BreakdownGraph, BreakdownTable } from 'components/fields'
 import React from 'react'
 import { useTranslation } from 'react-i18next'

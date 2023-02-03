@@ -1,7 +1,6 @@
 @import 'src/styles/master';
 
 .container {
-  position: fixed;
   display: flex;
   flex-direction: column;
   @include layoutTooltip;

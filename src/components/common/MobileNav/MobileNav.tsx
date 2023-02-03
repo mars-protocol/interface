@@ -14,21 +14,25 @@ export const MobileNav = () => {
 
   return (
     <nav className={styles.mobileNav}>
-      <Link href='/redbank' passHref>
-        <a className={classNames(styles.nav, !router.pathname.includes('farm') && styles.active)}>
-          <SVG.RedBankIcon />
-          <span>{t('global.redBank')}</span>
-        </a>
+      <Link
+        href='/redbank'
+        passHref
+        className={classNames(styles.nav, !router.pathname.includes('farm') && styles.active)}
+      >
+        <SVG.RedBankIcon />
+        <span>{t('global.redBank')}</span>
       </Link>
       <a className={styles.nav} target='_blank' href={networkConfig?.councilUrl} rel='noreferrer'>
         <SVG.CouncilIcon />
         <span>{t('global.council')}</span>
       </a>
-      <Link href='/farm' passHref>
-        <a className={classNames(styles.nav, router.pathname.includes('farm') && styles.active)}>
-          <SVG.FieldsIcon />
-          <span>{t('global.fields')}</span>
-        </a>
+      <Link
+        href='/farm'
+        passHref
+        className={classNames(styles.nav, router.pathname.includes('farm') && styles.active)}
+      >
+        <SVG.FieldsIcon />
+        <span>{t('global.fields')}</span>
       </Link>
     </nav>
   )

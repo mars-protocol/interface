@@ -17,6 +17,7 @@ import {
   ArrayOfCoin,
   ArrayOfCoinBalanceResponseItem,
   ArrayOfDebtShares,
+  ArrayOfLentShares,
   ArrayOfSharesResponseItem,
   ArrayOfString,
   ArrayOfVaultInfoResponse,
@@ -26,6 +27,7 @@ import {
   ConfigResponse,
   DebtShares,
   HealthResponse,
+  LentShares,
   Positions,
   Uint128,
   VaultBaseForString,
@@ -95,6 +97,30 @@ export const marsMockCreditManagerQueryKeys = {
       {
         ...marsMockCreditManagerQueryKeys.address(contractAddress)[0],
         method: 'all_total_debt_shares',
+        args,
+      },
+    ] as const,
+  allLentShares: (contractAddress: string | undefined, args?: Record<string, unknown>) =>
+    [
+      {
+        ...marsMockCreditManagerQueryKeys.address(contractAddress)[0],
+        method: 'all_lent_shares',
+        args,
+      },
+    ] as const,
+  totalLentShares: (contractAddress: string | undefined, args?: Record<string, unknown>) =>
+    [
+      {
+        ...marsMockCreditManagerQueryKeys.address(contractAddress)[0],
+        method: 'total_lent_shares',
+        args,
+      },
+    ] as const,
+  allTotalLentShares: (contractAddress: string | undefined, args?: Record<string, unknown>) =>
+    [
+      {
+        ...marsMockCreditManagerQueryKeys.address(contractAddress)[0],
+        method: 'all_total_lent_shares',
         args,
       },
     ] as const,
@@ -259,6 +285,66 @@ export function useMarsMockCreditManagerAllVaultPositionsQuery<
     () =>
       client
         ? client.allVaultPositions({
+            limit: args.limit,
+            startAfter: args.startAfter,
+          })
+        : Promise.reject(new Error('Invalid client')),
+    { ...options, enabled: !!client && (options?.enabled != undefined ? options.enabled : true) },
+  )
+}
+export interface MarsMockCreditManagerAllTotalLentSharesQuery<TData>
+  extends MarsMockCreditManagerReactQuery<ArrayOfLentShares, TData> {
+  args: {
+    limit?: number
+    startAfter?: string
+  }
+}
+export function useMarsMockCreditManagerAllTotalLentSharesQuery<TData = ArrayOfLentShares>({
+  client,
+  args,
+  options,
+}: MarsMockCreditManagerAllTotalLentSharesQuery<TData>) {
+  return useQuery<ArrayOfLentShares, Error, TData>(
+    marsMockCreditManagerQueryKeys.allTotalLentShares(client?.contractAddress, args),
+    () =>
+      client
+        ? client.allTotalLentShares({
+            limit: args.limit,
+            startAfter: args.startAfter,
+          })
+        : Promise.reject(new Error('Invalid client')),
+    { ...options, enabled: !!client && (options?.enabled != undefined ? options.enabled : true) },
+  )
+}
+export interface MarsMockCreditManagerTotalLentSharesQuery<TData>
+  extends MarsMockCreditManagerReactQuery<LentShares, TData> {}
+export function useMarsMockCreditManagerTotalLentSharesQuery<TData = LentShares>({
+  client,
+  options,
+}: MarsMockCreditManagerTotalLentSharesQuery<TData>) {
+  return useQuery<LentShares, Error, TData>(
+    marsMockCreditManagerQueryKeys.totalLentShares(client?.contractAddress),
+    () => (client ? client.totalLentShares() : Promise.reject(new Error('Invalid client'))),
+    { ...options, enabled: !!client && (options?.enabled != undefined ? options.enabled : true) },
+  )
+}
+export interface MarsMockCreditManagerAllLentSharesQuery<TData>
+  extends MarsMockCreditManagerReactQuery<ArrayOfSharesResponseItem, TData> {
+  args: {
+    limit?: number
+    startAfter?: string[][]
+  }
+}
+export function useMarsMockCreditManagerAllLentSharesQuery<TData = ArrayOfSharesResponseItem>({
+  client,
+  args,
+  options,
+}: MarsMockCreditManagerAllLentSharesQuery<TData>) {
+  return useQuery<ArrayOfSharesResponseItem, Error, TData>(
+    marsMockCreditManagerQueryKeys.allLentShares(client?.contractAddress, args),
+    () =>
+      client
+        ? client.allLentShares({
             limit: args.limit,
             startAfter: args.startAfter,
           })

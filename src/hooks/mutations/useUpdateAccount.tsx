@@ -13,29 +13,33 @@ interface Props {
 
 export const useUpdateAccount = () => {
   const queryClient = useQueryClient()
-  const creditManagerClient = useStore((s) => s.creditManagerClient)
+  const executeMsg = useStore((s) => s.executeMsg)
+  const networkConfig = useStore((s) => s.networkConfig)
   const getVaults = useStore((s) => s.getVaults)
 
-  return useMutation(
-    async (props: Props) => {
-      queryClient.removeQueries([QUERY_KEYS.ESTIMATE_FARM_FEE])
-      return creditManagerClient?.updateCreditAccount(
-        {
-          accountId: props.accountId,
-          actions: props.actions,
-        },
-        props.fee,
-        undefined,
-        props.funds,
-      )
-    },
-    {
-      onSuccess: () => {
+  return useMutation(async (props: Props) => {
+    queryClient.removeQueries([QUERY_KEYS.ESTIMATE_FARM_FEE])
+    const message = {
+      update_credit_account: {
+        account_id: props.accountId,
+        actions: props.actions,
+      },
+    }
+
+    if (!networkConfig) return
+
+    return executeMsg({
+      msg: message,
+      fee: props.fee,
+      contract: networkConfig.contracts.creditManager,
+      funds: props.funds,
+    }).then((broadcastResult) => {
+      if (broadcastResult?.response.code === 0) {
         getVaults({ refetch: true })
-      },
-      onError: (error: Error) => {
-        return `${error.message}`
-      },
-    },
-  )
+        return { result: broadcastResult }
+      } else {
+        return { error: broadcastResult?.rawLogs }
+      }
+    })
+  })
 }

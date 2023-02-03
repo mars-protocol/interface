@@ -3,8 +3,8 @@ import { getTokenValueFromCoins } from 'functions/fields'
 import { formatUnlockDate } from 'libs/parse'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
+import { VaultClient } from 'types/classes'
 import { QUERY_KEYS } from 'types/enums/queryKeys'
-import { MarsMockVaultClient } from 'types/generated/mars-mock-vault/MarsMockVault.client'
 
 interface Props {
   vault?: ActiveVault
@@ -23,15 +23,19 @@ export const useUnlockMessages = (props: Props) => {
     async () => {
       if (!client || !userWalletAddress || !props.vault || !creditManagerClient) return null
 
-      const vaultClient = new MarsMockVaultClient(client, userWalletAddress, props.vault.address)
-      const lpTokenAmount = await vaultClient.previewRedeem({
-        amount: props.vaultTokenAmount,
+      const vaultClient = new VaultClient(props.vault.address, client)
+      const lpTokenAmount = await vaultClient.query({
+        preview_redeem: {
+          amount: props.vaultTokenAmount,
+        },
       })
 
       const lpToken = { denom: props.vault.denoms.lpToken, amount: lpTokenAmount }
 
-      const coins = await creditManagerClient.estimateWithdrawLiquidity({
-        lpToken,
+      const coins = await creditManagerClient.query({
+        estimate_withdraw_liquidity: {
+          lp_token: lpToken,
+        },
       })
 
       return [

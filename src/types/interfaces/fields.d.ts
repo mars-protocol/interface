@@ -52,7 +52,11 @@ interface Position {
     total: number
     net: number
   }
-  apy: number
+  apy: {
+    total: number
+    borrow: number
+    net: number
+  }
   ltv: number
   currentLeverage: number
   unlockAtTimestamp?: number

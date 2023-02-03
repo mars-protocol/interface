@@ -1,12 +1,20 @@
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import Tippy from '@tippyjs/react'
 import BigNumber from 'bignumber.js'
-import classNames from 'classnames/bind'
-import { AnimatedNumber, Button, DisplayCurrency, SVG, TokenBalance } from 'components/common'
+import classNames from 'classnames'
+import {
+  AnimatedNumber,
+  Apy,
+  Button,
+  DisplayCurrency,
+  SVG,
+  TextTooltip,
+  TokenBalance,
+} from 'components/common'
 import { VaultLogo, VaultName } from 'components/fields'
 import { VAULT_DEPOSIT_BUFFER } from 'constants/appConstants'
 import { convertPercentage } from 'functions'
-import { convertApyToDailyApy, formatValue, ltvToLeverage } from 'libs/parse'
+import { convertApyToDailyApy, formatValue, getTimeAndUnit, ltvToLeverage } from 'libs/parse'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -19,6 +27,8 @@ export const useAvailableVaultsColumns = () => {
   const router = useRouter()
   const baseCurrency = useStore((s) => s.baseCurrency)
   const columnHelper = createColumnHelper<Vault>()
+  const redBankAssets = useStore((s) => s.redBankAssets)
+
   const defaultAvailableVaultsColumns: ColumnDef<Vault, any>[] = useMemo(
     () => [
       columnHelper.accessor('color', {
@@ -33,12 +43,39 @@ export const useAvailableVaultsColumns = () => {
       }),
       columnHelper.accessor('name', {
         enableSorting: true,
-        header: t('fields.position'),
-        cell: ({ row }) => <VaultName vault={row.original} />,
+        header: t('fields.name'),
+        cell: ({ row }) => {
+          return (
+            <Tippy
+              appendTo={() => document.body}
+              animation={false}
+              render={(attrs) => {
+                return (
+                  <div className='tippyContainer' {...attrs}>
+                    {t('fields.tooltips.name', {
+                      asset1: row.original.symbols.primary,
+                      asset2: row.original.symbols.secondary,
+                      ...getTimeAndUnit(row.original.lockup),
+                    })}
+                  </div>
+                )
+              }}
+            >
+              <div>
+                <VaultName vault={row.original} />
+              </div>
+            </Tippy>
+          )
+        },
       }),
       columnHelper.accessor('ltv', {
         enableSorting: true,
-        header: t('fields.leverage'),
+        header: () => (
+          <TextTooltip
+            text={t('fields.leverage')}
+            tooltip={t('fields.tooltips.leverage.available')}
+          />
+        ),
         cell: ({ row }) => {
           return (
             <>
@@ -53,16 +90,22 @@ export const useAvailableVaultsColumns = () => {
       columnHelper.accessor('apy', {
         id: 'apy',
         enableSorting: true,
-        header: t('common.apy'),
+        header: () => (
+          <TextTooltip text={t('common.apy')} tooltip={t('fields.tooltips.apy.available')} />
+        ),
         cell: ({ row }) => {
           if (!row.original.apy) {
             return null
           }
 
           const maxLeverage = ltvToLeverage(row.original.ltv.max)
-
+          const borrowAsset = redBankAssets.find(
+            (asset) => asset.denom === row.original.denoms.secondary,
+          )
+          const maxBorrowRate = Number(borrowAsset?.borrowRate ?? 0) * row.original.ltv.max
           const minAPY = new BigNumber(row.original.apy).decimalPlaces(2).toNumber()
-          const maxAPY = new BigNumber(minAPY).times(maxLeverage).decimalPlaces(2).toNumber()
+
+          const maxAPY = new BigNumber(minAPY).times(maxLeverage).toNumber() - maxBorrowRate
           const minDailyAPY = new BigNumber(convertApyToDailyApy(row.original.apy))
             .decimalPlaces(2)
             .toNumber()
@@ -70,13 +113,27 @@ export const useAvailableVaultsColumns = () => {
             .times(maxLeverage)
             .decimalPlaces(2)
             .toNumber()
+          const apyDataNoLev = { total: row.original.apy || 0, borrow: 0 }
+          const apyDataLev = { total: row.original.apy || 0, borrow: maxBorrowRate }
+
           return (
             <>
-              <p className='m'>
-                <AnimatedNumber amount={minAPY} />
-                <span>-</span>
-                <AnimatedNumber amount={maxAPY} suffix='%' />
-              </p>
+              <Tippy content={<Apy apyData={apyDataNoLev} leverage={1} />}>
+                <span className='tooltip m'>
+                  <AnimatedNumber amount={minAPY} />
+                </span>
+              </Tippy>
+              <span>-</span>
+              <Tippy
+                content={
+                  <Apy apyData={apyDataLev} leverage={ltvToLeverage(row.original.ltv.max)} />
+                }
+              >
+                <span className='tooltip ,'>
+                  <AnimatedNumber amount={maxAPY} suffix='%' />
+                </span>
+              </Tippy>
+
               <p className='s faded'>
                 {minDailyAPY}-{maxDailyAPY}%/
                 {t('common.day')}
@@ -87,7 +144,9 @@ export const useAvailableVaultsColumns = () => {
       }),
       columnHelper.accessor('vaultCap', {
         enableSorting: true,
-        header: t('fields.vaultCap'),
+        header: () => (
+          <TextTooltip text={t('fields.vaultCap')} tooltip={t('fields.tooltips.vaultCap')} />
+        ),
         cell: ({ row }) => {
           if (!row.original.vaultCap) {
             return null
@@ -140,7 +199,25 @@ export const useAvailableVaultsColumns = () => {
       columnHelper.accessor('description', {
         enableSorting: true,
         header: t('common.description'),
-        cell: ({ row }) => <p>{row.original.description}</p>,
+        cell: ({ row }) => (
+          <Tippy
+            appendTo={() => document.body}
+            animation={false}
+            render={(attrs) => {
+              return (
+                <div className='tippyContainer' {...attrs}>
+                  {t('fields.tooltips.name', {
+                    asset1: row.original.symbols.primary,
+                    asset2: row.original.symbols.secondary,
+                    ...getTimeAndUnit(row.original.lockup),
+                  })}
+                </div>
+              )
+            }}
+          >
+            <p>{row.original.description}</p>
+          </Tippy>
+        ),
       }),
       columnHelper.display({
         id: 'actions',

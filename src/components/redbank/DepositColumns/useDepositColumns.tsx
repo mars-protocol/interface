@@ -1,6 +1,6 @@
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import Tippy from '@tippyjs/react'
-import classNames from 'classnames/bind'
+import classNames from 'classnames'
 import { AnimatedNumber, Apr, Button, CellAmount, SVG } from 'components/common'
 import { convertPercentage } from 'functions'
 import { formatValue } from 'libs/parse'
@@ -32,7 +32,7 @@ export const useDepositColumns = () => {
         header: '',
         cell: (info) => (
           <div className={styles.logo}>
-            <Image alt='logo' height='100%' src={info.getValue().src} width='100%' />
+            <Image alt='logo' src={info.getValue().src} width={32} height={32} />
           </div>
         ),
       }),

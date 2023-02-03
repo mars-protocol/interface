@@ -1,11 +1,15 @@
-import { ExecuteResult } from '@cosmjs/cosmwasm-stargate'
 import { LcdClient } from '@cosmjs/launchpad'
 import { Coin, StdFee } from '@cosmjs/stargate'
-import { WalletChainInfo, WalletSigningCosmWasmClient } from '@marsprotocol/wallet-connector'
+import {
+  SimplifiedChainInfo,
+  TxBroadcastResult,
+  WalletClient,
+} from '@marsprotocol/wallet-connector'
 import { BlockHeightData } from 'hooks/queries/useBlockHeight'
 import { MarketDepositsData } from 'hooks/queries/useMarketDeposits'
 import { SafetyFundBalanceData } from 'hooks/queries/useSafetyFundBalance'
 import { UserBalanceData } from 'hooks/queries/useUserBalance'
+import { UserIcnsData } from 'hooks/queries/useUserIcns'
 import { Network } from 'types/enums/network'
 import { ContractMsg } from 'types/types'
 
@@ -22,8 +26,8 @@ export interface CommonSlice {
     decimals: number
   }
   baseToDisplayCurrencyRatio?: number
-  chainInfo?: WalletChainInfo
-  client?: WalletSigningCosmWasmClient
+  chainInfo?: SimplifiedChainInfo
+  client?: WalletClient
   currentNetwork: Network
   displayCurrency: {
     denom: string
@@ -51,7 +55,7 @@ export interface CommonSlice {
   userUnclaimedRewards: string
   userMarsTokenBalances: Coin[]
   userWalletAddress: string
-  userWalletName: string
+  userIcns?: string
   vaultConfigs: Vault[]
   whitelistedAssets: Asset[]
   // ------------------
@@ -65,7 +69,7 @@ export interface CommonSlice {
     contract: string
     fee: StdFee
     sender?: string
-  }) => Promise<ExecuteResult | undefined>
+  }) => Promise<TxBroadcastResult | undefined>
   loadNetworkConfig: () => void
   queryContract: <T>(
     contractAddress: string,
@@ -76,22 +80,23 @@ export interface CommonSlice {
   // ------------------
   // SETTERS
   // ------------------
-  setChainInfo: (chainInfo: WalletChainInfo) => void
+  setChainInfo: (chainInfo: SimplifiedChainInfo) => void
   setCurrentNetwork: (network: Network) => void
   setTutorialStep: (type: 'fields' | 'redbank', step?: number) => void
   setLcdClient: (rpc: string, chainID: string) => void
   setNetworkError: (isError: boolean) => void
-  setClient: (client: WalletSigningCosmWasmClient) => void
+  setClient: (client: WalletClient) => void
   setQueryError: (name: string, isError: boolean) => void
   setServerError: (isError: boolean) => void
+  setUserIcns: (icns: string) => void
   setUserWalletAddress: (address: string) => void
-  setUserWalletName: (name: string) => void
   // ------------------
   // QUERY RELATED
   // ------------------
   previousBlockHeightQueryData?: BlockHeightData
   previousSafetyFundBalanceQueryData?: SafetyFundBalanceData
   previousUserBalanceQueryData?: UserBalanceData
+  previousUserIcnsQueryData?: UserIcnsData
   previousUserUnclaimedBalanceQueryData?: number
   processMarketDepositsQuery: (data: MarketDepositsData) => void
   processUserBalanceQuery: (data: UserBalanceData) => void

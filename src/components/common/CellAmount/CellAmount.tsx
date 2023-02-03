@@ -1,4 +1,4 @@
-import classNames from 'classnames/bind'
+import classNames from 'classnames'
 import { AnimatedNumber, DisplayCurrency } from 'components/common'
 import { lookup } from 'libs/parse'
 

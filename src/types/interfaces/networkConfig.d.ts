@@ -23,4 +23,5 @@ interface NetworkConfig {
   }
   appUrl: string
   councilUrl: string
+  wallets: import('@marsprotocol/wallet-connector').WalletID[]
 }

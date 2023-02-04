@@ -1,4 +1,4 @@
-import { ExecuteResult } from '@cosmjs/cosmwasm-stargate'
+import { TxBroadcastResult } from '@marsprotocol/wallet-connector'
 import { useQueryClient } from '@tanstack/react-query'
 import { Action, Notification, TxResponse } from 'components/common'
 import { findByDenom } from 'functions'
@@ -13,8 +13,7 @@ import { ltvWeightedDepositValue, maintainanceMarginWeightedDepositValue } from 
 import { lookup, lookupDecimals } from 'libs/parse'
 import isEqual from 'lodash.isequal'
 import { useRouter } from 'next/router'
-import { useMemo, useState } from 'react'
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
 import { NotificationType, ViewType } from 'types/enums'
@@ -54,7 +53,7 @@ export const RedbankAction = React.memo(
     // ------------------
     const [amount, setAmount] = useState(0)
     const [submitted, setSubmitted] = useState(false)
-    const [response, setResponse] = useState<ExecuteResult>()
+    const [response, setResponse] = useState<TxBroadcastResult>()
     const [error, setError] = useState<string>()
     const [isMax, setIsMax] = useState<boolean>(false)
     const [capHit, setCapHit] = useState<boolean>(false)
@@ -126,7 +125,7 @@ export const RedbankAction = React.memo(
       funds:
         activeView === ViewType.Deposit || activeView === ViewType.Repay
           ? [{ denom, amount: amount > 0 ? amount.toFixed(0) : '1' }]
-          : [],
+          : undefined,
       contract: redBankContractAddress,
     })
 

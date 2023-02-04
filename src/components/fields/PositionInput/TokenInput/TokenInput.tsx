@@ -1,5 +1,5 @@
 import { Coin } from '@cosmjs/proto-signing'
-import classNames from 'classnames/bind'
+import classNames from 'classnames'
 import { Button, DisplayCurrency, NumberInput } from 'components/common'
 import { findByDenom } from 'functions'
 import { useAsset } from 'hooks/data'

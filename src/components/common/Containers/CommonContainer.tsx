@@ -1,4 +1,11 @@
-import { useWallet } from '@marsprotocol/wallet-connector'
+import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate'
+import {
+  getChainInfo,
+  getClient,
+  useWallet,
+  useWalletManager,
+  WalletConnectionStatus,
+} from '@marsprotocol/wallet-connector'
 import { useQueryClient } from '@tanstack/react-query'
 import { MARS_SYMBOL, USDC_SYMBOL } from 'constants/appConstants'
 import {
@@ -9,9 +16,10 @@ import {
   useUserBalance,
   useUserDebt,
   useUserDeposit,
+  useUserIcns,
 } from 'hooks/queries'
 import { useSpotPrice } from 'hooks/queries/useSpotPrice'
-import { ReactNode, useEffect } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import useStore from 'store'
 import { State } from 'types/enums'
 import { Network } from 'types/enums/network'
@@ -24,8 +32,14 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
   // ------------------
   // EXTERNAL HOOKS
   // ---------------
-  const { chainInfo, address, signingCosmWasmClient, name } = useWallet()
+  const { recentWallet, simulate, sign, broadcast } = useWallet()
+  const { status } = useWalletManager()
   const queryClient = useQueryClient()
+
+  const chainInfo = recentWallet?.network ? getChainInfo(recentWallet?.network.chainId) : undefined
+  const address = status !== WalletConnectionStatus.Connected ? '' : recentWallet?.account.address
+
+  const [cosmWasmClient, setCosmWasmClient] = useState<CosmWasmClient | undefined>()
 
   // ------------------
   // STORE STATE
@@ -54,7 +68,6 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
   const setClient = useStore((s) => s.setClient)
   const setUserBalancesState = useStore((s) => s.setUserBalancesState)
   const setUserWalletAddress = useStore((s) => s.setUserWalletAddress)
-  const setUserWalletName = useStore((s) => s.setUserWalletName)
 
   // ------------------
   // SETTERS
@@ -76,19 +89,9 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
   }, [setUserWalletAddress, address])
 
   useEffect(() => {
-    if (!name) return
-    setUserWalletName(name)
-  }, [setUserWalletName, name])
-
-  useEffect(() => {
     if (!rpc || !chainID) return
     setLcdClient(rpc, chainID)
   }, [rpc, chainID, setLcdClient])
-
-  useEffect(() => {
-    if (!signingCosmWasmClient) return
-    setClient(signingCosmWasmClient)
-  }, [signingCosmWasmClient, setClient])
 
   useEffect(() => {
     if (userDebts && userDeposits && userBalances) {
@@ -97,6 +100,28 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
       setUserBalancesState(State.ERROR)
     }
   }, [userDebts, userDeposits, userBalances, setUserBalancesState])
+
+  useEffect(() => {
+    if (!recentWallet) return
+    if (!cosmWasmClient) {
+      const getCosmWasmClient = async () => {
+        const cosmClient = await getClient(recentWallet.network.rpc)
+        setCosmWasmClient(cosmClient)
+      }
+
+      getCosmWasmClient()
+      return
+    }
+
+    const client = {
+      broadcast,
+      cosmWasmClient,
+      recentWallet,
+      sign,
+      simulate,
+    }
+    setClient(client)
+  }, [simulate, sign, recentWallet, cosmWasmClient, broadcast, setClient])
 
   useEffect(() => {
     setRedBankAssets()
@@ -126,6 +151,7 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
   useBlockHeight()
   useRedBank()
   useUserBalance()
+  useUserIcns()
   useUserDeposit()
   useUserDebt()
   useMarsOracle()

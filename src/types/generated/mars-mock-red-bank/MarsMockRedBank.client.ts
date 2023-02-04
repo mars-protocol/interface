@@ -13,7 +13,7 @@ import {
   ArrayOfUncollateralizedLoanLimitResponse,
   ArrayOfUserCollateralResponse,
   ArrayOfUserDebtResponse,
-  ConfigForString,
+  ConfigResponse,
   CreateOrUpdateConfig,
   InitOrUpdateAssetParams,
   Market,
@@ -25,7 +25,7 @@ import {
 } from './MarsMockRedBank.types'
 export interface MarsMockRedBankReadOnlyInterface {
   contractAddress: string
-  config: () => Promise<ConfigForString>
+  config: () => Promise<ConfigResponse>
   market: ({ denom }: { denom: string }) => Promise<Market>
   markets: ({
     limit,
@@ -117,7 +117,7 @@ export class MarsMockRedBankQueryClient implements MarsMockRedBankReadOnlyInterf
     this.underlyingDebtAmount = this.underlyingDebtAmount.bind(this)
   }
 
-  config = async (): Promise<ConfigForString> => {
+  config = async (): Promise<ConfigResponse> => {
     return this.client.queryContractSmart(this.contractAddress, {
       config: {},
     })
@@ -303,6 +303,16 @@ export class MarsMockRedBankQueryClient implements MarsMockRedBankReadOnlyInterf
 export interface MarsMockRedBankInterface extends MarsMockRedBankReadOnlyInterface {
   contractAddress: string
   sender: string
+  updateOwner: (
+    fee?: number | StdFee | 'auto',
+    memo?: string,
+    funds?: Coin[],
+  ) => Promise<ExecuteResult>
+  updateEmergencyOwner: (
+    fee?: number | StdFee | 'auto',
+    memo?: string,
+    funds?: Coin[],
+  ) => Promise<ExecuteResult>
   updateConfig: (
     {
       config,
@@ -439,6 +449,8 @@ export class MarsMockRedBankClient
     this.client = client
     this.sender = sender
     this.contractAddress = contractAddress
+    this.updateOwner = this.updateOwner.bind(this)
+    this.updateEmergencyOwner = this.updateEmergencyOwner.bind(this)
     this.updateConfig = this.updateConfig.bind(this)
     this.initAsset = this.initAsset.bind(this)
     this.updateAsset = this.updateAsset.bind(this)
@@ -451,6 +463,38 @@ export class MarsMockRedBankClient
     this.updateAssetCollateralStatus = this.updateAssetCollateralStatus.bind(this)
   }
 
+  updateOwner = async (
+    fee: number | StdFee | 'auto' = 'auto',
+    memo?: string,
+    funds?: Coin[],
+  ): Promise<ExecuteResult> => {
+    return await this.client.execute(
+      this.sender,
+      this.contractAddress,
+      {
+        update_owner: {},
+      },
+      fee,
+      memo,
+      funds,
+    )
+  }
+  updateEmergencyOwner = async (
+    fee: number | StdFee | 'auto' = 'auto',
+    memo?: string,
+    funds?: Coin[],
+  ): Promise<ExecuteResult> => {
+    return await this.client.execute(
+      this.sender,
+      this.contractAddress,
+      {
+        update_emergency_owner: {},
+      },
+      fee,
+      memo,
+      funds,
+    )
+  }
   updateConfig = async (
     {
       config,

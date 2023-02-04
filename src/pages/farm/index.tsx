@@ -7,7 +7,7 @@ import {
 } from 'components/fields'
 import { FIELDS_FEATURE } from 'constants/appConstants'
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import useStore from 'store'
 
 import styles from './Fields.module.scss'
@@ -23,7 +23,8 @@ const Fields = () => {
   const userWalletAddress = useStore((s) => s.userWalletAddress)
 
   useEffect(() => {
-    if (!getVaults || !accountNftClient || !client || !creditManagerClient) return
+    if (!getVaults || !accountNftClient || !client || !creditManagerClient || !userWalletAddress)
+      return
     if (userWalletAddress && prefUserWalletAddress !== userWalletAddress) {
       prefUserWalletAddress = userWalletAddress
       getVaults({ refetch: true })

@@ -1,5 +1,17 @@
 @import 'src/styles/master';
 
+$color: ':nth-child(1)';
+$logo: ':nth-child(2)';
+$name: ':nth-child(3)';
+$posValue: ':nth-child(4)';
+$netValue: ':nth-child(5)';
+$borrowValue: ':nth-child(6)';
+$vaultCap: ':nth-child(7)';
+$apy: ':nth-child(8)';
+$leverage: ':nth-child(9)';
+$borrowCapacity: ':nth-child(10)';
+$actions: ':nth-child(11)';
+
 .table {
   display: none;
   @include margin(0, 0, 6, 0);
@@ -32,13 +44,11 @@
         }
       }
 
-      // Not color indicator
-      &:not(:first-child) {
+      &:not(#{$color}) {
         @include padding(4, 2);
       }
 
-      // Name
-      &:nth-child(3) {
+      &#{$name} {
         @include padding(4, 2, 4, 0);
       }
     }
@@ -64,24 +74,15 @@
   .td {
     position: relative;
 
-    // Logos
-    &:nth-child(2) {
+    &#{$logo} {
       width: rem-calc(64);
     }
 
-    // Not color indicator
-    &:not(:first-child) {
+    &:not(#{$color}) {
       @include padding(0, 2);
     }
 
-    // Name
-    &:nth-child(3) {
-      text-align: left;
-      @include padding(0, 2, 0, 0);
-    }
-
-    // Leverage
-    &:nth-child(3) {
+    &#{$name} {
       text-align: left;
       @include padding(0, 2, 0, 0);
     }
@@ -92,11 +93,9 @@
   .table {
     .td,
     .th {
-      // Leverage
-      &:nth-child(5),
-      &:nth-child(6),
-      &:nth-child(8),
-      &:nth-child(9) {
+      &#{$vaultCap},
+      &#{$borrowValue},
+      &#{$leverage} {
         display: none;
       }
     }

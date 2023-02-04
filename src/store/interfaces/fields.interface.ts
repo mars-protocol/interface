@@ -1,16 +1,12 @@
-import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
-import { MarsAccountNftInterface } from 'types/generated/mars-account-nft/MarsAccountNft.client'
-import { MarsCreditManagerClient } from 'types/generated/mars-credit-manager/MarsCreditManager.client'
+import { AccountNftClient, CreditManagerClient } from 'types/classes'
 import { MarsCreditManagerMessageComposer } from 'types/generated/mars-credit-manager/MarsCreditManager.message-composer'
 
 export interface FieldsSlice {
-  accountNftClient?: MarsAccountNftInterface
-  creditManagerClient?: MarsCreditManagerClient
+  accountNftClient?: AccountNftClient
+  creditManagerClient?: CreditManagerClient
   creditManagerMsgComposer?: MarsCreditManagerMessageComposer
   isRepay: boolean
   position?: Position
-  setAccountNftClient: (client: SigningCosmWasmClient) => void
-  setCreditManagerClient: (client: SigningCosmWasmClient) => void
   setCreditManagerMsgComposer: (address: string, contract: string) => void
   setIsRepay: (isRepay: boolean) => void
   setPosition: (position?: Position) => void

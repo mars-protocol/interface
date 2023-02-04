@@ -11,13 +11,15 @@ interface Props {
 export const useProvideLiquidity = (props: Props) => {
   const creditManagerClient = useStore((s) => s.creditManagerClient)
 
-  return useQuery(
+  return useQuery<number>(
     [QUERY_KEYS.PROVIDE_LIQUIDITY, props.coins],
     async () => {
       if (!creditManagerClient || !props.coins.length) return null
-      return creditManagerClient.estimateProvideLiquidity({
-        coinsIn: props.coins,
-        lpTokenOut: props.vault?.denoms.lpToken || '',
+      return creditManagerClient.query({
+        estimate_provide_liquidity: {
+          coins_in: props.coins,
+          lp_token_out: props.vault?.denoms.lpToken || '',
+        },
       })
     },
     {

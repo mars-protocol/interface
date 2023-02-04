@@ -1,5 +1,5 @@
 import Tippy from '@tippyjs/react'
-import classNames from 'classnames/bind'
+import classNames from 'classnames'
 
 import styles from './AssetBar.module.scss'
 
@@ -12,11 +12,11 @@ interface Props {
 }
 
 export const AssetBar = (props: Props) => {
-  const labelClasses = classNames([
+  const labelClasses = classNames(
     styles.label,
     props.alignRight && styles.alignRight,
     props.showLabel ? styles.show : styles.hide,
-  ])
+  )
   return (
     <Tippy
       content={

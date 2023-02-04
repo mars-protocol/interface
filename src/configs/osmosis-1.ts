@@ -1,4 +1,4 @@
-import { ChainInfoID } from '@marsprotocol/wallet-connector'
+import { ChainInfoID, WalletID } from '@marsprotocol/wallet-connector'
 import atom from 'images/atom.svg'
 import axlusdc from 'images/axlusdc.svg'
 import mars from 'images/mars.svg'
@@ -50,9 +50,9 @@ const OTHER_ASSETS: { [denom: string]: OtherAsset } = {
 
 export const NETWORK_CONFIG: NetworkConfig = {
   name: ChainInfoID.OsmosisTestnet,
-  hiveUrl: 'https://osmosis-delphi-testnet-1.simply-vc.com.mt/XF32UOOU55CX/osmosis-hive/graphql',
-  rpcUrl: 'https://osmosis-delphi-testnet-1.simply-vc.com.mt/XF32UOOU55CX/osmosis-rpc',
-  restUrl: 'https://osmosis-delphi-testnet-1.simply-vc.com.mt/XF32UOOU55CX/osmosis-lcd',
+  hiveUrl: 'https://osmosis-delphi-testnet-1.simply-vc.com.mt/XF32UOOU55CX/osmosis-hive/graphql/',
+  rpcUrl: 'https://osmosis-delphi-testnet-1.simply-vc.com.mt/XF32UOOU55CX/osmosis-rpc/',
+  restUrl: 'https://osmosis-delphi-testnet-1.simply-vc.com.mt/XF32UOOU55CX/osmosis-lcd/',
   apolloAprUrl: 'https://stats.apollo.farm/api/apr/v1/all',
   contracts: {
     addressProvider: 'osmo17dyy6hyzzy6u5khy5lau7afa2y9kwknu0aprwqn8twndw2qhv8ls6msnjr',
@@ -72,7 +72,8 @@ export const NETWORK_CONFIG: NetworkConfig = {
     other: [OTHER_ASSETS.mars],
   },
   appUrl: 'https://testnet.osmosis.zone',
-  councilUrl: 'https://testnet.keplr.app/chains/mars-protocol-testnet',
+  councilUrl: 'https://council.marsprotocol.io',
+  wallets: [WalletID.Keplr, WalletID.Leap, WalletID.Cosmostation, WalletID.Falcon],
 }
 
 export const VAULT_CONFIGS: Vault[] = [

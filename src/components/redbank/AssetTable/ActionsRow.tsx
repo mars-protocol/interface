@@ -58,7 +58,7 @@ export const ActionsRow = ({ row, type }: Props) => {
                     <div className='tippyContainer' {...attrs}>
                       {t('redbank.toDepositAssetOnChain', {
                         asset: assetSymbol,
-                        chain: chainInfo?.chainName,
+                        chain: chainInfo?.name,
                       })}
                     </div>
                   )

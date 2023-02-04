@@ -1,4 +1,4 @@
-import classNames from 'classnames/bind'
+import classNames from 'classnames'
 
 import styles from './Backdrop.module.scss'
 

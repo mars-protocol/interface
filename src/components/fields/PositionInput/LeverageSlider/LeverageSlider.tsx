@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import classNames from 'classnames/bind'
+import classNames from 'classnames'
 import { InputSlider, Tutorial } from 'components/common'
 import { FIELDS_TUTORIAL_KEY } from 'constants/appConstants'
 import { formatValue, ltvToLeverage } from 'libs/parse'

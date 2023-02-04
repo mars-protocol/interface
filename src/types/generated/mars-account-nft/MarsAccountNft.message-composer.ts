@@ -10,7 +10,7 @@ import { toUtf8 } from '@cosmjs/encoding'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 import { MsgExecuteContractEncodeObject } from 'cosmwasm'
 
-import { Binary, ConfigUpdates, Expiration } from './MarsAccountNft.types'
+import { Binary, Expiration, NftConfigUpdates } from './MarsAccountNft.types'
 export interface MarsAccountNftMessage {
   contractAddress: string
   sender: string
@@ -18,7 +18,7 @@ export interface MarsAccountNftMessage {
     {
       updates,
     }: {
-      updates: ConfigUpdates
+      updates: NftConfigUpdates
     },
     funds?: Coin[],
   ) => MsgExecuteContractEncodeObject
@@ -125,7 +125,7 @@ export class MarsAccountNftMessageComposer implements MarsAccountNftMessage {
     {
       updates,
     }: {
-      updates: ConfigUpdates
+      updates: NftConfigUpdates
     },
     funds?: Coin[],
   ): MsgExecuteContractEncodeObject => {

@@ -110,7 +110,7 @@ export const NumberInput = (props: Props) => {
       return
     }
 
-    if (value === '') {
+    if (!value) {
       updateValues(value, 0)
       return
     }

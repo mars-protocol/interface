@@ -20,21 +20,28 @@ export const Header = () => {
         <SVG.Logo />
       </div>
       <div className={styles.navbar}>
-        <Link href='/redbank' passHref>
-          <a className={classNames(styles.nav, !router.pathname.includes('farm') && styles.active)}>
-            {t('global.redBank')}
-          </a>
+        <Link
+          passHref
+          href='/redbank'
+          className={classNames(
+            styles.nav,
+            !router.pathname.includes('farm') && styles.active,
+            router.pathname === '/redbank' && styles.unclickable,
+          )}
+        >
+          {t('global.redBank')}
         </Link>
-        <Link href='/farm' passHref>
-          <a
-            className={classNames(
-              !FIELDS_FEATURE && styles.disabled,
-              styles.nav,
-              router.pathname.includes('farm') && styles.active,
-            )}
-          >
-            {t('global.fields')}
-          </a>
+        <Link
+          passHref
+          href='/farm'
+          className={classNames(
+            !FIELDS_FEATURE && styles.disabled,
+            styles.nav,
+            router.pathname.includes('farm') && styles.active,
+            router.pathname === '/farm' && styles.unclickable,
+          )}
+        >
+          {t('global.fields')}
         </Link>
         <a className={styles.nav} href={networkConfig?.councilUrl} target='_blank' rel='noreferrer'>
           {t('global.council')}

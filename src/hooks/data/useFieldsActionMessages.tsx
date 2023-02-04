@@ -1,5 +1,5 @@
-import { ExecuteResult } from '@cosmjs/cosmwasm-stargate'
-import { getAmountFromUnlockRes, getTokenValueFromCoins } from 'functions/fields'
+import { TxBroadcastResult } from '@marsprotocol/wallet-connector'
+import { getTokenValueFromCoins } from 'functions/fields'
 import { useUnlockMessages } from 'hooks/queries'
 import { extractCoinFromLog, parseActionMessages } from 'libs/parse'
 import { useCallback, useEffect, useState } from 'react'
@@ -8,7 +8,7 @@ import useStore from 'store'
 import { Coin } from 'types/generated/mars-credit-manager/MarsCreditManager.types'
 
 export const useFieldsActionMessages = (
-  data?: ExecuteResult,
+  data?: TxBroadcastResult,
   vault?: ActiveVault,
 ): {
   depositMessage?: FieldsAction
@@ -31,11 +31,9 @@ export const useFieldsActionMessages = (
 
   const getDepositedCoins = useCallback((messages: unknown[]): Coin[] => {
     try {
-      return (
-        messages.filter(
-          (message: any) => message?.action === 'rover/execute/update_credit_account',
-        ) as any
-      ).map((msg: any) => extractCoinFromLog(msg.coin_deposited))
+      return (messages.filter((message: any) => message?.action === 'callback/deposit') as any).map(
+        (msg: any) => extractCoinFromLog(msg.coin_deposited),
+      )
     } catch {
       return []
     }
@@ -44,7 +42,7 @@ export const useFieldsActionMessages = (
   const getBorrowedCoins = useCallback((messages: any[]): Coin[] => {
     try {
       return (
-        messages.filter((message: any) => message?.action === 'outposts/red-bank/borrow') as any
+        messages.filter((message: any) => message?.action === 'borrow' && message?.denom) as any
       ).map((msg: any) => ({ denom: msg.denom, amount: msg.amount }))
     } catch {
       return []
@@ -53,9 +51,9 @@ export const useFieldsActionMessages = (
 
   const getSwapCoinIn = useCallback((messages: unknown[]): Coin | null => {
     try {
-      return (
-        messages.filter((message: any) => message?.action === 'rover/swapper/swap_fn') as any
-      ).map((msg: any) => ({ denom: msg.denom_in, amount: msg.amount_in }))[0]
+      return (messages.filter((message: any) => message?.action === 'swap_fn') as any).map(
+        (msg: any) => ({ denom: msg.denom_in, amount: msg.amount_in }),
+      )[0]
     } catch {
       return null
     }
@@ -64,7 +62,7 @@ export const useFieldsActionMessages = (
   const getSwapCoinOut = useCallback((messages: unknown[]): Coin | null => {
     try {
       const coinsSwapOutIndex = messages.findIndex(
-        (message: any) => message?.action === 'rover/swapper/transfer_result',
+        (message: any) => message?.action === 'transfer_result',
       ) as any
 
       const msg: any = messages[coinsSwapOutIndex + 1]
@@ -80,8 +78,10 @@ export const useFieldsActionMessages = (
   const getRepayCoin = useCallback((messages: any[]): Coin | null => {
     try {
       return messages
-        .filter((message: any) => message?.action === ('outposts/red-bank/repay' as any))
-        .map((msg: any) => ({ denom: msg.denom, amount: msg.amount }))[0]
+        .filter((message: any) => message?.action === ('repay' as any) && message?.denom)
+        .map((msg: any) => {
+          return { denom: msg.denom, amount: msg.amount }
+        })[0]
     } catch {
       return null
     }
@@ -90,14 +90,24 @@ export const useFieldsActionMessages = (
   const getWithdrawnCoins = useCallback((messages: any[]): Coin[] => {
     try {
       return (
-        messages.filter(
-          (message: any) => message?.action === 'rover/credit-manager/callback/withdraw',
-        ) as any
+        messages.filter((message: any) => message?.action === 'callback/withdraw') as any
       ).map((msg: any) => {
         return extractCoinFromLog(msg.coin_withdrawn)
       })
     } catch {
       return []
+    }
+  }, [])
+
+  const getVaultUnlockAmount = useCallback((messages: any[]): string | null => {
+    try {
+      return (
+        messages.filter((message: any) => message?.action === 'vault/request_unlock') as any
+      ).map((msg: any) => {
+        return msg.unlock_amount
+      })[0]
+    } catch {
+      return null
     }
   }, [])
 
@@ -117,9 +127,10 @@ export const useFieldsActionMessages = (
     const swapCoinOut = getSwapCoinOut(messages)
     const repayCoin = getRepayCoin(messages)
     const withdrawnCoins = getWithdrawnCoins(messages)
+    const vaultUnlockAmount = getVaultUnlockAmount(messages)
 
-    if (!vaultTokenAmount) {
-      setVaultTokenAmount(getAmountFromUnlockRes(data))
+    if (!vaultTokenAmount && vaultUnlockAmount) {
+      setVaultTokenAmount(vaultUnlockAmount)
     }
 
     if (depositedCoins.length) {
@@ -170,6 +181,7 @@ export const useFieldsActionMessages = (
     getRepayCoin,
     getWithdrawnCoins,
     vaultTokenAmount,
+    getVaultUnlockAmount,
     whitelistedAssets,
   ])
 

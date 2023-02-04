@@ -1,4 +1,4 @@
-import { findAssetByDenom, formatValue } from 'libs/parse'
+import { findAssetByDenom, formatValue, lookup } from 'libs/parse'
 import { Coin } from 'types/generated/mars-credit-manager/MarsCreditManager.types'
 
 export const getTokenValueFromCoins = (assets: Asset[], coins: Coin[] = []) => {
@@ -7,6 +7,15 @@ export const getTokenValueFromCoins = (assets: Asset[], coins: Coin[] = []) => {
 
     if (!asset) return ''
 
-    return `${formatValue(Number(token.amount) / 10 ** asset.decimals, 2, 2, true)} ${asset.symbol}`
+    const convertedValue = lookup(Number(token.amount), asset.symbol, asset.decimals)
+
+    return formatValue(
+      convertedValue,
+      2,
+      2,
+      true,
+      convertedValue >= 0.01 ? false : '>',
+      ` ${asset.symbol}`,
+    )
   })
 }

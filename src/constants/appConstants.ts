@@ -11,7 +11,7 @@ export const DEFAULT_SLIPPAGE = 0.01
 
 /* other */
 export const FEE_EST_AMOUNT = '1'
-export const SESSION_WALLET_KEY = 'walletConnection'
+export const SESSION_WALLET_KEY = 'shuttle'
 export const SWAP_THRESHOLD = 10
 export const VAULT_DEPOSIT_BUFFER = 0.99
 export const GAS_ADJUSTMENT = 1.3

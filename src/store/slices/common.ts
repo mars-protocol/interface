@@ -1,7 +1,11 @@
-import { ExecuteResult } from '@cosmjs/cosmwasm-stargate'
 import { LcdClient } from '@cosmjs/launchpad'
 import { Coin } from '@cosmjs/stargate'
-import { WalletChainInfo, WalletSigningCosmWasmClient } from '@marsprotocol/wallet-connector'
+import {
+  MsgExecuteContract,
+  SimplifiedChainInfo,
+  TxBroadcastResult,
+  WalletClient,
+} from '@marsprotocol/wallet-connector'
 import BigNumber from 'bignumber.js'
 import { BlockHeightData } from 'hooks/queries/useBlockHeight'
 import { MarketDepositsData } from 'hooks/queries/useMarketDeposits'
@@ -46,7 +50,6 @@ const commonSlice = (
   queryErrors: [],
   slippage: 0.02,
   tutorialSteps: { redbank: 1, fields: 1 },
-  userWalletName: '',
   userBalances: [],
   userMarsTokenBalances: [],
   userUnclaimedRewards: '0',
@@ -80,20 +83,30 @@ const commonSlice = (
 
     return new BigNumber(coin.amount).div(exchangeRate).toNumber()
   },
-  executeMsg: async (options: StrategyExecuteMsgOptions): Promise<ExecuteResult | undefined> => {
+  executeMsg: async (
+    options: StrategyExecuteMsgOptions,
+  ): Promise<TxBroadcastResult | undefined> => {
     const client = get().client!
 
     if (!options.sender) options.sender = get().userWalletAddress
 
+    const broadcastOptions = {
+      messages: [
+        new MsgExecuteContract({
+          sender: options.sender,
+          contract: options.contract,
+          msg: options.msg,
+          funds: options.funds,
+        }),
+      ],
+      feeAmount: options.fee.amount[0].amount,
+      gasLimit: options.fee.gas,
+      memo: undefined,
+      wallet: client.recentWallet,
+    }
+
     try {
-      return client.execute(
-        options.sender,
-        options.contract,
-        options.msg as Record<string, unknown>,
-        options.fee,
-        undefined,
-        options.funds,
-      )
+      return client.broadcast(broadcastOptions)
     } catch (e) {}
   },
   loadNetworkConfig: async () => {
@@ -133,7 +146,7 @@ const commonSlice = (
       lcdClient: new LcdClient(rpc),
     })
   },
-  setChainInfo: (chainInfo: WalletChainInfo) => set({ chainInfo }),
+  setChainInfo: (chainInfo: SimplifiedChainInfo) => set({ chainInfo }),
   setCurrentNetwork: (network: Network) => set({ currentNetwork: network }),
   setNetworkError: (isError: boolean) => {
     const errors = get().errors
@@ -142,7 +155,7 @@ const commonSlice = (
       set({ errors })
     }
   },
-  setClient: (client: WalletSigningCosmWasmClient) => set({ client }),
+  setClient: (client: WalletClient) => set({ client }),
   setQueryError: (name: string, isError: boolean) => {
     const errors = get().errors
     const queryErrors = get().queryErrors
@@ -171,7 +184,7 @@ const commonSlice = (
     set({ tutorialSteps })
   },
   setUserWalletAddress: (address: string) => set({ userWalletAddress: address }),
-  setUserWalletName: (name: string) => set({ userWalletName: name }),
+  setUserIcns: (icns: string) => set({ userIcns: icns }),
   // -------------------
   // QUERY RELATED
   // -------------------

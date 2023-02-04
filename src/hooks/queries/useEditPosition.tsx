@@ -9,7 +9,7 @@ import { Action, Coin } from 'types/generated/mars-credit-manager/MarsCreditMana
 import { useEstimateFarmFee } from './useEstimateFarmFee'
 
 interface Props {
-  accountId?: string
+  accountId?: null | string
   prevPosition?: Position
   position: Position
   vault: Vault

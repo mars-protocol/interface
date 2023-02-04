@@ -68,7 +68,7 @@ export const ActiveVaultsTable = () => {
       title={t('fields.activeVaults')}
       hideHeaderBorder
       styleOverride={{ marginBottom: 40 }}
-      tooltip={<Trans i18nKey='fields.tooltips.activeVaults' />}
+      tooltip={<Trans i18nKey='fields.tooltips.activeVaults.desktop' />}
     >
       <table className={styles.table}>
         <thead className={styles.thead}>

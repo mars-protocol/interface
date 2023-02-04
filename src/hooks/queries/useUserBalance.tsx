@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { gql, request } from 'graphql-request'
 import { useMemo } from 'react'
 import useStore from 'store'
+import { QUERY_KEYS } from 'types/enums/queryKeys'
 
 export interface UserBalanceData {
   balance: {
@@ -16,7 +17,7 @@ export const useUserBalance = () => {
   const processUserBalanceQuery = useStore((s) => s.processUserBalanceQuery)
 
   const result = useQuery<UserBalanceData>(
-    [],
+    [QUERY_KEYS.USER_BALANCE],
     async () => {
       return await request(
         hiveUrl!,

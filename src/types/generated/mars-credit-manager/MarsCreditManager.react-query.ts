@@ -15,6 +15,7 @@ import {
   ArrayOfCoin,
   ArrayOfCoinBalanceResponseItem,
   ArrayOfDebtShares,
+  ArrayOfLentShares,
   ArrayOfSharesResponseItem,
   ArrayOfString,
   ArrayOfVaultInfoResponse,
@@ -25,6 +26,8 @@ import {
   ConfigUpdates,
   DebtShares,
   HealthResponse,
+  LentShares,
+  NftConfigUpdates,
   Positions,
   Uint128,
   VaultBaseForString,
@@ -86,6 +89,30 @@ export const marsCreditManagerQueryKeys = {
       {
         ...marsCreditManagerQueryKeys.address(contractAddress)[0],
         method: 'all_total_debt_shares',
+        args,
+      },
+    ] as const,
+  allLentShares: (contractAddress: string | undefined, args?: Record<string, unknown>) =>
+    [
+      {
+        ...marsCreditManagerQueryKeys.address(contractAddress)[0],
+        method: 'all_lent_shares',
+        args,
+      },
+    ] as const,
+  totalLentShares: (contractAddress: string | undefined, args?: Record<string, unknown>) =>
+    [
+      {
+        ...marsCreditManagerQueryKeys.address(contractAddress)[0],
+        method: 'total_lent_shares',
+        args,
+      },
+    ] as const,
+  allTotalLentShares: (contractAddress: string | undefined, args?: Record<string, unknown>) =>
+    [
+      {
+        ...marsCreditManagerQueryKeys.address(contractAddress)[0],
+        method: 'all_total_lent_shares',
         args,
       },
     ] as const,
@@ -250,6 +277,66 @@ export function useMarsCreditManagerAllVaultPositionsQuery<
     () =>
       client
         ? client.allVaultPositions({
+            limit: args.limit,
+            startAfter: args.startAfter,
+          })
+        : Promise.reject(new Error('Invalid client')),
+    { ...options, enabled: !!client && (options?.enabled != undefined ? options.enabled : true) },
+  )
+}
+export interface MarsCreditManagerAllTotalLentSharesQuery<TData>
+  extends MarsCreditManagerReactQuery<ArrayOfLentShares, TData> {
+  args: {
+    limit?: number
+    startAfter?: string
+  }
+}
+export function useMarsCreditManagerAllTotalLentSharesQuery<TData = ArrayOfLentShares>({
+  client,
+  args,
+  options,
+}: MarsCreditManagerAllTotalLentSharesQuery<TData>) {
+  return useQuery<ArrayOfLentShares, Error, TData>(
+    marsCreditManagerQueryKeys.allTotalLentShares(client?.contractAddress, args),
+    () =>
+      client
+        ? client.allTotalLentShares({
+            limit: args.limit,
+            startAfter: args.startAfter,
+          })
+        : Promise.reject(new Error('Invalid client')),
+    { ...options, enabled: !!client && (options?.enabled != undefined ? options.enabled : true) },
+  )
+}
+export interface MarsCreditManagerTotalLentSharesQuery<TData>
+  extends MarsCreditManagerReactQuery<LentShares, TData> {}
+export function useMarsCreditManagerTotalLentSharesQuery<TData = LentShares>({
+  client,
+  options,
+}: MarsCreditManagerTotalLentSharesQuery<TData>) {
+  return useQuery<LentShares, Error, TData>(
+    marsCreditManagerQueryKeys.totalLentShares(client?.contractAddress),
+    () => (client ? client.totalLentShares() : Promise.reject(new Error('Invalid client'))),
+    { ...options, enabled: !!client && (options?.enabled != undefined ? options.enabled : true) },
+  )
+}
+export interface MarsCreditManagerAllLentSharesQuery<TData>
+  extends MarsCreditManagerReactQuery<ArrayOfSharesResponseItem, TData> {
+  args: {
+    limit?: number
+    startAfter?: string[][]
+  }
+}
+export function useMarsCreditManagerAllLentSharesQuery<TData = ArrayOfSharesResponseItem>({
+  client,
+  args,
+  options,
+}: MarsCreditManagerAllLentSharesQuery<TData>) {
+  return useQuery<ArrayOfSharesResponseItem, Error, TData>(
+    marsCreditManagerQueryKeys.allLentShares(client?.contractAddress, args),
+    () =>
+      client
+        ? client.allLentShares({
             limit: args.limit,
             startAfter: args.startAfter,
           })
@@ -464,6 +551,29 @@ export function useMarsCreditManagerCallbackMutation(
     options,
   )
 }
+export interface MarsCreditManagerUpdateNftConfigMutation {
+  client: MarsCreditManagerClient
+  msg: {
+    updates: NftConfigUpdates
+  }
+  args?: {
+    fee?: number | StdFee | 'auto'
+    memo?: string
+    funds?: Coin[]
+  }
+}
+export function useMarsCreditManagerUpdateNftConfigMutation(
+  options?: Omit<
+    UseMutationOptions<ExecuteResult, Error, MarsCreditManagerUpdateNftConfigMutation>,
+    'mutationFn'
+  >,
+) {
+  return useMutation<ExecuteResult, Error, MarsCreditManagerUpdateNftConfigMutation>(
+    ({ client, msg, args: { fee, memo, funds } = {} }) =>
+      client.updateNftConfig(msg, fee, memo, funds),
+    options,
+  )
+}
 export interface MarsCreditManagerUpdateOwnerMutation {
   client: MarsCreditManagerClient
   args?: {
@@ -486,7 +596,7 @@ export function useMarsCreditManagerUpdateOwnerMutation(
 export interface MarsCreditManagerUpdateConfigMutation {
   client: MarsCreditManagerClient
   msg: {
-    newConfig: ConfigUpdates
+    updates: ConfigUpdates
   }
   args?: {
     fee?: number | StdFee | 'auto'

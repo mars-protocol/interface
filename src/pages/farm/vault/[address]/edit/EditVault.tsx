@@ -162,31 +162,18 @@ const EditVault = (props: Props) => {
 
   if (isLoadingEdit || editData || editError) {
     return (
-      <EditResponse
-        data={editData}
-        error={editError}
-        isLoading={isLoadingEdit}
-        activeVault={props.activeVault}
-      />
+      <EditResponse data={editData} isLoading={isLoadingEdit} activeVault={props.activeVault} />
     )
   }
 
   if (isLoadingRepay || repayData || repayError) {
-    return (
-      <RepayResponse
-        data={repayData}
-        error={repayError}
-        isLoading={isLoadingRepay}
-        vault={props.activeVault}
-      />
-    )
+    return <RepayResponse data={repayData} isLoading={isLoadingRepay} vault={props.activeVault} />
   }
 
   if (isLoadingUnlock || unlockData || unlockError) {
     return (
       <UnlockResponse
         data={unlockData}
-        error={unlockError}
         isLoading={isLoadingUnlock}
         activeVault={props.activeVault}
       />

@@ -1,5 +1,5 @@
 import Tippy from '@tippyjs/react'
-import classNames from 'classnames/bind'
+import classNames from 'classnames'
 import { SVG } from 'components/common'
 import { ReactNode } from 'react'
 

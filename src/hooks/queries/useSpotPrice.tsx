@@ -5,7 +5,7 @@ import { useAsset } from 'hooks/data'
 import useStore from 'store'
 import { QUERY_KEYS } from 'types/enums/queryKeys'
 
-const poolsEndpoint = '/osmosis/gamm/v1beta1/pools/'
+const poolsEndpoint = 'osmosis/gamm/v1beta1/pools/'
 
 export const useSpotPrice = (symbol: string) => {
   const displayCurrency = useStore((s) => s.displayCurrency)

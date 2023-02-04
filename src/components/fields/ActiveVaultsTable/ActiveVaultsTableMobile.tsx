@@ -1,8 +1,8 @@
+import Tippy from '@tippyjs/react'
 import BigNumber from 'bignumber.js'
-import { BorrowCapacity, Card, DisplayCurrency } from 'components/common'
+import { AnimatedNumber, Apy, BorrowCapacity, Card, DisplayCurrency } from 'components/common'
 import { VaultLogo, VaultName } from 'components/fields'
 import { FIELDS_TUTORIAL_KEY } from 'constants/appConstants'
-import { formatValue } from 'libs/parse'
 import Link from 'next/link'
 import { Trans, useTranslation } from 'react-i18next'
 import useStore from 'store'
@@ -45,7 +45,7 @@ export const ActiveVaultsTableMobile = () => {
     <Card
       title={t('fields.activeVaults')}
       styleOverride={{ marginBottom: 40 }}
-      tooltip={<Trans i18nKey='fields.tooltips.activeVaults' />}
+      tooltip={<Trans i18nKey='fields.tooltips.activeVaults.mobile' />}
     >
       <div className={styles.container}>
         {activeVaults.map((vault, i) => {
@@ -55,24 +55,39 @@ export const ActiveVaultsTableMobile = () => {
                 <VaultLogo vault={vault} />
               </div>
               <div className={styles.name}>{getVaultSubText(vault)}</div>
+
               <div className={styles.position}>
-                <DisplayCurrency
-                  coin={{
-                    denom: baseCurrency.denom,
-                    amount: vault.position.values.total.toString(),
-                  }}
-                  className={'xl'}
-                />
+                <div className='xl' onClick={(e) => e.preventDefault()}>
+                  <span className='faded'>{t('common.apy')} </span>
+                  <span>
+                    <Tippy
+                      content={
+                        <Apy
+                          apyData={{
+                            borrow: vault.position.apy.borrow,
+                            total: vault.position.apy.total,
+                          }}
+                          leverage={vault.position.currentLeverage}
+                        />
+                      }
+                    >
+                      <span className='tooltip xl'>
+                        <AnimatedNumber amount={vault.position.apy.net} className='xl' suffix='%' />
+                      </span>
+                    </Tippy>
+                  </span>
+                </div>
                 <div className='s'>
-                  <span className='faded'>{t('common.debt')} </span>
+                  <span className='faded'>{t('fields.positionValueShort')} </span>
                   <DisplayCurrency
                     coin={{
                       denom: baseCurrency.denom,
-                      amount: vault.position.values.borrowed.toString(),
+                      amount: vault.position.values.total.toString(),
                     }}
-                    className={styles.inline}
+                    className={`s ${styles.inline}`}
                   />
                 </div>
+
                 <div className='s'>
                   <span className='faded'>{t('common.net')} </span>
                   <DisplayCurrency
@@ -84,20 +99,18 @@ export const ActiveVaultsTableMobile = () => {
                   />
                 </div>
                 <div className='s'>
-                  <span className='faded'>{t('fields.leverage')} </span>
-                  {new BigNumber(vault.position.currentLeverage).toPrecision(3)}
+                  <span className='faded'>{t('common.debt')} </span>
+                  <DisplayCurrency
+                    coin={{
+                      denom: baseCurrency.denom,
+                      amount: vault.position.values.borrowed.toString(),
+                    }}
+                    className={styles.inline}
+                  />
                 </div>
                 <div className='s'>
-                  <span className='faded'>{t('fields.vaultCap')} </span>
-
-                  {formatValue(
-                    (vault.vaultCap?.max || 0) / 10 ** baseCurrency.decimals,
-                    0,
-                    0,
-                    true,
-                    '',
-                    ` ${baseCurrency.symbol}`,
-                  )}
+                  <span className='faded'>{t('fields.leverage')} </span>
+                  {new BigNumber(vault.position.currentLeverage).toPrecision(3)}
                 </div>
               </div>
               <div className={styles.borrowCapacity}>
@@ -124,6 +137,7 @@ export const ActiveVaultsTableMobile = () => {
               href={`/farm/vault/${vault.address}/${
                 vault.position.status === 'active' ? 'edit' : 'close'
               }`}
+              className={styles.link}
             >
               <div>{content}</div>
             </Link>

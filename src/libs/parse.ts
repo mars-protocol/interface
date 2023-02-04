@@ -1,4 +1,4 @@
-import { ExecuteResult } from '@cosmjs/cosmwasm-stargate'
+import { TxBroadcastResult } from '@marsprotocol/wallet-connector'
 import BigNumber from 'bignumber.js'
 import { DAY_IN_SECONDS, HOUR_IN_SECONDS, MINUTE_IN_SECONDS } from 'constants/timeConstants'
 import moment from 'moment'
@@ -282,19 +282,29 @@ export const extractCoinFromLog = (text: string) => {
   return { amount: arr[0], denom: arr[1] }
 }
 
-export const parseActionMessages = (data: ExecuteResult) => {
-  const wasmEvents = data.logs[0].events.find((object) => object.type === 'wasm')
-  if (wasmEvents) {
-    return wasmEvents.attributes.reduce((prev: {}[], curr) => {
-      if (curr.key === '_contract_address') {
+export const parseActionMessages = (data: TxBroadcastResult) => {
+  const wasmEvents: [] = data.response.events
+    .filter((object: Record<string, string>) => object.type === 'wasm')
+    .map((event: Record<string, string>) => event?.attributes)
+    .flat()
+
+  if (wasmEvents.length) {
+    return wasmEvents.reduce((prev: {}[], curr: any) => {
+      if (curr.key === 'action') {
         prev.push({ [curr.key]: curr.value })
         return prev
       } else {
-        Object.assign(prev[prev.length - 1], { [curr.key]: curr.value })
+        if (prev.length) {
+          Object.assign(prev[prev.length - 1], { [curr.key]: curr.value })
+        }
         return prev
       }
     }, [])
   }
+}
+
+export const toBase64 = (obj: object) => {
+  return Buffer.from(JSON.stringify(obj)).toString('base64')
 }
 
 export const ltvToLeverage = (ltv: number) => {

@@ -1,4 +1,4 @@
-import { ChainInfoID, SimpleChainInfoList, useWalletManager } from '@marsprotocol/wallet-connector'
+import { ChainInfoID, useWallet, useWalletManager } from '@marsprotocol/wallet-connector'
 import { AnimatedNumber, Button, CircularProgress, DisplayCurrency, SVG } from 'components/common'
 import { findByDenom } from 'functions'
 import { useUserBalance } from 'hooks/queries'
@@ -16,7 +16,8 @@ export const ConnectedButton = () => {
   // ---------------
   // EXTERNAL HOOKS
   // ---------------
-  const { disconnect } = useWalletManager()
+  const { disconnect } = useWallet()
+  const { disconnect: terminate } = useWalletManager()
   const { t } = useTranslation()
 
   // ---------------
@@ -25,7 +26,7 @@ export const ConnectedButton = () => {
   const baseCurrency = useStore((s) => s.baseCurrency)
   const chainInfo = useStore((s) => s.chainInfo)
   const userWalletAddress = useStore((s) => s.userWalletAddress)
-  const userWalletName = useStore((s) => s.userWalletName)
+  const userIcns = useStore((s) => s.userIcns)
 
   // ---------------
   // LOCAL STATE
@@ -34,18 +35,16 @@ export const ConnectedButton = () => {
     successDuration: 1000 * 5,
   })
   const { data, isLoading } = useUserBalance()
-
   // ---------------
   // VARIABLES
   // ---------------
   const baseCurrencyBalance = Number(findByDenom(data || [], baseCurrency.denom || '')?.amount || 0)
-  const explorerName =
-    chainInfo && SimpleChainInfoList[chainInfo.chainId as ChainInfoID].explorerName
+  const explorerName = chainInfo ? chainInfo.explorerName : ''
 
   const [showDetails, setShowDetails] = useState(false)
 
   const viewOnFinder = useCallback(() => {
-    const explorerUrl = chainInfo && SimpleChainInfoList[chainInfo.chainId as ChainInfoID].explorer
+    const explorerUrl = chainInfo ? chainInfo.explorer : ''
 
     window.open(`${explorerUrl}account/${userWalletAddress}`, '_blank')
   }, [chainInfo, userWalletAddress])
@@ -59,6 +58,11 @@ export const ConnectedButton = () => {
     baseCurrency.denom,
     baseCurrency.decimals,
   )
+
+  const handleDisconnect = () => {
+    disconnect()
+    terminate()
+  }
 
   return (
     <div className={styles.wrapper}>
@@ -75,18 +79,11 @@ export const ConnectedButton = () => {
         text={
           <>
             <span className={styles.address}>
-              {userWalletName ? userWalletName : truncate(userWalletAddress, [2, 4])}
+              {userIcns ? userIcns.split('.')[0] : truncate(userWalletAddress, [2, 4])}
             </span>
             <span className={`${styles.balance} number`}>
               {!isLoading ? (
-                `${formatValue(
-                  currentBalanceAmount,
-                  2,
-                  2,
-                  true,
-                  false,
-                  ` ${chainInfo?.stakeCurrency?.coinDenom}`,
-                )}`
+                `${formatValue(currentBalanceAmount, 2, 2, true, false, ` ${baseCurrency.symbol}`)}`
               ) : (
                 <CircularProgress className={styles.circularProgress} size={12} />
               )}
@@ -99,26 +96,28 @@ export const ConnectedButton = () => {
           <div className={styles.details}>
             <div className={styles.detailsHeader}>
               <div className={styles.detailsBalance}>
-                <div className={styles.detailsDenom}>{chainInfo?.stakeCurrency?.coinDenom}</div>
+                <div className={styles.detailsDenom}>{baseCurrency.symbol}</div>
                 <div className={`${styles.detailsBalanceAmount}`}>
                   <AnimatedNumber amount={currentBalanceAmount} abbreviated={false} />
                   <DisplayCurrency
                     className='s faded'
                     coin={{
                       amount: baseCurrencyBalance.toString(),
-                      denom: baseCurrency.denom,
+                      denom: baseCurrency.symbol,
                     }}
                   />
                 </div>
               </div>
               <div className={styles.detailsButton}>
-                <Button color='secondary' onClick={disconnect} text={t('common.disconnect')} />
+                <Button
+                  color='secondary'
+                  onClick={handleDisconnect}
+                  text={t('common.disconnect')}
+                />
               </div>
             </div>
             <div className={styles.detailsBody}>
-              <p className={styles.addressLabel}>
-                {userWalletName ? `‘${userWalletName}’` : t('common.yourAddress')}
-              </p>
+              <p className={styles.addressLabel}>{userIcns ? userIcns : t('common.yourAddress')}</p>
               <p className={styles.address}>{userWalletAddress}</p>
               <p className={styles.addressMobile}>{truncate(userWalletAddress, [14, 14])}</p>
               <div className={styles.buttons}>

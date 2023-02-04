@@ -1,8 +1,7 @@
-import classNames from 'classnames/bind'
+import classNames from 'classnames'
 import { DisplayCurrency } from 'components/common'
 import { AssetBar } from 'components/fields'
 import { lookup } from 'libs/parse'
-import React from 'react'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
 

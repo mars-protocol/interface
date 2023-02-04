@@ -49,14 +49,7 @@ const RepayVault = (props: Props) => {
   }
 
   if (isLoadingRepay || repayData || repayError) {
-    return (
-      <RepayResponse
-        data={repayData}
-        error={repayError}
-        isLoading={isLoadingRepay}
-        vault={props.activeVault}
-      />
-    )
+    return <RepayResponse data={repayData} isLoading={isLoadingRepay} vault={props.activeVault} />
   }
 
   const isSameAmounts = isEqual(prevPosition.amounts, repayPosition.amounts)

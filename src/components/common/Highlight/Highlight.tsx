@@ -1,4 +1,4 @@
-import classNames from 'classnames/bind'
+import classNames from 'classnames'
 import { ReactNode } from 'react'
 
 import styles from './Highlight.module.scss'

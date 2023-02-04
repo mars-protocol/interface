@@ -5,12 +5,13 @@ import { convertAprToApy, leverageToLtv } from 'libs/parse'
 import moment from 'moment'
 import { Store } from 'store/interfaces/store.interface'
 import { Options, VaultsSlice } from 'store/interfaces/vaults.interface.'
+import { VaultClient } from 'types/classes'
 import {
+  ArrayOfVaultInfoResponse,
   LockingVaultAmount,
   Positions,
 } from 'types/generated/mars-credit-manager/MarsCreditManager.types'
 import { VaultBaseForString } from 'types/generated/mars-mock-credit-manager/MarsMockCreditManager.types'
-import { MarsMockVaultClient } from 'types/generated/mars-mock-vault/MarsMockVault.client'
 import { GetState } from 'zustand'
 import { NamedSet } from 'zustand/middleware'
 
@@ -25,12 +26,14 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
     const nftClient = get().accountNftClient!
     const address = get().userWalletAddress
 
-    const accountIds = await nftClient
-      .tokens({ owner: address, limit: 100 })
-      .then((result) => result.tokens)
+    const accountIds: string[] = await nftClient
+      .query({ tokens: { owner: address, limit: 100 } })
+      .then((result: { tokens: string[] }) => result.tokens)
 
     const creditManagerClient = get().creditManagerClient
-    const promises = accountIds?.map((id) => creditManagerClient?.positions({ accountId: id }))
+    const promises = accountIds?.map((id) =>
+      creditManagerClient?.query({ positions: { account_id: id } }),
+    )
 
     const newCreditAccounts = await Promise.all(promises).then((result) =>
       result.map((value) => value as Positions).filter((positions) => positions.vaults.length),
@@ -58,10 +61,12 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
         .toString()
 
       return {
-        coins: await creditManagerClient.estimateWithdrawLiquidity({
-          lpToken: {
-            amount: amount,
-            denom: lpToken.denom,
+        coins: await creditManagerClient.query({
+          estimate_withdraw_liquidity: {
+            lp_token: {
+              amount: amount,
+              denom: lpToken.denom,
+            },
           },
         }),
         vaultAddress: lpToken.vaultAddress,
@@ -91,11 +96,14 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
         ?.unlocking[0]?.id
 
       if (!client || !vault || isNaN(lockupId)) return null
+
+      const vaultClient = new VaultClient(vault.address, client)
+
       return {
         unlockAtTimestamp: Math.round(
           Number(
             (
-              await client.queryContractSmart(vault.address, {
+              await vaultClient.query({
                 vault_extension: { lockup: { unlocking_position: { lockup_id: lockupId } } },
               })
             ).release_at?.at_time,
@@ -152,7 +160,9 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
     let data: VaultCapData[] = []
 
     const getBatch = async (startAfter?: VaultBaseForString): Promise<void> => {
-      const batch = await creditManagerClient?.vaultsInfo({ limit: 5, startAfter })
+      const batch: ArrayOfVaultInfoResponse = await creditManagerClient.query({
+        vaults_info: { limit: 5, start_after: startAfter },
+      })
 
       const batchProcessed = batch?.map(
         (vaultInfo) =>
@@ -184,19 +194,20 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
 
     const creditAccounts = await get().getCreditAccounts(options)
     const client = get().client!
-    const userWalletAddress = get().userWalletAddress
 
     const promises = creditAccounts.map(async (creditAccount) => {
       const vaultAddress = creditAccount.vaults[0].vault.address
       const vault = get().vaultConfigs.find((vault) => vault.address === vaultAddress)
 
-      const vaultClient = new MarsMockVaultClient(client, userWalletAddress, vaultAddress)
+      const vaultClient = new VaultClient(vaultAddress, client)
 
       const amounts = getAmountsFromActiveVault(creditAccount.vaults[0].amount)
       return {
         locked: Number(
-          await vaultClient.previewRedeem({
-            amount: amounts.locked,
+          await vaultClient.query({
+            preview_redeem: {
+              amount: amounts.locked,
+            },
           }),
         ),
         unlocking: amounts.unlocking,
@@ -206,7 +217,7 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
       }
     })
 
-    const newLpTokens = await Promise.all(promises)
+    const newLpTokens = (await Promise.all(promises)).filter((lpToken) => !!lpToken.denom)
     set({ lpTokens: newLpTokens })
 
     return newLpTokens
@@ -378,7 +389,11 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
                 vault: vaultTokenAmounts.locked,
               },
               values,
-              apy: apy,
+              apy: {
+                total: curr.apy,
+                borrow: trueBorrowRate,
+                net: apy,
+              },
               currentLeverage: leverage,
               ltv: leverageToLtv(leverage),
               ...(unlockTime ? { unlockAtTimestamp: unlockTime } : {}),

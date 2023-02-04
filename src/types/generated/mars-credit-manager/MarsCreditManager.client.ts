@@ -13,6 +13,7 @@ import {
   ArrayOfCoin,
   ArrayOfCoinBalanceResponseItem,
   ArrayOfDebtShares,
+  ArrayOfLentShares,
   ArrayOfSharesResponseItem,
   ArrayOfString,
   ArrayOfVaultInfoResponse,
@@ -23,6 +24,8 @@ import {
   ConfigUpdates,
   DebtShares,
   HealthResponse,
+  LentShares,
+  NftConfigUpdates,
   Positions,
   Uint128,
   VaultBaseForString,
@@ -68,6 +71,21 @@ export interface MarsCreditManagerReadOnlyInterface {
     limit?: number
     startAfter?: string
   }) => Promise<ArrayOfDebtShares>
+  allLentShares: ({
+    limit,
+    startAfter,
+  }: {
+    limit?: number
+    startAfter?: string[][]
+  }) => Promise<ArrayOfSharesResponseItem>
+  totalLentShares: () => Promise<LentShares>
+  allTotalLentShares: ({
+    limit,
+    startAfter,
+  }: {
+    limit?: number
+    startAfter?: string
+  }) => Promise<ArrayOfLentShares>
   allVaultPositions: ({
     limit,
     startAfter,
@@ -108,6 +126,9 @@ export class MarsCreditManagerQueryClient implements MarsCreditManagerReadOnlyIn
     this.allDebtShares = this.allDebtShares.bind(this)
     this.totalDebtShares = this.totalDebtShares.bind(this)
     this.allTotalDebtShares = this.allTotalDebtShares.bind(this)
+    this.allLentShares = this.allLentShares.bind(this)
+    this.totalLentShares = this.totalLentShares.bind(this)
+    this.allTotalLentShares = this.allTotalLentShares.bind(this)
     this.allVaultPositions = this.allVaultPositions.bind(this)
     this.totalVaultCoinBalance = this.totalVaultCoinBalance.bind(this)
     this.allTotalVaultCoinBalances = this.allTotalVaultCoinBalances.bind(this)
@@ -209,6 +230,39 @@ export class MarsCreditManagerQueryClient implements MarsCreditManagerReadOnlyIn
       },
     })
   }
+  allLentShares = async ({
+    limit,
+    startAfter,
+  }: {
+    limit?: number
+    startAfter?: string[][]
+  }): Promise<ArrayOfSharesResponseItem> => {
+    return this.client.queryContractSmart(this.contractAddress, {
+      all_lent_shares: {
+        limit,
+        start_after: startAfter,
+      },
+    })
+  }
+  totalLentShares = async (): Promise<LentShares> => {
+    return this.client.queryContractSmart(this.contractAddress, {
+      total_lent_shares: {},
+    })
+  }
+  allTotalLentShares = async ({
+    limit,
+    startAfter,
+  }: {
+    limit?: number
+    startAfter?: string
+  }): Promise<ArrayOfLentShares> => {
+    return this.client.queryContractSmart(this.contractAddress, {
+      all_total_lent_shares: {
+        limit,
+        start_after: startAfter,
+      },
+    })
+  }
   allVaultPositions = async ({
     limit,
     startAfter,
@@ -288,15 +342,25 @@ export interface MarsCreditManagerInterface extends MarsCreditManagerReadOnlyInt
   ) => Promise<ExecuteResult>
   updateConfig: (
     {
-      newConfig,
+      updates,
     }: {
-      newConfig: ConfigUpdates
+      updates: ConfigUpdates
     },
     fee?: number | StdFee | 'auto',
     memo?: string,
     funds?: Coin[],
   ) => Promise<ExecuteResult>
   updateOwner: (
+    fee?: number | StdFee | 'auto',
+    memo?: string,
+    funds?: Coin[],
+  ) => Promise<ExecuteResult>
+  updateNftConfig: (
+    {
+      updates,
+    }: {
+      updates: NftConfigUpdates
+    },
     fee?: number | StdFee | 'auto',
     memo?: string,
     funds?: Coin[],
@@ -324,6 +388,7 @@ export class MarsCreditManagerClient
     this.updateCreditAccount = this.updateCreditAccount.bind(this)
     this.updateConfig = this.updateConfig.bind(this)
     this.updateOwner = this.updateOwner.bind(this)
+    this.updateNftConfig = this.updateNftConfig.bind(this)
     this.callback = this.callback.bind(this)
   }
 
@@ -371,9 +436,9 @@ export class MarsCreditManagerClient
   }
   updateConfig = async (
     {
-      newConfig,
+      updates,
     }: {
-      newConfig: ConfigUpdates
+      updates: ConfigUpdates
     },
     fee: number | StdFee | 'auto' = 'auto',
     memo?: string,
@@ -384,7 +449,7 @@ export class MarsCreditManagerClient
       this.contractAddress,
       {
         update_config: {
-          new_config: newConfig,
+          updates,
         },
       },
       fee,
@@ -402,6 +467,29 @@ export class MarsCreditManagerClient
       this.contractAddress,
       {
         update_owner: {},
+      },
+      fee,
+      memo,
+      funds,
+    )
+  }
+  updateNftConfig = async (
+    {
+      updates,
+    }: {
+      updates: NftConfigUpdates
+    },
+    fee: number | StdFee | 'auto' = 'auto',
+    memo?: string,
+    funds?: Coin[],
+  ): Promise<ExecuteResult> => {
+    return await this.client.execute(
+      this.sender,
+      this.contractAddress,
+      {
+        update_nft_config: {
+          updates,
+        },
       },
       fee,
       memo,

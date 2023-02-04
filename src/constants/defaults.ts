@@ -19,7 +19,11 @@ export const DEFAULT_POSITION: Position = {
     total: 0,
     net: 0,
   },
-  apy: 0,
+  apy: {
+    borrow: 5.2,
+    net: 7.7,
+    total: 19,
+  },
   ltv: 0.5,
   currentLeverage: 1,
 }

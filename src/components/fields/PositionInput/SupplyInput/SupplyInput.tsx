@@ -1,4 +1,4 @@
-import classNames from 'classnames/bind'
+import classNames from 'classnames'
 import { Button, SVG, Tutorial } from 'components/common'
 import { TokenInput } from 'components/fields'
 import { FIELDS_TUTORIAL_KEY } from 'constants/appConstants'

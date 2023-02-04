@@ -1,4 +1,4 @@
-import { ChainInfoID } from '@marsprotocol/wallet-connector'
+import { ChainInfoID, WalletID } from '@marsprotocol/wallet-connector'
 import atom from 'images/atom.svg'
 import axlusdc from 'images/axlusdc.svg'
 import juno from 'images/juno.svg'
@@ -63,9 +63,9 @@ const OTHER_ASSETS: { [denom: string]: OtherAsset } = {
 
 export const NETWORK_CONFIG: NetworkConfig = {
   name: ChainInfoID.OsmosisTestnet,
-  hiveUrl: 'https://osmosis-delphi-testnet-1.simply-vc.com.mt/XF32UOOU55CX/osmosis-hive/graphql',
-  rpcUrl: 'https://osmosis-delphi-testnet-1.simply-vc.com.mt/XF32UOOU55CX/osmosis-rpc',
-  restUrl: 'https://osmosis-delphi-testnet-1.simply-vc.com.mt/XF32UOOU55CX/osmosis-lcd',
+  hiveUrl: 'https://osmosis-delphi-testnet-1.simply-vc.com.mt/XF32UOOU55CX/osmosis-hive/graphql/',
+  rpcUrl: 'https://osmosis-delphi-testnet-1.simply-vc.com.mt/XF32UOOU55CX/osmosis-rpc/',
+  restUrl: 'https://osmosis-delphi-testnet-1.simply-vc.com.mt/XF32UOOU55CX/osmosis-lcd/',
   apolloAprUrl: 'https://stats.apollo.farm/api/apr/v1/all',
   contracts: {
     addressProvider: 'osmo17dyy6hyzzy6u5khy5lau7afa2y9kwknu0aprwqn8twndw2qhv8ls6msnjr',
@@ -76,8 +76,8 @@ export const NETWORK_CONFIG: NetworkConfig = {
     treasury: 'osmo1qv74pu0gjc9vuvkhayuj5j3q8fzmf4pnl643djqpv7enxr925g5q0wf7p3',
     safetyFund: 'osmo1j2mnzs7eqld4umtwky4hyf6f7kqcsg7ragh2l76ev7ucxcjvdjrs3tdezf',
     protocolRewardsCollector: 'osmo1xl7jguvkg807ya00s0l722nwcappfzyzrac3ug5tnjassnrmnfrs47wguz',
-    creditManager: 'osmo1prwnxn3vlvh0kqmwxn8whqnavk8ze9hrccwpsapysgpa3pj8r2csy84grp',
-    accountNft: 'osmo1ua5rw84jxg6e7ma4hx7v7yhqcks74cjnx38gpnsvtfzrtxhwcvjqgsxulx',
+    creditManager: 'osmo169xhpftsee275j3cjudj6qfzdpfp8sdllgeeprud4ynwr4sj6m4qel2ezp',
+    accountNft: 'osmo1xpgx06z2c6zjk49feq75swgv78m6dvht6wramu2gltzjz5j959nq4hggxz',
   },
   assets: {
     base: ASSETS.osmo,
@@ -85,7 +85,8 @@ export const NETWORK_CONFIG: NetworkConfig = {
     other: [OTHER_ASSETS.mars, OTHER_ASSETS.axlusdc],
   },
   appUrl: 'https://testnet.osmosis.zone',
-  councilUrl: 'https://testnet.keplr.app/chains/mars-protocol-testnet',
+  councilUrl: 'https://testnet.keplr.app/chains/mars-hub-testnet',
+  wallets: [WalletID.Keplr, WalletID.Leap, WalletID.Cosmostation],
 }
 
 export const VAULT_CONFIGS: Vault[] = [
@@ -104,7 +105,8 @@ export const VAULT_CONFIGS: Vault[] = [
     color: '#DD5B65',
     lockup: 86400,
     provider: 'Apollo vault',
-    description: 'Up to 2× Leveraged Yield Farming with auto compounding of the LP tokens.',
+    description:
+      'Up to 2.67× leveraged yield farming with auto compounding of the OSMO-ATOM LP tokens.',
     ltv: {
       max: 0.625,
       contract: 0.63,
@@ -126,7 +128,8 @@ export const VAULT_CONFIGS: Vault[] = [
     color: '#DD5B65',
     lockup: 86400 * 14,
     provider: 'Apollo vault',
-    description: 'Up to 2× Leveraged Yield Farming with auto compounding of the LP tokens.',
+    description:
+      'Up to 2.67× leveraged yield farming with auto compounding of the OSMO-ATOM LP tokens.',
     ltv: {
       max: 0.625,
       contract: 0.63,
@@ -148,7 +151,8 @@ export const VAULT_CONFIGS: Vault[] = [
     color: '#DD5B65',
     lockup: 86400 * 1,
     provider: 'Apollo vault',
-    description: 'Up to 2× Leveraged Yield Farming with auto compounding of the LP tokens.',
+    description:
+      'Up to 1.67× leveraged yield farming with auto compounding of the OSMO-JUNO LP tokens.',
     ltv: {
       max: 0.4,
       contract: 0.4115,
@@ -170,7 +174,8 @@ export const VAULT_CONFIGS: Vault[] = [
     color: '#DD5B65',
     lockup: 86400 * 14,
     provider: 'Apollo vault',
-    description: 'Up to 2× Leveraged Yield Farming with auto compounding of the LP tokens.',
+    description:
+      'Up to 1.67× leveraged yield farming with auto compounding of the OSMO-JUNO LP tokens.',
     ltv: {
       max: 0.4,
       contract: 4.115,

@@ -1,0 +1,16 @@
+diff --git a/next.config.js b/next.config.js
+index 2801090..4b5fabe 100644
+--- a/next.config.js
++++ b/next.config.js
+@@ -48,6 +48,11 @@ const moduleExports = {
+       },
+     ]
+   },
++  sentry: {
++    disableServerWebpackPlugin: true,
++    disableClientWebpackPlugin: true,
++  },
++  output: 'standalone'
+ }
+ 
+ const sentryWebpackPluginOptions = {

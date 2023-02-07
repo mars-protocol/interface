@@ -75,7 +75,7 @@ const RedBank = () => {
     <Card
       hideHeaderBorder
       title={t('redbank.myDeposits')}
-      tooltip={t('redbank.redBankMarketsDepositedTooltip')}
+      tooltip={<Trans i18nKey='redbank.tooltips.deposit.market.connected' />}
     >
       <AssetTable columns={defaultDepositColumns} data={redBankAssets} type='deposit' />
     </Card>
@@ -85,7 +85,7 @@ const RedBank = () => {
     <Card
       hideHeaderBorder
       title={t('redbank.myBorrowings')}
-      tooltip={t('redbank.redbankMarketsBorrowedTooltip')}
+      tooltip={<Trans i18nKey='redbank.tooltips.borrow.market.connected' />}
     >
       <AssetTable columns={defaultBorrowColumns} data={redBankAssets} type='borrow' />
     </Card>
@@ -107,7 +107,7 @@ const RedBank = () => {
       />
       <Highlight show={tutorialStep === 3 || !showTutorial}>
         <div className={styles.summaryContainer}>
-          <Card title={t('common.portfolio')} tooltip={t('redbank.redbankPortfolioTooltip')}>
+          <Card title={t('common.portfolio')} tooltip={t('redbank.tooltips.portfolio')}>
             <div className={styles.summary}>
               <Portfolio borrowLimit={maxBorrowLimit} liquidationThreshold={liquidationThreshold} />
             </div>

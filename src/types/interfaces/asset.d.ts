@@ -2,7 +2,7 @@ interface Asset {
   color: string
   name: string
   denom: string
-  symbol: 'OSMO' | 'ATOM' | 'JUNO'
+  symbol: 'OSMO' | 'ATOM' | 'JUNO' | 'axlUSDC'
   contract_addr?: string
   logo: string
   decimals: number

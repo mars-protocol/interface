@@ -75,6 +75,7 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
     )
       return
     const redBankAssets: RedBankAsset[] = []
+    const marketAssetLiquidity: Coin[] = []
     const whitelistedAssets = get().whitelistedAssets
 
     if (!whitelistedAssets?.length) return
@@ -84,7 +85,6 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
       const convertToBaseCurrency = get().convertToBaseCurrency
       const reserveInfo = findByDenom(get().marketInfo, asset.denom)
       const depositApy = reserveInfo?.liquidity_rate || 0
-      const liquidity = findByDenom(get().marketAssetLiquidity, asset.denom) as Coin
       const incentiveInfo = get().calculateIncentiveAssetInfo(
         findByDenom(get().marketIncentiveInfo, asset.denom),
         { denom: asset.denom, amount: get().computeMarketLiquidity(asset.denom).toString() },
@@ -96,6 +96,11 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
       const depositCap = Number(marketInfo?.deposit_cap) || 0
       const depositLiquidity =
         Number(get().marketDeposits.find((coin) => coin.denom === asset.denom)?.amount) || 0
+      const debtLiquidity =
+        Number(get().marketDebts.find((coin) => coin.denom === asset.denom)?.amount) || 0
+
+      const marketLiquidity = (depositLiquidity - debtLiquidity).toString()
+      marketAssetLiquidity.push({ denom: asset.denom, amount: marketLiquidity })
       const redBankAsset: RedBankAsset = {
         ...asset,
         walletBalance: assetWallet?.amount.toString(),
@@ -112,7 +117,7 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
         borrowRate: borrowApy * 100 >= 0.01 ? borrowApy * 100 : 0.0,
         apy: depositApy * 100 >= 0.01 ? depositApy * 100 : 0.0,
         depositLiquidity: depositLiquidity,
-        marketLiquidity: liquidity?.amount.toString() || '0',
+        marketLiquidity: marketLiquidity,
         incentiveInfo,
         isCollateral: true,
         depositCap: depositCap,
@@ -123,6 +128,7 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
 
     set({
       redBankAssets,
+      marketAssetLiquidity,
     })
   },
   setUserBalancesState: (userBalancesState: State) => set({ userBalancesState }),
@@ -135,11 +141,7 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
   processRedBankQuery: (data: RedBankData, whitelistedAssets: Asset[]) => {
     if (isEqual(data, get().previousRedBankQueryData)) return
 
-    const rawBalances: Coin[] = data.balance.balance
     const userUnclaimedRewards = data.rbwasmkey.unclaimedRewards
-    const marketAssetLiquidity: Coin[] = rawBalances.map((coin) => {
-      return { denom: coin.denom, amount: coin.amount }
-    })
     const marketInfo: Market[] = []
     const marketIncentiveInfo: MarketIncentive[] = []
 
@@ -160,7 +162,6 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
       marketIncentiveInfo.push(marketIncentiveData)
     })
     set({
-      marketAssetLiquidity,
       marketInfo,
       marketIncentiveInfo,
       previousRedBankQueryData: data,
@@ -187,6 +188,8 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
     if (isEqual(data, get().previousUserDepositQueryData)) return
 
     const deposits = data.deposits.deposits
+
+    if (!deposits) return
 
     const userDeposits = deposits.map((deposit) => ({
       denom: deposit.denom,

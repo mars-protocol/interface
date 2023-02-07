@@ -1,40 +1,44 @@
 import { useQuery } from '@tanstack/react-query'
-import { getMarketDepositsQuery } from 'functions/queries'
+import { getDepositDebtQuery } from 'functions/queries'
 import { gql, request } from 'graphql-request'
 import { useEffect } from 'react'
 import useStore from 'store'
 import { QUERY_KEYS } from 'types/enums/queryKeys'
 
-export interface MarketDepositsData {
+export interface DepositAndDebtData {
   mdwasmkey: {
     OSMODeposits: string
+    OSMODebt: string
     ATOMDeposits: string
+    ATOMDebt: string
     JUNODeposits: string
+    JUNODebt: string
     axlUSDCDeposits: string
+    axlUSDCDebt: string
   }
 }
 
-export const useMarketDeposits = () => {
+export const useDepositAndDebt = () => {
   const hiveUrl = useStore((s) => s.networkConfig?.hiveUrl)
   const whitelistedAssets = useStore((s) => s.whitelistedAssets)
   const redBankAddress = useStore((s) => s.networkConfig?.contracts.redBank) || ''
   const marketInfo = useStore((s) => s.marketInfo)
-  const processMarketDepositsQuery = useStore((s) => s.processMarketDepositsQuery)
+  const processDepositAndDebtQuery = useStore((s) => s.processDepositAndDebtQuery)
 
-  const { refetch } = useQuery<MarketDepositsData>(
+  const { refetch } = useQuery<DepositAndDebtData>(
     [QUERY_KEYS.MARKET_DEPOSITS],
     async () => {
       return await request(
         hiveUrl!,
         gql`
-          ${getMarketDepositsQuery(redBankAddress, whitelistedAssets, marketInfo)}
+          ${getDepositDebtQuery(redBankAddress, whitelistedAssets, marketInfo)}
         `,
       )
     },
     {
       enabled: !!hiveUrl && !!whitelistedAssets.length && !!redBankAddress && !!marketInfo.length,
       refetchInterval: 120000,
-      onSuccess: processMarketDepositsQuery,
+      onSuccess: processDepositAndDebtQuery,
     },
   )
 

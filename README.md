@@ -12,8 +12,6 @@ Typescript is added and utilised (but optional if you want to create .jsx or .ts
 
 SCSS with [CSS modules](https://create-react-app.dev/docs/adding-a-css-modules-stylesheet) (webpack allows importing css files into javascript, use the CSS module technique to avoid className clashes).
 
-Sentry is used for front end error logging/exception & bug reporting.
-
 ## 2. Deployment
 
 Start web server

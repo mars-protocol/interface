@@ -1,6 +1,12 @@
-import Tippy from '@tippyjs/react'
 import BigNumber from 'bignumber.js'
-import { AnimatedNumber, Apy, BorrowCapacity, Card, DisplayCurrency } from 'components/common'
+import {
+  AnimatedNumber,
+  Apy,
+  BorrowCapacity,
+  Card,
+  DisplayCurrency,
+  TextTooltip,
+} from 'components/common'
 import { VaultLogo, VaultName } from 'components/fields'
 import { FIELDS_TUTORIAL_KEY } from 'constants/appConstants'
 import Link from 'next/link'
@@ -60,8 +66,18 @@ export const ActiveVaultsTableMobile = () => {
                 <div className='xl' onClick={(e) => e.preventDefault()}>
                   <span className='faded'>{t('common.apy')} </span>
                   <span>
-                    <Tippy
-                      content={
+                    <TextTooltip
+                      hideStyling
+                      text={
+                        <span>
+                          <AnimatedNumber
+                            amount={vault.position.apy.net}
+                            className='xl'
+                            suffix='%'
+                          />
+                        </span>
+                      }
+                      tooltip={
                         <Apy
                           apyData={{
                             borrow: vault.position.apy.borrow,
@@ -70,11 +86,7 @@ export const ActiveVaultsTableMobile = () => {
                           leverage={vault.position.currentLeverage}
                         />
                       }
-                    >
-                      <span className='tooltip xl'>
-                        <AnimatedNumber amount={vault.position.apy.net} className='xl' suffix='%' />
-                      </span>
-                    </Tippy>
+                    />
                   </span>
                 </div>
                 <div className='s'>

@@ -9,6 +9,8 @@ interface RedBankData {
     ATOMMarketIncentive: MarketIncentive
     JUNOMarket: Market
     JUNOMarketIncentive: MarketIncentive
+    axlUSDCMarket: Market
+    axlUSDCMarketIncentive: MarketIncentive
     collateral: UserCollateral[]
     unclaimedRewards: string
   }

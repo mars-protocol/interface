@@ -8,7 +8,7 @@ import {
 } from '@marsprotocol/wallet-connector'
 import BigNumber from 'bignumber.js'
 import { BlockHeightData } from 'hooks/queries/useBlockHeight'
-import { MarketDepositsData } from 'hooks/queries/useMarketDeposits'
+import { DepositAndDebtData } from 'hooks/queries/useDepositAndDebt'
 import { SafetyFundBalanceData } from 'hooks/queries/useSafetyFundBalance'
 import { UserBalanceData } from 'hooks/queries/useUserBalance'
 import isEqual from 'lodash.isequal'
@@ -30,13 +30,6 @@ const commonSlice = (
     symbol: 'OSMO',
     decimals: 6,
   },
-  displayCurrency: {
-    // The denom of DAI, not USDC
-    denom: 'ibc/88D70440A05BFB25C7FF0BA62DA357EAA993CB1B036077CF1DAAEFB28721D935',
-    prefix: '$',
-    suffix: '',
-    decimals: 2,
-  },
   currentNetwork: Network.TESTNET,
   errors: {
     network: false,
@@ -46,6 +39,7 @@ const commonSlice = (
   isNetworkLoaded: false,
   latestBlockHeight: 0,
   marketDeposits: [],
+  marketDebts: [],
   otherAssets: [],
   queryErrors: [],
   slippage: 0.02,
@@ -196,16 +190,21 @@ const commonSlice = (
     if (blockFetched !== -1) set({ latestBlockHeight: blockFetched })
     set({ previousBlockHeightQueryData: data })
   },
-  processMarketDepositsQuery: (data: MarketDepositsData) => {
+  processDepositAndDebtQuery: (data: DepositAndDebtData) => {
     const whitelistedAssets = get().whitelistedAssets
     if (!whitelistedAssets.length) return
 
-    const coins: Coin[] = whitelistedAssets.map((asset) => ({
+    const depositCoins: Coin[] = whitelistedAssets.map((asset) => ({
       amount: data.mdwasmkey[`${asset.symbol}Deposits`],
       denom: asset.denom,
     }))
 
-    set({ marketDeposits: coins })
+    const debtCoins: Coin[] = whitelistedAssets.map((asset) => ({
+      amount: data.mdwasmkey[`${asset.symbol}Debt`],
+      denom: asset.denom,
+    }))
+
+    set({ marketDeposits: depositCoins, marketDebts: debtCoins })
   },
   processSafetyFundQuery: (data: SafetyFundBalanceData) => {
     if (isEqual(data, get().previousSafetyFundBalanceQueryData)) return

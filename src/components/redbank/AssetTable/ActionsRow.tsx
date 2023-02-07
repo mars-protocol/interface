@@ -1,10 +1,9 @@
 import { Row } from '@tanstack/react-table'
-import Tippy from '@tippyjs/react/headless'
 import classNames from 'classnames/bind'
-import { Button, SVG } from 'components/common'
+import { Button, SVG, TextTooltip } from 'components/common'
 import { getSwapUrl } from 'functions'
 import { balanceSum } from 'libs/assetInfo'
-import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
 
@@ -17,9 +16,11 @@ interface Props {
 
 export const ActionsRow = ({ row, type }: Props) => {
   const { t } = useTranslation()
+  const router = useRouter()
   const chainInfo = useStore((s) => s.chainInfo)
   const redBankAssets = useStore((s) => s.redBankAssets)
   const hasBalance = Number(row.original.walletBalance ?? 0) > 0
+
   const hasDeposits = Number(row.original.depositBalance ?? 0) > 0
   const hasNeverDeposited = Number(balanceSum(redBankAssets, 'depositBalanceBaseCurrency')) === 0
   const appUrl = useStore((s) => s.networkConfig?.appUrl) || ''
@@ -32,7 +33,7 @@ export const ActionsRow = ({ row, type }: Props) => {
 
   return (
     <tr key={row.id} className={trClasses} onClick={() => row.toggleExpanded()}>
-      <td key={row.id} className={styles.td} colSpan={10}>
+      <td key={row.id} className={styles.td} colSpan={7}>
         <div className={styles.wrapper}>
           {type === 'deposit' && (
             <>
@@ -50,41 +51,35 @@ export const ActionsRow = ({ row, type }: Props) => {
                 size='small'
                 text={t('common.buy')}
               />
-              <Tippy
-                appendTo={() => document.body}
-                interactive={false}
-                render={(attrs) => {
-                  return hasBalance ? null : (
-                    <div className='tippyContainer' {...attrs}>
-                      {t('redbank.toDepositAssetOnChain', {
-                        asset: assetSymbol,
-                        chain: chainInfo?.name,
-                      })}
-                    </div>
-                  )
-                }}
-              >
-                <div>
-                  <Link href={`/redbank/deposit/${assetSymbol}`} passHref>
-                    <Button
-                      color='tertiary'
-                      disabled={!hasBalance}
-                      prefix={<SVG.Deposit />}
-                      size='small'
-                      text={t('redbank.deposit')}
-                    />
-                  </Link>
-                </div>
-              </Tippy>
-              {hasDeposits && (
-                <Link href={`/redbank/withdraw/${assetSymbol}`} passHref>
+              <TextTooltip
+                hideUnderline
+                text={
                   <Button
                     color='tertiary'
-                    prefix={<SVG.Withdraw />}
+                    disabled={!hasBalance}
+                    prefix={<SVG.Deposit />}
                     size='small'
-                    text={t('redbank.withdraw')}
+                    text={t('redbank.deposit')}
+                    onClick={() => router.push(`/redbank/deposit/${assetSymbol}`)}
                   />
-                </Link>
+                }
+                tooltip={
+                  hasBalance
+                    ? null
+                    : t('redbank.toDepositAssetOnChain', {
+                        asset: assetSymbol,
+                        chain: chainInfo?.name,
+                      })
+                }
+              />
+              {hasDeposits && (
+                <Button
+                  color='tertiary'
+                  prefix={<SVG.Withdraw />}
+                  size='small'
+                  text={t('redbank.withdraw')}
+                  onClick={() => router.push(`/redbank/withdraw/${assetSymbol}`)}
+                />
               )}
             </>
           )}
@@ -108,60 +103,48 @@ export const ActionsRow = ({ row, type }: Props) => {
                       text={t('common.buy')}
                     />
                   )}
-                  <Tippy
-                    appendTo={() => document.body}
-                    interactive={false}
-                    render={(attrs) => {
-                      return !hasBalance || hasNeverDeposited ? (
-                        <div className='tippyContainer' {...attrs}>
-                          {hasBalance
-                            ? t('redbank.warning.borrow')
-                            : t('redbank.noFundsForRepay', {
-                                symbol: assetSymbol,
-                              })}
-                        </div>
-                      ) : null
-                    }}
-                  >
-                    <div>
-                      <Link href={`/redbank/repay/${assetSymbol}`} passHref>
-                        <Button
-                          disabled={!hasBalance}
-                          color='tertiary'
-                          prefix={<SVG.Deposit />}
-                          size='small'
-                          text={t('common.repay')}
-                        />
-                      </Link>
-                    </div>
-                  </Tippy>
+                  <TextTooltip
+                    hideUnderline
+                    text={
+                      <Button
+                        disabled={!hasBalance}
+                        color='tertiary'
+                        prefix={<SVG.Deposit />}
+                        size='small'
+                        text={t('common.repay')}
+                        onClick={() => router.push(`/redbank/repay/${assetSymbol}`)}
+                      />
+                    }
+                    tooltip={
+                      !hasBalance
+                        ? t('redbank.noFundsForRepay', {
+                            symbol: assetSymbol,
+                          })
+                        : null
+                    }
+                  />
                 </>
               )}
-              <Tippy
-                appendTo={() => document.body}
-                interactive={false}
-                render={(attrs) => {
-                  return row.original.marketLiquidity === '0' || hasNeverDeposited ? (
-                    <div className='tippyContainer' {...attrs}>
-                      {hasNeverDeposited
-                        ? t('redbank.warning.borrow')
-                        : t('redbank.notEnoughMarketLiquidity')}
-                    </div>
-                  ) : null
-                }}
-              >
-                <div>
-                  <Link href={`/redbank/borrow/${assetSymbol}`} passHref>
-                    <Button
-                      color='tertiary'
-                      prefix={<SVG.Withdraw />}
-                      disabled={row.original.marketLiquidity === '0' || hasNeverDeposited}
-                      size='small'
-                      text={t('common.borrow')}
-                    />
-                  </Link>
-                </div>
-              </Tippy>
+              <TextTooltip
+                hideUnderline
+                text={
+                  <Button
+                    color='tertiary'
+                    prefix={<SVG.Withdraw />}
+                    disabled={row.original.marketLiquidity === '0' || hasNeverDeposited}
+                    size='small'
+                    text={t('common.borrow')}
+                    onClick={() => router.push(`/redbank/borrow/${assetSymbol}`)}
+                  />
+                }
+                tooltip={
+                  row.original.marketLiquidity === '0' || hasNeverDeposited
+                    ? hasNeverDeposited
+                      ? t('redbank.warning.borrow')
+                      : t('redbank.notEnoughMarketLiquidity')
+                    : null
+                }
+              />
             </>
           )}
         </div>

@@ -21,6 +21,12 @@ interface NetworkConfig {
     whitelist: Asset[]
     other: OtherAsset[]
   }
+  displayCurrency: {
+    denom: string
+    prefix: string
+    suffix: string
+    decimals: number
+  }
   appUrl: string
   councilUrl: string
   wallets: import('@marsprotocol/wallet-connector').WalletID[]

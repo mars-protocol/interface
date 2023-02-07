@@ -156,7 +156,7 @@ export const IncentivesButton = () => {
                   <p className='m'>{t('incentives.successfullyClaimed')}</p>
                   <TxLink
                     hash={response?.hash || ''}
-                    link={`${explorerUrl}txs/${response?.hash}`}
+                    link={`${explorerUrl}/txs/${response?.hash}`}
                   />
                 </div>
               ) : (

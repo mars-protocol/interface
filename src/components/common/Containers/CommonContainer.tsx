@@ -10,7 +10,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { MARS_SYMBOL, USDC_SYMBOL } from 'constants/appConstants'
 import {
   useBlockHeight,
-  useMarketDeposits,
+  useDepositAndDebt,
   useMarsOracle,
   useRedBank,
   useUserBalance,
@@ -49,7 +49,6 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
   const exchangeRatesState = useStore((s) => s.exchangeRatesState)
   const isNetworkLoaded = useStore((s) => s.isNetworkLoaded)
   const rpc = useStore((s) => s.chainInfo?.rpc)
-  const marketAssetLiquidity = useStore((s) => s.marketAssetLiquidity)
   const marketDeposits = useStore((s) => s.marketDeposits)
   const marketInfo = useStore((s) => s.marketInfo)
   const marketIncentiveInfo = useStore((s) => s.marketIncentiveInfo)
@@ -131,7 +130,6 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
     userBalancesState,
     exchangeRates,
     marketInfo,
-    marketAssetLiquidity,
     marketIncentiveInfo,
     userDebts,
     userDeposits,
@@ -157,7 +155,7 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
   useMarsOracle()
   useSpotPrice(MARS_SYMBOL)
   useSpotPrice(USDC_SYMBOL)
-  useMarketDeposits()
+  useDepositAndDebt()
   useRedBank()
 
   return <>{isNetworkLoaded && children}</>

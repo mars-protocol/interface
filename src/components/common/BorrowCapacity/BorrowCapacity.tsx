@@ -1,6 +1,5 @@
-import Tippy from '@tippyjs/react'
 import classNames from 'classnames'
-import { AnimatedNumber, DisplayCurrency } from 'components/common'
+import { AnimatedNumber, DisplayCurrency, TextTooltip } from 'components/common'
 import { formatValue } from 'libs/parse'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -82,73 +81,66 @@ export const BorrowCapacity = ({
             />
           )}
         </div>
-        <Tippy
-          appendTo={() => document.body}
-          interactive={true}
-          animation={false}
-          render={(attrs) => {
-            return (
-              <div className='tippyContainer' {...attrs}>
-                {t('redbank.borrowingBarTooltip', {
-                  limit: formatValue(
-                    convertToDisplayCurrency({
-                      amount: limit.toString(),
-                      denom: baseCurrency.denom,
-                    }),
-                    2,
-                    2,
-                    true,
-                    '$',
-                  ),
-                  liquidation: formatValue(
-                    convertToDisplayCurrency({
-                      amount: max.toString(),
-                      denom: baseCurrency.denom,
-                    }),
-                    2,
-                    2,
-                    true,
-                    '$',
-                  ),
-                })}
-              </div>
-            )
-          }}
-        >
-          <div className={styles.progressbarContainer} style={{ height: barHeight }}>
-            <div className={styles.progressbar}>
-              <div className={styles.limitLine} style={{ left: `${limitPercentOfMax || 0}%` }} />
-              <div
-                className={styles.limitBar}
-                style={{
-                  right: `${limitPercentOfMax ? 100 - limitPercentOfMax : 100}%`,
-                }}
-              ></div>
-
-              <div className={styles.ltvContainer}>
+        <TextTooltip
+          hideUnderline
+          tooltip={t('redbank.tooltips.borrow.bar', {
+            limit: formatValue(
+              convertToDisplayCurrency({
+                amount: limit.toString(),
+                denom: baseCurrency.denom,
+              }),
+              2,
+              2,
+              true,
+              '$',
+            ),
+            liquidation: formatValue(
+              convertToDisplayCurrency({
+                amount: max.toString(),
+                denom: baseCurrency.denom,
+              }),
+              2,
+              2,
+              true,
+              '$',
+            ),
+          })}
+          text={
+            <div className={styles.progressbarContainer} style={{ height: barHeight }}>
+              <div className={styles.progressbar}>
+                <div className={styles.limitLine} style={{ left: `${limitPercentOfMax || 0}%` }} />
                 <div
-                  className={styles.indicator}
-                  style={{ width: `${percentOfMaxRange || 0.01}%` }}
-                >
-                  <div className={styles.gradient} />
+                  className={styles.limitBar}
+                  style={{
+                    right: `${limitPercentOfMax ? 100 - limitPercentOfMax : 100}%`,
+                  }}
+                ></div>
+
+                <div className={styles.ltvContainer}>
+                  <div
+                    className={styles.indicator}
+                    style={{ width: `${percentOfMaxRange || 0.01}%` }}
+                  >
+                    <div className={styles.gradient} />
+                  </div>
+                  {showPercentageText ? (
+                    <span className={classNames('overline', styles.percentage)}>
+                      {max !== 0 && (
+                        <AnimatedNumber
+                          amount={percentOfMaxRound}
+                          suffix='%'
+                          maxDecimals={roundPercentage ? 0 : undefined}
+                          minDecimals={roundPercentage ? 0 : undefined}
+                          abbreviated={false}
+                        />
+                      )}
+                    </span>
+                  ) : null}
                 </div>
-                {showPercentageText ? (
-                  <span className={classNames('overline', styles.percentage)}>
-                    {max !== 0 && (
-                      <AnimatedNumber
-                        amount={percentOfMaxRound}
-                        suffix='%'
-                        maxDecimals={roundPercentage ? 0 : undefined}
-                        minDecimals={roundPercentage ? 0 : undefined}
-                        abbreviated={false}
-                      />
-                    )}
-                  </span>
-                ) : null}
               </div>
             </div>
-          </div>
-        </Tippy>
+          }
+        />
         {!hideValues && (
           <div className={`overline ${styles.values} xxxsCaps`}>
             <DisplayCurrency

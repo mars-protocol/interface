@@ -17,10 +17,12 @@ export const DisplayCurrency = ({
   isApproximation,
   className,
 }: Props) => {
-  const displayCurrency = useStore((s) => s.displayCurrency)
+  const networkConfig = useStore((s) => s.networkConfig)
   const convertToDisplayCurrency = useStore((s) => s.convertToDisplayCurrency)
-
   const amount = convertToDisplayCurrency(coin)
+  const displayCurrency = networkConfig?.displayCurrency
+
+  if (!displayCurrency) return null
 
   return (
     <div className={className}>

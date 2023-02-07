@@ -1,6 +1,5 @@
 import {
   getBalanceQuery,
-  getBankQuery,
   getContractQuery,
   getIncentiveQuery,
   getMarketQuery,
@@ -46,7 +45,6 @@ export const getRedbankQuery = (
   })
 
   return `query RedbankQuery {
-                ${getBankQuery(redBankContractAddress)}
                 ${REDBANK_WASM_KEY}: wasm {
                     ${wasmQueries}
                     ${

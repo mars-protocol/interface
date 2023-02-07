@@ -447,13 +447,13 @@ export const Action = ({
   const getTooltip = (): string | undefined => {
     switch (activeView) {
       case ViewType.Borrow:
-        return t('redbank.redbankActionBorrowTooltip')
+        return t('redbank.tooltips.borrow.action')
       case ViewType.Deposit:
-        return t('redbank.redbankActionDepositTooltip')
+        return t('redbank.tooltips.deposit.action')
       case ViewType.Withdraw:
-        return t('redbank.redbankActionWithdrawTooltip')
+        return t('redbank.tooltips.withdraw.action')
       case ViewType.Repay:
-        return t('redbank.redbankActionRepayTooltip')
+        return t('redbank.tooltips.repay.action')
     }
   }
 

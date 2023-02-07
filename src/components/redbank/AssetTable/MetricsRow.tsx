@@ -37,7 +37,7 @@ export const MetricsRow = ({ row, type }: Props) => {
 
   return (
     <tr key={row.id} className={trClasses} onClick={() => row.toggleExpanded()}>
-      <td key={row.id} className={styles.td} colSpan={10}>
+      <td key={row.id} className={styles.td} colSpan={7}>
         <div className={styles.wrapper}>
           <div className={styles.body}>
             <ValueWithLabel

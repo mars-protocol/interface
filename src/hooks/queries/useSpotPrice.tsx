@@ -8,11 +8,13 @@ import { QUERY_KEYS } from 'types/enums/queryKeys'
 const poolsEndpoint = 'osmosis/gamm/v1beta1/pools/'
 
 export const useSpotPrice = (symbol: string) => {
-  const displayCurrency = useStore((s) => s.displayCurrency)
+  const networkConfig = useStore((s) => s.networkConfig)
   const lcd = useStore((s) => s.chainInfo?.rest)
   const exchangeRates = useStore((s) => s.exchangeRates)
 
   const asset = useAsset({ symbol })
+
+  const displayCurrency = networkConfig?.displayCurrency
 
   useQuery<PoolResponse>(
     [QUERY_KEYS.MARS_PRICE, asset?.poolId],
@@ -27,7 +29,7 @@ export const useSpotPrice = (symbol: string) => {
       staleTime: 30000,
       refetchInterval: 30000,
       onSuccess: (data) => {
-        if (!asset) return
+        if (!asset || !displayCurrency) return
         const poolDataAssets = data.pool.pool_assets
         const assetFirst = poolDataAssets[0].token.denom === asset.denom
         const targetAsset = poolDataAssets[assetFirst ? 0 : 1]

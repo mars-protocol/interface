@@ -24,7 +24,7 @@ export const TxFailedContent = ({ message, hash, handleClose }: Props) => {
       <InfoTitle src={TxStatus.FAILURE} subTitle='' title={t('common.transactionFailed')} />
       <div className={styles.failure}>
         <div className={styles.message}>{message}</div>
-        {hash ? <TxLink hash={hash} link={`${explorerUrl}txs/${hash}`} /> : null}
+        {hash ? <TxLink hash={hash} link={`${explorerUrl}/txs/${hash}`} /> : null}
       </div>
 
       <div

@@ -1,5 +1,4 @@
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import Tippy from '@tippyjs/react'
 import BigNumber from 'bignumber.js'
 import classNames from 'classnames'
 import {
@@ -53,25 +52,14 @@ export const useActiveVaultsColumns = () => {
         header: t('fields.position'),
         cell: ({ row }) => {
           return (
-            <Tippy
-              appendTo={() => document.body}
-              animation={false}
-              render={(attrs) => {
-                return (
-                  <div className='tippyContainer' {...attrs}>
-                    {t('fields.tooltips.name', {
-                      asset1: row.original.symbols.primary,
-                      asset2: row.original.symbols.secondary,
-                      ...getTimeAndUnit(row.original.lockup),
-                    })}
-                  </div>
-                )
-              }}
-            >
-              <div>
-                <VaultName vault={row.original} />
-              </div>
-            </Tippy>
+            <TextTooltip
+              text={<VaultName vault={row.original} />}
+              tooltip={t('fields.tooltips.name', {
+                asset1: row.original.symbols.primary,
+                asset2: row.original.symbols.secondary,
+                ...getTimeAndUnit(row.original.lockup),
+              })}
+            />
           )
         },
       }),
@@ -97,28 +85,23 @@ export const useActiveVaultsColumns = () => {
           }
 
           return (
-            <Tippy
-              appendTo={() => document.body}
-              animation={false}
-              render={(attrs) => {
-                return (
-                  <div className='tippyContainer' {...attrs}>
-                    <TokenBalance coin={primaryCoin} maxDecimals={2} showSymbol />
-                    <br />
-                    <TokenBalance coin={secondaryCoin} maxDecimals={2} showSymbol />
-                  </div>
-                )
-              }}
-            >
-              <div>
+            <TextTooltip
+              text={
                 <DisplayCurrency
                   coin={{
                     denom: baseCurrency.denom,
                     amount: row.original.position.values.total.toString(),
                   }}
                 />
-              </div>
-            </Tippy>
+              }
+              tooltip={
+                <>
+                  <TokenBalance coin={primaryCoin} maxDecimals={2} showSymbol />
+                  <br />
+                  <TokenBalance coin={secondaryCoin} maxDecimals={2} showSymbol />
+                </>
+              }
+            />
           )
         },
       }),
@@ -142,25 +125,20 @@ export const useActiveVaultsColumns = () => {
           ]
 
           return (
-            <Tippy
-              appendTo={() => document.body}
-              animation={false}
-              render={(attrs) => {
-                return (
-                  <div className='tippyContainer' {...attrs}>
-                    <TokenBalance coin={coins[0]} maxDecimals={2} showSymbol />
-                    <br />
-                    <TokenBalance coin={coins[1]} maxDecimals={2} showSymbol />
-                  </div>
-                )
-              }}
-            >
-              <div>
+            <TextTooltip
+              text={
                 <DisplayCurrency
                   coin={{ denom: baseCurrency.denom, amount: netValue.toString() }}
                 />
-              </div>
-            </Tippy>
+              }
+              tooltip={
+                <>
+                  <TokenBalance coin={coins[0]} maxDecimals={2} showSymbol />
+                  <br />
+                  <TokenBalance coin={coins[1]} maxDecimals={2} showSymbol />
+                </>
+              }
+            />
           )
         },
       }),
@@ -176,33 +154,26 @@ export const useActiveVaultsColumns = () => {
           if (!borrowAsset) return
 
           return (
-            <Tippy
-              appendTo={() => document.body}
-              animation={false}
-              render={(attrs) => {
-                return (
-                  <div className='tippyContainer' {...attrs}>
-                    <TokenBalance
-                      coin={{
-                        denom: info.row.original.denoms.secondary,
-                        amount: info.row.original.position.amounts.borrowed.toString(),
-                      }}
-                      maxDecimals={2}
-                      showSymbol
-                    />
-                  </div>
-                )
-              }}
-            >
-              <div>
+            <TextTooltip
+              text={
                 <DisplayCurrency
                   coin={{
                     denom: baseCurrency.denom,
                     amount: info.row.original.position.values.borrowed.toString(),
                   }}
                 />
-              </div>
-            </Tippy>
+              }
+              tooltip={
+                <TokenBalance
+                  coin={{
+                    denom: info.row.original.denoms.secondary,
+                    amount: info.row.original.position.amounts.borrowed.toString(),
+                  }}
+                  maxDecimals={2}
+                  showSymbol
+                />
+              }
+            />
           )
         },
       }),
@@ -223,35 +194,30 @@ export const useActiveVaultsColumns = () => {
           const vaultCap = row.original.vaultCap
 
           return (
-            <Tippy
-              appendTo={() => document.body}
-              animation={false}
-              render={(attrs) => {
-                return (
-                  <div className='tippyContainer' {...attrs}>
-                    <TokenBalance
-                      showSymbol
-                      coin={{
-                        denom: baseCurrency.denom,
-                        amount: vaultCap.max.toString(),
-                      }}
-                    />
-                  </div>
-                )
-              }}
-            >
-              <div>
-                <DisplayCurrency
+            <TextTooltip
+              text={
+                <>
+                  <DisplayCurrency
+                    coin={{
+                      denom: baseCurrency.denom,
+                      amount: vaultCap.max.toString(),
+                    }}
+                  />
+                  <p className={percentClasses}>
+                    {percent}% {t('common.used')}
+                  </p>
+                </>
+              }
+              tooltip={
+                <TokenBalance
+                  showSymbol
                   coin={{
                     denom: baseCurrency.denom,
                     amount: vaultCap.max.toString(),
                   }}
                 />
-                <p className={percentClasses}>
-                  {percent}% {t('common.used')}
-                </p>
-              </div>
-            </Tippy>
+              }
+            />
           )
         },
       }),
@@ -279,20 +245,20 @@ export const useActiveVaultsColumns = () => {
               }
               return (
                 <>
-                  <Tippy
-                    appendTo={() => document.body}
-                    animation={false}
-                    content={
+                  <TextTooltip
+                    hideStyling
+                    text={
+                      <>
+                        <AnimatedNumber amount={apy} className='m' suffix='%' />
+                        <p className='s faded'>
+                          {convertApyToDailyApy(row.original.position.apy.net)}%/{t('common.day')}
+                        </p>
+                      </>
+                    }
+                    tooltip={
                       <Apy apyData={apyData} leverage={row.original.position.currentLeverage} />
                     }
-                  >
-                    <span className='tooltip'>
-                      <AnimatedNumber amount={apy} className='m' suffix='%' />
-                      <p className='s faded'>
-                        {convertApyToDailyApy(row.original.position.apy.net)}%/{t('common.day')}
-                      </p>
-                    </span>
-                  </Tippy>
+                  />
                 </>
               )
             case 'unlocking':

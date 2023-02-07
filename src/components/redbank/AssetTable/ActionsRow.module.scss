@@ -12,7 +12,7 @@
 
   .td {
     .wrapper {
-      @include padding(6, 0, 0);
+      @include padding(3, 0, 0);
       display: flex;
       flex-wrap: wrap;
       justify-content: center;

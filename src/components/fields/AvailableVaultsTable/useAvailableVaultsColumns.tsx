@@ -1,5 +1,4 @@
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import Tippy from '@tippyjs/react'
 import BigNumber from 'bignumber.js'
 import classNames from 'classnames'
 import {
@@ -46,25 +45,14 @@ export const useAvailableVaultsColumns = () => {
         header: t('fields.name'),
         cell: ({ row }) => {
           return (
-            <Tippy
-              appendTo={() => document.body}
-              animation={false}
-              render={(attrs) => {
-                return (
-                  <div className='tippyContainer' {...attrs}>
-                    {t('fields.tooltips.name', {
-                      asset1: row.original.symbols.primary,
-                      asset2: row.original.symbols.secondary,
-                      ...getTimeAndUnit(row.original.lockup),
-                    })}
-                  </div>
-                )
-              }}
-            >
-              <div>
-                <VaultName vault={row.original} />
-              </div>
-            </Tippy>
+            <TextTooltip
+              text={<VaultName vault={row.original} />}
+              tooltip={t('fields.tooltips.name', {
+                asset1: row.original.symbols.primary,
+                asset2: row.original.symbols.secondary,
+                ...getTimeAndUnit(row.original.lockup),
+              })}
+            />
           )
         },
       }),
@@ -118,21 +106,19 @@ export const useAvailableVaultsColumns = () => {
 
           return (
             <>
-              <Tippy content={<Apy apyData={apyDataNoLev} leverage={1} />}>
-                <span className='tooltip m'>
-                  <AnimatedNumber amount={minAPY} />
-                </span>
-              </Tippy>
+              <TextTooltip
+                hideStyling
+                text={<AnimatedNumber amount={minAPY} />}
+                tooltip={<Apy apyData={apyDataNoLev} leverage={1} />}
+              />
               <span>-</span>
-              <Tippy
-                content={
+              <TextTooltip
+                hideStyling
+                text={<AnimatedNumber amount={maxAPY} suffix='%' />}
+                tooltip={
                   <Apy apyData={apyDataLev} leverage={ltvToLeverage(row.original.ltv.max)} />
                 }
-              >
-                <span className='tooltip ,'>
-                  <AnimatedNumber amount={maxAPY} suffix='%' />
-                </span>
-              </Tippy>
+              />
 
               <p className='s faded'>
                 {minDailyAPY}-{maxDailyAPY}%/
@@ -159,35 +145,30 @@ export const useAvailableVaultsColumns = () => {
           const vaultCap = row.original.vaultCap
 
           return (
-            <Tippy
-              appendTo={() => document.body}
-              animation={false}
-              render={(attrs) => {
-                return (
-                  <div className='tippyContainer' {...attrs}>
-                    <TokenBalance
-                      showSymbol
-                      coin={{
-                        denom: baseCurrency.denom,
-                        amount: vaultCap.max.toString(),
-                      }}
-                    />
-                  </div>
-                )
-              }}
-            >
-              <div>
-                <DisplayCurrency
+            <TextTooltip
+              text={
+                <>
+                  <DisplayCurrency
+                    coin={{
+                      denom: baseCurrency.denom,
+                      amount: vaultCap.max.toString(),
+                    }}
+                  />
+                  <p className={percentClasses}>
+                    {percent}% {t('common.used')}
+                  </p>
+                </>
+              }
+              tooltip={
+                <TokenBalance
+                  showSymbol
                   coin={{
                     denom: baseCurrency.denom,
                     amount: vaultCap.max.toString(),
                   }}
                 />
-                <p className={percentClasses}>
-                  {percent}% {t('common.used')}
-                </p>
-              </div>
-            </Tippy>
+              }
+            />
           )
         },
       }),
@@ -200,23 +181,15 @@ export const useAvailableVaultsColumns = () => {
         enableSorting: true,
         header: t('common.description'),
         cell: ({ row }) => (
-          <Tippy
-            appendTo={() => document.body}
-            animation={false}
-            render={(attrs) => {
-              return (
-                <div className='tippyContainer' {...attrs}>
-                  {t('fields.tooltips.name', {
-                    asset1: row.original.symbols.primary,
-                    asset2: row.original.symbols.secondary,
-                    ...getTimeAndUnit(row.original.lockup),
-                  })}
-                </div>
-              )
-            }}
-          >
-            <p>{row.original.description}</p>
-          </Tippy>
+          <TextTooltip
+            hideUnderline
+            text={row.original.description}
+            tooltip={t('fields.tooltips.name', {
+              asset1: row.original.symbols.primary,
+              asset2: row.original.symbols.secondary,
+              ...getTimeAndUnit(row.original.lockup),
+            })}
+          />
         ),
       }),
       columnHelper.display({

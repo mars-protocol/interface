@@ -1,6 +1,5 @@
-import Tippy from '@tippyjs/react'
 import BigNumber from 'bignumber.js'
-import { AnimatedNumber, Apy, Card, DisplayCurrency } from 'components/common'
+import { AnimatedNumber, Apy, Card, DisplayCurrency, TextTooltip } from 'components/common'
 import { VaultLogo, VaultName } from 'components/fields'
 import { getTimeAndUnit, ltvToLeverage } from 'libs/parse'
 import Link from 'next/link'
@@ -52,20 +51,18 @@ export const AvailableVaultsTableMobile = () => {
                   <div onClick={(e) => e.preventDefault()} className='xl'>
                     <span className='faded'>{t('common.apy')} </span>
                     <span>
-                      <Tippy content={<Apy apyData={apyDataNoLev} leverage={1} />}>
-                        <span className='tooltip xl'>
-                          <AnimatedNumber amount={minAPY} suffix='-' />
-                        </span>
-                      </Tippy>
-                      <Tippy
-                        content={
+                      <TextTooltip
+                        hideStyling
+                        text={<AnimatedNumber amount={minAPY} suffix='-' />}
+                        tooltip={<Apy apyData={apyDataNoLev} leverage={1} />}
+                      />
+                      <TextTooltip
+                        hideStyling
+                        text={<AnimatedNumber amount={maxAPY} suffix='%' />}
+                        tooltip={
                           <Apy apyData={apyDataLev} leverage={ltvToLeverage(vault.ltv.max)} />
                         }
-                      >
-                        <span className='tooltip xl'>
-                          <AnimatedNumber amount={maxAPY} suffix='%' />
-                        </span>
-                      </Tippy>
+                      />
                     </span>
                   </div>
                   <div className='s'>

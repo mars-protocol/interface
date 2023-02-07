@@ -44,9 +44,7 @@ interface InterestRateModel {
 
 interface MarketIncentive {
   denom: string
-  asset_incentive: {
-    emission_per_second: number
-    index: number
-    last_updated: number
-  }
+  emission_per_second: number
+  index: number
+  last_updated: number
 }

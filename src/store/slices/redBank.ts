@@ -31,15 +31,10 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
     const whitelistedAssets = get().whitelistedAssets
     const convertToBaseCurrency = get().convertToBaseCurrency
     const marsAsset = get().otherAssets?.find((asset) => asset.denom === MARS_SYMBOL)
-    if (
-      !incentive?.asset_incentive ||
-      !marketTotalLiquidity ||
-      !whitelistedAssets ||
-      !convertToBaseCurrency
-    )
-      return
 
-    const anualEmission = Number(incentive.asset_incentive.emission_per_second) * SECONDS_IN_YEAR
+    if (!incentive || !marketTotalLiquidity || !whitelistedAssets || !convertToBaseCurrency) return
+
+    const anualEmission = Number(incentive.emission_per_second) * SECONDS_IN_YEAR
     const anualEmissionVaule = convertToBaseCurrency({
       denom: lookupDenomBySymbol(MARS_SYMBOL, otherAssets),
       amount: anualEmission.toString(),
@@ -85,10 +80,6 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
       const convertToBaseCurrency = get().convertToBaseCurrency
       const reserveInfo = findByDenom(get().marketInfo, asset.denom)
       const depositApy = reserveInfo?.liquidity_rate || 0
-      const incentiveInfo = get().calculateIncentiveAssetInfo(
-        findByDenom(get().marketIncentiveInfo, asset.denom),
-        { denom: asset.denom, amount: get().computeMarketLiquidity(asset.denom).toString() },
-      )
       const borrowApy = reserveInfo?.borrow_rate || 0
       const depositBalance = get().findUserDeposit(asset.denom)
       const borrowBalance = get().findUserDebt(asset.denom)
@@ -101,6 +92,12 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
 
       const marketLiquidity = (depositLiquidity - debtLiquidity).toString()
       marketAssetLiquidity.push({ denom: asset.denom, amount: marketLiquidity })
+
+      const incentiveInfo = get().calculateIncentiveAssetInfo(
+        findByDenom(get().marketIncentiveInfo, asset.denom),
+        { denom: asset.denom, amount: marketLiquidity },
+      )
+
       const redBankAsset: RedBankAsset = {
         ...asset,
         walletBalance: assetWallet?.amount.toString(),

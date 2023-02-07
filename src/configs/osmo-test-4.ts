@@ -63,9 +63,9 @@ const OTHER_ASSETS: { [denom: string]: OtherAsset } = {
 
 export const NETWORK_CONFIG: NetworkConfig = {
   name: ChainInfoID.OsmosisTestnet,
-  hiveUrl: 'https://osmosis-delphi-testnet-1.simply-vc.com.mt/XF32UOOU55CX/osmosis-hive/graphql/',
-  rpcUrl: 'https://osmosis-delphi-testnet-1.simply-vc.com.mt/XF32UOOU55CX/osmosis-rpc/',
-  restUrl: 'https://osmosis-delphi-testnet-1.simply-vc.com.mt/XF32UOOU55CX/osmosis-lcd/',
+  hiveUrl: 'https://testnet-osmosis-node.marsprotocol.io/XF32UOOU55CX/osmosis-hive-front/graphql',
+  rpcUrl: 'https://rpc-test.osmosis.zone/',
+  restUrl: 'https://lcd-test.osmosis.zone/',
   apolloAprUrl: 'https://stats.apollo.farm/api/apr/v1/all',
   contracts: {
     addressProvider: 'osmo17dyy6hyzzy6u5khy5lau7afa2y9kwknu0aprwqn8twndw2qhv8ls6msnjr',
@@ -83,6 +83,12 @@ export const NETWORK_CONFIG: NetworkConfig = {
     base: ASSETS.osmo,
     whitelist: [ASSETS.osmo, ASSETS.atom, ASSETS.juno],
     other: [OTHER_ASSETS.mars, OTHER_ASSETS.axlusdc],
+  },
+  displayCurrency: {
+    denom: 'ibc/88D70440A05BFB25C7FF0BA62DA357EAA993CB1B036077CF1DAAEFB28721D935',
+    prefix: '$',
+    suffix: '',
+    decimals: 2,
   },
   appUrl: 'https://testnet.osmosis.zone',
   councilUrl: 'https://testnet.keplr.app/chains/mars-hub-testnet',

@@ -1,4 +1,4 @@
-import { ChainInfoID, WalletID, WalletManagerProvider } from '@marsprotocol/wallet-connector'
+import { WalletID, WalletManagerProvider } from '@marsprotocol/wallet-connector'
 import { CircularProgress, SVG } from 'components/common'
 import { useEffect, useState } from 'react'
 
@@ -8,10 +8,12 @@ type Props = {
   children?: React.ReactNode
 }
 
-const defaultChain = ChainInfoID.OsmosisTestnet
-
 export const CosmosWalletConnectProvider = ({ children }: Props) => {
-  const [chainInfoOverrides, setChainInfoOverrides] = useState<{ rpc: string; rest: string }>()
+  const [chainInfoOverrides, setChainInfoOverrides] = useState<{
+    rpc: string
+    rest: string
+    chainID: string
+  }>()
   const [enabledWallets, setEnabledWallets] = useState<WalletID[]>([])
 
   useEffect(() => {
@@ -29,6 +31,7 @@ export const CosmosWalletConnectProvider = ({ children }: Props) => {
       setChainInfoOverrides({
         rpc: networkConfig.rpcUrl,
         rest: networkConfig.restUrl,
+        chainID: networkConfig.name,
       })
       setEnabledWallets(networkConfig.wallets)
     }
@@ -42,7 +45,7 @@ export const CosmosWalletConnectProvider = ({ children }: Props) => {
     <WalletManagerProvider
       chainInfoOverrides={chainInfoOverrides}
       closeIcon={<SVG.Close />}
-      defaultChainId={defaultChain}
+      defaultChainId={chainInfoOverrides.chainID}
       enabledWallets={enabledWallets}
       persistent
       renderLoader={() => (

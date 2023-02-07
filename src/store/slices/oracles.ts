@@ -2,6 +2,7 @@ import { Coin } from '@cosmjs/stargate'
 import BigNumber from 'bignumber.js'
 import { updateExchangeRate } from 'functions/updateExchangeRate'
 import { MarsOracleData } from 'hooks/queries/useMarsOracle'
+import { findAssetByDenom, lookup } from 'libs/parse'
 import isEqual from 'lodash.isequal'
 import { OraclesSlice } from 'store/interfaces/oracles.interface'
 import { Store } from 'store/interfaces/store.interface'
@@ -22,15 +23,18 @@ const oraclesSlice = (set: NamedSet<Store>, get: GetState<Store>): OraclesSlice 
     const exchangeRates = get().exchangeRates
     const otherAssets = get().otherAssets
     const baseCurrency = get().baseCurrency
-    const displayCurrency = get().displayCurrency
+    const networkConfig = get().networkConfig
+    const displayCurrency = networkConfig?.displayCurrency
     const assets = [...whitelistedAssets, ...otherAssets]
 
-    if (!coin || !exchangeRates || !assets.length) {
+    if (!coin || !exchangeRates || !assets.length || !displayCurrency) {
       return 0
     }
 
-    if (coin.denom === displayCurrency.denom) {
-      return Number(coin.amount)
+    if (coin.denom.toLowerCase() === displayCurrency.denom.toLowerCase()) {
+      const displayAsset = findAssetByDenom(displayCurrency.denom, assets)
+      if (!displayAsset) return 0
+      return lookup(Number(coin.amount), displayAsset.symbol, displayAsset.decimals)
     }
 
     const assetToBaseRatio = Number(

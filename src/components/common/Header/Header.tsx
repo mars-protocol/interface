@@ -31,18 +31,19 @@ export const Header = () => {
         >
           {t('global.redBank')}
         </Link>
-        <Link
-          passHref
-          href='/farm'
-          className={classNames(
-            !FIELDS_FEATURE && styles.disabled,
-            styles.nav,
-            router.pathname.includes('farm') && styles.active,
-            router.pathname === '/farm' && styles.unclickable,
-          )}
-        >
-          {t('global.fields')}
-        </Link>
+        {FIELDS_FEATURE && (
+          <Link
+            passHref
+            href='/farm'
+            className={classNames(
+              styles.nav,
+              router.pathname.includes('farm') && styles.active,
+              router.pathname === '/farm' && styles.unclickable,
+            )}
+          >
+            {t('global.fields')}
+          </Link>
+        )}
         <a className={styles.nav} href={networkConfig?.councilUrl} target='_blank' rel='noreferrer'>
           {t('global.council')}
         </a>

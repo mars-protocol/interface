@@ -14,6 +14,7 @@
       @include padding(4, 0);
       font-weight: $fontWeightRegular;
       opacity: 0.6;
+      white-space: nowrap;
 
       &:not(.disabled) {
         &.canSort {
@@ -24,7 +25,11 @@
       .wrapper {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-end;
+
+        &.left {
+          justify-content: center;
+        }
 
         svg {
           display: none;
@@ -52,14 +57,13 @@
         }
 
         .wrapper {
-          justify-content: flex-end;
-
           svg {
             display: block;
           }
 
           &.left {
             flex-direction: row-reverse;
+            justify-content: flex-end;
           }
         }
       }

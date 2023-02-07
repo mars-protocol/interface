@@ -1,7 +1,5 @@
-import { Coin } from '@cosmjs/stargate'
 import { Card, ConnectButton, SVG, Title } from 'components/common'
 import { AssetTable, useBorrowColumns, useDepositColumns } from 'components/redbank'
-import { findByDenom } from 'functions'
 import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import useStore from 'store'
@@ -21,10 +19,7 @@ export const RedbankNotConnected = () => {
   // STORE STATE
   // ------------------
   const whitelistedAssets = useStore((s) => s.whitelistedAssets)
-  const marketAssetLiquidity = useStore((s) => s.marketAssetLiquidity)
-  const marketInfo = useStore((s) => s.marketInfo)
   const convertToBaseCurrency = useStore((s) => s.convertToBaseCurrency)
-
   // ------------------
   // LOCAL STATE
   // ------------------
@@ -34,29 +29,24 @@ export const RedbankNotConnected = () => {
     const dummyData: RedBankAsset[] = []
     if (!whitelistedAssets?.length) return
     whitelistedAssets.forEach((asset) => {
-      const reserveInfo = findByDenom(marketInfo, asset.denom)
-      const depositApy = reserveInfo?.liquidity_rate || 0
-      const borrowApy = reserveInfo?.borrow_rate || 0
-      const liquidity = findByDenom(marketAssetLiquidity, asset.denom) as Coin
-
       dummyData.push({
         ...asset,
-        apy: depositApy * 100,
-        borrowRate: borrowApy * 100,
-        marketLiquidity: liquidity?.amount.toString() || '0',
+        apy: 0,
+        borrowRate: 0,
+        marketLiquidity: '0',
         walletBalance: '0',
         borrowBalance: '0',
         depositBalance: '0',
         isCollateral: true,
         borrowBalanceBaseCurrency: 0,
         depositBalanceBaseCurrency: 0,
-        depositCap: 100000000,
-        depositLiquidity: 1000000,
+        depositCap: 0,
+        depositLiquidity: 0,
       })
     })
 
     setDummyData(dummyData)
-  }, [marketAssetLiquidity, marketInfo, convertToBaseCurrency, whitelistedAssets])
+  }, [convertToBaseCurrency, whitelistedAssets])
 
   return (
     <div className={styles.notConnected}>
@@ -86,14 +76,14 @@ export const RedbankNotConnected = () => {
       <div className={styles.grids}>
         <Card
           title={t('redbank.depositMarkets')}
-          tooltip={t('redbank.redBankMarketsDepositedNotConnectedTooltip')}
+          tooltip={t('redbank.tooltips.deposit.market.unconnected')}
         >
           <AssetTable columns={defaultDepositColumns} data={dummyData} disabled type='deposit' />
         </Card>
 
         <Card
           title={t('redbank.borrowMarkets')}
-          tooltip={t('redbank.redbankMarketsBorrowedNotConnectedTooltip')}
+          tooltip={t('redbank.tooltips.borrow.market.unconnected')}
         >
           <AssetTable columns={defaultBorrowColumns} data={dummyData} disabled type='borrow' />
         </Card>

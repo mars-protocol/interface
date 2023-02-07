@@ -1,7 +1,8 @@
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import { AnimatedNumber, Button, CellAmount, SVG } from 'components/common'
+import { AnimatedNumber, Button, CellAmount, SVG, TextTooltip } from 'components/common'
 import Image from 'next/image'
 import { useMemo } from 'react'
+import { isMobile, isTablet } from 'react-device-detect'
 import { useTranslation } from 'react-i18next'
 
 import styles from './useBorrowColumns.module.scss'
@@ -9,6 +10,8 @@ import styles from './useBorrowColumns.module.scss'
 export const useBorrowColumns = () => {
   const { t } = useTranslation()
   const columnHelper = createColumnHelper<RedBankAsset>()
+  const enableSorting = !isMobile && !isTablet
+
   const defaultBorrowColumns: ColumnDef<RedBankAsset, any>[] = useMemo(
     () => [
       columnHelper.accessor('color', {
@@ -32,7 +35,10 @@ export const useBorrowColumns = () => {
         ),
       }),
       columnHelper.accessor('name', {
-        header: t('common.asset'),
+        enableSorting: enableSorting,
+        header: () => (
+          <TextTooltip text={t('common.asset')} tooltip={t('redbank.tooltips.borrow.assets')} />
+        ),
         id: 'name',
         cell: (info) => (
           <>
@@ -42,7 +48,13 @@ export const useBorrowColumns = () => {
         ),
       }),
       columnHelper.accessor('borrowBalance', {
-        header: t('common.borrowed'),
+        enableSorting: enableSorting,
+        header: () => (
+          <TextTooltip
+            text={t('common.borrowed')}
+            tooltip={t('redbank.tooltips.borrow.borrowed')}
+          />
+        ),
         cell: (info) => (
           <CellAmount
             amount={Number(info.row.original.borrowBalance)}
@@ -53,7 +65,11 @@ export const useBorrowColumns = () => {
         ),
       }),
       columnHelper.accessor('borrowRate', {
-        header: t('common.rate'),
+        enableSorting: enableSorting,
+
+        header: () => (
+          <TextTooltip text={t('common.rate')} tooltip={t('redbank.tooltips.borrow.rate')} />
+        ),
         cell: (info) => {
           return (
             <AnimatedNumber
@@ -67,7 +83,13 @@ export const useBorrowColumns = () => {
         },
       }),
       columnHelper.accessor('marketLiquidity', {
-        header: t('common.marketLiquidityShort'),
+        enableSorting: enableSorting,
+        header: () => (
+          <TextTooltip
+            text={t('common.marketLiquidityShort')}
+            tooltip={t('redbank.tooltips.borrow.marketLiquidity')}
+          />
+        ),
         cell: (info) => (
           <CellAmount
             amount={Number(info.row.original.marketLiquidity)}

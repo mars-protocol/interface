@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { NETWORK_CONFIG } from 'configs/osmosis-1'
 import { gql, request } from 'graphql-request'
 import { useMemo } from 'react'
 import useStore from 'store'
@@ -15,7 +16,7 @@ export interface UserIcnsData {
 
 export const useUserIcns = () => {
   /* only possible to query on mainnet */
-  const hiveUrl = 'https://osmosis-mars-frontend.simply-vc.com.mt/GGSFGSFGFG34/osmosis-hive/graphql'
+  const hiveUrl = NETWORK_CONFIG.hiveUrl
   const resolverContract = 'osmo1xk0s8xgktn9x5vwcgtjdxqzadg88fgn33p8u9cnpdxwemvxscvast52cdd'
 
   const userWalletAddress = useStore((s) => s.userWalletAddress)

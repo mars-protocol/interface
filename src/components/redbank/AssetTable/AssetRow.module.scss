@@ -30,14 +30,6 @@
         @include bgTableHover;
       }
     }
-
-    > .td {
-      border-bottom: 1px solid $alphaWhite20;
-      &:nth-child(1),
-      &:nth-child(2) {
-        border-bottom: none;
-      }
-    }
   }
 
   .td {

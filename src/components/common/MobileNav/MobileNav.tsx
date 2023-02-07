@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import { SVG } from 'components/common'
+import { FIELDS_FEATURE } from 'constants/appConstants'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
@@ -26,14 +27,16 @@ export const MobileNav = () => {
         <SVG.CouncilIcon />
         <span>{t('global.council')}</span>
       </a>
-      <Link
-        href='/farm'
-        passHref
-        className={classNames(styles.nav, router.pathname.includes('farm') && styles.active)}
-      >
-        <SVG.FieldsIcon />
-        <span>{t('global.fields')}</span>
-      </Link>
+      {FIELDS_FEATURE && (
+        <Link
+          href='/farm'
+          passHref
+          className={classNames(styles.nav, router.pathname.includes('farm') && styles.active)}
+        >
+          <SVG.FieldsIcon />
+          <span>{t('global.fields')}</span>
+        </Link>
+      )}
     </nav>
   )
 }

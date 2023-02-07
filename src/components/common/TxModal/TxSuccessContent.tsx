@@ -67,7 +67,7 @@ export const TxSuccessContent = ({
                 <div className={styles.label}>{t('common.txHash')}</div>
                 <TxLink
                   hash={response?.response.transactionHash || ''}
-                  link={`${explorerUrl}txs/${response?.response.transactionHash}`}
+                  link={`${explorerUrl}/txs/${response?.response.transactionHash}`}
                 />
               </div>
             </div>

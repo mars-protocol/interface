@@ -47,9 +47,9 @@
   top: rem-calc(38);
   @include padding(6, 6, 5.5);
   @include layoutPopover;
-  width: rem-calc(420);
+  width: rem-calc(380);
   max-width: calc(100vw - 24px);
-  right: 0;
+  right: -25%;
   z-index: 100;
 }
 
@@ -191,6 +191,8 @@
 @media only screen and (min-width: $bpMediumLow) {
   .details {
     transform: none;
+    width: rem-calc(420);
+    right: 0;
   }
 
   .detailsBalance {

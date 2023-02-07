@@ -1,0 +1,16 @@
+@import 'src/styles/master';
+
+.pointer {
+  cursor: pointer;
+}
+
+.tooltip {
+  border-bottom: 1px dashed $alphaWhite40;
+  transition: border 0.2s;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    border-bottom-color: transparent;
+  }
+}

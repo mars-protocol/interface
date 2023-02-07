@@ -27,7 +27,6 @@
 
     > .widthBox {
       width: 100%;
-      overflow-x: hidden;
 
       > .body {
         min-height: calc(100vh - #{$headerHeight});

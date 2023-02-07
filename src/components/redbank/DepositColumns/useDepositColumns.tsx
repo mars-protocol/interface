@@ -1,11 +1,11 @@
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import Tippy from '@tippyjs/react'
 import classNames from 'classnames'
-import { AnimatedNumber, Apr, Button, CellAmount, SVG } from 'components/common'
+import { AnimatedNumber, Apr, Button, CellAmount, SVG, TextTooltip } from 'components/common'
 import { convertPercentage } from 'functions'
 import { formatValue } from 'libs/parse'
 import Image from 'next/image'
 import { useMemo } from 'react'
+import { isMobile, isTablet } from 'react-device-detect'
 import { useTranslation } from 'react-i18next'
 
 import styles from './useDepositColumns.module.scss'
@@ -13,6 +13,8 @@ import styles from './useDepositColumns.module.scss'
 export const useDepositColumns = () => {
   const { t } = useTranslation()
   const columnHelper = createColumnHelper<RedBankAsset>()
+
+  const enableSorting = !isMobile && !isTablet
 
   const defaultDepositColumns: ColumnDef<RedBankAsset, any>[] = useMemo(() => {
     return [
@@ -37,7 +39,10 @@ export const useDepositColumns = () => {
         ),
       }),
       columnHelper.accessor('name', {
-        header: t('common.asset'),
+        enableSorting: enableSorting,
+        header: () => (
+          <TextTooltip text={t('common.asset')} tooltip={t('redbank.tooltips.deposit.assets')} />
+        ),
         id: 'name',
         cell: (info) => (
           <>
@@ -47,7 +52,13 @@ export const useDepositColumns = () => {
         ),
       }),
       columnHelper.accessor('depositBalance', {
-        header: t('common.deposited'),
+        enableSorting: enableSorting,
+        header: () => (
+          <TextTooltip
+            text={t('common.deposited')}
+            tooltip={t('redbank.tooltips.deposit.deposited')}
+          />
+        ),
         cell: (info) => {
           return (
             <CellAmount
@@ -60,10 +71,14 @@ export const useDepositColumns = () => {
         },
       }),
       columnHelper.accessor('apy', {
-        header: t('common.apy'),
+        enableSorting: enableSorting,
+        header: () => (
+          <TextTooltip text={t('common.apy')} tooltip={t('redbank.tooltips.deposit.apy')} />
+        ),
         cell: (info) => (
-          <Tippy content={<Apr data={info.row.original} />}>
-            <div>
+          <TextTooltip
+            hideStyling
+            text={
               <AnimatedNumber
                 amount={info.getValue() + Number(info.row.original.incentiveInfo?.apy || 0)}
                 suffix='%'
@@ -71,13 +86,19 @@ export const useDepositColumns = () => {
                 rounded={false}
                 className='m'
               />
-            </div>
-          </Tippy>
+            }
+            tooltip={<Apr data={info.row.original} />}
+          />
         ),
       }),
       columnHelper.accessor('depositCap', {
-        enableSorting: true,
-        header: t('redbank.depositCap'),
+        enableSorting: enableSorting,
+        header: () => (
+          <TextTooltip
+            text={t('redbank.depositCap')}
+            tooltip={t('redbank.tooltips.deposit.caps')}
+          />
+        ),
         cell: ({ row }) => {
           const depositLiquidity = Number(row.original.depositLiquidity)
           const percent = convertPercentage((depositLiquidity / row.original.depositCap) * 100)

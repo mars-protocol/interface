@@ -46,7 +46,7 @@ export const ConnectedButton = () => {
   const viewOnFinder = useCallback(() => {
     const explorerUrl = chainInfo ? chainInfo.explorer : ''
 
-    window.open(`${explorerUrl}account/${userWalletAddress}`, '_blank')
+    window.open(`${explorerUrl}/account/${userWalletAddress}`, '_blank')
   }, [chainInfo, userWalletAddress])
 
   const onClickAway = useCallback(() => {
@@ -103,7 +103,7 @@ export const ConnectedButton = () => {
                     className='s faded'
                     coin={{
                       amount: baseCurrencyBalance.toString(),
-                      denom: baseCurrency.symbol,
+                      denom: baseCurrency.denom,
                     }}
                   />
                 </div>

@@ -1,10 +1,10 @@
-import Tippy from '@tippyjs/react'
 import classNames from 'classnames'
 import {
   AnimatedNumber,
   Apy,
   BorrowCapacity,
   DisplayCurrency,
+  TextTooltip,
   TokenBalance,
 } from 'components/common'
 import { MARS_DECIMALS, MARS_SYMBOL, VAULT_DEPOSIT_BUFFER } from 'constants/appConstants'
@@ -214,11 +214,11 @@ export const BreakdownTable = (props: Props) => {
       <div className={styles.stats}>
         <div className={styles.apy}>
           <span className='faded'>{t('common.apy')}: </span>
-          <Tippy content={<Apy apyData={apyData} leverage={currentLeverage} />}>
-            <span className='tooltip'>
-              <AnimatedNumber amount={apy} suffix='%' abbreviated={false} />
-            </span>
-          </Tippy>
+          <TextTooltip
+            hideStyling
+            text={<AnimatedNumber amount={apy} suffix='%' abbreviated={false} />}
+            tooltip={<Apy apyData={apyData} leverage={currentLeverage} />}
+          />
         </div>
         <div className={styles.price}>
           <span className='faded'>{formatValue(1, 0, 0, false, false, ' OSMO ≈ ')}</span>

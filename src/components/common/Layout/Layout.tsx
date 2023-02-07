@@ -15,23 +15,23 @@ type Props = {
 
 export const Layout = ({ children }: Props) => {
   const router = useRouter()
+  const { status } = useWalletManager()
   useAnimations()
 
-  const userWalletAddress = useStore((s) => s.userWalletAddress)
   const enableAnimations = useStore((s) => s.enableAnimations)
-  const backgroundClasses = classNames('background', !userWalletAddress && 'night')
-  const vaultConfigs = useStore((s) => s.vaultConfigs)
-  const { status } = useWalletManager()
   const isConnected = status === WalletConnectionStatus.Connected
+  const backgroundClasses = classNames('background', !isConnected && 'night')
+  const vaultConfigs = useStore((s) => s.vaultConfigs)
   const wasConnectedBefore =
-    localStorage.getItem(SESSION_WALLET_KEY) !== null &&
-    localStorage.getItem(SESSION_WALLET_KEY) !== '[]'
+    localStorage.getItem(SESSION_WALLET_KEY) &&
+    localStorage.getItem(SESSION_WALLET_KEY) !== '[]' &&
+    status !== WalletConnectionStatus.Errored
 
   useEffect(() => {
-    if (!userWalletAddress) {
+    if (!isConnected) {
       useStore.setState({ availableVaults: vaultConfigs, activeVaults: [] })
     }
-  }, [userWalletAddress, vaultConfigs])
+  }, [isConnected, vaultConfigs])
 
   return (
     <div className={classNames('app', !enableAnimations && 'no-motion')}>

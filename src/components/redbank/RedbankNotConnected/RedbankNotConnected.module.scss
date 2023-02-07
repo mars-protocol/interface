@@ -84,6 +84,9 @@
         td {
           display: table-cell;
         }
+        td {
+          pointer-events: none;
+        }
       }
     }
   }

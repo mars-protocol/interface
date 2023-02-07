@@ -1,6 +1,6 @@
 import { getContractQuery } from './getContractQuery'
 
-export const getMarketDepositsQuery = (
+export const getDepositDebtQuery = (
   redBankAddress: string,
   whitelistedAssets: Asset[],
   marketInfo: Market[],
@@ -15,24 +15,42 @@ export const getMarketDepositsQuery = (
     const totalCollateralScaled =
       marketInfo.find((market) => market.denom === asset.denom)?.collateral_total_scaled || '0'
 
-    const marketKey = `${symbol}Deposits`
+    const depositMarketKey = `${symbol}Deposits`
     query =
       query +
       getContractQuery(
-        marketKey,
+        depositMarketKey,
         redBankAddress || '',
         `
         {
-            underlying_liquidity_amount: {
+          underlying_liquidity_amount: {
+            denom: "${denom}"
+            amount_scaled: "${totalCollateralScaled}"
+          }
+        }`,
+      )
+
+    const totalDebtScaled =
+      marketInfo.find((market) => market.denom === asset.denom)?.debt_total_scaled || '0'
+    const debtMarketKey = `${symbol}Debt`
+    query =
+      query +
+      getContractQuery(
+        debtMarketKey,
+        redBankAddress || '',
+        `
+        {
+            underlying_debt_amount: {
                 denom: "${denom}"
-                amount_scaled: "${totalCollateralScaled}"
+                amount_scaled: "${totalDebtScaled}"
             }
         }`,
       )
+
     return query
   })
 
-  return `query MarketDepositsQuery {
+  return `query DepositDebtQuery {
         mdwasmkey: wasm {
             ${wasmQueries}
         }

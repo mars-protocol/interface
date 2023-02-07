@@ -6,7 +6,7 @@ import {
   WalletClient,
 } from '@marsprotocol/wallet-connector'
 import { BlockHeightData } from 'hooks/queries/useBlockHeight'
-import { MarketDepositsData } from 'hooks/queries/useMarketDeposits'
+import { DepositAndDebtData } from 'hooks/queries/useDepositAndDebt'
 import { SafetyFundBalanceData } from 'hooks/queries/useSafetyFundBalance'
 import { UserBalanceData } from 'hooks/queries/useUserBalance'
 import { UserIcnsData } from 'hooks/queries/useUserIcns'
@@ -29,12 +29,7 @@ export interface CommonSlice {
   chainInfo?: SimplifiedChainInfo
   client?: WalletClient
   currentNetwork: Network
-  displayCurrency: {
-    denom: string
-    prefix: string
-    suffix: string
-    decimals: number
-  }
+  marketDebts: Coin[]
   enableAnimations?: boolean
   errors: {
     network: boolean
@@ -98,7 +93,7 @@ export interface CommonSlice {
   previousUserBalanceQueryData?: UserBalanceData
   previousUserIcnsQueryData?: UserIcnsData
   previousUserUnclaimedBalanceQueryData?: number
-  processMarketDepositsQuery: (data: MarketDepositsData) => void
+  processDepositAndDebtQuery: (data: DepositAndDebtData) => void
   processUserBalanceQuery: (data: UserBalanceData) => void
   processBlockHeightQuery: (data: BlockHeightData) => void
   processSafetyFundQuery: (data: SafetyFundBalanceData) => void

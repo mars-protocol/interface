@@ -2,6 +2,7 @@ import { useWalletManager, WalletConnectionStatus } from '@marsprotocol/wallet-c
 import BigNumber from 'bignumber.js'
 import classNames from 'classnames'
 import { Button, NumberInput, SVG, Toggle, Tooltip } from 'components/common'
+import { FIELDS_FEATURE } from 'constants/appConstants'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
@@ -88,54 +89,57 @@ export const Settings = () => {
                 </div>
               </div>
             </div>
-
-            <div className={styles.header}>
-              <p className={styles.text}>{t('fields.settings')}</p>
-            </div>
-            <div className={styles.settings}>
-              <div className={styles.setting}>
-                <div className={styles.name}>
-                  {t('common.slippage')}
-                  <Tooltip content={t('fields.tooltips.slippage')} className={styles.tooltip} />
+            {FIELDS_FEATURE && (
+              <>
+                <div className={styles.header}>
+                  <p className={styles.text}>{t('fields.settings')}</p>
                 </div>
-                <div className={styles.content}>
-                  {slippages.map((value) => (
-                    <button
-                      key={`slippage-${value}`}
-                      onClick={() => {
-                        useStore.setState({ slippage: value })
-                      }}
-                      className={classNames([
-                        styles.button,
-                        slippage === value && !isCustom ? styles.solid : '',
-                      ])}
-                    >
-                      {value * 100}%
-                    </button>
-                  ))}
-                  <button
-                    onClick={() => inputRef?.current?.focus()}
-                    className={classNames([
-                      styles.button,
-                      !slippages.includes(slippage) || isCustom ? styles.solid : '',
-                    ])}
-                  >
-                    <NumberInput
-                      onRef={setInputRef}
-                      onChange={onInputChange}
-                      onBlur={onInputBlur}
-                      onFocus={onInputFocus}
-                      value={customSlippage}
-                      maxValue={10}
-                      maxDecimals={1}
-                      maxLength={3}
-                      className={styles.customSlippageBtn}
-                    />
-                    %
-                  </button>
+                <div className={styles.settings}>
+                  <div className={styles.setting}>
+                    <div className={styles.name}>
+                      {t('common.slippage')}
+                      <Tooltip content={t('fields.tooltips.slippage')} className={styles.tooltip} />
+                    </div>
+                    <div className={styles.content}>
+                      {slippages.map((value) => (
+                        <button
+                          key={`slippage-${value}`}
+                          onClick={() => {
+                            useStore.setState({ slippage: value })
+                          }}
+                          className={classNames([
+                            styles.button,
+                            slippage === value && !isCustom ? styles.solid : '',
+                          ])}
+                        >
+                          {value * 100}%
+                        </button>
+                      ))}
+                      <button
+                        onClick={() => inputRef?.current?.focus()}
+                        className={classNames([
+                          styles.button,
+                          !slippages.includes(slippage) || isCustom ? styles.solid : '',
+                        ])}
+                      >
+                        <NumberInput
+                          onRef={setInputRef}
+                          onChange={onInputChange}
+                          onBlur={onInputBlur}
+                          onFocus={onInputFocus}
+                          value={customSlippage}
+                          maxValue={10}
+                          maxDecimals={1}
+                          maxLength={3}
+                          className={styles.customSlippageBtn}
+                        />
+                        %
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </>
+            )}
           </div>
           <div className={styles.clickAway} onClick={() => setShowDetails(false)} role='button' />
         </>

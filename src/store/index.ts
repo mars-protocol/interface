@@ -1,4 +1,4 @@
-import create, { StoreApi, UseBoundStore } from 'zustand'
+import { create, StoreApi, UseBoundStore } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
 import { Store } from './interfaces/store.interface'

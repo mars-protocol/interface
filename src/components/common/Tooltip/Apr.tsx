@@ -27,7 +27,7 @@ export const Apr = ({ data }: Props) => {
         color: asset.color,
         symbol: asset.symbol,
         apr: asset.apy,
-        subtitle: key === 0 ? t('incentives.depositRewards') : t('incentives.incentiveApr'),
+        subtitle: key === 0 ? t('incentives.interestApr') : t('incentives.depositRewards'),
       })
     })
     return items

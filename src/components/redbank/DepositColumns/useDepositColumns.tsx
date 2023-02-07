@@ -73,7 +73,7 @@ export const useDepositColumns = () => {
       columnHelper.accessor('apy', {
         enableSorting: enableSorting,
         header: () => (
-          <TextTooltip text={t('common.apy')} tooltip={t('redbank.tooltips.deposit.apy')} />
+          <TextTooltip text={t('common.apr')} tooltip={t('redbank.tooltips.deposit.apy')} />
         ),
         cell: (info) => (
           <TextTooltip

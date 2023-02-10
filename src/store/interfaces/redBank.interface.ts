@@ -12,6 +12,7 @@ export interface RedBankSlice {
   marketInfo: Market[]
   redBankAssets: RedBankAsset[]
   redBankState: State
+  showRedBankTutorial: boolean
   userBalancesState: State
   userCollateral?: UserCollateral[]
   userDebts?: Coin[]

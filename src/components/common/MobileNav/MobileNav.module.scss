@@ -27,7 +27,7 @@
     opacity: 0.4;
 
     &.active {
-      filter: grayscale(0);
+      filter: unset;
       opacity: 1;
     }
 
@@ -37,9 +37,23 @@
       @include typoXScaps;
     }
 
-    svg {
+    .icon {
       width: rem-calc(50);
-      height: auto;
+      height: rem-calc(50);
+      display: block;
+
+      svg {
+        width: 100%;
+        height: auto;
+      }
+
+      &.redBank {
+        background: url('../../../images/redbank.svg');
+      }
+
+      &.farm {
+        background: url('../../../images/farm.svg');
+      }
     }
   }
 }

@@ -1,7 +1,15 @@
 import { ChainInfoID, SimpleChainInfoList, TxBroadcastResult } from '@marsprotocol/wallet-connector'
 import { useQueryClient } from '@tanstack/react-query'
 import classNames from 'classnames'
-import { AnimatedNumber, Button, DisplayCurrency, SVG, Tooltip, TxLink } from 'components/common'
+import {
+  AnimatedNumber,
+  Button,
+  DisplayCurrency,
+  ErrorMessage,
+  SVG,
+  Tooltip,
+  TxLink,
+} from 'components/common'
 import { MARS_DECIMALS, MARS_SYMBOL } from 'constants/appConstants'
 import { getClaimUserRewardsMsgOptions } from 'functions/messages'
 import { useEstimateFee } from 'hooks/queries'
@@ -36,6 +44,7 @@ export const IncentivesButton = () => {
   // ---------------
   const [showDetails, setShowDetails] = useState(false)
   const [disabled, setDisabled] = useState(true)
+  const [fetching, setFetching] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [response, setResponse] = useState<TxBroadcastResult>()
   const [error, setError] = useState<string>()
@@ -53,6 +62,7 @@ export const IncentivesButton = () => {
   const onClickAway = useCallback(() => {
     setShowDetails(false)
     setResponse(undefined)
+    setError(undefined)
   }, [])
 
   useEffect(() => {
@@ -64,11 +74,21 @@ export const IncentivesButton = () => {
     return getClaimUserRewardsMsgOptions()
   }, [hasUnclaimedRewards])
 
-  const { data: fee } = useEstimateFee({
+  const { data: fee, error: feeError } = useEstimateFee({
     msg: txMsgOptions?.msg,
     funds: [],
     contract: incentivesContractAddress,
   })
+
+  if (feeError && error !== feeError && !fee) {
+    setError(feeError as string)
+  }
+
+  useEffect(() => {
+    const isFetching = submitted || (!fee && !response && hasUnclaimedRewards)
+    if (fetching === isFetching) return
+    setFetching(isFetching)
+  }, [submitted, fetching, fee, response, hasUnclaimedRewards])
 
   useEffect(() => {
     if (error) {
@@ -186,8 +206,8 @@ export const IncentivesButton = () => {
               )}
               <div className={styles.claimButton}>
                 <Button
-                  disabled={disabled || submitted || (!fee && !response && hasUnclaimedRewards)}
-                  showProgressIndicator={(!fee && !response && hasUnclaimedRewards) || submitted}
+                  disabled={disabled}
+                  showProgressIndicator={fetching}
                   text={
                     Number(unclaimedRewards) > 0 && !disabled
                       ? t('incentives.claimRewards')
@@ -196,7 +216,7 @@ export const IncentivesButton = () => {
                   onClick={() => (submitted ? null : claimRewards())}
                   color='primary'
                 />
-                {error && <div className={styles.error}>{error}</div>}
+                <ErrorMessage errorMessage={error} alignment='center' />
               </div>
             </div>
           </div>

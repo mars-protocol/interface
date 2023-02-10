@@ -1,7 +1,6 @@
 import classNames from 'classnames'
 import { CircularProgress } from 'components/common'
-import React from 'react'
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 
 import styles from './Button.module.scss'
 
@@ -46,7 +45,7 @@ export const Button = React.forwardRef<any, Props>(
         styles[size],
         styles[color],
         styles[variant],
-        disabled && styles.disabled,
+        (disabled || showProgressIndicator) && styles.disabled,
         className,
       )
       return (

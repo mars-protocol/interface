@@ -364,7 +364,7 @@
     "@cosmjs/math" "^0.29.5"
     "@cosmjs/utils" "^0.29.5"
 
-"@cosmjs/cosmwasm-stargate@^0.29.2", "@cosmjs/cosmwasm-stargate@^0.29.5":
+"@cosmjs/cosmwasm-stargate@^0.29.5":
   version "0.29.5"
   resolved "https://registry.yarnpkg.com/@cosmjs/cosmwasm-stargate/-/cosmwasm-stargate-0.29.5.tgz#3f257da682658833e0f4eb9e8ff758e4d927663a"
   integrity sha512-TNdSvm2tEE3XMCuxHxquzls56t40hC8qnLeYJWHsY2ECZmRK3KrnpRReEr7N7bLtODToK7X/riYrV0JaYxjrYA==
@@ -419,7 +419,7 @@
     bech32 "^1.1.4"
     readonly-date "^1.0.0"
 
-"@cosmjs/encoding@^0.29.2", "@cosmjs/encoding@^0.29.5":
+"@cosmjs/encoding@^0.29.5":
   version "0.29.5"
   resolved "https://registry.yarnpkg.com/@cosmjs/encoding/-/encoding-0.29.5.tgz#009a4b1c596cdfd326f30ccfa79f5e56daa264f2"
   integrity sha512-G4rGl/Jg4dMCw5u6PEZHZcoHnUBlukZODHbm/wcL4Uu91fkn5jVo5cXXZcvs4VCkArVGrEj/52eUgTZCmOBGWQ==
@@ -486,7 +486,7 @@
     ws "^7"
     xstream "^11.14.0"
 
-"@cosmjs/stargate@^0.29.2", "@cosmjs/stargate@^0.29.5":
+"@cosmjs/stargate@^0.29.5":
   version "0.29.5"
   resolved "https://registry.yarnpkg.com/@cosmjs/stargate/-/stargate-0.29.5.tgz#d597af1c85a3c2af7b5bdbec34d5d40692cc09e4"
   integrity sha512-hjEv8UUlJruLrYGJcUZXM/CziaINOKwfVm2BoSdUnNTMxGvY/jC1ABHKeZUYt9oXHxEJ1n9+pDqzbKc8pT0nBw==
@@ -537,21 +537,21 @@
   resolved "https://registry.yarnpkg.com/@cosmjs/utils/-/utils-0.29.5.tgz#3fed1b3528ae8c5f1eb5d29b68755bebfd3294ee"
   integrity sha512-m7h+RXDUxOzEOGt4P+3OVPX7PuakZT3GBmaM/Y2u+abN3xZkziykD/NvedYFvvCCdQo714XcGl33bwifS9FZPQ==
 
-"@delphi-labs/shuttle@^2.3.6":
-  version "2.3.6"
-  resolved "https://registry.yarnpkg.com/@delphi-labs/shuttle/-/shuttle-2.3.6.tgz#91d047d31e077fe001f155e4abed9faf36a9100c"
-  integrity sha512-dhUphKn/MhUdbKIVmZFL5QvK5CqjJBrQ+io/euncgMwjAQyCOwLReXoncpF8DzwEcADJdFpmHhUurAWlWxG5ZA==
+"@delphi-labs/shuttle@^2.3.9":
+  version "2.3.10"
+  resolved "https://registry.yarnpkg.com/@delphi-labs/shuttle/-/shuttle-2.3.10.tgz#bd4f0fc48bb0ff13fd3a7e004246e469c5315d6e"
+  integrity sha512-fS7vN7nFkeynbf7p01E8OTF3L+pKPnW2yuTWQTzHLzCSpzSaLkgIPnXxg4/C5/abr4FZ5ZytxpS9TKyj7hP4wA==
   dependencies:
     "@cosmjs/amino" "^0.29.5"
-    "@cosmjs/cosmwasm-stargate" "^0.29.2"
-    "@cosmjs/encoding" "^0.29.2"
+    "@cosmjs/cosmwasm-stargate" "^0.29.5"
+    "@cosmjs/encoding" "^0.29.5"
     "@cosmjs/launchpad" "^0.27.1"
     "@cosmjs/proto-signing" "^0.29.5"
-    "@cosmjs/stargate" "^0.29.2"
+    "@cosmjs/stargate" "^0.29.5"
     "@injectivelabs/sdk-ts" "^1.0.360"
     "@injectivelabs/ts-types" "^1.0.28"
     "@injectivelabs/utils" "^1.0.60"
-    "@keplr-wallet/cosmos" "^0.11.34"
+    "@keplr-wallet/cosmos" "^0.11.38"
     "@keplr-wallet/proto-types" "^0.11.38"
     "@metamask/eth-sig-util" "^5.0.2"
     "@walletconnect/client" "^1.8.0"
@@ -564,6 +564,7 @@
     long "^5.2.1"
     secp256k1 "^5.0.0"
     tslib "^2.4.0"
+    use-local-storage-state "^18.1.2"
     ws "^8.12.0"
     zustand "^4.3.1"
 
@@ -1436,7 +1437,7 @@
     buffer "^6.0.3"
     delay "^4.4.0"
 
-"@keplr-wallet/cosmos@^0.11.34", "@keplr-wallet/cosmos@^0.11.38":
+"@keplr-wallet/cosmos@^0.11.38":
   version "0.11.38"
   resolved "https://registry.yarnpkg.com/@keplr-wallet/cosmos/-/cosmos-0.11.38.tgz#5657e3fed10c9a9f75d29f01a137913403196348"
   integrity sha512-0N7pf77cSPp/tNzsCp9dhbmEStXZJv+7KZv3FICRpgSp2w6vKwMPwJ5GIt0T0X4RuiQfgkabnDX77DkBSHo9ng==
@@ -1497,16 +1498,18 @@
   resolved "https://registry.yarnpkg.com/@kurkle/color/-/color-0.3.2.tgz#5acd38242e8bde4f9986e7913c8fdf49d3aa199f"
   integrity sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==
 
-"@marsprotocol/wallet-connector@^1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@marsprotocol/wallet-connector/-/wallet-connector-1.3.1.tgz#1875c92f87876342469a9190ae5ca44d6c0f552e"
-  integrity sha512-zi6QsPt5/1nvX/4IlpoGubJO2M4/gqlmTd6WdHACeeCOYNV2UtlpNepvjPDIcTJn5Ls0xK8Ig+3JiEtGJeiWpw==
+"@marsprotocol/wallet-connector@^1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@marsprotocol/wallet-connector/-/wallet-connector-1.4.2.tgz#9dfeaf82242e821d2beef276c23e7f60313ae079"
+  integrity sha512-rHVCbKHvAXHzmU5tZo9mV81Y4WclY6oDtO35nQqlh4X+DtIF/8j71hJRXCpGF+IuN1xwp3I8hcKAIqb08KOa5w==
   dependencies:
     "@cosmjs/cosmwasm-stargate" "^0.29.5"
-    "@delphi-labs/shuttle" "^2.3.6"
+    "@cosmjs/encoding" "^0.29.5"
+    "@cosmjs/stargate" "^0.29.5"
+    "@delphi-labs/shuttle" "^2.3.9"
     "@keplr-wallet/cosmos" "^0.11.38"
     axios "^1.3.2"
-    react-device-detect "^2.2.2"
+    react-device-detect "^2.2.3"
     react-modal "^3.16.1"
     react-qr-code "^2.0.11"
     webpack "^5.75.0"
@@ -6706,6 +6709,13 @@ react-device-detect@^2.2.2:
   dependencies:
     ua-parser-js "^1.0.2"
 
+react-device-detect@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/react-device-detect/-/react-device-detect-2.2.3.tgz#97a7ae767cdd004e7c3578260f48cf70c036e7ca"
+  integrity sha512-buYY3qrCnQVlIFHrC5UcUoAj7iANs/+srdkwsnNjI7anr3Tt7UY6MqNxtMLlr0tMBied0O49UZVK8XKs3ZIiPw==
+  dependencies:
+    ua-parser-js "^1.0.33"
+
 react-dom@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.2.0.tgz#22aaf38708db2674ed9ada224ca4aa708d821e3d"
@@ -7639,7 +7649,7 @@ typescript@^4.9.5:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.5.tgz#095979f9bcc0d09da324d58d03ce8f8374cbe65a"
   integrity sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==
 
-ua-parser-js@^1.0.2:
+ua-parser-js@^1.0.2, ua-parser-js@^1.0.33:
   version "1.0.33"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-1.0.33.tgz#f21f01233e90e7ed0f059ceab46eb190ff17f8f4"
   integrity sha512-RqshF7TPTE0XLYAqmjlu5cLLuGdKrNu9O1KLA/qp39QtbZwuzwv1dT46DZSopoUMsYgXpB3Cv8a03FI8b74oFQ==
@@ -7686,6 +7696,11 @@ url-parse@^1.5.3:
   dependencies:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
+
+use-local-storage-state@^18.1.2:
+  version "18.1.2"
+  resolved "https://registry.yarnpkg.com/use-local-storage-state/-/use-local-storage-state-18.1.2.tgz#f131c0aa3803742ca261c547cdfd9d61e848581d"
+  integrity sha512-V+kYQNC5R0N/JDpsg6b4ED5UaItKJcSvbne68DwJDZWHxGMQBiF41ATktFIOyet3PIq30d2qtzVp/2aB6hQ8Bg==
 
 use-sync-external-store@1.2.0, use-sync-external-store@^1.2.0:
   version "1.2.0"

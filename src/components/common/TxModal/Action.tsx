@@ -8,6 +8,7 @@ import {
   Card,
   ConnectButton,
   DisplayCurrency,
+  ErrorMessage,
   InputSection,
 } from 'components/common'
 import { findByDenom } from 'functions'
@@ -44,6 +45,7 @@ interface Props {
   totalBorrowBaseCurrencyAmount: number
   actionButtonSpec: ModalActionButton
   submitted: boolean
+  feeError?: string
   txFee?: Coin
   activeView: ViewType
   denom: string
@@ -64,6 +66,7 @@ export const Action = ({
   totalBorrowBaseCurrencyAmount,
   actionButtonSpec,
   submitted,
+  feeError,
   txFee,
   activeView,
   denom,
@@ -313,22 +316,22 @@ export const Action = ({
 
     if (microValue >= maxUsableAmount) microValue = maxUsableAmount
     setAmountCallback(Number(formatValue(microValue, 0, 0, false, false, false, false, false)))
-    setCapHit(amount > amountUntilDepositCap)
+    setCapHit(amount > amountUntilDepositCap && activeView === ViewType.Deposit)
   }
 
   const produceTabActionButton = () => {
     return (
-      <Button
-        color='primary'
-        className={styles.submitButton}
-        disabled={
-          actionButtonSpec.disabled ||
-          (amount > amountUntilDepositCap && activeView === ViewType.Deposit)
-        }
-        onClick={() => actionButtonSpec.clickHandler()}
-        showProgressIndicator={actionButtonSpec.fetching}
-        text={actionButtonSpec.text}
-      />
+      <>
+        <Button
+          color='primary'
+          className={styles.submitButton}
+          disabled={actionButtonSpec.disabled}
+          onClick={() => actionButtonSpec.clickHandler()}
+          showProgressIndicator={actionButtonSpec.fetching}
+          text={actionButtonSpec.text}
+        />
+        <ErrorMessage errorMessage={feeError} alignment='center' />
+      </>
     )
   }
 
@@ -465,7 +468,7 @@ export const Action = ({
         actionButton={actionButton}
         amount={amount}
         availableText={produceAvailableText()}
-        checkForMaxValue={activeView === ViewType.Deposit}
+        checkForMaxValue={activeView === ViewType.Deposit || activeView === ViewType.Repay}
         asset={currentAsset}
         disabled={
           submitted ||
@@ -478,6 +481,7 @@ export const Action = ({
         setAmountCallback={handleInputAmount}
         amountUntilDepositCap={amountUntilDepositCap}
         activeView={activeView}
+        walletBalance={walletBalance}
       />
 
       {/* SITUATION COMPARISON */}

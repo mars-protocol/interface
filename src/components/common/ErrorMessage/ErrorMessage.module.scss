@@ -1,0 +1,18 @@
+@import 'src/styles/master';
+
+.errorMessage {
+  text-align: left;
+  @include margin(2, 0, -2);
+  display: block;
+  width: 100%;
+  @include typoXS;
+  color: $colorInfoWarning;
+
+  &.center {
+    text-align: center;
+  }
+
+  &.right {
+    text-align: right;
+  }
+}

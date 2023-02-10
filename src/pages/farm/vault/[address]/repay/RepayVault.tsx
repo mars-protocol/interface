@@ -67,7 +67,14 @@ const RepayVault = (props: Props) => {
       <Card
         title={props.activeVault.name}
         onClick={() => router.back()}
-        tooltip={t('fields.tooltips.editPosition')}
+        tooltip={
+          <>
+            {t('fields.tooltips.editPosition')}
+            <br />
+            <br />
+            {t('fields.tooltips.apy.available')}
+          </>
+        }
       >
         <RepayInput
           vault={props.activeVault}

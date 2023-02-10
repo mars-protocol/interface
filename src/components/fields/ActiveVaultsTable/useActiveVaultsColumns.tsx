@@ -237,7 +237,7 @@ export const useActiveVaultsColumns = () => {
                 </>
               )
             case 'active':
-              const apy = new BigNumber(row.original.position.apy.net).decimalPlaces(2).toNumber()
+              const apy = new BigNumber(row.original.position.apy.net).toNumber()
 
               const apyData = {
                 total: row.original.apy || 0,

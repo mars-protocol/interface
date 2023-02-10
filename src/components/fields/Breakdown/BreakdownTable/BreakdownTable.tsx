@@ -216,7 +216,13 @@ export const BreakdownTable = (props: Props) => {
           <span className='faded'>{t('common.apy')}: </span>
           <TextTooltip
             hideStyling
-            text={<AnimatedNumber amount={apy} suffix='%' abbreviated={false} />}
+            text={
+              <AnimatedNumber
+                amount={Number(formatValue(apy, 2, 2, true, false, false, true))}
+                suffix='%'
+                abbreviated={false}
+              />
+            }
             tooltip={<Apy apyData={apyData} leverage={currentLeverage} />}
           />
         </div>

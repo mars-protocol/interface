@@ -18,7 +18,7 @@ export default function Document() {
         <meta content='@mars_protocol' name='twitter:site' />
         <meta content='@mars_protocol' name='twitter:creator' />
         <meta content='https://osmosis.marsprotocol.io' property='og:url' />
-        <meta content='Mars Protocol Application - Powered by Osmosis' property='og:title' />
+        <meta content='Mars Protocol - Osmosis Outpost' property='og:title' />
         <meta
           content="Lend, borrow and earn on the galaxy's most powerful credit protocol or enter the Fields of Mars for advanced DeFi strategies."
           property='og:description'

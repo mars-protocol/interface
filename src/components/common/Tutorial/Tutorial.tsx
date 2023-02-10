@@ -52,11 +52,14 @@ export const Tutorial = (props: Props) => {
   }, [tutorialStep, props.step])
 
   const hideTutorial = () => {
-    localStorage.setItem(
-      props.type === 'fields' ? FIELDS_TUTORIAL_KEY : RED_BANK_TUTORIAL_KEY,
-      'true',
-    )
+    if (props.type === 'fields') {
+      localStorage.setItem(FIELDS_TUTORIAL_KEY, 'true')
+      return
+    }
+    localStorage.setItem(RED_BANK_TUTORIAL_KEY, 'true')
+    useStore.setState({ showRedBankTutorial: false })
   }
+
   const handleButtonClick = () => {
     if (props.step === 3) hideTutorial()
     setTutorialStep(props.type)

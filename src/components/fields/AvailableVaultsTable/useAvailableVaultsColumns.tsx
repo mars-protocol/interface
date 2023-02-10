@@ -91,7 +91,7 @@ export const useAvailableVaultsColumns = () => {
             (asset) => asset.denom === row.original.denoms.secondary,
           )
           const maxBorrowRate = Number(borrowAsset?.borrowRate ?? 0) * row.original.ltv.max
-          const minAPY = new BigNumber(row.original.apy).decimalPlaces(2).toNumber()
+          const minAPY = new BigNumber(row.original.apy).toNumber()
 
           const maxAPY = new BigNumber(minAPY).times(maxLeverage).toNumber() - maxBorrowRate
           const minDailyAPY = new BigNumber(convertApyToDailyApy(row.original.apy))
@@ -108,13 +108,22 @@ export const useAvailableVaultsColumns = () => {
             <>
               <TextTooltip
                 hideStyling
-                text={<AnimatedNumber amount={minAPY} />}
+                text={
+                  <AnimatedNumber
+                    amount={Number(formatValue(minAPY, 2, 2, true, false, false, true))}
+                  />
+                }
                 tooltip={<Apy apyData={apyDataNoLev} leverage={1} />}
               />
               <span>-</span>
               <TextTooltip
                 hideStyling
-                text={<AnimatedNumber amount={maxAPY} suffix='%' />}
+                text={
+                  <AnimatedNumber
+                    amount={Number(formatValue(maxAPY, 2, 2, true, false, false, true))}
+                    suffix='%'
+                  />
+                }
                 tooltip={
                   <Apy apyData={apyDataLev} leverage={ltvToLeverage(row.original.ltv.max)} />
                 }

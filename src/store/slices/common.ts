@@ -12,6 +12,7 @@ import { DepositAndDebtData } from 'hooks/queries/useDepositAndDebt'
 import { SafetyFundBalanceData } from 'hooks/queries/useSafetyFundBalance'
 import { UserBalanceData } from 'hooks/queries/useUserBalance'
 import isEqual from 'lodash.isequal'
+import { isMobile } from 'react-device-detect'
 import { CommonSlice } from 'store/interfaces/common.interface'
 import { OraclesSlice } from 'store/interfaces/oracles.interface'
 import { Network } from 'types/enums/network'
@@ -97,11 +98,14 @@ const commonSlice = (
       gasLimit: options.fee.gas,
       memo: undefined,
       wallet: client.recentWallet,
+      mobile: isMobile,
     }
 
     try {
       return client.broadcast(broadcastOptions)
-    } catch (e) {}
+    } catch (e) {
+      console.error('transaction', e)
+    }
   },
   loadNetworkConfig: async () => {
     try {

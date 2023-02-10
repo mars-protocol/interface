@@ -19,6 +19,7 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
   marketInfo: [],
   redBankAssets: [],
   redBankState: State.INITIALISING,
+  showRedBankTutorial: false,
   userBalancesState: State.INITIALISING,
   // ------------------
   // GENERAL FUNCTIONS

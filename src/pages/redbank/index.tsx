@@ -10,7 +10,7 @@ import {
 import { useEffect, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import useStore from 'store'
-import { NotificationType } from 'types/enums'
+import { NotificationType, State } from 'types/enums'
 import { DocURL } from 'types/enums/docURL'
 
 import styles from './Redbank.module.scss'
@@ -28,8 +28,10 @@ const RedBank = () => {
   // STORE STATE
   // ------------------
   const marketInfo = useStore((s) => s.marketInfo)
-  const userCollateral = useStore((s) => s.userCollateral)
+  const showTutorial = useStore((s) => s.showRedBankTutorial)
   const tutorialStep = useStore((s) => s.tutorialSteps['redbank'])
+  const userBalancesState = useStore((s) => s.userBalancesState)
+  const userCollateral = useStore((s) => s.userCollateral)
 
   const maxBorrowLimit = useMemo(() => {
     if (!userCollateral || !redBankAssets) return 0
@@ -69,8 +71,6 @@ const RedBank = () => {
 
   const showLiquidationWarning = borrowBalance >= maxBorrowLimit && borrowBalance > 0
 
-  const showTutorial = !localStorage.getItem(RED_BANK_TUTORIAL_KEY)
-
   const depositCard = (
     <Card
       hideHeaderBorder
@@ -92,10 +92,19 @@ const RedBank = () => {
   )
 
   useEffect(() => {
+    if (userBalancesState !== State.READY) return
+
+    if (localStorage.getItem(RED_BANK_TUTORIAL_KEY)) {
+      return useStore.setState({ showRedBankTutorial: false })
+    }
+
     if (Number(balanceSum(redBankAssets, 'depositBalanceBaseCurrency')) > 0) {
       localStorage.setItem(RED_BANK_TUTORIAL_KEY, 'true')
+      return useStore.setState({ showRedBankTutorial: false })
     }
-  }, [redBankAssets])
+
+    useStore.setState({ showRedBankTutorial: true })
+  }, [redBankAssets, userBalancesState])
 
   return (
     <div className={styles.markets}>

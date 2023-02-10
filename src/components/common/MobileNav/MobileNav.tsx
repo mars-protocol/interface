@@ -20,11 +20,14 @@ export const MobileNav = () => {
         passHref
         className={classNames(styles.nav, !router.pathname.includes('farm') && styles.active)}
       >
-        <SVG.RedBankIcon />
+        <div className={classNames(styles.icon, styles.redBank)} />
         <span>{t('global.redBank')}</span>
       </Link>
+
       <a className={styles.nav} target='_blank' href={networkConfig?.councilUrl} rel='noreferrer'>
-        <SVG.CouncilIcon />
+        <div className={styles.icon}>
+          <SVG.CouncilIcon />
+        </div>
         <span>{t('global.council')}</span>
       </a>
       {FIELDS_FEATURE && (
@@ -33,7 +36,7 @@ export const MobileNav = () => {
           passHref
           className={classNames(styles.nav, router.pathname.includes('farm') && styles.active)}
         >
-          <SVG.FieldsIcon />
+          <div className={classNames(styles.icon, styles.farm)} />
           <span>{t('global.fields')}</span>
         </Link>
       )}

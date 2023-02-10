@@ -18,6 +18,7 @@ interface Props {
   disabled?: boolean
   amountUntilDepositCap: number
   activeView: ViewType
+  walletBalance: number
   inputCallback: (value: number) => void
   onEnterHandler: () => void
   setAmountCallback: (value: number) => void
@@ -33,6 +34,7 @@ export const InputSection = ({
   disabled,
   amountUntilDepositCap,
   activeView,
+  walletBalance,
   inputCallback,
   onEnterHandler,
   setAmountCallback,
@@ -90,15 +92,14 @@ export const InputSection = ({
 
   useEffect(
     () => {
+      if (asset.denom !== baseCurrency.denom || !checkForMaxValue) return
       if (
-        amount >= maxUsableAmount &&
-        asset.denom === baseCurrency.denom &&
-        !depositWarning &&
-        checkForMaxValue
+        (activeView === ViewType.Repay && walletBalance <= amount) ||
+        (activeView === ViewType.Deposit && amount >= maxUsableAmount)
       ) {
-        setDepositWarning(true)
+        if (!depositWarning) setDepositWarning(true)
       } else {
-        setDepositWarning(false)
+        if (depositWarning) setDepositWarning(false)
       }
     }, // eslint-disable-next-line react-hooks/exhaustive-deps
     [sliderValue, amount, maxUsableAmount],

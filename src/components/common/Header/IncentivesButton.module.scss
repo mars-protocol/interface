@@ -220,15 +220,6 @@
     button {
       width: 100%;
     }
-
-    .error {
-      @include margin(2, 0, 0);
-      @include typoS;
-      width: 100%;
-      text-align: center;
-      font-weight: $fontWeightSemibold;
-      color: $colorInfoLoss;
-    }
   }
 }
 

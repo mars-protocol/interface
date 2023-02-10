@@ -15,15 +15,6 @@ export const ASSETS: { [denom: string]: Asset } = {
     hasOraclePrice: true,
     logo: osmo,
   },
-  atom: {
-    symbol: 'ATOM',
-    name: 'Atom',
-    denom: 'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2',
-    color: colors.atom,
-    logo: atom,
-    decimals: 6,
-    hasOraclePrice: true,
-  },
   axlusdc: {
     symbol: 'axlUSDC',
     name: 'Axelar USDC',
@@ -33,6 +24,15 @@ export const ASSETS: { [denom: string]: Asset } = {
     decimals: 6,
     hasOraclePrice: true,
     poolId: 678,
+  },
+  atom: {
+    symbol: 'ATOM',
+    name: 'Atom',
+    denom: 'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2',
+    color: colors.atom,
+    logo: atom,
+    decimals: 6,
+    hasOraclePrice: true,
   },
 }
 
@@ -82,9 +82,9 @@ export const NETWORK_CONFIG: NetworkConfig = {
   councilUrl: 'https://council.marsprotocol.io',
   wallets: [
     WalletID.Keplr,
+    WalletID.StationWallet,
     WalletID.Leap,
     WalletID.Cosmostation,
-    WalletID.Falcon,
     WalletID.KeplrMobile,
   ],
 }

@@ -120,7 +120,7 @@ export const RedbankAction = React.memo(
       }
     }, [activeView, amount, redBankContractAddress, denom, isMax, userBalances])
 
-    const { data: fee } = useEstimateFee({
+    const { data: fee, error: feeError } = useEstimateFee({
       msg: txMsgOptions?.msg,
       funds:
         activeView === ViewType.Deposit || activeView === ViewType.Repay
@@ -131,8 +131,8 @@ export const RedbankAction = React.memo(
 
     const produceActionButtonSpec = (): ModalActionButton => {
       return {
-        disabled: !Number(amount) || amount === 0 || typeof fee === 'undefined' || submitted,
-        fetching: !!Number(amount) && amount > 0 && typeof fee === 'undefined' && !capHit,
+        disabled: amount === 0 || capHit,
+        fetching: (amount > 0 && typeof fee === 'undefined') || submitted,
         text: t(`redbank.${activeView.toLowerCase()}`),
         clickHandler: handleAction,
         color: 'primary',
@@ -157,10 +157,14 @@ export const RedbankAction = React.memo(
           // @ts-ignore
           funds: txMsgOptions.funds || [],
           contract: redBankContractAddress,
-          fee,
+          fee: fee,
         })
 
-        setResponse(res)
+        if (res?.response.code !== 0) {
+          setError(res?.rawLogs)
+        } else {
+          setResponse(res)
+        }
       } catch (error) {
         const e = error as { message: string }
         setError(e.message as string)
@@ -248,6 +252,7 @@ export const RedbankAction = React.memo(
         ) : (
           <Action
             actionButtonSpec={produceActionButtonSpec()}
+            feeError={!fee ? (feeError as string) : undefined}
             activeView={activeView}
             amount={Number(amount)}
             borrowAssets={removeZeroBalanceValues(borrowAssets, 'borrowBalance')}

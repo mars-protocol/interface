@@ -80,7 +80,7 @@ const SetupPosition = (props: Props) => {
             <Button
               prefix={accountId && <SVG.Check />}
               text={t('fields.setup.step1.button')}
-              disabled={!!accountId || isLoadingCreate || !createFee}
+              disabled={!!accountId || !createFee}
               showProgressIndicator={isLoadingCreate}
               onClick={handleCreateCreditAccountClick}
               className={styles.mintBtn}

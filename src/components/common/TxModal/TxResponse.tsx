@@ -73,14 +73,11 @@ export const TxResponse = ({
     return [t('common.completed'), null]
   }, [txStatus, t])
 
+  const transactionHash = response?.hash ? response?.hash : response?.response.transactionHash || ''
   return (
     <Card isClose={true} onClick={handleClose} title={cardTitle}>
       {txStatus === TxStatus.FAILURE ? (
-        <TxFailedContent
-          handleClose={handleClose}
-          hash={response?.response.transactionHash || ''}
-          message={error}
-        />
+        <TxFailedContent handleClose={handleClose} hash={transactionHash} message={error} />
       ) : (
         <TxSuccessContent
           handleClose={handleClose}

@@ -27,6 +27,7 @@ export const TxSuccessContent = ({
   const { t } = useTranslation()
   const chainInfo = useStore((s) => s.chainInfo)
   const explorerUrl = chainInfo && SimpleChainInfoList[chainInfo.chainId as ChainInfoID].explorer
+  const transactionHash = response?.hash ? response?.hash : response?.response.transactionHash || ''
 
   return (
     <div className={styles.container}>
@@ -65,10 +66,7 @@ export const TxSuccessContent = ({
               </div>
               <div className={styles.item}>
                 <div className={styles.label}>{t('common.txHash')}</div>
-                <TxLink
-                  hash={response?.response.transactionHash || ''}
-                  link={`${explorerUrl}/txs/${response?.response.transactionHash}`}
-                />
+                <TxLink hash={transactionHash} link={`${explorerUrl}/txs/${transactionHash}`} />
               </div>
             </div>
           )}

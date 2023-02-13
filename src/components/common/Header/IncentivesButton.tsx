@@ -136,7 +136,7 @@ export const IncentivesButton = () => {
     }
   }
 
-  const transactionHash = response?.hash ? response?.hash : response?.response.transactionHash || ''
+  const transactionHash = response?.hash || ''
 
   if (!userWalletAddress) return null
 

@@ -27,7 +27,7 @@ export const TxSuccessContent = ({
   const { t } = useTranslation()
   const chainInfo = useStore((s) => s.chainInfo)
   const explorerUrl = chainInfo && SimpleChainInfoList[chainInfo.chainId as ChainInfoID].explorer
-  const transactionHash = response?.hash ? response?.hash : response?.response.transactionHash || ''
+  const transactionHash = response?.hash || ''
 
   return (
     <div className={styles.container}>

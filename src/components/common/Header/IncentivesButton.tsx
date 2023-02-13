@@ -136,6 +136,8 @@ export const IncentivesButton = () => {
     }
   }
 
+  const transactionHash = response?.hash || ''
+
   if (!userWalletAddress) return null
 
   return (
@@ -174,10 +176,7 @@ export const IncentivesButton = () => {
               {response ? (
                 <div className={`${styles.container} ${styles.info}`}>
                   <p className='m'>{t('incentives.successfullyClaimed')}</p>
-                  <TxLink
-                    hash={response?.hash || ''}
-                    link={`${explorerUrl}/txs/${response?.hash}`}
-                  />
+                  <TxLink hash={transactionHash} link={`${explorerUrl}/txs/${transactionHash}`} />
                 </div>
               ) : (
                 <div className={styles.container}>

@@ -16,7 +16,6 @@ interface Props {
 export const TxFailedContent = ({ message, hash, handleClose }: Props) => {
   const chainInfo = useStore((s) => s.chainInfo)
   const explorerUrl = chainInfo && SimpleChainInfoList[chainInfo.chainId as ChainInfoID].explorer
-
   const { t } = useTranslation()
 
   return (

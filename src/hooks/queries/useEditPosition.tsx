@@ -223,7 +223,11 @@ export const useEditPosition = (props: Props) => {
     props.isReducingPosition,
   ])
 
-  const { data: fee, isLoading } = useEstimateFarmFee({
+  const {
+    data: fee,
+    isLoading,
+    error,
+  } = useEstimateFarmFee({
     accountId: props.accountId,
     actions: actions,
     funds,
@@ -231,5 +235,5 @@ export const useEditPosition = (props: Props) => {
     isLoading: props.isLoading,
   })
 
-  return { editActions: actions, editFunds: funds, editFee: fee, isLoading }
+  return { editActions: actions, editFunds: funds, editFee: fee, isLoading, error }
 }

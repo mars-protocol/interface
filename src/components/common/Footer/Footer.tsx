@@ -102,6 +102,15 @@ export const Footer = () => {
             >
               {t('global.privacyPolicy')}
             </a>
+            <a
+              className={styles.item}
+              href={DocURL.SECURITY}
+              rel='noopener noreferrer'
+              target='_blank'
+              title={t('global.security')}
+            >
+              {t('global.security')}
+            </a>
           </div>
           <div className={styles.column3}>
             <div className={styles.header}>{t('global.community')}</div>

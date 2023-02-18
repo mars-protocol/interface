@@ -21,6 +21,7 @@ export const vault: Vault = {
     secondary: 'ATOM',
   },
   vaultCap: {
+    denom: 'uosmo',
     used: 1000,
     max: 5000,
   },

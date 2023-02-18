@@ -26,6 +26,7 @@
   }
 
   .container {
+    position: relative;
     display: flex;
     flex: 1;
     border: 1px solid;
@@ -37,6 +38,17 @@
       border-color: rgba($colorSecondary, 0.8) !important;
     }
 
+    .inputWarning {
+      position: absolute;
+      bottom: rem-calc(36);
+      left: 0;
+      width: 100%;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      @include typoS;
+    }
+
     .input,
     .select {
       color: $colorWhite;
@@ -44,6 +56,11 @@
       outline: none;
       @include padding(1.5, 2);
       background: $backgroundInTile;
+
+      option {
+        background: $backgroundInTile;
+        color: $colorWhite;
+      }
     }
 
     .input:focus,

@@ -23,6 +23,7 @@ interface Props {
 export const TokenInput = (props: Props) => {
   const userBalances = useStore((s) => s.userBalances)
   const { t } = useTranslation()
+  const baseCurrency = useStore((s) => s.baseCurrency)
 
   const walletBalance = findByDenom(userBalances, props.input.denom) as Coin
   const asset = useAsset({ denom: props.input.denom })
@@ -54,11 +55,14 @@ export const TokenInput = (props: Props) => {
     props.onChange(microValue)
   }
 
-  if (!asset) return <></>
+  if (!asset) return null
 
   const maxAmount =
     (props.maxAmount === undefined ? Number(walletBalance.amount) : props.maxAmount) /
     10 ** asset.decimals
+
+  const showGasWarning =
+    props.maxAmount && props.amount >= props.maxAmount && asset.denom === baseCurrency.denom
 
   return (
     <div className={styles.wrapper}>
@@ -75,9 +79,11 @@ export const TokenInput = (props: Props) => {
             onChange={onValueEntered}
             onFocus={() => {}}
             onBlur={() => {}}
+            minValue={0}
             maxValue={(props.maxAmount || 0) / 10 ** asset.decimals}
             value={(props.amount / 10 ** asset.decimals).toString()}
             maxDecimals={6}
+            allowNegative={false}
             suffix={isSingleToken ? ` ${props.input.symbol}` : ''}
             className={inputClasses}
           />
@@ -98,6 +104,11 @@ export const TokenInput = (props: Props) => {
               </select>
             </>
           )}
+          {showGasWarning ? (
+            <div className={styles.inputWarning}>
+              <p className='tippyContainer'>{t('common.lowUstAmountAfterTransaction')}</p>
+            </div>
+          ) : null}
         </div>
       </div>
       <div className={styles.bottomInfo}>

@@ -1,4 +1,4 @@
-import { Button, Card, SVG } from 'components/common'
+import { Button, Card, ErrorMessage, SVG } from 'components/common'
 import { SetUpResponse } from 'components/fields'
 import { useCreateCreditAccount, useUpdateAccount } from 'hooks/mutations'
 import { useEditPosition, useEstimateFarmFee } from 'hooks/queries'
@@ -25,7 +25,6 @@ const SetupPosition = (props: Props) => {
     mutate: enterVault,
     data: enterVaultData,
     isLoading: isLoadingEnterVault,
-    error: enterVaultError,
   } = useUpdateAccount()
 
   const {
@@ -33,6 +32,7 @@ const SetupPosition = (props: Props) => {
     editFunds,
     editFee,
     isLoading: isLoadingFee,
+    error: enterError,
   } = useEditPosition({
     accountId: accountId,
     position: props.position,
@@ -40,7 +40,11 @@ const SetupPosition = (props: Props) => {
     isReducingPosition: false,
     isLoading: isLoadingEnterVault || !!enterVaultData,
   })
-  const { data: createFee } = useEstimateFarmFee({
+  const {
+    data: createFee,
+    error: createError,
+    isLoading: isLoadingCreateFee,
+  } = useEstimateFarmFee({
     isCreate: true,
     isLoading: isLoadingCreate || !!accountId,
   })
@@ -81,11 +85,12 @@ const SetupPosition = (props: Props) => {
               prefix={accountId && <SVG.Check />}
               text={t('fields.setup.step1.button')}
               disabled={!!accountId || !createFee}
-              showProgressIndicator={isLoadingCreate}
+              showProgressIndicator={isLoadingCreate || (isLoadingCreateFee && !accountId)}
               onClick={handleCreateCreditAccountClick}
               className={styles.mintBtn}
             />
             {accountId && <p className='xxsCaps'>{t('fields.setup.step1.success')}</p>}
+            <ErrorMessage message={createError} alignment='center' />
           </div>
         </div>
         <div className={styles.section}>
@@ -96,11 +101,9 @@ const SetupPosition = (props: Props) => {
             text={t('fields.disclaimers.lockup.button', timeAndUnit)}
             disabled={!accountId || !editFee}
             className={styles.btn}
-            showProgressIndicator={isLoadingEnterVault}
+            showProgressIndicator={(isLoadingEnterVault || isLoadingFee) && !!accountId}
           />
-          {!isLoadingFee && !editFee && accountId && (
-            <p className='colorInfoVoteAgainst xxsCaps'>{t('fields.setup.step2.error')}</p>
-          )}
+          <ErrorMessage message={enterError} alignment='center' />
         </div>
       </div>
     </Card>

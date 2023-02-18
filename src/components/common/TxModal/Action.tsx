@@ -330,7 +330,7 @@ export const Action = ({
           showProgressIndicator={actionButtonSpec.fetching}
           text={actionButtonSpec.text}
         />
-        <ErrorMessage errorMessage={feeError} alignment='center' />
+        <ErrorMessage message={feeError} alignment='center' />
       </>
     )
   }

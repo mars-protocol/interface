@@ -59,7 +59,8 @@ const oraclesSlice = (set: NamedSet<Store>, get: GetState<Store>): OraclesSlice 
         .times(baseToDisplayCurrencyRatio)
         .toNumber()
     }
-    return amount
+    // Prevent extremely small numbers
+    return amount < 0.005 ? 0 : amount
   },
   getExchangeRate: (denom1: string, denom2?: string) => {
     if (!denom2) {

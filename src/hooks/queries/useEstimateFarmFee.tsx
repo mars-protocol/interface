@@ -50,19 +50,21 @@ export const useEstimateFarmFee = (props: Props) => {
 
         const result = await client.simulate(simulateOptions)
 
-        return result.success
-          ? {
-              amount: result.fee ? result.fee.amount : [],
-              gas: new BigNumber(result.fee ? result.fee.gas : 0)
-                .multipliedBy(gasAdjustment)
-                .toFixed(0),
-            }
-          : null
-      } catch {
-        return null
+        if (result.success) {
+          return {
+            amount: result.fee ? result.fee.amount : [],
+            gas: new BigNumber(result.fee ? result.fee.gas : 0)
+              .multipliedBy(gasAdjustment)
+              .toFixed(0),
+          }
+        }
+        throw result.error
+      } catch (e) {
+        throw e
       }
     },
     {
+      retry: 1,
       enabled:
         !props.isLoading &&
         !!client &&

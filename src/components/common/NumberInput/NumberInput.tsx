@@ -7,8 +7,10 @@ interface Props {
   value: string
   className: string
   maxDecimals: number
+  minValue?: number
   maxValue?: number
   maxLength?: number
+  allowNegative?: boolean
   suffix?: string
   onChange: (value: number) => void
   onBlur?: () => void
@@ -79,6 +81,13 @@ export const NumberInput = (props: Props) => {
     const isNumber = !isNaN(Number(value))
     const hasMultipleDots = (value.match(/[.,]/g)?.length || 0) > 1
     const isSeparator = lastChar === '.' || lastChar === ','
+    const isNegative = value.indexOf('-') > -1
+    const isLowerThanMinimum = props.minValue !== undefined && Number(value) < props.minValue
+    const isHigherThanMaximum = props.maxValue !== undefined && Number(value) > props.maxValue
+    const isTooLong = props.maxLength !== undefined && numberCount > props.maxLength
+    const exceedsMaxDecimals = props.maxDecimals !== undefined && decimals > props.maxDecimals
+
+    if (isNegative && !props.allowNegative) return
 
     if (isSeparator && value.length === 1) {
       updateValues('0.', 0)
@@ -90,17 +99,21 @@ export const NumberInput = (props: Props) => {
       return
     }
 
-    if (!isNumber) return
-    if (hasMultipleDots) return
+    if (!isNumber || hasMultipleDots) return
 
-    if (props.maxDecimals !== undefined && decimals > props.maxDecimals) {
+    if (exceedsMaxDecimals) {
       value = value.substring(0, value.length - 1)
     }
 
-    if (props.maxLength !== undefined && numberCount > props.maxLength) return
+    if (isTooLong) return
 
-    if ((props.maxValue && Number(value) > props.maxValue) || props.maxValue === 0) {
-      updateValues(String(props.maxValue), props.maxValue)
+    if (isLowerThanMinimum) {
+      updateValues(String(props.minValue), props.minValue!)
+      return
+    }
+
+    if (isHigherThanMaximum) {
+      updateValues(String(props.maxValue), props.maxValue!)
       return
     }
 

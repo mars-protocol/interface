@@ -74,7 +74,7 @@ export const AvailableVaultsTableMobile = () => {
                     <span>
                       <DisplayCurrency
                         coin={{
-                          denom: baseCurrency.denom,
+                          denom: vault.vaultCap?.denom || '',
                           amount: (vault.vaultCap?.max || 0).toString(),
                         }}
                         className={styles.inline}

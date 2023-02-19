@@ -4,7 +4,6 @@ import { VAULT_DEPOSIT_BUFFER } from 'constants/appConstants'
 import { DEFAULT_POSITION } from 'constants/defaults'
 import { useAvailableVault } from 'hooks/data'
 import cloneDeep from 'lodash.clonedeep'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -18,6 +17,7 @@ const Create = () => {
   const address = String(router.query.address)
   const availableVault = useAvailableVault(address)
   const setPositionInStore = useStore((s) => s.setPosition)
+  const convertToBaseCurrency = useStore((s) => s.convertToBaseCurrency)
 
   const [position, setPosition] = useState<Position>(cloneDeep(DEFAULT_POSITION))
 
@@ -28,10 +28,25 @@ const Create = () => {
     return
   }
 
-  const vaultCap = (availableVault.vaultCap?.max || 0) * VAULT_DEPOSIT_BUFFER
+  const handleSetupClick = () => {
+    setPositionInStore(position)
+    router.push(`/farm/vault/${address}/create/setup`)
+  }
+
+  const vaultCapValue = convertToBaseCurrency({
+    amount: ((availableVault.vaultCap?.max || 0) * VAULT_DEPOSIT_BUFFER).toString(),
+    denom: availableVault.vaultCap?.denom || '',
+  })
+
+  const vaultCapUsedValue = convertToBaseCurrency({
+    amount: (availableVault.vaultCap?.used || 0).toString(),
+    denom: availableVault.vaultCap?.denom || '',
+  })
+
   const isVaultCapReached = availableVault.vaultCap
-    ? availableVault.vaultCap.used + position.values.total > vaultCap
+    ? vaultCapUsedValue + position.values.total > vaultCapValue
     : false
+
   const isDisabled = position.values.total === 0 || isVaultCapReached
 
   return (
@@ -51,14 +66,12 @@ const Create = () => {
       <Breakdown vault={availableVault} newPosition={position} isSetUp />
       <div className={styles.action}>
         <div className={styles.buttonContainer}>
-          <Link href={`/farm/vault/${address}/create/setup`}>
-            <Button
-              text={t('common.setup')}
-              onClick={() => setPositionInStore(position)}
-              disabled={isDisabled}
-              className={styles.button}
-            />
-          </Link>
+          <Button
+            text={t('common.setup')}
+            onClick={handleSetupClick}
+            disabled={isDisabled}
+            className={styles.button}
+          />
           {!isDisabled && (
             <ActionsTooltip
               type='edit'

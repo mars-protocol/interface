@@ -18,6 +18,7 @@ import isEqual from 'lodash.isequal'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import useStore from 'store'
 
 import styles from './EditVault.module.scss'
 
@@ -26,6 +27,7 @@ interface Props {
 }
 
 const EditVault = (props: Props) => {
+  const convertToBaseCurrency = useStore((s) => s.convertToBaseCurrency)
   const router = useRouter()
   const {
     mutate: edit,
@@ -181,9 +183,17 @@ const EditVault = (props: Props) => {
   }
 
   const additionalPositionValue = position.values.total - prevPosition.values.total
+  const vaultCapValue = convertToBaseCurrency({
+    amount: ((props.activeVault.vaultCap?.max || 0) * VAULT_DEPOSIT_BUFFER).toString(),
+    denom: props.activeVault.vaultCap?.denom || '',
+  })
+
+  const vaultCapUsedValue = convertToBaseCurrency({
+    amount: (props.activeVault.vaultCap?.used || 0).toString(),
+    denom: props.activeVault.vaultCap?.denom || '',
+  })
   const isVaultCapReached = props.activeVault.vaultCap
-    ? props.activeVault.vaultCap.used + additionalPositionValue >
-      props.activeVault.vaultCap.max * VAULT_DEPOSIT_BUFFER
+    ? vaultCapUsedValue + additionalPositionValue > vaultCapValue
     : false
 
   const isReducingAnyAsset =

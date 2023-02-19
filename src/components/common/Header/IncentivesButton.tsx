@@ -215,7 +215,7 @@ export const IncentivesButton = () => {
                   onClick={() => (submitted ? null : claimRewards())}
                   color='primary'
                 />
-                <ErrorMessage errorMessage={error} alignment='center' />
+                <ErrorMessage message={error} alignment='center' />
               </div>
             </div>
           </div>

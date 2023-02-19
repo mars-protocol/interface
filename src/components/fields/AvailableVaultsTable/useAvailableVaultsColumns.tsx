@@ -159,7 +159,7 @@ export const useAvailableVaultsColumns = () => {
                 <>
                   <DisplayCurrency
                     coin={{
-                      denom: baseCurrency.denom,
+                      denom: vaultCap.denom,
                       amount: vaultCap.max.toString(),
                     }}
                   />
@@ -172,7 +172,7 @@ export const useAvailableVaultsColumns = () => {
                 <TokenBalance
                   showSymbol
                   coin={{
-                    denom: baseCurrency.denom,
+                    denom: vaultCap.denom,
                     amount: vaultCap.max.toString(),
                   }}
                 />

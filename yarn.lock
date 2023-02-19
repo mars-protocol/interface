@@ -538,9 +538,9 @@
   integrity sha512-m7h+RXDUxOzEOGt4P+3OVPX7PuakZT3GBmaM/Y2u+abN3xZkziykD/NvedYFvvCCdQo714XcGl33bwifS9FZPQ==
 
 "@delphi-labs/shuttle@^2.3.9":
-  version "2.3.10"
-  resolved "https://registry.yarnpkg.com/@delphi-labs/shuttle/-/shuttle-2.3.10.tgz#bd4f0fc48bb0ff13fd3a7e004246e469c5315d6e"
-  integrity sha512-fS7vN7nFkeynbf7p01E8OTF3L+pKPnW2yuTWQTzHLzCSpzSaLkgIPnXxg4/C5/abr4FZ5ZytxpS9TKyj7hP4wA==
+  version "2.3.9"
+  resolved "https://registry.yarnpkg.com/@delphi-labs/shuttle/-/shuttle-2.3.9.tgz#d82c7160c9d297b9b6abfbce3b3e2bd96af99ccc"
+  integrity sha512-zst45B/nLp52DMCncouGcfrHw8X+FvBGUQnSiqynKDtJikolMRVU7DtE8iNpWXFGqK8hTnkn4srl/qoiL3wNDg==
   dependencies:
     "@cosmjs/amino" "^0.29.5"
     "@cosmjs/cosmwasm-stargate" "^0.29.5"
@@ -1498,10 +1498,10 @@
   resolved "https://registry.yarnpkg.com/@kurkle/color/-/color-0.3.2.tgz#5acd38242e8bde4f9986e7913c8fdf49d3aa199f"
   integrity sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==
 
-"@marsprotocol/wallet-connector@^1.4.2":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@marsprotocol/wallet-connector/-/wallet-connector-1.4.2.tgz#9dfeaf82242e821d2beef276c23e7f60313ae079"
-  integrity sha512-rHVCbKHvAXHzmU5tZo9mV81Y4WclY6oDtO35nQqlh4X+DtIF/8j71hJRXCpGF+IuN1xwp3I8hcKAIqb08KOa5w==
+"@marsprotocol/wallet-connector@^1.4.5":
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/@marsprotocol/wallet-connector/-/wallet-connector-1.4.5.tgz#5d87cc587c9a5458bc02a412b7d5c7fe2c76e62d"
+  integrity sha512-96LjjqQe4+IYJeQGPftYjDFDSY2TOSkS+j0pP0HhbHdrbR5cT823ClvsrceNSjKAUWQESxNtdpZlf0DRQfKz8Q==
   dependencies:
     "@cosmjs/cosmwasm-stargate" "^0.29.5"
     "@cosmjs/encoding" "^0.29.5"

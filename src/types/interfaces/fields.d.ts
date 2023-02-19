@@ -24,6 +24,7 @@ interface Vault {
     liq: number
   }
   vaultCap?: {
+    denom: string
     used: number
     max: number
   }
@@ -108,6 +109,7 @@ interface AprResponse {
 interface VaultCapData {
   address: string
   vaultCap: {
+    denom: string
     used: number
     max: number
   }

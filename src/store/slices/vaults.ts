@@ -169,6 +169,7 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
           ({
             address: vaultInfo.vault.address,
             vaultCap: {
+              denom: vaultInfo.config.deposit_cap.denom,
               used: Number(vaultInfo.utilization.amount),
               max: Number(vaultInfo.config.deposit_cap.amount),
             },

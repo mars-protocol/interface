@@ -42,6 +42,7 @@ export const BreakdownTable = (props: Props) => {
   const primaryAsset = useAsset({ denom: props.vault.denoms.primary })
   const secondaryAsset = useAsset({ denom: props.vault.denoms.secondary })
   const convertToDisplayCurrency = useStore((s) => s.convertToDisplayCurrency)
+  const convertToBaseCurrency = useStore((s) => s.convertToBaseCurrency)
 
   const primaryPrice = usePrice(props.vault.denoms.primary)
   const secondaryPrice = usePrice(props.vault.denoms.secondary)
@@ -165,13 +166,23 @@ export const BreakdownTable = (props: Props) => {
     const additionalPositionValue = props.isSetUp
       ? props.newPosition.values.total
       : props.newPosition.values.total - props.prevPosition.values.total
-    const vaultCap = (props.vault.vaultCap?.max || 0) * VAULT_DEPOSIT_BUFFER
+
+    const vaultCapValue = convertToBaseCurrency({
+      amount: ((props.vault.vaultCap?.max || 0) * VAULT_DEPOSIT_BUFFER).toString(),
+      denom: props.vault.vaultCap?.denom || '',
+    })
+
+    const vaultCapUsedValue = convertToBaseCurrency({
+      amount: (props.vault.vaultCap?.used || 0).toString(),
+      denom: props.vault.vaultCap?.denom || '',
+    })
+
     const isVaultCapReached = props.vault.vaultCap
-      ? props.vault.vaultCap.used + additionalPositionValue > vaultCap
+      ? vaultCapUsedValue + additionalPositionValue > vaultCapValue
       : false
 
     if (isVaultCapReached && props.vault.vaultCap) {
-      const leftoverCap = vaultCap - props.vault.vaultCap.used
+      const leftoverCap = vaultCapValue - vaultCapUsedValue
       const maxPositionValue = convertToDisplayCurrency({
         amount: ((props.isSetUp ? 0 : props.prevPosition.values.total) + leftoverCap).toString(),
         denom: 'uosmo',

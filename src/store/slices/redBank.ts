@@ -96,7 +96,7 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
 
       const incentiveInfo = get().calculateIncentiveAssetInfo(
         findByDenom(get().marketIncentiveInfo, asset.denom),
-        { denom: asset.denom, amount: marketLiquidity },
+        { denom: asset.denom, amount: depositLiquidity.toString() },
       )
 
       const redBankAsset: RedBankAsset = {

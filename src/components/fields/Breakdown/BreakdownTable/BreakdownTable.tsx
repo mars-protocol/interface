@@ -209,7 +209,8 @@ export const BreakdownTable = (props: Props) => {
   const currentLeverage = props.newPosition.currentLeverage
 
   const trueBorrowRate =
-    (Number(secondaryRedBankAsset?.borrowRate ?? 0) / 2) * (Number(currentLeverage) - 1)
+    Number(secondaryRedBankAsset?.borrowRate ?? 0) * (Number(currentLeverage) - 1)
+
   const apy = (props.vault.apy || 0) * currentLeverage - trueBorrowRate
 
   const apyData = {

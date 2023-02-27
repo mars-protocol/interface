@@ -1,4 +1,5 @@
 import { ChainInfoID, WalletID } from '@marsprotocol/wallet-connector'
+import { URL_GQL, URL_REST, URL_RPC } from 'constants/env'
 import atom from 'images/atom.svg'
 import axlusdc from 'images/axlusdc.svg'
 import juno from 'images/juno.svg'
@@ -63,21 +64,18 @@ const OTHER_ASSETS: { [denom: string]: OtherAsset } = {
 
 export const NETWORK_CONFIG: NetworkConfig = {
   name: ChainInfoID.OsmosisTestnet,
-  hiveUrl: 'https://testnet-osmosis-node.marsprotocol.io/XF32UOOU55CX/osmosis-hive-front/graphql',
-  rpcUrl: 'https://rpc-test.osmosis.zone/',
-  restUrl: 'https://lcd-test.osmosis.zone/',
-  apolloAprUrl: 'https://stats.apollo.farm/api/apr/v1/all',
+  hiveUrl:
+    URL_GQL ??
+    'https://testnet-osmosis-node.marsprotocol.io/XF32UOOU55CX/osmosis-hive-front/graphql',
+  rpcUrl: URL_RPC ?? 'https://rpc-test.osmosis.zone/',
+  restUrl: URL_REST ?? 'https://lcd-test.osmosis.zone/',
+  apolloAprUrl: 'https://api.apollo.farm/api/vault_infos/v2/osmo-test-4',
   contracts: {
-    addressProvider: 'osmo17dyy6hyzzy6u5khy5lau7afa2y9kwknu0aprwqn8twndw2qhv8ls6msnjr',
     redBank: 'osmo1t0dl6r27phqetfu0geaxrng0u9zn8qgrdwztapt5xr32adtwptaq6vwg36',
     incentives: 'osmo1zxs8fry3m8j94pqg7h4muunyx86en27cl0xgk76fc839xg2qnn6qtpjs48',
     oracle: 'osmo1dqz2u3c8rs5e7w5fnchsr2mpzzsxew69wtdy0aq4jsd76w7upmsstqe0s8',
-    rewardsCollector: 'osmo14kzsqw5tatdvwlkj383lgkh6gcdetwn7kfqm7488uargyy2lpucqsyv53j',
-    treasury: 'osmo1qv74pu0gjc9vuvkhayuj5j3q8fzmf4pnl643djqpv7enxr925g5q0wf7p3',
-    safetyFund: 'osmo1j2mnzs7eqld4umtwky4hyf6f7kqcsg7ragh2l76ev7ucxcjvdjrs3tdezf',
-    protocolRewardsCollector: 'osmo1xl7jguvkg807ya00s0l722nwcappfzyzrac3ug5tnjassnrmnfrs47wguz',
-    creditManager: 'osmo169xhpftsee275j3cjudj6qfzdpfp8sdllgeeprud4ynwr4sj6m4qel2ezp',
-    accountNft: 'osmo1xpgx06z2c6zjk49feq75swgv78m6dvht6wramu2gltzjz5j959nq4hggxz',
+    creditManager: 'osmo1dzk4y3s9am6773sglhfc60nstz09c3gy978h2jka6wre5z4hlavq4pcwk0',
+    accountNft: 'osmo16wwckvccarltl4mlnjhw3lcj3v59yglhldgw36ldkknmjavqyaasgcessw',
   },
   assets: {
     base: ASSETS.osmo,
@@ -91,13 +89,12 @@ export const NETWORK_CONFIG: NetworkConfig = {
     decimals: 2,
   },
   appUrl: 'https://testnet.osmosis.zone',
-  councilUrl: 'https://testnet.keplr.app/chains/mars-hub-testnet',
   wallets: [WalletID.Keplr, WalletID.Leap, WalletID.Cosmostation],
 }
 
 export const VAULT_CONFIGS: Vault[] = [
   {
-    address: 'osmo1v40lnedgvake8p7f49gvqu0q3vc9sx3qpc0jqtyfdyw25d4vg8us38an37',
+    address: 'osmo1zktjv92f76epswjvyxzzt3yyskpw7k6jsyu0kmq4zzc5fphrjumqlahctp',
     name: 'OSMO-ATOM LP (1 day)',
     denoms: {
       primary: 'uosmo',
@@ -118,9 +115,10 @@ export const VAULT_CONFIGS: Vault[] = [
       contract: 0.63,
       liq: 0.65,
     },
+    apy: 0,
   },
   {
-    address: 'osmo1eht92w5dr0vx8dzl6dn9770yq0ycln50zfhzvz8uc6928mp8vvgqwcram9',
+    address: 'osmo1tp2m6g39h8mvhnu3plqjyen5s63023gj8w873l8wvly0cd77l6hsaa73wt',
     name: 'OSMO-ATOM LP (14 day)',
     denoms: {
       primary: 'uosmo',
@@ -141,9 +139,10 @@ export const VAULT_CONFIGS: Vault[] = [
       contract: 0.63,
       liq: 0.65,
     },
+    apy: 0,
   },
   {
-    address: 'osmo1g5hryv0gp9dzlchkp3yxk8fmcf5asjun6cxkvyffetqzkwmvy75qfmeq3f',
+    address: 'osmo1r6h0pafu3wq0kf6yv09qhc8qvuku2d6fua0rpwwv46h7hd8u586scxspjf',
     name: 'OSMO-JUNO LP (1 day)',
     denoms: {
       primary: 'uosmo',
@@ -164,9 +163,10 @@ export const VAULT_CONFIGS: Vault[] = [
       contract: 0.4115,
       liq: 0.441,
     },
+    apy: 0,
   },
   {
-    address: 'osmo1rclt7lsfp0c89ydf9umuhwlg28maw6z87jak3ly7u2lefnyzdz2s8gsepe',
+    address: 'osmo1d6knwkelyr9eklewnn9htkess4ttpxpf2cze9ec0xfw7e3fj0ggssqzfpp',
     name: 'OSMO-JUNO LP (14 day)',
     denoms: {
       primary: 'uosmo',
@@ -187,5 +187,6 @@ export const VAULT_CONFIGS: Vault[] = [
       contract: 4.115,
       liq: 0.441,
     },
+    apy: 0,
   },
 ]

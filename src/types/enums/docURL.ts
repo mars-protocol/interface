@@ -1,5 +1,10 @@
 export enum DocURL {
   COOKIE_POLICY_URL = 'https://docs.marsprotocol.io/docs/overview/legal/cookie-policy',
+  COUNCIL_URL = 'https://council.marsprotocol.io',
+  COUNCIL_LEAP_URL = 'https://cosmos.leapwallet.io/chains/mars/governance',
+  COUNCIL_STATION_URL = 'https://station.terra.money/gov#PROPOSAL_STATUS_VOTING_PERIOD',
+  COUNCIL_TESTNET_URL = 'https://testnet.keplr.app/chains/mars-hub-testnet',
+  COUNCIL_KEPLR_URL = 'https://wallet.keplr.app/chains/mars-hub',
   FIELDS = 'https://docs.marsprotocol.io/docs/learn/rover/rover-intro',
   LANDING = 'https://docs.marsprotocol.io/',
   PRIVACY_POLICY_URL = 'https://docs.marsprotocol.io/docs/overview/legal/privacy-policy',

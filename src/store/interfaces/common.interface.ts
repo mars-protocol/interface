@@ -7,7 +7,6 @@ import {
 } from '@marsprotocol/wallet-connector'
 import { BlockHeightData } from 'hooks/queries/useBlockHeight'
 import { DepositAndDebtData } from 'hooks/queries/useDepositAndDebt'
-import { SafetyFundBalanceData } from 'hooks/queries/useSafetyFundBalance'
 import { UserBalanceData } from 'hooks/queries/useUserBalance'
 import { UserIcnsData } from 'hooks/queries/useUserIcns'
 import { Network } from 'types/enums/network'
@@ -44,7 +43,6 @@ export interface CommonSlice {
   otherAssets: Asset[]
   queryErrors: string[]
   slippage: number
-  safetyFundBalance?: Coin
   tutorialSteps: { redbank: number; fields: number }
   userBalances: Coin[]
   userUnclaimedRewards: string
@@ -89,12 +87,10 @@ export interface CommonSlice {
   // QUERY RELATED
   // ------------------
   previousBlockHeightQueryData?: BlockHeightData
-  previousSafetyFundBalanceQueryData?: SafetyFundBalanceData
   previousUserBalanceQueryData?: UserBalanceData
   previousUserIcnsQueryData?: UserIcnsData
   previousUserUnclaimedBalanceQueryData?: number
   processDepositAndDebtQuery: (data: DepositAndDebtData) => void
   processUserBalanceQuery: (data: UserBalanceData) => void
   processBlockHeightQuery: (data: BlockHeightData) => void
-  processSafetyFundQuery: (data: SafetyFundBalanceData) => void
 }

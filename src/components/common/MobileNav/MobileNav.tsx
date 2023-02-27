@@ -1,6 +1,8 @@
+import { WalletID } from '@marsprotocol/wallet-connector'
 import classNames from 'classnames'
 import { SVG } from 'components/common'
 import { FIELDS_FEATURE } from 'constants/appConstants'
+import { getCouncilLink } from 'libs/council'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
@@ -11,7 +13,7 @@ import styles from './MobileNav.module.scss'
 export const MobileNav = () => {
   const { t } = useTranslation()
   const router = useRouter()
-  const networkConfig = useStore((s) => s.networkConfig)
+  const client = useStore((s) => s.client)
 
   return (
     <nav className={styles.mobileNav}>
@@ -24,7 +26,12 @@ export const MobileNav = () => {
         <span>{t('global.redBank')}</span>
       </Link>
 
-      <a className={styles.nav} target='_blank' href={networkConfig?.councilUrl} rel='noreferrer'>
+      <a
+        className={styles.nav}
+        target='_blank'
+        href={getCouncilLink(client?.recentWallet.providerId as WalletID)}
+        rel='noreferrer'
+      >
         <div className={styles.icon}>
           <SVG.CouncilIcon />
         </div>

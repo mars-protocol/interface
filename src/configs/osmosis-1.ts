@@ -1,4 +1,5 @@
 import { ChainInfoID, WalletID } from '@marsprotocol/wallet-connector'
+import { URL_GQL, URL_REST, URL_RPC } from 'constants/env'
 import atom from 'images/atom.svg'
 import axlusdc from 'images/axlusdc.svg'
 import mars from 'images/mars.svg'
@@ -51,21 +52,17 @@ const OTHER_ASSETS: { [denom: string]: OtherAsset } = {
 
 export const NETWORK_CONFIG: NetworkConfig = {
   name: ChainInfoID.Osmosis1,
-  hiveUrl: 'https://osmosis-node.marsprotocol.io/GGSFGSFGFG34/osmosis-hive-front/graphql',
-  rpcUrl: 'https://rpc-osmosis.blockapsis.com/',
-  restUrl: 'https://lcd-osmosis.blockapsis.com/',
-  apolloAprUrl: 'https://stats.apollo.farm/api/apr/v1/all',
+  hiveUrl:
+    URL_GQL ?? 'https://osmosis-node.marsprotocol.io/GGSFGSFGFG34/osmosis-hive-front/graphql',
+  rpcUrl: URL_RPC ?? 'https://rpc-osmosis.blockapsis.com/',
+  restUrl: URL_REST ?? 'https://lcd-osmosis.blockapsis.com/',
+  apolloAprUrl: 'https://api.apollo.farm/api/vault_infos/v2/osmosis-1',
   contracts: {
-    addressProvider: 'osmo1g677w7mfvn78eeudzwylxzlyz69fsgumqrscj6tekhdvs8fye3asufmvxr',
     redBank: 'osmo1c3ljch9dfw5kf52nfwpxd2zmj2ese7agnx0p9tenkrryasrle5sqf3ftpg',
     incentives: 'osmo1nkahswfr8shg8rlxqwup0vgahp0dk4x8w6tkv3rra8rratnut36sk22vrm',
     oracle: 'osmo1mhznfr60vjdp2gejhyv2gax9nvyyzhd3z0qcwseyetkfustjauzqycsy2g',
-    rewardsCollector: 'osmo1urvqe5mw00ws25yqdd4c4hlh8kdyf567mpcml7cdve9w08z0ydcqvsrgdy',
-    treasury: 'osmo1qv74pu0gjc9vuvkhayuj5j3q8fzmf4pnl643djqpv7enxr925g5q0wf7p3',
-    safetyFund: 'osmo1j2mnzs7eqld4umtwky4hyf6f7kqcsg7ragh2l76ev7ucxcjvdjrs3tdezf',
-    protocolRewardsCollector: 'osmo1xl7jguvkg807ya00s0l722nwcappfzyzrac3ug5tnjassnrmnfrs47wguz',
-    creditManager: 'osmo1prwnxn3vlvh0kqmwxn8whqnavk8ze9hrccwpsapysgpa3pj8r2csy84grp',
-    accountNft: 'osmo1ua5rw84jxg6e7ma4hx7v7yhqcks74cjnx38gpnsvtfzrtxhwcvjqgsxulx',
+    creditManager: 'osmo1f2m24wktq0sw3c0lexlg7fv4kngwyttvzws3a3r3al9ld2s2pvds87jqvf',
+    accountNft: 'osmo1450hrg6dv2l58c0rvdwx8ec2a0r6dd50hn4frk370tpvqjhy8khqw7sw09',
   },
   assets: {
     base: ASSETS.osmo,
@@ -79,14 +76,63 @@ export const NETWORK_CONFIG: NetworkConfig = {
     decimals: 2,
   },
   appUrl: 'https://app.osmosis.zone',
-  councilUrl: 'https://council.marsprotocol.io',
   wallets: [
     WalletID.Keplr,
     WalletID.StationWallet,
     WalletID.Leap,
     WalletID.Cosmostation,
     WalletID.KeplrMobile,
+    WalletID.CosmostationMobile,
   ],
 }
 
-export const VAULT_CONFIGS: Vault[] = []
+export const VAULT_CONFIGS: Vault[] = [
+  {
+    address: 'osmo1g3kmqpp8608szfp0pdag3r6z85npph7wmccat8lgl3mp407kv73qlj7qwp',
+    name: 'OSMO-ATOM LP (14 day)',
+    denoms: {
+      primary: 'uosmo',
+      secondary: 'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2',
+      lpToken: 'gamm/pool/1',
+    },
+    symbols: {
+      primary: 'OSMO',
+      secondary: 'ATOM',
+    },
+    color: '#6f7390',
+    lockup: 86400 * 14,
+    provider: 'Apollo vault',
+    description:
+      'Up to 2.67× leveraged yield farming with auto compounding of the OSMO-ATOM LP tokens.',
+    ltv: {
+      max: 0.625,
+      contract: 0.63,
+      liq: 0.65,
+    },
+    apy: 0,
+  },
+  {
+    address: 'osmo1jfmwayj8jqp9tfy4v4eks5c2jpnqdumn8x8xvfllng0wfes770qqp7jl4j',
+    name: 'OSMO-axlUSDC LP (14 day)',
+    denoms: {
+      primary: 'uosmo',
+      secondary: 'ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858',
+      lpToken: 'gamm/pool/678',
+    },
+    symbols: {
+      primary: 'OSMO',
+      secondary: 'axlUSDC',
+    },
+    color: '#478edc',
+    lockup: 86400 * 14,
+    provider: 'Apollo vault',
+    description:
+      'Up to 2.78× leveraged yield farming with auto compounding of the OSMO-axlUSDC LP tokens.',
+    ltv: {
+      max: 0.64,
+      contract: 0.65,
+      liq: 0.66,
+    },
+    apy: 0,
+  },
+]

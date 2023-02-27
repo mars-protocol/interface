@@ -4,6 +4,7 @@ import {
   Apy,
   BorrowCapacity,
   DisplayCurrency,
+  Loading,
   TextTooltip,
   TokenBalance,
 } from 'components/common'
@@ -225,17 +226,21 @@ export const BreakdownTable = (props: Props) => {
       <div className={styles.stats}>
         <div className={styles.apy}>
           <span className='faded'>{t('common.apy')}: </span>
-          <TextTooltip
-            hideStyling
-            text={
-              <AnimatedNumber
-                amount={Number(formatValue(apy, 2, 2, true, false, false, true))}
-                suffix='%'
-                abbreviated={false}
-              />
-            }
-            tooltip={<Apy apyData={apyData} leverage={currentLeverage} />}
-          />
+          {props.vault.apy !== null ? (
+            <TextTooltip
+              hideStyling
+              text={
+                <AnimatedNumber
+                  amount={Number(formatValue(apy, 2, 2, true, false, false, true))}
+                  suffix='%'
+                  abbreviated={false}
+                />
+              }
+              tooltip={<Apy apyData={apyData} leverage={currentLeverage} />}
+            />
+          ) : (
+            <Loading />
+          )}
         </div>
         <div className={styles.price}>
           <span className='faded'>{formatValue(1, 0, 0, false, false, ' OSMO ≈ ')}</span>

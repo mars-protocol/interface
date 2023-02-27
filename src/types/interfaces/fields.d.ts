@@ -28,7 +28,7 @@ interface Vault {
     used: number
     max: number
   }
-  apy?: number
+  apy: number | null
 }
 
 interface Position {
@@ -54,9 +54,9 @@ interface Position {
     net: number
   }
   apy: {
-    total: number
+    total: number | null
     borrow: number
-    net: number
+    net: number | null
   }
   ltv: number
   currentLeverage: number
@@ -102,8 +102,8 @@ interface AprData {
 
 interface AprResponse {
   contract_address: string
-  aprs: { type: string; value: number }[]
-  fees: { type: string; value: number }[]
+  apr: { type: string; value: number | string }[]
+  fees: { type: string; value: number | string }[]
 }
 
 interface VaultCapData {

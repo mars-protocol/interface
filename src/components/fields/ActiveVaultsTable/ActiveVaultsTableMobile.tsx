@@ -7,6 +7,7 @@ import {
   DisplayCurrency,
   TextTooltip,
 } from 'components/common'
+import { Loading } from 'components/common'
 import { VaultLogo, VaultName } from 'components/fields'
 import { FIELDS_TUTORIAL_KEY } from 'constants/appConstants'
 import Link from 'next/link'
@@ -66,27 +67,31 @@ export const ActiveVaultsTableMobile = () => {
                 <div className='xl' onClick={(e) => e.preventDefault()}>
                   <span className='faded'>{t('common.apy')} </span>
                   <span>
-                    <TextTooltip
-                      hideStyling
-                      text={
-                        <span>
-                          <AnimatedNumber
-                            amount={vault.position.apy.net}
-                            className='xl'
-                            suffix='%'
+                    {vault.position.apy.net !== null && vault.position.apy.total !== null ? (
+                      <TextTooltip
+                        hideStyling
+                        text={
+                          <span>
+                            <AnimatedNumber
+                              amount={vault.position.apy.net}
+                              className='xl'
+                              suffix='%'
+                            />
+                          </span>
+                        }
+                        tooltip={
+                          <Apy
+                            apyData={{
+                              borrow: vault.position.apy.borrow,
+                              total: vault.position.apy.total,
+                            }}
+                            leverage={vault.position.currentLeverage}
                           />
-                        </span>
-                      }
-                      tooltip={
-                        <Apy
-                          apyData={{
-                            borrow: vault.position.apy.borrow,
-                            total: vault.position.apy.total,
-                          }}
-                          leverage={vault.position.currentLeverage}
-                        />
-                      }
-                    />
+                        }
+                      />
+                    ) : (
+                      <Loading style={{ display: 'inline-block' }} />
+                    )}
                   </span>
                 </div>
                 <div className='s'>

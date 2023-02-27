@@ -7,6 +7,7 @@ import {
   BorrowCapacity,
   Button,
   DisplayCurrency,
+  Loading,
   SVG,
   TextTooltip,
   TokenBalance,
@@ -237,30 +238,34 @@ export const useActiveVaultsColumns = () => {
                 </>
               )
             case 'active':
-              const apy = new BigNumber(row.original.position.apy.net).toNumber()
+              if (row.original.position.apy?.net !== null) {
+                const apy = new BigNumber(row.original.position.apy.net).toNumber()
 
-              const apyData = {
-                total: row.original.apy || 0,
-                borrow: row.original.position.apy.borrow,
+                const apyData = {
+                  total: row.original.apy || 0,
+                  borrow: row.original.position.apy.borrow,
+                }
+                return (
+                  <>
+                    <TextTooltip
+                      hideStyling
+                      text={
+                        <>
+                          <AnimatedNumber amount={apy} className='m' suffix='%' />
+                          <p className='s faded'>
+                            {convertApyToDailyApy(row.original.position.apy.net)}%/{t('common.day')}
+                          </p>
+                        </>
+                      }
+                      tooltip={
+                        <Apy apyData={apyData} leverage={row.original.position.currentLeverage} />
+                      }
+                    />
+                  </>
+                )
+              } else {
+                return <Loading />
               }
-              return (
-                <>
-                  <TextTooltip
-                    hideStyling
-                    text={
-                      <>
-                        <AnimatedNumber amount={apy} className='m' suffix='%' />
-                        <p className='s faded'>
-                          {convertApyToDailyApy(row.original.position.apy.net)}%/{t('common.day')}
-                        </p>
-                      </>
-                    }
-                    tooltip={
-                      <Apy apyData={apyData} leverage={row.original.position.currentLeverage} />
-                    }
-                  />
-                </>
-              )
             case 'unlocking':
               return (
                 <>

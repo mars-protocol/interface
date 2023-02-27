@@ -1,5 +1,7 @@
+import { WalletID } from '@marsprotocol/wallet-connector'
 import { SVG } from 'components/common'
 import { FIELDS_FEATURE } from 'constants/appConstants'
+import { getCouncilLink } from 'libs/council'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
 import { DocURL } from 'types/enums/docURL'
@@ -8,7 +10,8 @@ import styles from './Footer.module.scss'
 
 export const Footer = () => {
   const { t } = useTranslation()
-  const networkConfig = useStore((s) => s.networkConfig)
+
+  const client = useStore((s) => s.client)
 
   return (
     <footer className={styles.footer}>
@@ -38,7 +41,7 @@ export const Footer = () => {
             )}
             <a
               className={styles.item}
-              href={networkConfig?.councilUrl}
+              href={getCouncilLink(client?.recentWallet.providerId as WalletID)}
               rel='noopener noreferrer'
               target='_blank'
               title={t('global.council')}

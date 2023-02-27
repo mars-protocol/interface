@@ -19,6 +19,29 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
   isLoading: false,
   availableVaults: [],
   activeVaults: [],
+  addAprToVaults: (aprs: AprData[]) => {
+    const updatedAvailableVaults = get().availableVaults.map((availableVault) => {
+      const apr =
+        (aprs?.find((apr) => apr.contractAddress === availableVault.address)?.apr || 0) * 100
+      availableVault.apy = convertAprToApy(apr, 365)
+      return availableVault
+    })
+
+    const updatedActiveVaults = get().activeVaults.map((activeVault) => {
+      const apr = (aprs?.find((apr) => apr.contractAddress === activeVault.address)?.apr || 0) * 100
+      const apy = convertAprToApy(apr, 365)
+      activeVault.apy = apy
+      activeVault.position.apy.total = apy
+      activeVault.position.apy.net =
+        apy * activeVault.position.currentLeverage - activeVault.position.apy.borrow
+      return activeVault
+    })
+
+    set({
+      availableVaults: updatedAvailableVaults,
+      activeVaults: updatedActiveVaults,
+    })
+  },
   getCreditAccounts: async (options?: Options) => {
     const creditAccounts = get().creditAccounts
     if (creditAccounts && !options?.refetch) return creditAccounts
@@ -123,7 +146,10 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
   },
   getAprs: async (options?: Options) => {
     const aprs = get().aprs
-    if (aprs && !options?.refetch) return aprs
+    if (aprs && !options?.refetch) {
+      get().addAprToVaults(aprs)
+      return null
+    }
 
     const networkConfig = get().networkConfig
     if (!networkConfig) return null
@@ -134,17 +160,19 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
       const data: AprResponse[] = await response.json()
 
       const newAprs = data.map((aprData) => {
-        const aprTotal = aprData.aprs.reduce((prev, curr) => (curr.value += prev), 0)
-        const feeTotal = aprData.fees.reduce((prev, curr) => (curr.value += prev), 0)
+        const aprTotal = aprData.apr.reduce((prev, curr) => Number(curr.value) + prev, 0)
+        const feeTotal = aprData.fees.reduce((prev, curr) => Number(curr.value) + prev, 0)
 
-        const finalApr = aprTotal - feeTotal
+        const finalApr = aprTotal + feeTotal
 
         return { contractAddress: aprData.contract_address, apr: finalApr }
       })
 
-      set({ aprs: newAprs })
+      set({
+        aprs: newAprs,
+      })
 
-      return newAprs
+      get().addAprToVaults(newAprs)
     }
 
     return null
@@ -229,11 +257,10 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
     set({ isLoading: true })
     const vaultAssets = get().getVaultAssets(options)
     const unlockTimes = get().getUnlockTimes(options)
-    const aprs = get().getAprs(options)
     const caps = get().getCaps(options)
 
-    return Promise.all([vaultAssets, unlockTimes, aprs, caps]).then(
-      ([vaultAssets, unlockTimes, aprs, caps]) => {
+    return Promise.all([vaultAssets, unlockTimes, caps]).then(
+      ([vaultAssets, unlockTimes, caps]) => {
         const { activeVaults, availableVaults } = get().vaultConfigs.reduce(
           (prev, curr) => {
             const lpTokens = get().lpTokens
@@ -243,29 +270,7 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
               (position) => position.vaults[0].vault.address === curr.address,
             )
 
-            const apr = (aprs?.find((apr) => apr.contractAddress === curr.address)?.apr || 0) * 100
-
-            const fakeAprVaults = [
-              {
-                address: 'osmo1eht92w5dr0vx8dzl6dn9770yq0ycln50zfhzvz8uc6928mp8vvgqwcram9',
-                apy: 13.69,
-              },
-              {
-                address: 'osmo1g5hryv0gp9dzlchkp3yxk8fmcf5asjun6cxkvyffetqzkwmvy75qfmeq3f',
-                apy: 8.32,
-              },
-              {
-                address: 'osmo1rclt7lsfp0c89ydf9umuhwlg28maw6z87jak3ly7u2lefnyzdz2s8gsepe',
-                apy: 17.22,
-              },
-            ]
-
-            const fakeVault = fakeAprVaults.find((vault) => vault.address === curr.address)
-            if (fakeVault) {
-              curr.apy = fakeVault.apy
-            } else {
-              curr.apy = convertAprToApy(apr, 365)
-            }
+            curr.apy = null
 
             curr.vaultCap = caps?.find((cap) => cap.address === curr.address)?.vaultCap
 
@@ -356,7 +361,6 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
               redBankAssets.find((asset) => asset.denom === curr.denoms.secondary)?.borrowRate || 0
 
             const trueBorrowRate = (borrowRate / 2) * (leverage - 1)
-            const apy = curr.apy * leverage - trueBorrowRate
 
             const getPositionStatus = (unlockTime?: number) => {
               if (!unlockTime) return 'active'
@@ -391,9 +395,9 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
               },
               values,
               apy: {
-                total: curr.apy,
+                total: null,
                 borrow: trueBorrowRate,
-                net: apy,
+                net: null,
               },
               currentLeverage: leverage,
               ltv: leverageToLtv(leverage),
@@ -412,6 +416,7 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
         )
 
         set({ activeVaults, availableVaults, isLoading: false })
+        get().getAprs(options)
       },
     )
   },

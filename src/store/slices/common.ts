@@ -9,8 +9,8 @@ import {
 import BigNumber from 'bignumber.js'
 import { BlockHeightData } from 'hooks/queries/useBlockHeight'
 import { DepositAndDebtData } from 'hooks/queries/useDepositAndDebt'
-import { SafetyFundBalanceData } from 'hooks/queries/useSafetyFundBalance'
 import { UserBalanceData } from 'hooks/queries/useUserBalance'
+import { serializeUrl } from 'libs/parse'
 import isEqual from 'lodash.isequal'
 import { isMobile } from 'react-device-detect'
 import { CommonSlice } from 'store/interfaces/common.interface'
@@ -110,6 +110,11 @@ const commonSlice = (
   loadNetworkConfig: async () => {
     try {
       const config = await import(`../../configs/${get().currentNetwork}.ts`)
+
+      config.NETWORK_CONFIG.hiveUrl = serializeUrl(config.NETWORK_CONFIG.hiveUrl)
+      config.NETWORK_CONFIG.rpcUrl = serializeUrl(config.NETWORK_CONFIG.rpcUrl)
+      config.NETWORK_CONFIG.restUrl = serializeUrl(config.NETWORK_CONFIG.restUrl)
+
       set({
         otherAssets: config.NETWORK_CONFIG.assets.other,
         whitelistedAssets: config.NETWORK_CONFIG.assets.whitelist,
@@ -144,7 +149,11 @@ const commonSlice = (
       lcdClient: new LcdClient(rpc),
     })
   },
-  setChainInfo: (chainInfo: SimplifiedChainInfo) => set({ chainInfo }),
+  setChainInfo: (chainInfo: SimplifiedChainInfo) => {
+    if (chainInfo?.rpc) chainInfo.rpc = serializeUrl(chainInfo.rpc)
+    if (chainInfo?.rest) chainInfo.rest = serializeUrl(chainInfo.rest)
+    set({ chainInfo })
+  },
   setCurrentNetwork: (network: Network) => set({ currentNetwork: network }),
   setNetworkError: (isError: boolean) => {
     const errors = get().errors
@@ -209,14 +218,6 @@ const commonSlice = (
     }))
 
     set({ marketDeposits: depositCoins, marketDebts: debtCoins })
-  },
-  processSafetyFundQuery: (data: SafetyFundBalanceData) => {
-    if (isEqual(data, get().previousSafetyFundBalanceQueryData)) return
-
-    set({
-      previousSafetyFundBalanceQueryData: data,
-      safetyFundBalance: data.balance.balance[0],
-    })
   },
   processUserBalanceQuery: (data: UserBalanceData) => {
     if (isEqual(data, get().previousUserBalanceQueryData)) return

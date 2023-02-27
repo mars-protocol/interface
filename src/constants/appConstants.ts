@@ -18,7 +18,7 @@ export const GAS_ADJUSTMENT = 1.3
 export const GAS_PRICE = '0.025uosmo'
 
 /* feature flags */
-export const FIELDS_FEATURE = false
+export const FIELDS_FEATURE = true
 export const PROPOSAL_ACTION_BUTTONS_FEATURE = false
 
 /* fields query keys */

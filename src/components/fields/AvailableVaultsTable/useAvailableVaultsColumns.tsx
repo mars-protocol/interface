@@ -6,6 +6,7 @@ import {
   Apy,
   Button,
   DisplayCurrency,
+  Loading,
   SVG,
   TextTooltip,
   TokenBalance,
@@ -82,8 +83,8 @@ export const useAvailableVaultsColumns = () => {
           <TextTooltip text={t('common.apy')} tooltip={t('fields.tooltips.apy.available')} />
         ),
         cell: ({ row }) => {
-          if (!row.original.apy) {
-            return null
+          if (row.original.apy === null) {
+            return <Loading />
           }
 
           const maxLeverage = ltvToLeverage(row.original.ltv.max)
@@ -144,7 +145,19 @@ export const useAvailableVaultsColumns = () => {
         ),
         cell: ({ row }) => {
           if (!row.original.vaultCap) {
-            return null
+            return (
+              <>
+                <DisplayCurrency
+                  coin={{
+                    denom: 'uosmo',
+                    amount: '0',
+                  }}
+                />
+                <p className='s faded'>
+                  {0}% {t('common.used')}
+                </p>
+              </>
+            )
           }
 
           const percent = convertPercentage(
@@ -217,7 +230,7 @@ export const useAvailableVaultsColumns = () => {
     ],
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [baseCurrency.denom, router, t],
+    [redBankAssets, baseCurrency.denom, router, t],
   )
 
   return {

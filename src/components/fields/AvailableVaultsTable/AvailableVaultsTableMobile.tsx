@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import { AnimatedNumber, Apy, Card, DisplayCurrency, TextTooltip } from 'components/common'
+import { AnimatedNumber, Apy, Card, DisplayCurrency, Loading, TextTooltip } from 'components/common'
 import { VaultLogo, VaultName } from 'components/fields'
 import { getTimeAndUnit, ltvToLeverage } from 'libs/parse'
 import Link from 'next/link'
@@ -12,7 +12,6 @@ import styles from './AvailableVaultsTableMobile.module.scss'
 export const AvailableVaultsTableMobile = () => {
   const { t } = useTranslation()
   const availableVaults = useStore((s) => s.availableVaults)
-  const baseCurrency = useStore((s) => s.baseCurrency)
   const redBankAssets = useStore((s) => s.redBankAssets)
 
   if (!availableVaults?.length) return null
@@ -50,20 +49,24 @@ export const AvailableVaultsTableMobile = () => {
                 <div className={styles.stats}>
                   <div onClick={(e) => e.preventDefault()} className='xl'>
                     <span className='faded'>{t('common.apy')} </span>
-                    <span>
-                      <TextTooltip
-                        hideStyling
-                        text={<AnimatedNumber amount={minAPY} suffix='-' />}
-                        tooltip={<Apy apyData={apyDataNoLev} leverage={1} />}
-                      />
-                      <TextTooltip
-                        hideStyling
-                        text={<AnimatedNumber amount={maxAPY} suffix='%' />}
-                        tooltip={
-                          <Apy apyData={apyDataLev} leverage={ltvToLeverage(vault.ltv.max)} />
-                        }
-                      />
-                    </span>
+                    {vault.apy !== null ? (
+                      <span>
+                        <TextTooltip
+                          hideStyling
+                          text={<AnimatedNumber amount={minAPY} suffix='-' />}
+                          tooltip={<Apy apyData={apyDataNoLev} leverage={1} />}
+                        />
+                        <TextTooltip
+                          hideStyling
+                          text={<AnimatedNumber amount={maxAPY} suffix='%' />}
+                          tooltip={
+                            <Apy apyData={apyDataLev} leverage={ltvToLeverage(vault.ltv.max)} />
+                          }
+                        />
+                      </span>
+                    ) : (
+                      <Loading style={{ display: 'inline-block' }} />
+                    )}
                   </div>
                   <div className='s'>
                     <span className='faded'>{t('fields.leverage')} </span>

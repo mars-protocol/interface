@@ -9,7 +9,6 @@ export enum QUERY_KEYS {
   USER_DEPOSIT = 'userDeposits',
   USER_ICNS = 'userIcns',
   ATOM_PRICE = 'atomPrice',
-  SAFETY_FUND_BALANCE = 'safetyFundBalance',
   MARKET_DEPOSITS = 'marketDeposits',
   USE_LP_TOKEN = 'useLpToken',
   ESTIMATE_FEE = 'estimateFee',

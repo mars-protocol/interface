@@ -1,6 +1,8 @@
+import { WalletID } from '@marsprotocol/wallet-connector'
 import classNames from 'classnames'
 import { IncentivesButton, Settings, SVG } from 'components/common'
 import { FIELDS_FEATURE } from 'constants/appConstants'
+import { getCouncilLink } from 'libs/council'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
@@ -12,7 +14,7 @@ import styles from './Header.module.scss'
 export const Header = () => {
   const { t } = useTranslation()
   const router = useRouter()
-  const networkConfig = useStore((s) => s.networkConfig)
+  const client = useStore((s) => s.client)
 
   return (
     <header className={styles.header}>
@@ -44,7 +46,12 @@ export const Header = () => {
             {t('global.fields')}
           </Link>
         )}
-        <a className={styles.nav} href={networkConfig?.councilUrl} target='_blank' rel='noreferrer'>
+        <a
+          className={styles.nav}
+          href={getCouncilLink(client?.recentWallet.providerId as WalletID)}
+          target='_blank'
+          rel='noreferrer'
+        >
           {t('global.council')}
         </a>
       </div>

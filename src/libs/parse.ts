@@ -314,3 +314,6 @@ export const ltvToLeverage = (ltv: number) => {
 
 export const leverageToLtv = (leverage: number) =>
   new BigNumber(1).div(leverage).minus(1).times(-1).toNumber()
+
+export const serializeUrl = (url?: string) =>
+  url ? (url.slice(-1) === '/' ? url : `${url}/`) : '/'

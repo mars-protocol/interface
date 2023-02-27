@@ -1,5 +1,13 @@
 FROM node:19-alpine as builder
 WORKDIR /app
+
+# This overrides the parameters during the build time.
+# You have to do this as passing env variables alone (or via .env file) is not enough.
+ARG NEXT_PUBLIC_RPC=https://rpc-osmosis.blockapsis.com
+ARG NEXT_PUBLIC_REST=https://lcd-osmosis.blockapsis.com
+ARG NEXT_PUBLIC_NETWORK=mainnet
+ARG NEXT_PUBLIC_GQL=https://rpc-osmosis.blockapsis.com
+
 COPY package.json yarn.lock ./
 RUN yarn install
 COPY . .

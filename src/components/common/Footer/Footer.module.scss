@@ -1,7 +1,7 @@
 @import 'src/styles/master';
 
 .footer {
-  @include padding(8, 0, 24);
+  @include padding(8, 0, 20);
   background-color: $backgroundFooter;
   display: grid;
   place-content: center;
@@ -88,11 +88,18 @@
       }
     }
   }
+
+  .version {
+    @include padding(0, 0, 4);
+    p {
+      text-align: right;
+    }
+  }
 }
 
 @media only screen and (min-width: $bpMediumLow) {
   .footer {
-    @include padding(8, 0);
+    @include padding(8, 0, 0);
     left: space(-4);
     width: calc(100% + (8 * #{$spacingBase}px));
 

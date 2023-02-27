@@ -154,28 +154,32 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
     const networkConfig = get().networkConfig
     if (!networkConfig) return null
 
-    const response = await fetch(networkConfig!.apolloAprUrl)
+    try {
+      const response = await fetch(networkConfig!.apolloAprUrl)
 
-    if (response.ok) {
-      const data: AprResponse[] = await response.json()
+      if (response.ok) {
+        const data: AprResponse[] = await response.json()
 
-      const newAprs = data.map((aprData) => {
-        const aprTotal = aprData.apr.reduce((prev, curr) => Number(curr.value) + prev, 0)
-        const feeTotal = aprData.fees.reduce((prev, curr) => Number(curr.value) + prev, 0)
+        const newAprs = data.map((aprData) => {
+          const aprTotal = aprData.apr.reduce((prev, curr) => Number(curr.value) + prev, 0)
+          const feeTotal = aprData.fees.reduce((prev, curr) => Number(curr.value) + prev, 0)
 
-        const finalApr = aprTotal + feeTotal
+          const finalApr = aprTotal + feeTotal
 
-        return { contractAddress: aprData.contract_address, apr: finalApr }
-      })
+          return { contractAddress: aprData.contract_address, apr: finalApr }
+        })
 
-      set({
-        aprs: newAprs,
-      })
+        set({
+          aprs: newAprs,
+        })
 
-      get().addAprToVaults(newAprs)
+        get().addAprToVaults(newAprs)
+      }
+
+      return null
+    } catch {
+      return null
     }
-
-    return null
   },
   getCaps: async (options?: Options) => {
     const caps = get().caps
@@ -360,7 +364,7 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
             const borrowRate =
               redBankAssets.find((asset) => asset.denom === curr.denoms.secondary)?.borrowRate || 0
 
-            const trueBorrowRate = (borrowRate / 2) * (leverage - 1)
+            const trueBorrowRate = (leverage - 1) * borrowRate
 
             const getPositionStatus = (unlockTime?: number) => {
               if (!unlockTime) return 'active'

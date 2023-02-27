@@ -91,7 +91,9 @@ export const useAvailableVaultsColumns = () => {
           const borrowAsset = redBankAssets.find(
             (asset) => asset.denom === row.original.denoms.secondary,
           )
-          const maxBorrowRate = Number(borrowAsset?.borrowRate ?? 0) * row.original.ltv.max
+          const maxBorrowRate =
+            Number(borrowAsset?.borrowRate ?? 0) * (ltvToLeverage(row.original.ltv.max) - 1)
+
           const minAPY = new BigNumber(row.original.apy).toNumber()
 
           const maxAPY = new BigNumber(minAPY).times(maxLeverage).toNumber() - maxBorrowRate

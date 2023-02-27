@@ -1,24 +1,18 @@
 @import 'src/styles/master';
+.primary,
+.secondary {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
 
 .primary {
-  position: absolute;
+  margin-top: space(-1);
   left: 20%;
   z-index: 1;
 }
 
 .secondary {
-  position: absolute;
+  margin-top: space(1);
   right: 20%;
-  top: 20%;
-}
-
-@media only screen and (min-width: $bpMediumLow) {
-  .primary {
-    top: 20%;
-  }
-
-  .secondary {
-    top: unset;
-    bottom: 20%;
-  }
 }

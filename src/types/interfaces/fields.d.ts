@@ -100,10 +100,18 @@ interface AprData {
   apr: number
 }
 
-interface AprResponse {
+interface FlatApr {
   contract_address: string
   apr: { type: string; value: number | string }[]
   fees: { type: string; value: number | string }[]
+}
+
+interface NestedApr {
+  contract_address: string
+  apr: {
+    aprs: { type: string; value: number | string }[]
+    fees: { type: string; value: number | string }[]
+  }
 }
 
 interface VaultCapData {

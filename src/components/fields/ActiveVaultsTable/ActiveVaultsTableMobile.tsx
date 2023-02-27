@@ -10,6 +10,7 @@ import {
 import { Loading } from 'components/common'
 import { VaultLogo, VaultName } from 'components/fields'
 import { FIELDS_TUTORIAL_KEY } from 'constants/appConstants'
+import { getLiqBorrowValue, getMaxBorrowValue } from 'functions/fields'
 import Link from 'next/link'
 import { Trans, useTranslation } from 'react-i18next'
 import useStore from 'store'
@@ -56,6 +57,8 @@ export const ActiveVaultsTableMobile = () => {
     >
       <div className={styles.container}>
         {activeVaults.map((vault, i) => {
+          const maxBorrowValue = getMaxBorrowValue(vault, vault.position)
+
           const content = (
             <div key={`${vault.address}-${i}`} className={styles.grid}>
               <div className={styles.logo}>
@@ -133,9 +136,9 @@ export const ActiveVaultsTableMobile = () => {
               <div className={styles.borrowCapacity}>
                 <BorrowCapacity
                   showPercentageText={true}
-                  max={10}
-                  limit={8}
-                  balance={7}
+                  max={getLiqBorrowValue(vault, maxBorrowValue)}
+                  limit={maxBorrowValue}
+                  balance={vault.position.values.borrowed}
                   showTitle={false}
                   barHeight={'16px'}
                   hideValues

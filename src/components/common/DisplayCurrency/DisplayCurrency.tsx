@@ -39,7 +39,7 @@ export const DisplayCurrency = ({
           maxDecimals={displayCurrency.decimals}
         />
       </span>
-      {displayCurrency.suffix && <span className={valueClass}>{displayCurrency.suffix}</span>}
+      {displayCurrency.suffix && <span className={valueClass}>{' ' + displayCurrency.suffix}</span>}
     </div>
   )
 }

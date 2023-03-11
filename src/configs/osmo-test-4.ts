@@ -84,8 +84,8 @@ export const NETWORK_CONFIG: NetworkConfig = {
   },
   displayCurrency: {
     denom: 'ibc/88D70440A05BFB25C7FF0BA62DA357EAA993CB1B036077CF1DAAEFB28721D935',
-    prefix: '$',
-    suffix: '',
+    prefix: '',
+    suffix: 'axlUSDC',
     decimals: 2,
   },
   appUrl: 'https://testnet.osmosis.zone',

@@ -182,7 +182,6 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
         set({
           aprs: newAprs,
         })
-
         get().addAprToVaults(newAprs)
       }
 

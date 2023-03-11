@@ -29,6 +29,7 @@
     position: relative;
     display: flex;
     align-items: center;
+    gap: space(1);
     height: 100%;
     padding-inline-start: rem-calc(8);
   }

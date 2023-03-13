@@ -18,10 +18,19 @@
   &.axlUSDC {
     background-image: $colorGradientAxlUSDC;
   }
+
+  &.stATOM {
+    background-image: $colorGradientStATOM;
+  }
 }
 
 .logo {
   display: grid;
   margin: auto;
   width: rem-calc(32);
+}
+
+.notBorrowable {
+  width: 100%;
+  display: block;
 }

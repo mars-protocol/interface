@@ -123,7 +123,10 @@ export const ActiveVaultsTableMobile = () => {
                   <DisplayCurrency
                     coin={{
                       denom: baseCurrency.denom,
-                      amount: vault.position.values.borrowed.toString(),
+                      amount: (vault.position.borrowDenom === vault.denoms.primary
+                        ? vault.position.amounts.borrowedPrimary
+                        : vault.position.amounts.borrowedSecondary
+                      ).toString(),
                     }}
                     className={styles.inline}
                   />
@@ -136,9 +139,13 @@ export const ActiveVaultsTableMobile = () => {
               <div className={styles.borrowCapacity}>
                 <BorrowCapacity
                   showPercentageText={true}
-                  max={getLiqBorrowValue(vault, maxBorrowValue)}
+                  max={getLiqBorrowValue(vault, vault.position.values.net)}
                   limit={maxBorrowValue}
-                  balance={vault.position.values.borrowed}
+                  balance={
+                    vault.position.borrowDenom === vault.denoms.primary
+                      ? vault.position.values.borrowedPrimary
+                      : vault.position.values.borrowedSecondary
+                  }
                   showTitle={false}
                   barHeight={'16px'}
                   hideValues

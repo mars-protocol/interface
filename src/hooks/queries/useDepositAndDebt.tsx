@@ -15,6 +15,8 @@ export interface DepositAndDebtData {
     JUNODebt: string
     axlUSDCDeposits: string
     axlUSDCDebt: string
+    stATOMDeposits: string
+    stATOMDebt: string
   }
 }
 

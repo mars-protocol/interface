@@ -54,6 +54,6 @@
 @media only screen and (min-width: $bpMediumHigh) {
   .grid {
     grid-template-areas: 'supply leverage borrow';
-    grid-template-columns: auto 2fr 1fr;
+    grid-auto-columns: auto;
   }
 }

@@ -5,6 +5,7 @@
   flex-direction: column;
   gap: space(2);
   flex: 1;
+  min-width: rem-calc(160);
 
   .input {
     display: flex;

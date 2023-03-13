@@ -7,7 +7,7 @@ import {
   WalletConnectionStatus,
 } from '@marsprotocol/wallet-connector'
 import { useQueryClient } from '@tanstack/react-query'
-import { MARS_SYMBOL, USDC_SYMBOL } from 'constants/appConstants'
+import { MARS_SYMBOL } from 'constants/appConstants'
 import { IS_TESTNET } from 'constants/env'
 import {
   useBlockHeight,
@@ -155,7 +155,6 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
   useUserDebt()
   useMarsOracle()
   useSpotPrice(MARS_SYMBOL)
-  useSpotPrice(USDC_SYMBOL)
   useDepositAndDebt()
   useRedBank()
 

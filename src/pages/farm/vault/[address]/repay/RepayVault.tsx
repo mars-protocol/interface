@@ -56,6 +56,11 @@ const RepayVault = (props: Props) => {
 
   const disableConfirmBtn = !repayFee || isSameAmounts
 
+  const borrowKey =
+    props.activeVault.position.borrowDenom === props.activeVault.denoms.primary
+      ? 'borrowedPrimary'
+      : 'borrowedSecondary'
+
   return (
     <>
       <Notification
@@ -102,7 +107,7 @@ const RepayVault = (props: Props) => {
                 type={'repay'}
                 position={repayPosition}
                 prevPosition={prevPosition}
-                repayAmount={prevPosition.amounts.borrowed - repayPosition.amounts.borrowed}
+                repayAmount={prevPosition.amounts[borrowKey] - repayPosition.amounts[borrowKey]}
                 vault={props.activeVault}
                 className={styles.tooltip}
               />

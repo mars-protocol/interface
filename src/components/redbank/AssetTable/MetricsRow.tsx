@@ -86,14 +86,16 @@ export const MetricsRow = ({ row, type }: Props) => {
               valueClass='s'
               labelClass='xs faded'
             />
-            <ValueWithLabel
-              percent={utilizationRatePercent}
-              label={t('redbank.utilizationRate')}
-              orientation='left'
-              prefixClass='xxs faded prefix'
-              valueClass='s'
-              labelClass='xs faded'
-            />
+            {row.original.borrowEnabled && (
+              <ValueWithLabel
+                percent={utilizationRatePercent}
+                label={t('redbank.utilizationRate')}
+                orientation='left'
+                prefixClass='xxs faded prefix'
+                valueClass='s'
+                labelClass='xs faded'
+              />
+            )}
           </div>
         </div>
       </td>

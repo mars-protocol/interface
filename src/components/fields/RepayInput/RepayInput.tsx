@@ -19,18 +19,28 @@ interface Props {
 export const RepayInput = (props: Props) => {
   const { t } = useTranslation()
   const convertToBaseCurrency = useStore((s) => s.convertToBaseCurrency)
-  const debtAmount = props.prevPosition.amounts.borrowed
+  const borrowKey =
+    props.position.borrowDenom === props.vault.denoms.primary
+      ? 'borrowedPrimary'
+      : 'borrowedSecondary'
+  const supplyKey = borrowKey === 'borrowedPrimary' ? 'primary' : 'secondary'
+  const debtAmount = props.prevPosition.amounts[borrowKey]
   const userBalances = useStore((s) => s.userBalances)
+
+  const borrowSymbol =
+    props.position.borrowDenom === props.vault.denoms.primary
+      ? props.vault.symbols.primary
+      : props.vault.symbols.secondary
 
   const walletBalance = Number(
     (findByDenom(userBalances, props.vault.denoms.secondary) as Coin)?.amount || 0,
   )
 
   const maxRepayAmount = Math.min(walletBalance, debtAmount)
-  const amount = props.prevPosition.amounts.borrowed - props.position.amounts.borrowed
+  const amount = props.prevPosition.amounts[borrowKey] - props.position.amounts[borrowKey]
   const maxValue = Math.max(
     getLeverageFromValues(props.prevPosition.values),
-    ltvToLeverage(props.vault.ltv.max),
+    ltvToLeverage(props.vault.ltv.contract),
   )
 
   const updateValues = (position: Position) => {
@@ -42,21 +52,29 @@ export const RepayInput = (props: Props) => {
       denom: props.vault.denoms.secondary,
       amount: position.amounts.secondary.toString(),
     })
-    const borrowValue = convertToBaseCurrency({
-      denom: props.vault.denoms.secondary,
-      amount: position.amounts.borrowed.toString(),
+    const borrowedPrimaryValue = convertToBaseCurrency({
+      denom: props.vault.denoms.primary,
+      amount: position.amounts.borrowedPrimary.toString(),
     })
+    const borrowedSecondaryValue = convertToBaseCurrency({
+      denom: props.vault.denoms.secondary,
+      amount: position.amounts.borrowedSecondary.toString(),
+    })
+    position.values.primary = primaryValue
     position.values.secondary = secondaryValue
-    position.values.borrowed = borrowValue
-    position.values.total = borrowValue + primaryValue + secondaryValue
+    position.values.borrowedPrimary = borrowedPrimaryValue
+    position.values.borrowedSecondary = borrowedSecondaryValue
+    position.values.total =
+      borrowedPrimaryValue + borrowedSecondaryValue + primaryValue + secondaryValue
     position.values.net = primaryValue + secondaryValue
     position.currentLeverage = getLeverageFromValues(position.values)
+
     return position
   }
 
   const handleChange = (amount: number) => {
-    props.position.amounts.borrowed = props.prevPosition.amounts.borrowed - amount
-    props.position.amounts.secondary = props.prevPosition.amounts.secondary + amount
+    props.position.amounts[borrowKey] = props.prevPosition.amounts[borrowKey] - amount
+    props.position.amounts[supplyKey] = props.prevPosition.amounts[supplyKey] + amount
     props.setPosition({ ...updateValues(props.position) })
   }
 
@@ -66,21 +84,22 @@ export const RepayInput = (props: Props) => {
         <p className={styles.headline}>{t('fields.repayDebt')}</p>
         <TokenInput
           amount={amount}
-          tokens={[props.vault.symbols.secondary]}
+          tokens={[borrowSymbol]}
           input={{
-            denom: props.vault.denoms.secondary,
-            symbol: props.vault.symbols.secondary,
+            denom: props.position.borrowDenom || props.vault.denoms.secondary,
+            symbol: borrowSymbol,
             visible: true,
           }}
           maxAmount={maxRepayAmount}
           maxAmountLabel={t('global.max')}
           onChange={handleChange}
+          disableGasWarning
         />
       </div>
       <RepayLeverage
         value={props.position.currentLeverage}
         maxValue={maxValue}
-        leverageMax={ltvToLeverage(props.vault.ltv.max)}
+        leverageMax={ltvToLeverage(props.vault.ltv.contract)}
       />
       <div>
         <strong className='m'>{t('fields.repayingDebtFromWallet')}</strong>

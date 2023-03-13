@@ -18,6 +18,10 @@
   outline: none;
   background: $alphaBlack10;
 
+  .marsAmount {
+    margin: 0 space(1);
+  }
+
   svg {
     margin-top: space(-0.5);
     height: rem-calc(19);

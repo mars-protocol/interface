@@ -29,6 +29,10 @@
     width: 100%;
     border-collapse: collapse;
 
+    td {
+      min-width: space(12);
+    }
+
     tr {
       td:nth-child(2) {
         width: 20px;

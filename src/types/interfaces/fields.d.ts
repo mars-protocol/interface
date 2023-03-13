@@ -38,7 +38,8 @@ interface Position {
   amounts: {
     primary: number
     secondary: number
-    borrowed: number
+    borrowedPrimary: number
+    borrowedSecondary: number
     lp: {
       amount: string // Need to be string as number can be extremely large
       primary: number
@@ -49,7 +50,8 @@ interface Position {
   values: {
     primary: number
     secondary: number
-    borrowed: number
+    borrowedPrimary: number
+    borrowedSecondary: number
     total: number
     net: number
   }
@@ -61,6 +63,7 @@ interface Position {
   ltv: number
   currentLeverage: number
   unlockAtTimestamp?: number
+  borrowDenom: string | null
 }
 
 interface PositionBarItem {

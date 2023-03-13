@@ -1,5 +1,5 @@
 interface RedBankData {
-  balance: {
+  balance?: {
     balance: import('@cosmjs/stargate').Coin[]
   }
   rbwasmkey: {
@@ -11,6 +11,8 @@ interface RedBankData {
     JUNOMarketIncentive: MarketIncentive
     axlUSDCMarket: Market
     axlUSDCMarketIncentive: MarketIncentive
+    stATOMMarket: Market
+    stATOMMarketIncentive: MarketIncentive
     collateral: UserCollateral[]
     unclaimedRewards: string
   }
@@ -44,7 +46,9 @@ interface InterestRateModel {
 
 interface MarketIncentive {
   denom: string
-  emission_per_second: number
-  index: number
+  emission_per_second: string
+  index: string
   last_updated: number
+  start_time: number
+  duration: number
 }

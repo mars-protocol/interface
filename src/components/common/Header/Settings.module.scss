@@ -43,6 +43,17 @@
         flex: 0 0 100%;
         flex-wrap: wrap;
         display: flex;
+        flex-direction: column;
+
+        .select {
+          border-radius: $borderRadiusS;
+          border: rem-calc(1) solid $alphaBlack20;
+          @include padding(1, 2);
+          color: $colorSecondaryDark;
+          background-color: $fontColorLightPrimary;
+          outline: none;
+          width: 100%;
+        }
 
         .name {
           @include margin(1, 0);
@@ -62,12 +73,16 @@
           }
         }
 
+        &.reduceMotion {
+          flex-direction: row;
+        }
+
         .content {
           @include margin(1, 0);
           display: flex;
           flex-wrap: wrap;
           flex: 1;
-          justify-content: flex-end;
+          justify-content: space-between;
           gap: space(2);
 
           .button {

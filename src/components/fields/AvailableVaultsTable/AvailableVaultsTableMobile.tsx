@@ -24,11 +24,20 @@ export const AvailableVaultsTableMobile = () => {
     >
       <div className={styles.container}>
         {availableVaults.map((vault, i) => {
-          const borrowAsset = redBankAssets.find((asset) => asset.denom === vault.denoms.secondary)
-          const maxBorrowRate = Number(borrowAsset?.borrowRate ?? 0) * vault.ltv.max
+          const primaryBorrowAsset = redBankAssets.find(
+            (asset) => asset.denom === vault.denoms.primary,
+          )
+          const secondaryBorrowAsset = redBankAssets.find(
+            (asset) => asset.denom === vault.denoms.secondary,
+          )
+          const borrowRate = Math.min(
+            Number(primaryBorrowAsset?.borrowRate ?? 0),
+            Number(secondaryBorrowAsset?.borrowRate ?? 0),
+          )
+          const maxBorrowRate = borrowRate * (ltvToLeverage(vault.ltv.contract) - 1)
           const minAPY = new BigNumber(vault.apy || 0).toNumber()
 
-          const leverage = ltvToLeverage(vault.ltv.max)
+          const leverage = ltvToLeverage(vault.ltv.contract)
           const maxAPY =
             new BigNumber(minAPY).times(leverage).decimalPlaces(2).toNumber() - maxBorrowRate
           const apyDataNoLev = { total: vault.apy || 0, borrow: 0 }
@@ -60,7 +69,10 @@ export const AvailableVaultsTableMobile = () => {
                           hideStyling
                           text={<AnimatedNumber amount={maxAPY} suffix='%' />}
                           tooltip={
-                            <Apy apyData={apyDataLev} leverage={ltvToLeverage(vault.ltv.max)} />
+                            <Apy
+                              apyData={apyDataLev}
+                              leverage={ltvToLeverage(vault.ltv.contract)}
+                            />
                           }
                         />
                       </span>

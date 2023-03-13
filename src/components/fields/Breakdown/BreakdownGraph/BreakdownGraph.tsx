@@ -18,7 +18,11 @@ export const BreakdownGraph = (props: Props) => {
   const { t } = useTranslation()
   const convertToDisplayCurrency = useStore((s) => s.convertToDisplayCurrency)
   const baseCurrency = useStore((s) => s.baseCurrency)
-  const yAxisLimit = Math.max(props.position.values.net, props.position.values.borrowed)
+  const borrowKey =
+    props.position.borrowDenom === props.vault.denoms.primary
+      ? 'borrowedPrimary'
+      : 'borrowedSecondary'
+  const yAxisLimit = Math.max(props.position.values.net, props.position.values[borrowKey])
 
   const containerClasses = classNames([
     styles.container,
@@ -40,7 +44,7 @@ export const BreakdownGraph = (props: Props) => {
         denom: props.vault.denoms.primary,
       }),
       convertToDisplayCurrency({
-        amount: props.position.values.borrowed.toString(),
+        amount: props.position.values[borrowKey].toString(),
         denom: props.vault.denoms.primary,
       }),
     ],
@@ -123,7 +127,11 @@ export const BreakdownGraph = (props: Props) => {
         <div className={`${styles.bar3}`} style={{ height: `${getBarHeightPercentage(3)}%` }}>
           <AssetBar
             type='debt'
-            symbol={props.vault.symbols.secondary}
+            symbol={
+              borrowKey === 'borrowedPrimary'
+                ? props.vault.symbols.primary
+                : props.vault.symbols.secondary
+            }
             height={getBarHeightPercentage(3)}
             showLabel={hasSpaceForLabel('debt')}
           />

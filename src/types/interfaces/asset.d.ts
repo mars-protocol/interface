@@ -2,12 +2,12 @@ interface Asset {
   color: string
   name: string
   denom: string
-  symbol: 'OSMO' | 'ATOM' | 'JUNO' | 'axlUSDC'
+  symbol: 'OSMO' | 'ATOM' | 'JUNO' | 'axlUSDC' | 'stATOM'
   contract_addr?: string
   logo: string
   decimals: number
-  hasOraclePrice: boolean
   poolId?: number
+  poolBase?: string
 }
 
 interface OtherAsset extends Omit<Asset, 'symbol'> {
@@ -33,6 +33,8 @@ interface RedBankAsset extends Asset {
   incentiveInfo?: IncentiveInfo
   depositCap: number
   depositLiquidity: numnber
+  borrowEnabled: boolean
+  depositEnabled: boolean
   // This is a hack, subRows can only contain same data model
   subRows?: DepositAsset[]
 }

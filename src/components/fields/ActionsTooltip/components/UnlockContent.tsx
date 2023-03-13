@@ -15,14 +15,21 @@ export const UnlockContent = (props: Props) => {
     <>
       <li>{t('fields.removeLiquidity', { vault: props.vault.provider })}</li>
       <li>
-        <span className={styles.marginRight}>{t('redbank.repay')}</span>
-        <TokenBalance
-          coin={{
-            denom: props.vault.denoms.secondary,
-            amount: props.position.amounts.borrowed.toString(),
-          }}
-          showSymbol
-        />
+        {props.position.borrowDenom && (
+          <>
+            <span className={styles.marginRight}>{t('redbank.repay')}</span>
+            <TokenBalance
+              coin={{
+                denom: props.position.borrowDenom,
+                amount: Math.max(
+                  props.position.amounts.borrowedPrimary,
+                  props.position.amounts.borrowedSecondary,
+                ).toString(),
+              }}
+              showSymbol
+            />
+          </>
+        )}
       </li>
       <li>
         <span className={styles.marginRight}>{t('redbank.withdraw')}</span>

@@ -91,6 +91,12 @@ export const AssetTable = ({ data, columns, type, disabled = false }: Props) => 
       </thead>
       <tbody>
         {table.getRowModel().rows.map((row) => {
+          if (
+            (type === 'deposit' && !row.original.depositEnabled) ||
+            (type === 'borrow' && !row.original.borrowEnabled)
+          )
+            return null
+
           if (row.depth === 1) {
             return (
               <React.Fragment key={`${row.id}_subrow`}>

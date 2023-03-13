@@ -9,15 +9,16 @@ const poolsEndpoint = 'osmosis/gamm/v1beta1/pools/'
 
 export const useSpotPrice = (symbol: string) => {
   const networkConfig = useStore((s) => s.networkConfig)
+  const displayCurrency = networkConfig?.displayCurrency
   const lcd = useStore((s) => s.chainInfo?.rest)
   const exchangeRates = useStore((s) => s.exchangeRates)
-
   const asset = useAsset({ symbol })
-
-  const displayCurrency = networkConfig?.displayCurrency
+  const poolBase = asset?.poolBase
+    ? exchangeRates?.find((ratesAsset) => ratesAsset.denom === asset.poolBase)
+    : true
 
   useQuery<PoolResponse>(
-    [QUERY_KEYS.MARS_PRICE, asset?.poolId],
+    [QUERY_KEYS.SPOT_PRICE, asset?.poolId],
     async () => {
       return fetch(`${lcd}${poolsEndpoint}${asset?.poolId}`).then(async (response) => {
         const data = await response.json()
@@ -25,7 +26,7 @@ export const useSpotPrice = (symbol: string) => {
       })
     },
     {
-      enabled: !!lcd && !!asset && !!asset.poolId,
+      enabled: !!lcd && !!asset && !!asset.poolId && !!poolBase,
       staleTime: 30000,
       refetchInterval: 30000,
       onSuccess: (data) => {
@@ -44,11 +45,22 @@ export const useSpotPrice = (symbol: string) => {
           .div(targetAssetAmount)
           .multipliedBy(otherAssetWeight.div(targetAssetWeight))
 
-        if (displayCurrency.denom === asset.denom) {
+        const hasDisplayCurrency = exchangeRates?.find(
+          (ratesAsset) => ratesAsset.denom === displayCurrency.denom,
+        )
+
+        if (displayCurrency.denom === asset.denom && !hasDisplayCurrency) {
           useStore.setState({ baseToDisplayCurrencyRatio: 1 / rate.toNumber() })
         } else {
           const coin = { denom: asset.denom, amount: rate.toString() }
-          useStore.setState({ exchangeRates: updateExchangeRate(coin, exchangeRates || []) })
+
+          if (typeof poolBase === 'object') {
+            const baseRate = Number(rate.toString()) * Number(poolBase.amount)
+            coin.amount = baseRate.toString()
+            useStore.setState({ exchangeRates: updateExchangeRate(coin, exchangeRates || []) })
+          } else {
+            useStore.setState({ exchangeRates: updateExchangeRate(coin, exchangeRates || []) })
+          }
         }
       },
     },

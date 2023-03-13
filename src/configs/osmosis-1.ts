@@ -4,6 +4,7 @@ import atom from 'images/atom.svg'
 import axlusdc from 'images/axlusdc.svg'
 import mars from 'images/mars.svg'
 import osmo from 'images/osmo.svg'
+import statom from 'images/statom.svg'
 import colors from 'styles/_assets.module.scss'
 
 export const ASSETS: { [denom: string]: Asset } = {
@@ -13,17 +14,15 @@ export const ASSETS: { [denom: string]: Asset } = {
     denom: 'uosmo',
     color: colors.osmo,
     decimals: 6,
-    hasOraclePrice: true,
     logo: osmo,
   },
   axlusdc: {
     symbol: 'axlUSDC',
     name: 'Axelar USDC',
     denom: 'ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858',
-    color: colors.axlUSDC,
+    color: colors.axlusdc,
     logo: axlusdc,
     decimals: 6,
-    hasOraclePrice: true,
     poolId: 678,
   },
   atom: {
@@ -33,7 +32,16 @@ export const ASSETS: { [denom: string]: Asset } = {
     color: colors.atom,
     logo: atom,
     decimals: 6,
-    hasOraclePrice: true,
+  },
+  statom: {
+    symbol: 'stATOM',
+    name: 'Stride Atom',
+    denom: 'ibc/C140AFD542AE77BD7DCC83F13FDD8C5E5BB8C4929785E6EC2F4C636F98F17901',
+    color: colors.statom,
+    logo: statom,
+    decimals: 6,
+    poolId: 803,
+    poolBase: 'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2',
   },
 }
 
@@ -45,7 +53,6 @@ const OTHER_ASSETS: { [denom: string]: OtherAsset } = {
     color: colors.mars,
     logo: mars,
     decimals: 6,
-    hasOraclePrice: true,
     poolId: 907,
   },
 }
@@ -57,6 +64,7 @@ export const NETWORK_CONFIG: NetworkConfig = {
   rpcUrl: URL_RPC ?? 'https://rpc-osmosis.blockapsis.com/',
   restUrl: URL_REST ?? 'https://lcd-osmosis.blockapsis.com/',
   apolloAprUrl: 'https://api.apollo.farm/api/vault_infos/v2/osmosis-1',
+  priceApiUrl: 'https://api-osmosis.imperator.co/tokens/v2/OSMO',
   contracts: {
     redBank: 'osmo1c3ljch9dfw5kf52nfwpxd2zmj2ese7agnx0p9tenkrryasrle5sqf3ftpg',
     incentives: 'osmo1nkahswfr8shg8rlxqwup0vgahp0dk4x8w6tkv3rra8rratnut36sk22vrm',
@@ -66,7 +74,7 @@ export const NETWORK_CONFIG: NetworkConfig = {
   },
   assets: {
     base: ASSETS.osmo,
-    whitelist: [ASSETS.osmo, ASSETS.atom, ASSETS.axlusdc],
+    whitelist: [ASSETS.osmo, ASSETS.atom, ASSETS.axlusdc, ASSETS.statom],
     other: [OTHER_ASSETS.mars],
   },
   displayCurrency: {
@@ -129,7 +137,7 @@ export const VAULT_CONFIGS: Vault[] = [
     description:
       'Up to 2.78× leveraged yield farming with auto compounding of the OSMO-axlUSDC LP tokens.',
     ltv: {
-      max: 0.64,
+      max: 0.645,
       contract: 0.65,
       liq: 0.66,
     },

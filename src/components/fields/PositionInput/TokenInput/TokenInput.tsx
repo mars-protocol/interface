@@ -16,6 +16,7 @@ interface Props {
   maxAmount?: number
   maxAmountLabel: string
   borrowRate?: number
+  disableGasWarning?: boolean
   onChange: (amount: number) => void
   onSelect?: (denom: string) => void
 }
@@ -62,7 +63,10 @@ export const TokenInput = (props: Props) => {
     10 ** asset.decimals
 
   const showGasWarning =
-    props.maxAmount && props.amount >= props.maxAmount && asset.denom === baseCurrency.denom
+    props.maxAmount &&
+    props.amount >= props.maxAmount &&
+    asset.denom === baseCurrency.denom &&
+    !props.disableGasWarning
 
   return (
     <div className={styles.wrapper}>

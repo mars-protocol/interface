@@ -75,13 +75,16 @@ export const useActiveVaultsColumns = () => {
         cell: ({ row }) => {
           const primaryCoin = {
             denom: row.original.denoms.primary,
-            amount: row.original.position.amounts.primary.toString(),
+            amount: (
+              row.original.position.amounts.primary + row.original.position.amounts.borrowedPrimary
+            ).toString(),
           }
 
           const secondaryCoin = {
             denom: row.original.denoms.secondary,
             amount: (
-              row.original.position.amounts.secondary + row.original.position.amounts.borrowed
+              row.original.position.amounts.secondary +
+              row.original.position.amounts.borrowedSecondary
             ).toString(),
           }
 
@@ -97,9 +100,13 @@ export const useActiveVaultsColumns = () => {
               }
               tooltip={
                 <>
-                  <TokenBalance coin={primaryCoin} maxDecimals={2} showSymbol />
+                  {Number(primaryCoin.amount) > 0 && (
+                    <TokenBalance coin={primaryCoin} maxDecimals={2} showSymbol />
+                  )}
                   <br />
-                  <TokenBalance coin={secondaryCoin} maxDecimals={2} showSymbol />
+                  {Number(secondaryCoin.amount) > 0 && (
+                    <TokenBalance coin={secondaryCoin} maxDecimals={2} showSymbol />
+                  )}
                 </>
               }
             />
@@ -134,25 +141,34 @@ export const useActiveVaultsColumns = () => {
               }
               tooltip={
                 <>
-                  <TokenBalance coin={coins[0]} maxDecimals={2} showSymbol />
+                  {Number(coins[0].amount) > 0 && (
+                    <TokenBalance coin={coins[0]} maxDecimals={2} showSymbol />
+                  )}
                   <br />
-                  <TokenBalance coin={coins[1]} maxDecimals={2} showSymbol />
+                  {Number(coins[1].amount) > 0 && (
+                    <TokenBalance coin={coins[1]} maxDecimals={2} showSymbol />
+                  )}{' '}
                 </>
               }
             />
           )
         },
       }),
-      columnHelper.accessor('position.values.borrowed', {
+      columnHelper.accessor('position.values.borrowedPrimary', {
         enableSorting: true,
         header: () => (
           <TextTooltip text={t('common.borrowed')} tooltip={t('fields.tooltips.borrowValue')} />
         ),
-        cell: (info) => {
+        cell: ({ row }) => {
           const borrowAsset = whitelistedAssets.find(
-            (asset) => asset.denom === info.row.original.denoms.secondary,
+            (asset) => asset.denom === row.original.position.borrowDenom,
           )
           if (!borrowAsset) return
+
+          const borrowKey =
+            row.original.position.borrowDenom === row.original.denoms.primary
+              ? 'borrowedPrimary'
+              : 'borrowedSecondary'
 
           return (
             <TextTooltip
@@ -160,15 +176,15 @@ export const useActiveVaultsColumns = () => {
                 <DisplayCurrency
                   coin={{
                     denom: baseCurrency.denom,
-                    amount: info.row.original.position.values.borrowed.toString(),
+                    amount: row.original.position.values[borrowKey].toString(),
                   }}
                 />
               }
               tooltip={
                 <TokenBalance
                   coin={{
-                    denom: info.row.original.denoms.secondary,
-                    amount: info.row.original.position.amounts.borrowed.toString(),
+                    denom: borrowAsset.denom,
+                    amount: row.original.position.amounts[borrowKey].toString(),
                   }}
                   maxDecimals={2}
                   showSymbol
@@ -291,7 +307,7 @@ export const useActiveVaultsColumns = () => {
               </p>
               <p className='s faded'>
                 {formatValue(
-                  ltvToLeverage(row.original.ltv.max),
+                  ltvToLeverage(row.original.ltv.contract),
                   2,
                   2,
                   false,
@@ -303,7 +319,7 @@ export const useActiveVaultsColumns = () => {
           )
         },
       }),
-      columnHelper.accessor('position.amounts.borrowed', {
+      columnHelper.accessor('position.amounts.borrowedPrimary', {
         enableSorting: false,
         header: () => (
           <TextTooltip
@@ -313,13 +329,19 @@ export const useActiveVaultsColumns = () => {
         ),
         cell: ({ row }) => {
           const maxBorrowValue = getMaxBorrowValue(row.original, row.original.position)
+          const borrowKey =
+            row.original.position.borrowDenom === row.original.denoms.primary
+              ? 'borrowedPrimary'
+              : 'borrowedSecondary'
+
+          const liqBorrowValue = getLiqBorrowValue(row.original, row.original.position.values.net)
 
           return (
             <BorrowCapacity
               showPercentageText={true}
-              max={getLiqBorrowValue(row.original, maxBorrowValue)}
+              max={liqBorrowValue}
               limit={maxBorrowValue}
-              balance={row.original.position.values.borrowed}
+              balance={row.original.position.values[borrowKey]}
               showTitle={false}
               barHeight={'16px'}
               hideValues

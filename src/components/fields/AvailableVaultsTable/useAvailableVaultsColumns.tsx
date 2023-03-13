@@ -69,7 +69,7 @@ export const useAvailableVaultsColumns = () => {
           return (
             <>
               <p className='m'>
-                {formatValue(ltvToLeverage(row.original.ltv.max), 2, 2, false, false, 'x')}
+                {formatValue(ltvToLeverage(row.original.ltv.contract), 2, 2, false, false, 'x')}
               </p>
               <p className='s faded'>{t('global.max_lower')}</p>
             </>
@@ -87,12 +87,20 @@ export const useAvailableVaultsColumns = () => {
             return <Loading />
           }
 
-          const maxLeverage = ltvToLeverage(row.original.ltv.max)
-          const borrowAsset = redBankAssets.find(
+          const maxLeverage = ltvToLeverage(row.original.ltv.contract)
+          const primaryBorrowAsset = redBankAssets.find(
+            (asset) => asset.denom === row.original.denoms.primary,
+          )
+          const secondaryBorrowAsset = redBankAssets.find(
             (asset) => asset.denom === row.original.denoms.secondary,
           )
-          const maxBorrowRate =
-            Number(borrowAsset?.borrowRate ?? 0) * (ltvToLeverage(row.original.ltv.max) - 1)
+
+          const borrowRate = Math.min(
+            Number(primaryBorrowAsset?.borrowRate ?? 0),
+            Number(secondaryBorrowAsset?.borrowRate ?? 0),
+          )
+
+          const maxBorrowRate = borrowRate * (ltvToLeverage(row.original.ltv.contract) - 1)
 
           const minAPY = new BigNumber(row.original.apy).toNumber()
 
@@ -128,7 +136,7 @@ export const useAvailableVaultsColumns = () => {
                   />
                 }
                 tooltip={
-                  <Apy apyData={apyDataLev} leverage={ltvToLeverage(row.original.ltv.max)} />
+                  <Apy apyData={apyDataLev} leverage={ltvToLeverage(row.original.ltv.contract)} />
                 }
               />
 

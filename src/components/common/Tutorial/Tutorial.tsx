@@ -66,7 +66,7 @@ export const Tutorial = (props: Props) => {
   }
 
   const maxLeverage = props.availableVault
-    ? formatValue(ltvToLeverage(props.availableVault?.ltv.max), 2, 2)
+    ? formatValue(ltvToLeverage(props.availableVault?.ltv.contract), 2, 2)
     : ''
 
   const content = (

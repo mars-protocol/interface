@@ -115,6 +115,11 @@ const commonSlice = (
       config.NETWORK_CONFIG.rpcUrl = serializeUrl(config.NETWORK_CONFIG.rpcUrl)
       config.NETWORK_CONFIG.restUrl = serializeUrl(config.NETWORK_CONFIG.restUrl)
 
+      const storageDisplayCurrency = localStorage.getItem('displayCurrency')
+      if (storageDisplayCurrency) {
+        config.NETWORK_CONFIG.displayCurrency = JSON.parse(storageDisplayCurrency)
+      }
+
       set({
         otherAssets: config.NETWORK_CONFIG.assets.other,
         whitelistedAssets: config.NETWORK_CONFIG.assets.whitelist,

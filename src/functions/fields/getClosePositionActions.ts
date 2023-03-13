@@ -8,7 +8,10 @@ export const getClosePositionActions = (
   const swapMessage: Action[] = []
 
   // Increase the borrow amount by factor to account for an increase of borrow over time
-  const borrowAmount = Math.ceil(vault.position.amounts.borrowed * 1.001)
+  const borrowAmount = Math.ceil(
+    Math.max(vault.position.amounts.borrowedPrimary, vault.position.amounts.borrowedSecondary) *
+      1.001,
+  )
   const secondaryAmount = vault.position.amounts.lp.secondary
 
   if (secondaryAmount < borrowAmount) {
@@ -46,11 +49,11 @@ export const getClosePositionActions = (
       },
     },
     ...swapMessage,
-    ...(vault.position.amounts.borrowed
+    ...(Math.max(vault.position.amounts.borrowedPrimary, vault.position.amounts.borrowedSecondary)
       ? [
           {
             repay: {
-              denom: vault.denoms.secondary,
+              denom: vault.position.borrowDenom || vault.denoms.secondary,
               amount: 'account_balance' as ActionAmount,
             },
           },

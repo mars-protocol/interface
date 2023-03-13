@@ -47,10 +47,16 @@ export const BreakdownTable = (props: Props) => {
 
   const primaryPrice = usePrice(props.vault.denoms.primary)
   const secondaryPrice = usePrice(props.vault.denoms.secondary)
+  const primaryRedBankAsset = useRedBankAsset(props.vault.denoms.primary)
   const secondaryRedBankAsset = useRedBankAsset(props.vault.denoms.secondary)
   const primaryChange = props.newPosition.amounts.primary - props.prevPosition.amounts.primary
   const secondaryChange = props.newPosition.amounts.secondary - props.prevPosition.amounts.secondary
-  const borrowedChange = props.newPosition.amounts.borrowed - props.prevPosition.amounts.borrowed
+  const borrowKey =
+    props.newPosition.borrowDenom === props.vault.denoms.primary
+      ? 'borrowedPrimary'
+      : 'borrowedSecondary'
+  const borrowedChange =
+    props.newPosition.amounts[borrowKey] - props.prevPosition.amounts[borrowKey]
 
   const containerClasses = classNames([
     props.className,
@@ -71,15 +77,15 @@ export const BreakdownTable = (props: Props) => {
         denom = props.vault.denoms.secondary
         break
       case AmountType.DEBT:
-        amount = props.newPosition.amounts.borrowed
+        amount = props.newPosition.amounts[borrowKey]
         denom = props.vault.denoms.secondary
         break
       case AmountType.POSITION_PRIMARY:
-        amount = props.newPosition.amounts.primary
+        amount = props.newPosition.amounts.primary + props.newPosition.amounts.borrowedPrimary
         denom = props.vault.denoms.primary
         break
       case AmountType.POSITION_SECONDARY:
-        amount = props.newPosition.amounts.secondary + props.newPosition.amounts.borrowed
+        amount = props.newPosition.amounts.secondary + props.newPosition.amounts.borrowedSecondary
         denom = props.vault.denoms.secondary
         break
     }
@@ -122,7 +128,9 @@ export const BreakdownTable = (props: Props) => {
     )
   }
 
-  const getValueText = (type: 'net' | 'borrowed' | 'total') => (
+  const getValueText = (
+    type: 'primary' | 'secondary' | 'net' | 'borrowedPrimary' | 'borrowedSecondary' | 'total',
+  ) => (
     <DisplayCurrency
       prefixClass='s faded'
       valueClass='m faded'
@@ -152,7 +160,8 @@ export const BreakdownTable = (props: Props) => {
       )
     }
 
-    const isReducingDebt = props.newPosition.amounts.borrowed < props.prevPosition.amounts.borrowed
+    const isReducingDebt =
+      props.newPosition.amounts[borrowKey] < props.prevPosition.amounts[borrowKey]
     if (isReducingDebt) {
       return (
         <>
@@ -208,8 +217,12 @@ export const BreakdownTable = (props: Props) => {
   /* APY CALCULATION */
   const currentLeverage = props.newPosition.currentLeverage
 
-  const trueBorrowRate =
-    Number(secondaryRedBankAsset?.borrowRate ?? 0) * (Number(currentLeverage) - 1)
+  const borrowRate = Number(
+    borrowKey === 'borrowedPrimary'
+      ? primaryRedBankAsset?.borrowRate
+      : secondaryRedBankAsset?.borrowRate,
+  )
+  const trueBorrowRate = borrowRate * (Number(currentLeverage) - 1)
 
   const apy = (props.vault.apy || 0) * currentLeverage - trueBorrowRate
 
@@ -291,9 +304,11 @@ export const BreakdownTable = (props: Props) => {
           <tr className={styles.debtRow}>
             <td className={`${styles.showDesktop} faded`}>{t('common.debt')}</td>
             <td className={styles.alignRight}>{getTokenBalance(AmountType.DEBT)}</td>
-            <td>{secondaryAsset?.symbol}</td>
+            <td>
+              {borrowKey === 'borrowedPrimary' ? primaryAsset?.symbol : secondaryAsset?.symbol}
+            </td>
             <td>{getChangeText(borrowedChange, 'secondary', true)}</td>
-            <td>{getValueText('borrowed')}</td>
+            <td>{getValueText(borrowKey)}</td>
           </tr>
 
           <tr className={`${styles.labelRow} faded`}>
@@ -320,11 +335,14 @@ export const BreakdownTable = (props: Props) => {
         </tbody>
       </table>
       {!props.isRepay && <div className={styles.reduceMessage}>{getWarningMessage()}</div>}
+
       <BorrowCapacity
         className={styles.borrowCapacity}
         limit={maxBorrowValue}
-        max={getLiqBorrowValue(props.vault, maxBorrowValue)}
-        balance={props.newPosition.values.borrowed}
+        max={getLiqBorrowValue(props.vault, props.newPosition.values.net)}
+        balance={
+          props.newPosition.values.borrowedPrimary + props.newPosition.values.borrowedSecondary
+        }
         barHeight={'24px'}
         showPercentageText
       />

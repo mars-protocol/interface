@@ -1,4 +1,5 @@
 import Tippy from '@tippyjs/react'
+import classNames from 'classnames'
 
 import styles from './TextTooltip.module.scss'
 
@@ -7,6 +8,7 @@ interface Props {
   tooltip: string | React.ReactNode
   hideUnderline?: boolean
   hideStyling?: boolean
+  className?: string
 }
 export const TextTooltip = (props: Props) => {
   return (
@@ -23,7 +25,13 @@ export const TextTooltip = (props: Props) => {
         )
       }}
     >
-      <span className={props.hideUnderline ? styles.pointer : styles.tooltip} style={{}}>
+      <span
+        className={classNames(
+          props.hideUnderline ? styles.pointer : styles.tooltip,
+          props.className,
+        )}
+        style={{}}
+      >
         {props.text}
       </span>
     </Tippy>

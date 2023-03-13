@@ -324,25 +324,50 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
               (unlockTime) => unlockTime?.vaultAddress === curr.address,
             )?.unlockAtTimestamp
 
-            let primarySupplyAmount = Number(
+            let primaryAmount = Number(
               findByDenom(primaryAndSecondaryAmount.coins, curr.denoms.primary)?.amount || 0,
             )
-            const secondaryAmount = Number(
+            let secondaryAmount = Number(
               findByDenom(primaryAndSecondaryAmount.coins, curr.denoms.secondary)?.amount || 0,
             )
-            const borrowedAmount = Number(creditAccountPosition.debts[0]?.amount || 0)
 
-            if (borrowedAmount > secondaryAmount) {
-              const swappedToPrimary = Math.round(
-                get().convertToBaseCurrency({
-                  denom: curr.denoms.secondary,
-                  amount: (borrowedAmount - secondaryAmount).toString(),
-                }),
-              )
-              primarySupplyAmount -= swappedToPrimary
+            let borrowedPrimaryAmount = 0
+            let borrowedSecondaryAmount = 0
+
+            const debt = creditAccountPosition.debts[0]
+            if (debt) {
+              if (debt.denom === curr.denoms.primary) {
+                borrowedPrimaryAmount = Number(debt.amount)
+              } else {
+                borrowedSecondaryAmount = Number(debt.amount)
+              }
             }
 
-            const secondarySupplyAmount = Math.max(secondaryAmount - borrowedAmount, 0)
+            const borrowedDenom: string = creditAccountPosition.debts[0]?.denom || ''
+
+            if (borrowedPrimaryAmount > primaryAmount) {
+              const swapped = Math.round(
+                get().convertToBaseCurrency({
+                  denom: borrowedDenom,
+                  amount: (borrowedPrimaryAmount - primaryAmount).toString(),
+                }),
+              )
+              secondaryAmount -= swapped
+            }
+
+            if (borrowedSecondaryAmount > secondaryAmount) {
+              const swapped = Math.round(
+                get().convertToBaseCurrency({
+                  denom: borrowedDenom,
+                  amount: (borrowedSecondaryAmount - secondaryAmount).toString(),
+                }),
+              )
+              primaryAmount -= swapped
+            }
+
+            const primarySupplyAmount = Math.max(primaryAmount - borrowedPrimaryAmount, 0)
+            const secondarySupplyAmount = Math.max(secondaryAmount - borrowedSecondaryAmount, 0)
+            const borrowedAmount = Math.max(borrowedPrimaryAmount, borrowedSecondaryAmount)
 
             const convertToBaseCurrency = get().convertToBaseCurrency
             const redBankAssets = get().redBankAssets
@@ -357,14 +382,15 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
             })
 
             const borrowedValue = convertToBaseCurrency({
-              denom: curr.denoms.secondary,
+              denom: borrowedDenom,
               amount: borrowedAmount.toString(),
             })
 
             const values = {
               primary: primaryValue,
               secondary: secondaryValue,
-              borrowed: borrowedValue,
+              borrowedPrimary: borrowedDenom === curr.denoms.primary ? borrowedValue : 0,
+              borrowedSecondary: borrowedDenom === curr.denoms.secondary ? borrowedValue : 0,
               net: primaryValue + secondaryValue,
               total: primaryValue + secondaryValue + borrowedValue,
             }
@@ -390,7 +416,8 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
               amounts: {
                 primary: primarySupplyAmount,
                 secondary: secondarySupplyAmount,
-                borrowed: borrowedAmount,
+                borrowedPrimary: borrowedDenom === curr.denoms.primary ? borrowedAmount : 0,
+                borrowedSecondary: borrowedDenom === curr.denoms.secondary ? borrowedAmount : 0,
                 lp: {
                   amount: vaultTokenAmounts.unlocking,
                   primary: Number(
@@ -416,6 +443,7 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
               ltv: leverageToLtv(leverage),
               ...(unlockTime ? { unlockAtTimestamp: unlockTime } : {}),
               status: getPositionStatus(unlockTime),
+              borrowDenom: borrowedDenom,
             }
 
             prev.activeVaults.push({ ...curr, position })

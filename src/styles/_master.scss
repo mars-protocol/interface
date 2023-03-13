@@ -1,43 +1,45 @@
 @use 'sass:math';
-$rem-base: 15px;
+$rem-base: 16px;
 
 /* Colors */
-$colorWhite: #ffffff;
-$colorGrey: #3a3c49;
-$colorGreyLight: #bfbfbf;
-$colorGreyHighlight: #4c4c4c;
-$colorGreyMedium: #5f697a;
-$colorGreyDark: #1a1c25;
+$colorWhite: #f5f5f5;
+$colorGrey: #bdbdbd;
+$colorGreyLight: #e0e0e0;
+$colorGreyHighlight: #efefef;
+$colorGreyMedium: #9e9e9e;
+$colorGreyDark: #616161;
 
 /* CI Colors */
-$colorPrimary: #14a693;
-$colorPrimaryHighlight: #15bfa9;
-$colorPrimaryAlpha: rgba(20, 166, 147, 0.15);
-$colorSecondary: #524bb1;
-$colorSecondaryHighlight: #6962cc;
-$colorSecondaryDark: #440b37;
-$colorSecondaryAlpha: rgba(68, 11, 55, 0.7);
-$colorAccent: #2c1b2f;
-$colorAccentHighlight: #421f32;
-$colorAccentDark: #341a2a;
-$colorAccentInverted: #345dff;
+$colorPrimary: #0000ff;
+$colorPrimaryHighlight: #6962cc;
+$colorPrimaryAlpha: rgba(0, 0, 255, 0.05);
+$colorSecondary: #212121;
+$colorSecondaryHighlight: #424242;
+$colorSecondaryDark: #111111;
+$colorSecondaryAlpha: rgba(17, 17, 17, 0.15);
+$colorAccent: $colorGreyMedium;
+$colorAccentHighlight: $colorGreyMedium;
+$colorAccentDark: $colorGreyDark;
+$colorAccentInverted: $colorGreyLight;
 
 /* Info Colors */
-$colorInfoProfit: #41a4a9;
-$colorInfoLoss: #f96363;
-$colorInfoWarning: #c83333;
-$colorInfoVoteAgainst: #eb9e49;
+$colorInfoProfit: #c4e7e9;
+$colorInfoLoss: #c8aaaa;
+$colorInfoWarning: #ffb5b5;
+$colorInfoVoteAgainst: #6c5a46;
 
 /* Token Colors */
-$colorTokenMARS: #a03b45;
+$colorTokenMARS: #dd5b65;
 $colorTokenOSMO: #9f1ab9;
 $colorTokenATOM: #6f7390;
 $colorTokenAxlUSDC: #478edc;
 $colorTokenJUNO: black;
+$colorTokenStATOM: #e50571;
 
 $colorGradientOSMO: linear-gradient(to bottom, #3a02e2, #e700ca);
 $colorGradientATOM: linear-gradient(to bottom, #2e3148, #6f7390);
 $colorGradientAxlUSDC: linear-gradient(to bottom, #1f5c9e, #478edc);
+$colorGradientStATOM: linear-gradient(to bottom, #e50571, #fb5da9);
 
 /* Alpha Colors */
 $alphaWhite10: rgba(255, 255, 255, 0.1);
@@ -60,32 +62,29 @@ $alphaBlack80: rgba(0, 0, 0, 0.8);
 $alphaBlack90: rgba(0, 0, 0, 0.9);
 
 /* Background Colors */
-$backgroundBody: #562a3b;
-$backgroundBodyDark: #141621;
-$backgroundInTile: $alphaBlack30;
-$backgroundFooter: $alphaBlack20;
+$backgroundBody: $colorGrey;
+$backgroundBodyDark: $backgroundBody;
+$backgroundInTile: transparent;
+$backgroundFooter: transparent;
 
 /* Slider Colors */
-$sliderThumb: $colorWhite;
-$sliderMark: $colorGreyLight;
+$sliderThumb: $colorGreyDark;
+$sliderMark: $colorGreyDark;
 
 /* Tooltip Colors */
-$tooltipIconColor: $alphaWhite20;
-$tableSort: $alphaWhite20;
-$tableSortActive: $colorWhite;
-$tableHeader: $alphaWhite50;
+$tooltipIconColor: $alphaBlack60;
 
 /* Table Colors */
-$tableBorder: $alphaWhite10;
-$tableBorderEnd: $alphaWhite80;
-$tableSort: $alphaWhite20;
-$tableSortActive: $colorWhite;
-$tableHeader: $alphaWhite40;
-$tableLabel: $alphaWhite60;
+$tableBorder: $alphaBlack30;
+$tableBorderEnd: $alphaBlack80;
+$tableSort: $alphaBlack20;
+$tableSortActive: $alphaBlack90;
+$tableHeader: $alphaBlack40;
+$tableLabel: $colorSecondaryDark;
 
 /* Graph Colors */
-$graphLiquidationsLine: $alphaWhite70;
-$graphAxis: $alphaWhite40;
+$graphLiquidationsLine: $alphaBlack70;
+$graphAxis: $alphaBlack40;
 
 /* Shadows */
 $shadowInset: inset 0px 2px 2px rgba(0, 0, 0, 0.25);
@@ -96,35 +95,32 @@ $shadowInset: inset 0px 2px 2px rgba(0, 0, 0, 0.25);
 
 /* Devider */
 @mixin devider10 {
-  border-bottom: 1px solid $alphaWhite10;
+  border-bottom: 1px solid $alphaBlack10;
 }
 
 @mixin devider20 {
-  border-bottom: 1px solid $alphaWhite20;
+  border-bottom: 1px solid $alphaBlack20;
 }
 
 @mixin devider40 {
-  border-bottom: 1px solid $alphaWhite40;
+  border-bottom: 1px solid $alphaBlack40;
 }
 
 @mixin devider60 {
-  border-bottom: 1px solid $alphaWhite60;
+  border-bottom: 1px solid $alphaBlack60;
 }
 
 /* Backgrounds */
 @mixin bgBody {
   background-color: $backgroundBody;
-  background-size: 100% auto;
-  background-image: url('../images/bg.svg');
-  background-position: center top;
+}
+
+@mixin bgTableHover {
+  background-color: transparent;
 }
 
 @mixin bgBodyDark {
   background-color: $backgroundBodyDark;
-}
-
-@mixin bgTableHover {
-  background-color: rgba($colorPrimary, 0.2);
 }
 
 @mixin bgProposalActive {
@@ -132,7 +128,7 @@ $shadowInset: inset 0px 2px 2px rgba(0, 0, 0, 0.25);
 }
 
 @mixin bgProposalHover {
-  background-color: #05252f;
+  background-color: $colorGreyMedium;
 }
 
 @mixin bgTile($deg: 99.79) {
@@ -144,7 +140,7 @@ $shadowInset: inset 0px 2px 2px rgba(0, 0, 0, 0.25);
 }
 
 @mixin bgInTile {
-  background: $alphaBlack30;
+  background: $backgroundInTile;
 }
 
 @mixin bgOverlay {
@@ -161,11 +157,11 @@ $shadowInset: inset 0px 2px 2px rgba(0, 0, 0, 0.25);
 }
 
 @mixin bgTileDevider {
-  background-color: $alphaWhite60;
+  background-color: $alphaBlack60;
 }
 
 @mixin bgDevider {
-  background-color: $alphaWhite20;
+  background-color: $alphaBlack20;
 }
 
 @mixin bgInput {
@@ -174,68 +170,60 @@ $shadowInset: inset 0px 2px 2px rgba(0, 0, 0, 0.25);
 
 @mixin bgPrimary {
   background-color: $colorPrimary;
+  color: $colorWhite;
 }
 
 @mixin bgSecondary {
   background-color: $colorSecondary;
+  color: $colorWhite;
 }
 
 @mixin bgTertiary {
-  background-color: rgba(82, 75, 177, 0.5);
+  background-color: $alphaBlack60;
+  color: $colorWhite;
 }
 
 @mixin bgLimit {
-  background: linear-gradient(
-    to right,
-    #15bfa9 20.9%,
-    #5e4bb1 49.68%,
-    #382685 82.55%,
-    #c83333 100%
-  );
+  background: $colorPrimary;
 }
 
 @mixin bgLimitOpacity {
-  background: linear-gradient(
-    to right,
-    #15bfa830 20.9%,
-    #5e4bb130 49.68%,
-    #38268530 82.55%,
-    #c8333330 100%
-  );
+  background: $colorPrimary;
 }
 
 @mixin bgHatched {
   background-image: linear-gradient(
     135deg,
-    transparent 33.33%,
-    #826d6b 33.33%,
-    #826d6b 50%,
-    transparent 50%,
-    transparent 83.33%,
-    #826d6b 83.33%,
-    #826d6b 100%
+    #1a1c25 33.33%,
+    rgba(255, 255, 255, 0.2) 33.33%,
+    rgba(255, 255, 255, 0.2) 50%,
+    #1a1c25 50%,
+    #1a1c25 83.33%,
+    rgba(255, 255, 255, 0.2) 83.33%,
+    rgba(255, 255, 255, 0.2) 100%
   );
   background-size: 5px 5px;
 }
 
 /* GLOWS */
+/* GLOWS */
 @mixin glowXS {
-  filter: blur(1px);
+  display: none;
 }
 @mixin glowS {
-  filter: blur(3px);
+  display: none;
 }
 @mixin glowM {
-  filter: blur(4px);
+  display: none;
 }
 @mixin glowL {
-  filter: blur(5px);
+  display: none;
 }
 @mixin glowXL {
-  filter: blur(8px);
+  display: none;
 }
 @mixin glowXXL {
-  filter: blur(24px);
+  display: none;
 }
 
 /* Typography */
@@ -243,11 +231,11 @@ $fontWeightLight: 300;
 $fontWeightRegular: 400;
 $fontWeightSemibold: 600;
 
-$fontColorDarkPrimary: $colorSecondaryDark;
-$fontColorDarkSecondary: rgba(68, 8, 55, 0.7);
-$fontColorLightPrimary: $colorWhite;
-$fontColorLightSecondary: $alphaWhite60;
-$fontColorLightTertiary: rgba(255, 255, 255, 0.4);
+$fontColorDarkPrimary: $colorWhite;
+$fontColorDarkSecondary: $colorSecondaryDark;
+$fontColorLightPrimary: $colorSecondaryDark;
+$fontColorLightSecondary: $alphaBlack30;
+$fontColorLightTertiary: $colorSecondaryDark;
 $fontColorLtv: $colorWhite;
 
 @mixin typoH1 {
@@ -263,8 +251,6 @@ $fontColorLtv: $colorWhite;
 
 @mixin typoH2caps {
   @include typoH2;
-  text-transform: uppercase;
-  letter-spacing: rem-calc(9);
 }
 
 @mixin typoH3 {
@@ -274,8 +260,6 @@ $fontColorLtv: $colorWhite;
 
 @mixin typoH3caps {
   font-size: rem-calc(30.42);
-  line-height: space(10);
-  text-transform: uppercase;
 }
 
 @mixin typoH4 {
@@ -286,8 +270,6 @@ $fontColorLtv: $colorWhite;
 
 @mixin typoH4caps {
   @include typoH4;
-  text-transform: uppercase;
-  letter-spacing: rem-calc(3);
 }
 
 @mixin typoXXL {
@@ -297,9 +279,7 @@ $fontColorLtv: $colorWhite;
 
 @mixin typoXXLcaps {
   @include typoXXL;
-  font-weight: $fontWeightRegular;
-  text-transform: uppercase;
-  letter-spacing: rem-calc(3);
+  font-weight: $fontWeightLight;
 }
 
 @mixin typoXL {
@@ -309,8 +289,6 @@ $fontColorLtv: $colorWhite;
 
 @mixin typoXLcaps {
   @include typoXL;
-  letter-spacing: rem-calc(5);
-  text-transform: uppercase;
   font-weight: $fontWeightLight;
 }
 
@@ -322,8 +300,6 @@ $fontColorLtv: $colorWhite;
 @mixin typoLcaps {
   @include typoL;
   font-weight: $fontWeightSemibold;
-  text-transform: uppercase;
-  letter-spacing: rem-calc(3);
 }
 
 @mixin typoM {
@@ -333,7 +309,6 @@ $fontColorLtv: $colorWhite;
 
 @mixin typoMcaps {
   @include typoM;
-  text-transform: uppercase;
 }
 
 @mixin typoS {
@@ -344,8 +319,6 @@ $fontColorLtv: $colorWhite;
 @mixin typoScaps {
   @include typoS;
   font-weight: $fontWeightSemibold;
-  text-transform: uppercase;
-  letter-spacing: rem-calc(3);
 }
 
 @mixin typoXS {
@@ -356,8 +329,6 @@ $fontColorLtv: $colorWhite;
 @mixin typoXScaps {
   @include typoXS;
   font-weight: $fontWeightSemibold;
-  text-transform: uppercase;
-  letter-spacing: rem-calc(3);
 }
 
 @mixin typoXXS {
@@ -368,8 +339,6 @@ $fontColorLtv: $colorWhite;
 @mixin typoXXScaps {
   @include typoXXS;
   font-weight: $fontWeightSemibold;
-  text-transform: uppercase;
-  letter-spacing: rem-calc(2);
 }
 
 @mixin typoXXXS {
@@ -380,20 +349,15 @@ $fontColorLtv: $colorWhite;
 @mixin typoXXXScaps {
   @include typoXXXS;
   font-weight: $fontWeightSemibold;
-  text-transform: uppercase;
-  letter-spacing: rem-calc(2);
 }
 
 @mixin typoButton {
-  font-family: Inter, sans-serif;
   @include typoS;
   font-weight: $fontWeightSemibold;
 }
 
 @mixin typoNav {
   @include typoL;
-  text-transform: uppercase;
-  letter-spacing: rem-calc(5);
 }
 
 @mixin typoNetwork {
@@ -467,100 +431,70 @@ $spacingBase: 4;
 
 /* LAYOUTS */
 @mixin layoutTile {
-  @include bgTile;
-  border: rem-calc(7) solid $colorAccentHighlight;
-  border-radius: $borderRadiusXL;
+  padding: space(1);
+  background: $colorGreyHighlight;
+  border: 2px solid $colorWhite;
+  box-shadow: 0 0 0 3px $colorGreyHighlight, 12px 12px 0 0 rgb(0 0 0 / 50%) !important;
   height: fit-content;
 }
 
 @mixin layoutTooltip {
-  @include padding(2, 4);
-  @include bgTooltip;
-  @include typoS;
-  box-shadow: 0 rem-calc(3) rem-calc(4) rgba(0, 0, 0, 0.14),
-    0 rem-calc(3) rem-calc(3) rgba(0, 0, 0, 0.12), 0 rem-calc(1) rem-calc(8) rgba(0, 0, 0, 0.2);
-  border-radius: $borderRadiusL;
-  max-width: rem-calc(350);
+  padding: space(3);
+  background: $colorGreyLight;
+  border: 1px solid $colorSecondaryDark;
 }
 
 @mixin layoutPopover {
-  @include bgPopover;
-  box-shadow: 0 rem-calc(2) rem-calc(2) rgba(0, 0, 0, 0.14),
-    0 rem-calc(1) rem-calc(5) rgba(0, 0, 0, 0.2);
-  border-radius: $borderRadiusL;
+  padding: space(3);
+  background: $colorGreyLight;
+  border: 1px solid $colorSecondaryDark;
 }
 
 @mixin layoutIncentiveButton {
-  --border-width: 3px;
-  background-color: #946582;
-  position: relative;
-  border: none;
-  margin: rem-calc(3) rem-calc(11) 0 0;
-  height: rem-calc(28);
-
-  &:hover {
-    border: none;
-    background-color: darken(#946582, 10%);
-  }
-
-  &::after {
-    border-radius: $borderRadiusXXL;
-    position: absolute;
-    content: '';
-    top: calc(-1 * var(--border-width));
-    left: calc(-1 * var(--border-width));
-    z-index: -1;
-    width: calc(100% + var(--border-width) * 2);
-    height: calc(100% + var(--border-width) * 2);
-    background: linear-gradient(
-      90deg,
-      rgba(105, 98, 204, 0.8) 0%,
-      rgba(105, 98, 204, 1) 40%,
-      rgba(255, 255, 255, 1) 50%,
-      rgba(105, 98, 204, 1) 60%,
-      rgba(105, 98, 204, 0.8) 100%
-    );
-    background-size: 300% 300%;
-    background-position: 0 50%;
-    animation: moveGradient 6s alternate infinite;
-  }
 }
 
 @mixin layoutLogo {
   > svg {
-    width: rem-calc(50);
-    height: rem-calc(50);
+    width: rem-calc(57);
+    height: rem-calc(57);
+
+    path {
+      stroke: $fontColorLightPrimary;
+    }
   }
 }
 
 @mixin layoutGlobal {
+  opacity: 1 !important;
+  box-shadow: none !important;
 }
 
 /* Buttons */
-$buttonBorder: $alphaWhite40;
-$buttonBorderHover: $colorWhite;
+$buttonBorder: $alphaBlack40;
+$buttonBorderHover: $colorSecondaryDark;
 
 @mixin buttonS {
   @include typoS;
   @include padding(1.5, 5);
-  min-height: rem-calc(32);
+  height: rem-calc(32);
 }
 
 @mixin buttonM {
   @include typoM;
   @include padding(2.5, 6);
-  min-height: rem-calc(40);
+  height: rem-calc(40);
 }
 
 @mixin buttonL {
   @include typoL;
   @include padding(2.5, 6);
-  min-height: rem-calc(56);
+  height: rem-calc(56);
 }
 
 @mixin buttonSolidPrimary {
   &.primary {
     background-color: $colorPrimary;
+    color: $colorWhite;
 
     &:hover,
     &:focus {
@@ -576,6 +510,7 @@ $buttonBorderHover: $colorWhite;
 @mixin buttonSolidSecondary {
   &.secondary {
     background-color: $colorSecondary;
+    color: $colorWhite;
 
     &:hover,
     &:focus {
@@ -590,34 +525,33 @@ $buttonBorderHover: $colorWhite;
 
 @mixin buttonSolidTertiary {
   &.tertiary {
-    background-color: $colorSecondaryAlpha;
-    border: 1px solid $alphaWhite60;
+    background-color: $colorSecondaryDark;
+    color: $colorWhite;
+    border: 1px solid $alphaBlack30;
 
     &:hover,
     &:focus {
-      border: 1px solid $fontColorLightPrimary;
-      background-color: $colorSecondaryDark;
+      border: 1px solid $alphaBlack20;
     }
 
     &:active {
-      border: 1px solid $fontColorLightPrimary;
       background-color: lighten($colorSecondaryDark, 10%);
     }
   }
 }
 
 /* Border Radius */
-$borderRadiusXXXS: rem-calc(3);
-$borderRadiusXXS: rem-calc(4);
-$borderRadiusXS: rem-calc(5);
-$borderRadiusS: rem-calc(8);
-$borderRadiusM: rem-calc(9);
-$borderRadiusL: rem-calc(12);
-$borderRadiusXL: rem-calc(16);
-$borderRadiusXXL: rem-calc(20);
-$borderRadiusXXXL: rem-calc(30);
-$borderRadiusXXXXL: rem-calc(100);
-$borderRadiusRound: 50%;
+$borderRadiusXXXS: 0;
+$borderRadiusXXS: 0;
+$borderRadiusXS: 0;
+$borderRadiusS: 0;
+$borderRadiusM: 0;
+$borderRadiusL: 0;
+$borderRadiusXL: 0;
+$borderRadiusXXL: 0;
+$borderRadiusXXXL: 0;
+$borderRadiusXXXXL: 0;
+$borderRadiusRound: 0;
 
 /* Dimensions */
 $headerHeight: rem-calc(86);

@@ -1,4 +1,5 @@
 import { useWalletManager, WalletConnectionStatus } from '@marsprotocol/wallet-connector'
+import { useQueryClient } from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
 import classNames from 'classnames'
 import { Button, NumberInput, SVG, Toggle, Tooltip } from 'components/common'
@@ -12,15 +13,39 @@ import styles from './Settings.module.scss'
 export const Settings = () => {
   const { t } = useTranslation()
   const inputPlaceholder = '...'
-
+  const queryClient = useQueryClient()
   const slippages = [0.02, 0.03]
   const [showDetails, setShowDetails] = useState(false)
   const slippage = useStore((s) => s.slippage)
+  const networkConfig = useStore((s) => s.networkConfig)
+  const baseCurrency = useStore((s) => s.baseCurrency)
+  const whitelistedAssets = useStore((s) => s.whitelistedAssets)
+  const otherAssets = useStore((s) => s.otherAssets)
+  const assets: Asset[] = [...whitelistedAssets, ...otherAssets]
   const [customSlippage, setCustomSlippage] = useState<string>(inputPlaceholder)
   const [inputRef, setInputRef] = useState<React.RefObject<HTMLInputElement>>()
   const [isCustom, setIsCustom] = useState(false)
   const enableAnimations = useStore((s) => s.enableAnimations)
   const { status } = useWalletManager()
+  const exchangeRates = useStore((s) => s.exchangeRates)
+  const [displayCurrency, setDisplayCurrency] = useState<DisplayCurrency>(() => {
+    const currency = {
+      denom: baseCurrency.denom,
+      prefix: '',
+      suffix: baseCurrency.symbol,
+      decimals: 2,
+    }
+    const currentCurrency = assets.find(
+      (asset) => asset.denom === networkConfig?.displayCurrency.denom,
+    )
+
+    if (currentCurrency) {
+      currency.denom = currentCurrency.denom
+      currency.prefix = ''
+      currency.suffix = currentCurrency.symbol
+    }
+    return currency
+  })
 
   const onInputChange = (value: number) => {
     setCustomSlippage(value.toString())
@@ -57,6 +82,24 @@ export const Settings = () => {
     localStorage.setItem('enableAnimations', reduce ? 'false' : 'true')
   }
 
+  const changeDisplayCurrency = (denom: string) => {
+    const selectedAsset = assets.find((asset) => asset.denom === denom)
+    if (!selectedAsset || !networkConfig || !exchangeRates?.length) return
+    const newDisplayCurrency = {
+      denom: selectedAsset.denom,
+      prefix: '',
+      suffix: selectedAsset.symbol,
+      decimals: 2,
+    }
+    const exchangeRate = exchangeRates.find((rate) => rate.denom === newDisplayCurrency.denom)
+    if (!exchangeRate) return
+    setDisplayCurrency(newDisplayCurrency)
+    useStore.setState({ networkConfig: { ...networkConfig, displayCurrency: newDisplayCurrency } })
+    useStore.setState({ baseToDisplayCurrencyRatio: 1 / Number(exchangeRate.amount) })
+    localStorage.setItem('displayCurrency', JSON.stringify(newDisplayCurrency))
+    queryClient.invalidateQueries()
+  }
+
   if (status !== WalletConnectionStatus.Connected) return null
 
   return (
@@ -75,7 +118,7 @@ export const Settings = () => {
               <p className={styles.text}>{t('common.settings')}</p>
             </div>
             <div className={styles.settings}>
-              <div className={styles.setting}>
+              <div className={`${styles.setting} ${styles.reduceMotion}`}>
                 <div className={styles.name}>
                   {t('common.reduceMotion')}
                   <Tooltip content={t('common.tooltips.reduceMotion')} className={styles.tooltip} />
@@ -86,6 +129,31 @@ export const Settings = () => {
                     checked={!enableAnimations}
                     onChange={changeReduceMotion}
                   />
+                </div>
+              </div>
+              <div className={styles.setting}>
+                <div className={styles.name}>
+                  {t('common.displayCurrency')}
+                  <Tooltip
+                    content={t('common.tooltips.displayCurrency', {
+                      baseCurrencySymbol: baseCurrency.symbol,
+                    })}
+                    className={styles.tooltip}
+                  />
+                </div>
+                <div className={styles.content}>
+                  <select
+                    onChange={(e) => changeDisplayCurrency(e.target.value)}
+                    className={classNames([styles.select, 's'])}
+                    tabIndex={2}
+                    value={displayCurrency.denom}
+                  >
+                    {assets.map((currency) => (
+                      <option key={currency.denom} value={currency.denom}>
+                        {`${currency.name} (${currency.symbol})`}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>

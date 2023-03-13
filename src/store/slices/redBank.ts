@@ -119,6 +119,8 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
         incentiveInfo,
         isCollateral: true,
         depositCap: depositCap,
+        borrowEnabled: marketInfo?.borrow_enabled ?? false,
+        depositEnabled: marketInfo?.deposit_enabled ?? false,
       }
       redBankAsset.subRows = [{ ...redBankAsset }]
       redBankAssets.push(redBankAsset)

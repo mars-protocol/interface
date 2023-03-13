@@ -14,7 +14,6 @@ export const ASSETS: { [denom: string]: Asset } = {
     denom: 'uosmo',
     color: colors.osmo,
     decimals: 6,
-    hasOraclePrice: true,
     logo: osmo,
     poolId: 678,
   },
@@ -25,7 +24,6 @@ export const ASSETS: { [denom: string]: Asset } = {
     color: colors.atom,
     logo: atom,
     decimals: 6,
-    hasOraclePrice: true,
   },
   juno: {
     symbol: 'JUNO',
@@ -34,7 +32,6 @@ export const ASSETS: { [denom: string]: Asset } = {
     color: colors.juno,
     logo: juno,
     decimals: 6,
-    hasOraclePrice: true,
   },
 }
 
@@ -46,7 +43,6 @@ const OTHER_ASSETS: { [denom: string]: OtherAsset } = {
     color: colors.mars,
     logo: mars,
     decimals: 6,
-    hasOraclePrice: true,
     poolId: 768,
   },
   axlusdc: {
@@ -57,7 +53,6 @@ const OTHER_ASSETS: { [denom: string]: OtherAsset } = {
     color: colors.axlusdc,
     logo: axlusdc,
     decimals: 6,
-    hasOraclePrice: false,
     poolId: 674,
   },
 }
@@ -70,6 +65,7 @@ export const NETWORK_CONFIG: NetworkConfig = {
   rpcUrl: URL_RPC ?? 'https://rpc-test.osmosis.zone/',
   restUrl: URL_REST ?? 'https://lcd-test.osmosis.zone/',
   apolloAprUrl: 'https://api.apollo.farm/api/vault_infos/v2/osmo-test-4',
+  priceApiUrl: 'https://api-osmosis.imperator.co/tokens/v2/OSMO',
   contracts: {
     redBank: 'osmo1t0dl6r27phqetfu0geaxrng0u9zn8qgrdwztapt5xr32adtwptaq6vwg36',
     incentives: 'osmo1zxs8fry3m8j94pqg7h4muunyx86en27cl0xgk76fc839xg2qnn6qtpjs48',
@@ -94,30 +90,6 @@ export const NETWORK_CONFIG: NetworkConfig = {
 
 export const VAULT_CONFIGS: Vault[] = [
   {
-    address: 'osmo1zktjv92f76epswjvyxzzt3yyskpw7k6jsyu0kmq4zzc5fphrjumqlahctp',
-    name: 'OSMO-ATOM LP (1 day)',
-    denoms: {
-      primary: 'uosmo',
-      secondary: 'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2',
-      lpToken: 'gamm/pool/1',
-    },
-    symbols: {
-      primary: 'OSMO',
-      secondary: 'ATOM',
-    },
-    color: '#DD5B65',
-    lockup: 86400,
-    provider: 'Apollo vault',
-    description:
-      'Up to 2.67× leveraged yield farming with auto compounding of the OSMO-ATOM LP tokens.',
-    ltv: {
-      max: 0.625,
-      contract: 0.63,
-      liq: 0.65,
-    },
-    apy: 0,
-  },
-  {
     address: 'osmo1tp2m6g39h8mvhnu3plqjyen5s63023gj8w873l8wvly0cd77l6hsaa73wt',
     name: 'OSMO-ATOM LP (14 day)',
     denoms: {
@@ -133,11 +105,11 @@ export const VAULT_CONFIGS: Vault[] = [
     lockup: 86400 * 14,
     provider: 'Apollo vault',
     description:
-      'Up to 2.67× leveraged yield farming with auto compounding of the OSMO-ATOM LP tokens.',
+      'Up to 1.43× leveraged yield farming with auto compounding of the OSMO-ATOM LP tokens.',
     ltv: {
-      max: 0.625,
-      contract: 0.63,
-      liq: 0.65,
+      max: 0.295,
+      contract: 0.3,
+      liq: 0.4,
     },
     apy: 0,
   },
@@ -157,11 +129,11 @@ export const VAULT_CONFIGS: Vault[] = [
     lockup: 86400 * 1,
     provider: 'Apollo vault',
     description:
-      'Up to 1.67× leveraged yield farming with auto compounding of the OSMO-JUNO LP tokens.',
+      'Up to 1.43× leveraged yield farming with auto compounding of the OSMO-JUNO LP tokens.',
     ltv: {
-      max: 0.4,
-      contract: 0.4115,
-      liq: 0.441,
+      max: 0.295,
+      contract: 0.3,
+      liq: 0.4,
     },
     apy: 0,
   },
@@ -181,11 +153,11 @@ export const VAULT_CONFIGS: Vault[] = [
     lockup: 86400 * 14,
     provider: 'Apollo vault',
     description:
-      'Up to 1.67× leveraged yield farming with auto compounding of the OSMO-JUNO LP tokens.',
+      'Up to 1.43× leveraged yield farming with auto compounding of the OSMO-JUNO LP tokens.',
     ltv: {
-      max: 0.4,
-      contract: 4.115,
-      liq: 0.441,
+      max: 0.295,
+      contract: 0.3,
+      liq: 0.4,
     },
     apy: 0,
   },

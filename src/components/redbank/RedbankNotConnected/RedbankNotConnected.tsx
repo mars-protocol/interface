@@ -42,6 +42,8 @@ export const RedbankNotConnected = () => {
         depositBalanceBaseCurrency: 0,
         depositCap: 0,
         depositLiquidity: 0,
+        borrowEnabled: true,
+        depositEnabled: true,
       })
     })
 

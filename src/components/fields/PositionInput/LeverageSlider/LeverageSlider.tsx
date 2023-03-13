@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js'
 import classNames from 'classnames'
 import { InputSlider, Tutorial } from 'components/common'
 import { FIELDS_TUTORIAL_KEY } from 'constants/appConstants'
-import { formatValue, ltvToLeverage } from 'libs/parse'
+import { formatValue, leverageToLtv, ltvToLeverage } from 'libs/parse'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import colors from 'styles/_assets.module.scss'
@@ -29,7 +29,7 @@ export const LeverageSlider = (props: Props) => {
       isLeverage
       value={props.leverage}
       maxValue={props.leverageMax}
-      leverageMax={ltvToLeverage(props.vault.ltv.max)}
+      leverageMax={ltvToLeverage(props.vault.ltv.contract)}
       leverageLimit={props.leverageLimit}
       onChange={props.onChange}
       sliderColor={colors.secondary}
@@ -51,8 +51,11 @@ export const LeverageSlider = (props: Props) => {
       ) : (
         <>{slider}</>
       )}
+      {leverageToLtv(props.leverage) > props.vault.ltv.max && (
+        <span className={styles.warning}>{t('fields.messages.closeToMaxLtv')}</span>
+      )}
       {props.leverage >= props.leverageLimit &&
-        props.leverageLimit < ltvToLeverage(props.vault.ltv.max) && (
+        props.leverageLimit < ltvToLeverage(props.vault.ltv.contract) && (
           <span className={styles.warning}>
             {t('fields.messages.unableToIncreaseLeverage', {
               leverage: formatValue(props.leverageLimit, 2, 2),

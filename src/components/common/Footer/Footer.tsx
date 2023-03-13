@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import useStore from 'store'
 import { DocURL } from 'types/enums/docURL'
 
-import { version } from '../../../../package.json'
+import packageInfo from '../../../../package.json'
 import styles from './Footer.module.scss'
 
 export const Footer = () => {
@@ -211,7 +211,7 @@ export const Footer = () => {
           </div>
         </div>
         <div className={styles.version}>
-          <p className='faded xs'>Mars Protocol v{version}</p>
+          <p className='faded xs'>Mars Protocol v{packageInfo.version}</p>
         </div>
       </div>
     </footer>

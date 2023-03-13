@@ -25,9 +25,16 @@ const oraclesSlice = (set: NamedSet<Store>, get: GetState<Store>): OraclesSlice 
     const baseCurrency = get().baseCurrency
     const networkConfig = get().networkConfig
     const displayCurrency = networkConfig?.displayCurrency
-    const assets = [...whitelistedAssets, ...otherAssets]
+    const exchangeRatesState = get().exchangeRatesState
+    const assets: Asset[] = [...whitelistedAssets, ...otherAssets]
 
-    if (!coin || !exchangeRates || !assets.length || !displayCurrency) {
+    if (
+      !coin ||
+      exchangeRatesState === State.INITIALISING ||
+      !exchangeRates?.find((rate) => rate.denom === displayCurrency.denom) ||
+      !assets.length ||
+      !displayCurrency
+    ) {
       return 0
     }
 
@@ -88,13 +95,19 @@ const oraclesSlice = (set: NamedSet<Store>, get: GetState<Store>): OraclesSlice 
 
     const wasmQueryResults = data.prices
     const exchangeRates: Coin[] = get().exchangeRates ?? []
+    const baseCurrency = get().baseCurrency
+    const networkConfig = get().networkConfig
+    const displayCurrency = networkConfig?.displayCurrency
 
     get()
       .whitelistedAssets?.filter((asset: Asset) => !!asset.denom)
       .forEach((asset: Asset) => {
         const denom = asset.denom
+        const hasBaseCurrency = exchangeRates?.find(
+          (ratesAsset) => ratesAsset.denom === baseCurrency.denom,
+        )
 
-        if (denom === get().baseCurrency.denom) {
+        if (denom === baseCurrency.denom && !hasBaseCurrency) {
           exchangeRates.push({ denom, amount: '1' })
           return
         }
@@ -105,6 +118,11 @@ const oraclesSlice = (set: NamedSet<Store>, get: GetState<Store>): OraclesSlice 
         const exchangeRate: Coin = {
           denom,
           amount: typeof exchangeRateResult === 'string' ? exchangeRateResult || '0.00' : '0.00',
+        }
+        if (asset.denom === displayCurrency.denom) {
+          set({
+            baseToDisplayCurrencyRatio: 1 / Number(exchangeRate.amount),
+          })
         }
         updateExchangeRate(exchangeRate, exchangeRates)
       })

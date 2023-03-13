@@ -27,15 +27,20 @@ export const useEditPosition = (props: Props) => {
       props.position.amounts.primary - (props.prevPosition?.amounts.primary || 0)
     const secondaryAmount =
       props.position.amounts.secondary - (props.prevPosition?.amounts.secondary || 0)
-    const borrowedAmount =
-      props.position.amounts.borrowed - (props.prevPosition?.amounts.borrowed || 0)
+    const borrowedPrimaryAmount =
+      props.position.amounts.borrowedPrimary - (props.prevPosition?.amounts.borrowedPrimary || 0)
+
+    const borrowedSecondaryAmount =
+      props.position.amounts.borrowedSecondary -
+      (props.prevPosition?.amounts.borrowedSecondary || 0)
 
     const editPosition = {
       ...props.position,
       amounts: {
         primary: primaryAmount,
         secondary: secondaryAmount,
-        borrowed: borrowedAmount,
+        borrowedPrimary: borrowedPrimaryAmount,
+        borrowedSecondary: borrowedSecondaryAmount,
         lp: {
           amount: '0',
           primary: 0,
@@ -47,15 +52,15 @@ export const useEditPosition = (props: Props) => {
 
     const primaryBaseAmount = convertToBaseCurrency({
       denom: props.vault.denoms.primary,
-      amount: primaryAmount.toString(),
+      amount: (primaryAmount + borrowedPrimaryAmount).toString(),
     })
     const secondaryBaseAmount = convertToBaseCurrency({
       denom: props.vault.denoms.secondary,
-      amount: (secondaryAmount + borrowedAmount).toString(),
+      amount: (secondaryAmount + borrowedSecondaryAmount).toString(),
     })
 
-    let primaryAfterSwap = primaryAmount
-    let secondaryAfterSwap = secondaryAmount + borrowedAmount
+    let primaryAfterSwap = primaryAmount + borrowedPrimaryAmount
+    let secondaryAfterSwap = secondaryAmount + borrowedSecondaryAmount
 
     // If difference is larger than threshold, initiate a swap
     const difference = primaryBaseAmount - secondaryBaseAmount
@@ -105,7 +110,8 @@ export const useEditPosition = (props: Props) => {
   }, [
     props.position.amounts.primary,
     props.position.amounts.secondary,
-    props.position.amounts.borrowed,
+    props.position.amounts.borrowedPrimary,
+    props.position.amounts.borrowedSecondary,
   ])
 
   const { data: minLpToReceive } = useProvideLiquidity({
@@ -128,9 +134,12 @@ export const useEditPosition = (props: Props) => {
       amount: editPosition.amounts.secondary.toString(),
     }
 
-    const borrow = editPosition.amounts.borrowed && {
-      denom: props.vault.denoms.secondary,
-      amount: editPosition.amounts.borrowed.toString(),
+    const borrow = editPosition.borrowDenom && {
+      denom: editPosition.borrowDenom,
+      amount: Math.max(
+        editPosition.amounts.borrowedPrimary,
+        editPosition.amounts.borrowedSecondary,
+      ).toString(),
     }
 
     if (primary) coins.supply.push(primary)
@@ -139,12 +148,12 @@ export const useEditPosition = (props: Props) => {
 
     const primaryBaseAmount = convertToBaseCurrency({
       denom: props.vault.denoms.primary,
-      amount: String(editPosition.amounts.primary),
+      amount: String(editPosition.amounts.primary + editPosition.amounts.borrowedPrimary),
     })
 
     const secondaryBaseAmount = convertToBaseCurrency({
       denom: props.vault.denoms.secondary,
-      amount: String(editPosition.amounts.secondary + editPosition.amounts.borrowed),
+      amount: String(editPosition.amounts.secondary + editPosition.amounts.borrowedSecondary),
     })
 
     const swapMessage: Action[] = []

@@ -1,7 +1,7 @@
 export const getCoinFromPosition = (
   position: Position,
   vault: Vault,
-  type: 'primary' | 'secondary' | 'borrowed',
+  type: 'primary' | 'secondary' | 'borrowedPrimary' | 'borrowedSecondary',
 ) => {
   const denom = type === 'primary' ? vault.denoms.primary : vault.denoms.secondary
   return {

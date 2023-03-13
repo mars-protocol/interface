@@ -153,13 +153,15 @@ export const IncentivesButton = () => {
         }}
       >
         <SVG.Logo />
-        <DisplayCurrency
-          className={styles.balance}
-          coin={{
-            amount: unclaimedRewards,
-            denom: marsDenom,
-          }}
-        />
+        <span>
+          <AnimatedNumber
+            amount={Number(unclaimedRewards) / 1e6}
+            minDecimals={2}
+            maxDecimals={2}
+            className={styles.marsAmount}
+          />
+          {MARS_SYMBOL}
+        </span>
       </button>
 
       {showDetails && (

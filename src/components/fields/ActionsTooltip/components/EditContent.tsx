@@ -15,11 +15,16 @@ export const EditContent = (props: Props) => {
   const { t } = useTranslation()
   const convertValueToAmount = useStore((s) => s.convertValueToAmount)
 
+  const borrowKey =
+    props.position.borrowDenom === props.vault.denoms.primary
+      ? 'borrowedPrimary'
+      : 'borrowedSecondary'
+
   const primaryAmount = props.position.amounts.primary - (props.prevPosition?.amounts.primary || 0)
   const secondaryAmount =
     props.position.amounts.secondary - (props.prevPosition?.amounts.secondary || 0)
   const borrowedAmount =
-    props.position.amounts.borrowed - (props.prevPosition?.amounts.borrowed || 0)
+    props.position.amounts[borrowKey] - (props.prevPosition?.amounts[borrowKey] || 0)
 
   const depositPrimary = (
     <TokenBalance
@@ -43,10 +48,10 @@ export const EditContent = (props: Props) => {
     />
   )
 
-  const borrowSecondary = (
+  const borrow = (
     <TokenBalance
       coin={{
-        denom: props.vault.denoms.secondary,
+        denom: props.position.borrowDenom || props.vault.denoms.secondary,
         amount: borrowedAmount.toString(),
       }}
       className={styles.marginRight}
@@ -78,14 +83,14 @@ export const EditContent = (props: Props) => {
     return (
       <li>
         <span className={styles.marginRight}>{t('redbank.borrow')}</span>
-        {borrowSecondary}
+        {borrow}
       </li>
     )
   }
 
   const getSwapMessage = () => {
-    const primaryValue = props.position.values.primary
-    const secondaryValue = props.position.values.secondary + props.position.values.borrowed
+    const primaryValue = props.position.values.primary + props.position.values.borrowedPrimary
+    const secondaryValue = props.position.values.secondary + props.position.values.borrowedSecondary
     const difference = Math.abs(primaryValue - secondaryValue)
     if (difference < SWAP_THRESHOLD) return null
 

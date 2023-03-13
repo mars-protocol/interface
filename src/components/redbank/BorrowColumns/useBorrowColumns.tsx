@@ -70,17 +70,15 @@ export const useBorrowColumns = () => {
         header: () => (
           <TextTooltip text={t('common.rate')} tooltip={t('redbank.tooltips.borrow.rate')} />
         ),
-        cell: (info) => {
-          return (
-            <AnimatedNumber
-              amount={info.getValue()}
-              suffix='%'
-              abbreviated={false}
-              rounded={false}
-              className='m'
-            />
-          )
-        },
+        cell: (info) => (
+          <AnimatedNumber
+            amount={info.getValue()}
+            suffix='%'
+            abbreviated={false}
+            rounded={false}
+            className='m'
+          />
+        ),
       }),
       columnHelper.accessor('marketLiquidity', {
         enableSorting: enableSorting,
@@ -100,15 +98,13 @@ export const useBorrowColumns = () => {
       }),
       columnHelper.display({
         id: 'actions',
-        cell: ({ row }) => {
-          return (
-            <Button
-              color='quaternary'
-              prefix={row.getIsExpanded() ? <SVG.Collapse /> : <SVG.Expand />}
-              variant='round'
-            />
-          )
-        },
+        cell: ({ row }) => (
+          <Button
+            color='quaternary'
+            prefix={row.getIsExpanded() ? <SVG.Collapse /> : <SVG.Expand />}
+            variant='round'
+          />
+        ),
       }),
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps

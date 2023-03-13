@@ -4,7 +4,8 @@ export const DEFAULT_POSITION: Position = {
   amounts: {
     primary: 0,
     secondary: 0,
-    borrowed: 0,
+    borrowedPrimary: 0,
+    borrowedSecondary: 0,
     lp: {
       amount: '0',
       primary: 0,
@@ -15,7 +16,8 @@ export const DEFAULT_POSITION: Position = {
   values: {
     primary: 0,
     secondary: 0,
-    borrowed: 0,
+    borrowedPrimary: 0,
+    borrowedSecondary: 0,
     total: 0,
     net: 0,
   },
@@ -26,4 +28,5 @@ export const DEFAULT_POSITION: Position = {
   },
   ltv: 0.5,
   currentLeverage: 1,
+  borrowDenom: null,
 }

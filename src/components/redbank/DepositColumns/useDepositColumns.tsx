@@ -59,37 +59,45 @@ export const useDepositColumns = () => {
             tooltip={t('redbank.tooltips.deposit.deposited')}
           />
         ),
-        cell: (info) => {
-          return (
-            <CellAmount
-              amount={Number(info.row.original.depositBalance)}
-              decimals={info.row.original.decimals}
-              denom={info.row.original.denom}
-              noBalanceText={t('common.noDeposit')}
-            />
-          )
-        },
+        cell: (info) => (
+          <CellAmount
+            amount={Number(info.row.original.depositBalance)}
+            decimals={info.row.original.decimals}
+            denom={info.row.original.denom}
+            noBalanceText={t('common.noDeposit')}
+          />
+        ),
       }),
       columnHelper.accessor('apy', {
         enableSorting: enableSorting,
         header: () => (
           <TextTooltip text={t('common.apr')} tooltip={t('redbank.tooltips.deposit.apy')} />
         ),
-        cell: (info) => (
-          <TextTooltip
-            hideStyling
-            text={
-              <AnimatedNumber
-                amount={info.getValue() + Number(info.row.original.incentiveInfo?.apy || 0)}
-                suffix='%'
-                abbreviated={false}
-                rounded={false}
-                className='m'
-              />
-            }
-            tooltip={<Apr data={info.row.original} />}
-          />
-        ),
+        cell: (info) =>
+          info.row.original.borrowEnabled ? (
+            <TextTooltip
+              hideStyling
+              text={
+                <AnimatedNumber
+                  amount={info.getValue() + Number(info.row.original.incentiveInfo?.apy || 0)}
+                  suffix='%'
+                  abbreviated={false}
+                  rounded={false}
+                  className='m'
+                />
+              }
+              tooltip={<Apr data={info.row.original} />}
+            />
+          ) : (
+            <TextTooltip
+              text='–'
+              hideUnderline
+              className={styles.notBorrowable}
+              tooltip={t('redbank.tooltips.deposit.notBorrowable', {
+                symbol: info.row.original.symbol,
+              })}
+            />
+          ),
       }),
       columnHelper.accessor('depositCap', {
         enableSorting: enableSorting,
@@ -108,7 +116,6 @@ export const useDepositColumns = () => {
             'faded',
             percent >= 100 ? 'colorInfoLoss' : '',
           )
-
           return (
             <>
               <p className='number'>
@@ -129,15 +136,13 @@ export const useDepositColumns = () => {
       }),
       columnHelper.display({
         id: 'actions',
-        cell: ({ row }) => {
-          return (
-            <Button
-              color='quaternary'
-              prefix={row.getIsExpanded() ? <SVG.Collapse /> : <SVG.Expand />}
-              variant='round'
-            />
-          )
-        },
+        cell: ({ row }) => (
+          <Button
+            color='quaternary'
+            prefix={row.getIsExpanded() ? <SVG.Collapse /> : <SVG.Expand />}
+            variant='round'
+          />
+        ),
       }),
     ]
     // eslint-disable-next-line react-hooks/exhaustive-deps

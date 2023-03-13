@@ -9,5 +9,5 @@ export const getMaxAllowedLeverage = (
     new BigNumber(borrowValue)
       .div(new BigNumber(primaryValue).plus(secondaryValue))
       .plus(1)
-      .toPrecision(2),
+      .toPrecision(4),
   )

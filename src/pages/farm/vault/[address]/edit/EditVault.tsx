@@ -65,6 +65,11 @@ const EditVault = (props: Props) => {
     [prevPosition.values.total, position.values.total],
   )
 
+  const borrowKey =
+    props.activeVault.position.borrowDenom === props.activeVault.denoms.primary
+      ? 'borrowedPrimary'
+      : 'borrowedSecondary'
+
   const { repayActions, repayFunds, repayFee } = useRepayPosition({
     prevPosition,
     repayPosition,
@@ -131,7 +136,8 @@ const EditVault = (props: Props) => {
   const actionButtons = useMemo(
     () => (
       <>
-        {prevPosition.amounts.borrowed > 0 && (
+        {(prevPosition.amounts.borrowedPrimary > 0 ||
+          prevPosition.amounts.borrowedSecondary > 0) && (
           <Button
             onClick={() => setIsRepay(!isRepay)}
             text={isRepay ? t('fields.managePosition') : t('fields.repayDebt')}
@@ -158,7 +164,8 @@ const EditVault = (props: Props) => {
       setIsRepay,
       lockupTimeAndUnit.time,
       lockupTimeAndUnit.unit,
-      prevPosition.amounts.borrowed,
+      prevPosition.amounts.borrowedPrimary,
+      prevPosition.amounts.borrowedSecondary,
     ],
   )
 
@@ -200,9 +207,13 @@ const EditVault = (props: Props) => {
     !isRepay &&
     (prevPosition.amounts.primary > position.amounts.primary ||
       prevPosition.amounts.secondary > position.amounts.secondary ||
-      prevPosition.amounts.borrowed > position.amounts.borrowed)
+      prevPosition.amounts.borrowedPrimary > position.amounts.borrowedPrimary ||
+      prevPosition.amounts.borrowedSecondary > position.amounts.borrowedSecondary)
 
-  const isNotRepaying = isRepay && repayPosition.amounts.borrowed >= prevPosition.amounts.borrowed
+  const isNotRepaying =
+    isRepay &&
+    repayPosition.amounts.borrowedPrimary >= prevPosition.amounts.borrowedPrimary &&
+    repayPosition.amounts.borrowedSecondary >= prevPosition.amounts.borrowedSecondary
   const isWithoutFee = (!isRepay && !editFee) || (isRepay && !repayFee)
   const isSameAmounts =
     (isEqual(prevPosition.amounts, position.amounts) && !isRepay) ||
@@ -280,7 +291,7 @@ const EditVault = (props: Props) => {
                 type={isRepay ? 'repay' : showUnlockBtn ? 'unlock' : 'edit'}
                 position={position}
                 prevPosition={prevPosition}
-                repayAmount={prevPosition.amounts.borrowed - repayPosition.amounts.borrowed}
+                repayAmount={prevPosition.amounts[borrowKey] - repayPosition.amounts[borrowKey]}
                 vault={props.activeVault}
                 className={styles.tooltip}
               />

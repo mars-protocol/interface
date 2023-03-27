@@ -3,9 +3,9 @@ import { useQueryClient } from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
 import classNames from 'classnames'
 import { Button, NumberInput, SVG, Toggle, Tooltip } from 'components/common'
-import { FIELDS_FEATURE } from 'constants/appConstants'
+import { DISPLAY_CURRENCY_KEY, ENABLE_ANIMATIONS_KEY, FIELDS_FEATURE } from 'constants/appConstants'
 import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import useStore from 'store'
 
 import styles from './Settings.module.scss'
@@ -19,33 +19,17 @@ export const Settings = () => {
   const slippage = useStore((s) => s.slippage)
   const networkConfig = useStore((s) => s.networkConfig)
   const baseCurrency = useStore((s) => s.baseCurrency)
-  const whitelistedAssets = useStore((s) => s.whitelistedAssets)
-  const otherAssets = useStore((s) => s.otherAssets)
-  const assets: Asset[] = [...whitelistedAssets, ...otherAssets]
+  const currencyAssets = useStore((s) => s.currencyAssets)
   const [customSlippage, setCustomSlippage] = useState<string>(inputPlaceholder)
   const [inputRef, setInputRef] = useState<React.RefObject<HTMLInputElement>>()
   const [isCustom, setIsCustom] = useState(false)
   const enableAnimations = useStore((s) => s.enableAnimations)
   const { status } = useWalletManager()
   const exchangeRates = useStore((s) => s.exchangeRates)
-  const [displayCurrency, setDisplayCurrency] = useState<DisplayCurrency>(() => {
-    const currency = {
-      denom: baseCurrency.denom,
-      prefix: '',
-      suffix: baseCurrency.symbol,
-      decimals: 2,
-    }
-    const currentCurrency = assets.find(
-      (asset) => asset.denom === networkConfig?.displayCurrency.denom,
-    )
 
-    if (currentCurrency) {
-      currency.denom = currentCurrency.denom
-      currency.prefix = ''
-      currency.suffix = currentCurrency.symbol
-    }
-    return currency
-  })
+  const [displayCurrency, setDisplayCurrency] = useState<DisplayCurrency>(
+    networkConfig?.displayCurrency,
+  )
 
   const onInputChange = (value: number) => {
     setCustomSlippage(value.toString())
@@ -79,24 +63,25 @@ export const Settings = () => {
 
   const changeReduceMotion = (reduce: boolean) => {
     useStore.setState({ enableAnimations: !reduce })
-    localStorage.setItem('enableAnimations', reduce ? 'false' : 'true')
+    localStorage.setItem(ENABLE_ANIMATIONS_KEY, reduce ? 'false' : 'true')
   }
 
   const changeDisplayCurrency = (denom: string) => {
-    const selectedAsset = assets.find((asset) => asset.denom === denom)
+    const selectedAsset = currencyAssets.find((asset) => asset.denom === denom)
     if (!selectedAsset || !networkConfig || !exchangeRates?.length) return
     const newDisplayCurrency = {
       denom: selectedAsset.denom,
-      prefix: '',
-      suffix: selectedAsset.symbol,
+      prefix: selectedAsset.prefix ?? '',
+      suffix: selectedAsset.symbol ?? '',
       decimals: 2,
     }
+
     const exchangeRate = exchangeRates.find((rate) => rate.denom === newDisplayCurrency.denom)
     if (!exchangeRate) return
     setDisplayCurrency(newDisplayCurrency)
     useStore.setState({ networkConfig: { ...networkConfig, displayCurrency: newDisplayCurrency } })
     useStore.setState({ baseToDisplayCurrencyRatio: 1 / Number(exchangeRate.amount) })
-    localStorage.setItem('displayCurrency', JSON.stringify(newDisplayCurrency))
+    localStorage.setItem(DISPLAY_CURRENCY_KEY, JSON.stringify(newDisplayCurrency))
     queryClient.invalidateQueries()
   }
 
@@ -135,9 +120,7 @@ export const Settings = () => {
                 <div className={styles.name}>
                   {t('common.displayCurrency')}
                   <Tooltip
-                    content={t('common.tooltips.displayCurrency', {
-                      baseCurrencySymbol: baseCurrency.symbol,
-                    })}
+                    content={<Trans i18nKey='common.tooltips.displayCurrency' />}
                     className={styles.tooltip}
                   />
                 </div>
@@ -148,9 +131,9 @@ export const Settings = () => {
                     tabIndex={2}
                     value={displayCurrency.denom}
                   >
-                    {assets.map((currency) => (
+                    {currencyAssets.map((currency) => (
                       <option key={currency.denom} value={currency.denom}>
-                        {`${currency.name} (${currency.symbol})`}
+                        {`${currency.name} ${currency.symbol && `(${currency.symbol})`}`}
                       </option>
                     ))}
                   </select>
@@ -200,6 +183,7 @@ export const Settings = () => {
                           maxDecimals={1}
                           maxLength={3}
                           className={styles.customSlippageBtn}
+                          style={{ fontSize: 16 }}
                         />
                         %
                       </button>

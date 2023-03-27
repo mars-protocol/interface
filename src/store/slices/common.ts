@@ -7,6 +7,7 @@ import {
   WalletClient,
 } from '@marsprotocol/wallet-connector'
 import BigNumber from 'bignumber.js'
+import { DISPLAY_CURRENCY_KEY } from 'constants/appConstants'
 import { BlockHeightData } from 'hooks/queries/useBlockHeight'
 import { DepositAndDebtData } from 'hooks/queries/useDepositAndDebt'
 import { UserBalanceData } from 'hooks/queries/useUserBalance'
@@ -31,6 +32,7 @@ const commonSlice = (
     symbol: 'OSMO',
     decimals: 6,
   },
+  currencyAssets: [],
   currentNetwork: Network.TESTNET,
   errors: {
     network: false,
@@ -115,7 +117,7 @@ const commonSlice = (
       config.NETWORK_CONFIG.rpcUrl = serializeUrl(config.NETWORK_CONFIG.rpcUrl)
       config.NETWORK_CONFIG.restUrl = serializeUrl(config.NETWORK_CONFIG.restUrl)
 
-      const storageDisplayCurrency = localStorage.getItem('displayCurrency')
+      const storageDisplayCurrency = localStorage.getItem(DISPLAY_CURRENCY_KEY)
       if (storageDisplayCurrency) {
         config.NETWORK_CONFIG.displayCurrency = JSON.parse(storageDisplayCurrency)
       }
@@ -123,6 +125,7 @@ const commonSlice = (
       set({
         otherAssets: config.NETWORK_CONFIG.assets.other,
         whitelistedAssets: config.NETWORK_CONFIG.assets.whitelist,
+        currencyAssets: config.NETWORK_CONFIG.assets.currencies,
         networkConfig: config.NETWORK_CONFIG,
         isNetworkLoaded: true,
         baseAsset: config.NETWORK_CONFIG.assets.base,

@@ -8,12 +8,8 @@ export const getLeverageFromValues = (values: {
   net: number
   total: number
 }) =>
-  Number(
-    new BigNumber(
-      values.borrowedPrimary > values.borrowedSecondary
-        ? values.borrowedPrimary
-        : values.borrowedSecondary,
-    )
-      .div(values.net || 1)
-      .plus(1),
-  )
+  new BigNumber(values.borrowedPrimary)
+    .plus(values.borrowedSecondary)
+    .div(values.net || 1)
+    .plus(1)
+    .toNumber()

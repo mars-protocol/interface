@@ -14,6 +14,7 @@ import {
   useDepositAndDebt,
   useMarsOracle,
   useRedBank,
+  useUsdPrice,
   useUserBalance,
   useUserDebt,
   useUserDeposit,
@@ -155,6 +156,7 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
   useUserDebt()
   useMarsOracle()
   useSpotPrice(MARS_SYMBOL)
+  useUsdPrice()
   useDepositAndDebt()
   useRedBank()
 

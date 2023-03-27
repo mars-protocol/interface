@@ -27,6 +27,7 @@ export interface CommonSlice {
   baseToDisplayCurrencyRatio?: number
   chainInfo?: SimplifiedChainInfo
   client?: WalletClient
+  currencyAssets: (Asset | OtherAsset)[]
   currentNetwork: Network
   marketDebts: Coin[]
   enableAnimations?: boolean

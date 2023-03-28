@@ -142,12 +142,14 @@ export const useActiveVaultsColumns = () => {
               tooltip={
                 <>
                   {Number(coins[0].amount) > 0 && (
-                    <TokenBalance coin={coins[0]} maxDecimals={2} showSymbol />
+                    <>
+                      <TokenBalance coin={coins[0]} maxDecimals={2} showSymbol />
+                      <br />
+                    </>
                   )}
-                  <br />
                   {Number(coins[1].amount) > 0 && (
                     <TokenBalance coin={coins[1]} maxDecimals={2} showSymbol />
-                  )}{' '}
+                  )}
                 </>
               }
             />
@@ -157,7 +159,7 @@ export const useActiveVaultsColumns = () => {
       columnHelper.accessor('position.values.borrowedPrimary', {
         enableSorting: true,
         header: () => (
-          <TextTooltip text={t('common.borrowed')} tooltip={t('fields.tooltips.borrowValue')} />
+          <TextTooltip text={t('fields.debtValue')} tooltip={t('fields.tooltips.borrowValue')} />
         ),
         cell: ({ row }) => {
           const borrowAsset = whitelistedAssets.find(

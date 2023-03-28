@@ -18,7 +18,7 @@ interface CoinPriceData {
 }
 
 export const useUsdPrice = () => {
-  const apiUrl = useStore((s) => s.networkConfig?.priceApiUrl ?? '')
+  const osmoUsdPriceUrl = useStore((s) => s.networkConfig?.osmoUsdPriceUrl ?? '')
   const exchangeRates = useStore((s) => s.exchangeRates ?? [])
   const networkConfig = useStore((s) => s.networkConfig)
   const displayCurrency = networkConfig?.displayCurrency
@@ -26,11 +26,11 @@ export const useUsdPrice = () => {
   useQuery<CoinPriceData[]>(
     [QUERY_KEYS.USD_PRICE],
     async () => {
-      const res = await fetch(apiUrl)
+      const res = await fetch(osmoUsdPriceUrl)
       return res.json()
     },
     {
-      enabled: !!apiUrl && !!exchangeRates.length && !!displayCurrency,
+      enabled: !!osmoUsdPriceUrl && !!exchangeRates.length && !!displayCurrency,
       staleTime: 30000,
       refetchInterval: 30000,
       onSuccess: (data) => {
@@ -39,7 +39,7 @@ export const useUsdPrice = () => {
           useStore.setState({ baseToDisplayCurrencyRatio: data[0].price })
         }
 
-        updateExchangeRate(coin, exchangeRates)
+        useStore.setState({ exchangeRates: updateExchangeRate(coin, exchangeRates) })
       },
     },
   )

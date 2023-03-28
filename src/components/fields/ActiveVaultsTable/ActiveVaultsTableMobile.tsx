@@ -5,9 +5,9 @@ import {
   BorrowCapacity,
   Card,
   DisplayCurrency,
+  Loading,
   TextTooltip,
 } from 'components/common'
-import { Loading } from 'components/common'
 import { VaultLogo, VaultName } from 'components/fields'
 import { FIELDS_TUTORIAL_KEY } from 'constants/appConstants'
 import { getLiqBorrowValue, getMaxBorrowValue } from 'functions/fields'
@@ -58,6 +58,10 @@ export const ActiveVaultsTableMobile = () => {
       <div className={styles.container}>
         {activeVaults.map((vault, i) => {
           const maxBorrowValue = getMaxBorrowValue(vault, vault.position)
+          const borrowKey =
+            vault.position.borrowDenom === vault.denoms.primary
+              ? 'borrowedPrimary'
+              : 'borrowedSecondary'
 
           const content = (
             <div key={`${vault.address}-${i}`} className={styles.grid}>
@@ -123,10 +127,7 @@ export const ActiveVaultsTableMobile = () => {
                   <DisplayCurrency
                     coin={{
                       denom: baseCurrency.denom,
-                      amount: (vault.position.borrowDenom === vault.denoms.primary
-                        ? vault.position.amounts.borrowedPrimary
-                        : vault.position.amounts.borrowedSecondary
-                      ).toString(),
+                      amount: vault.position.values[borrowKey].toString(),
                     }}
                     className={styles.inline}
                   />
@@ -141,11 +142,7 @@ export const ActiveVaultsTableMobile = () => {
                   showPercentageText={true}
                   max={getLiqBorrowValue(vault, vault.position.values.net)}
                   limit={maxBorrowValue}
-                  balance={
-                    vault.position.borrowDenom === vault.denoms.primary
-                      ? vault.position.values.borrowedPrimary
-                      : vault.position.values.borrowedSecondary
-                  }
+                  balance={vault.position.values[borrowKey]}
                   showTitle={false}
                   barHeight={'16px'}
                   hideValues

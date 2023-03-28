@@ -1,7 +1,6 @@
 import { ChainInfoID, WalletID } from '@marsprotocol/wallet-connector'
 import { URL_GQL, URL_REST, URL_RPC } from 'constants/env'
 import atom from 'images/atom.svg'
-import axlusdc from 'images/axlusdc.svg'
 import juno from 'images/juno.svg'
 import mars from 'images/mars.svg'
 import osmo from 'images/osmo.svg'
@@ -45,15 +44,14 @@ const OTHER_ASSETS: { [denom: string]: OtherAsset } = {
     decimals: 6,
     poolId: 768,
   },
-  axlusdc: {
-    symbol: 'axlUSDC',
-    name: 'axlUSDC',
-    // This is the address / pool of DAI, not USDC
-    denom: 'ibc/88D70440A05BFB25C7FF0BA62DA357EAA993CB1B036077CF1DAAEFB28721D935',
-    color: colors.axlusdc,
-    logo: axlusdc,
-    decimals: 6,
-    poolId: 674,
+  usd: {
+    symbol: '',
+    prefix: '$',
+    name: 'US Dollar',
+    denom: 'usd',
+    color: '',
+    logo: '',
+    decimals: 2,
   },
 }
 
@@ -65,7 +63,7 @@ export const NETWORK_CONFIG: NetworkConfig = {
   rpcUrl: URL_RPC ?? 'https://rpc-test.osmosis.zone/',
   restUrl: URL_REST ?? 'https://lcd-test.osmosis.zone/',
   apolloAprUrl: 'https://api.apollo.farm/api/vault_infos/v2/osmo-test-4',
-  priceApiUrl: 'https://api-osmosis.imperator.co/tokens/v2/OSMO',
+  osmoUsdPriceUrl: 'https://api-osmosis.imperator.co/tokens/v2/OSMO',
   contracts: {
     redBank: 'osmo1t0dl6r27phqetfu0geaxrng0u9zn8qgrdwztapt5xr32adtwptaq6vwg36',
     incentives: 'osmo1zxs8fry3m8j94pqg7h4muunyx86en27cl0xgk76fc839xg2qnn6qtpjs48',
@@ -76,14 +74,10 @@ export const NETWORK_CONFIG: NetworkConfig = {
   assets: {
     base: ASSETS.osmo,
     whitelist: [ASSETS.osmo, ASSETS.atom, ASSETS.juno],
-    other: [OTHER_ASSETS.mars, OTHER_ASSETS.axlusdc],
+    other: [OTHER_ASSETS.usd, OTHER_ASSETS.mars],
+    currencies: [OTHER_ASSETS.usd, ASSETS.osmo, ASSETS.atom, ASSETS.juno, OTHER_ASSETS.mars],
   },
-  displayCurrency: {
-    denom: 'ibc/88D70440A05BFB25C7FF0BA62DA357EAA993CB1B036077CF1DAAEFB28721D935',
-    prefix: '',
-    suffix: 'axlUSDC',
-    decimals: 2,
-  },
+  displayCurrency: OTHER_ASSETS.usd,
   appUrl: 'https://testnet.osmosis.zone',
   wallets: [WalletID.Keplr, WalletID.Leap, WalletID.Cosmostation],
 }

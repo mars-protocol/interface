@@ -4,7 +4,7 @@ interface NetworkConfig {
   rpcUrl: string
   restUrl: string
   apolloAprUrl: string
-  priceApiUrl: string
+  osmoUsdPriceUrl: string
   contracts: {
     redBank: string
     incentives: string
@@ -16,6 +16,7 @@ interface NetworkConfig {
     base: Asset
     whitelist: Asset[]
     other: OtherAsset[]
+    currencies: (Asset | OtherAsset)[]
   }
   displayCurrency: displayCurrency
   appUrl: string

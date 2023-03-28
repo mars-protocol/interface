@@ -122,9 +122,11 @@ export const TokenInput = (props: Props) => {
           coin={{ denom: asset.denom, amount: props.amount.toString() }}
         />
         {props.borrowRate && (
-          <span className='xxsCaps number faded'>
-            {formatValue(props.borrowRate, 2, 2, true, false, `% ${t('common.apr')}`)}
-          </span>
+          <div>
+            <span className='xxsCaps number faded'>
+              {formatValue(props.borrowRate, 2, 2, true, false, `% ${t('common.apr')}`)}
+            </span>
+          </div>
         )}
       </div>
     </div>

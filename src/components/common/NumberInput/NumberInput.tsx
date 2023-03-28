@@ -12,6 +12,7 @@ interface Props {
   maxLength?: number
   allowNegative?: boolean
   suffix?: string
+  style?: {}
   onChange: (value: number) => void
   onBlur?: () => void
   onFocus?: () => void
@@ -139,7 +140,8 @@ export const NumberInput = (props: Props) => {
       onFocus={onInputFocus}
       onChange={(e) => onInputChange(e.target.value)}
       onBlur={props.onBlur}
-      className={`${props.className} ${styles.input}`}
+      className={`${styles.input} ${props.className}`}
+      style={props.style}
     />
   )
 }

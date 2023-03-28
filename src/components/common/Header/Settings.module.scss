@@ -111,6 +111,7 @@
 }
 
 .button {
+  font-size: rem-calc(16);
   @include margin(0, 0, 0, 2);
 }
 

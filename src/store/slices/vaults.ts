@@ -324,17 +324,20 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
               (unlockTime) => unlockTime?.vaultAddress === curr.address,
             )?.unlockAtTimestamp
 
-            let primaryAmount = Number(
+            const primaryAmount = Number(
               findByDenom(primaryAndSecondaryAmount.coins, curr.denoms.primary)?.amount || 0,
             )
-            let secondaryAmount = Number(
+            const secondaryAmount = Number(
               findByDenom(primaryAndSecondaryAmount.coins, curr.denoms.secondary)?.amount || 0,
             )
 
+            let primarySupplyAmount = 0
+            let secondarySupplyAmount = 0
             let borrowedPrimaryAmount = 0
             let borrowedSecondaryAmount = 0
 
             const debt = creditAccountPosition.debts[0]
+
             if (debt) {
               if (debt.denom === curr.denoms.primary) {
                 borrowedPrimaryAmount = Number(debt.amount)
@@ -343,40 +346,57 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
               }
             }
 
-            const borrowedDenom: string = creditAccountPosition.debts[0]?.denom || ''
+            const borrowedDenom = debt?.denom || ''
 
-            if (borrowedPrimaryAmount > primaryAmount) {
-              const swapped = Math.round(
-                get().convertToBaseCurrency({
-                  denom: borrowedDenom,
-                  amount: (borrowedPrimaryAmount - primaryAmount).toString(),
-                }),
-              )
-              secondaryAmount -= swapped
+            if (borrowedDenom === curr.denoms.primary) {
+              if (borrowedPrimaryAmount > primaryAmount) {
+                const swapped = Math.round(
+                  get().convertToBaseCurrency({
+                    denom: borrowedDenom,
+                    amount: (borrowedPrimaryAmount - primaryAmount).toString(),
+                  }),
+                )
+
+                const rate = Number(
+                  get().exchangeRates?.find((coin) => coin.denom === curr.denoms.secondary)
+                    ?.amount ?? 0,
+                )
+                primarySupplyAmount = 0
+                secondarySupplyAmount = Math.floor(secondaryAmount - swapped / rate)
+              } else {
+                primarySupplyAmount = primaryAmount - borrowedPrimaryAmount
+                secondarySupplyAmount = secondaryAmount
+              }
+            } else if (borrowedDenom === curr.denoms.secondary) {
+              if (borrowedSecondaryAmount > secondaryAmount) {
+                const swapped = Math.round(
+                  get().convertToBaseCurrency({
+                    denom: borrowedDenom,
+                    amount: (borrowedSecondaryAmount - secondaryAmount).toString(),
+                  }),
+                )
+                const rate = Number(
+                  get().exchangeRates?.find((coin) => coin.denom === curr.denoms.primary)?.amount ??
+                    0,
+                )
+                secondarySupplyAmount = 0
+                primarySupplyAmount = Math.floor(primaryAmount - swapped / rate)
+              } else {
+                secondarySupplyAmount = secondaryAmount - borrowedSecondaryAmount
+                primarySupplyAmount = primaryAmount
+              }
             }
 
-            if (borrowedSecondaryAmount > secondaryAmount) {
-              const swapped = Math.round(
-                get().convertToBaseCurrency({
-                  denom: borrowedDenom,
-                  amount: (borrowedSecondaryAmount - secondaryAmount).toString(),
-                }),
-              )
-              primaryAmount -= swapped
-            }
-
-            const primarySupplyAmount = Math.max(primaryAmount - borrowedPrimaryAmount, 0)
-            const secondarySupplyAmount = Math.max(secondaryAmount - borrowedSecondaryAmount, 0)
             const borrowedAmount = Math.max(borrowedPrimaryAmount, borrowedSecondaryAmount)
 
             const convertToBaseCurrency = get().convertToBaseCurrency
             const redBankAssets = get().redBankAssets
-            const primaryValue = convertToBaseCurrency({
+            const primarySupplyValue = convertToBaseCurrency({
               denom: curr.denoms.primary,
               amount: primarySupplyAmount.toString(),
             })
 
-            const secondaryValue = convertToBaseCurrency({
+            const secondarySupplyValue = convertToBaseCurrency({
               denom: curr.denoms.secondary,
               amount: secondarySupplyAmount.toString(),
             })
@@ -387,12 +407,12 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
             })
 
             const values = {
-              primary: primaryValue,
-              secondary: secondaryValue,
+              primary: primarySupplyValue,
+              secondary: secondarySupplyValue,
               borrowedPrimary: borrowedDenom === curr.denoms.primary ? borrowedValue : 0,
               borrowedSecondary: borrowedDenom === curr.denoms.secondary ? borrowedValue : 0,
-              net: primaryValue + secondaryValue,
-              total: primaryValue + secondaryValue + borrowedValue,
+              net: primarySupplyValue + secondarySupplyValue,
+              total: primarySupplyValue + secondarySupplyValue + borrowedValue,
             }
 
             const leverage = getLeverageFromValues(values)

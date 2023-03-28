@@ -3,6 +3,7 @@ interface Asset {
   name: string
   denom: string
   symbol: 'OSMO' | 'ATOM' | 'JUNO' | 'axlUSDC' | 'stATOM'
+  prefix?: string
   contract_addr?: string
   logo: string
   decimals: number
@@ -11,7 +12,7 @@ interface Asset {
 }
 
 interface OtherAsset extends Omit<Asset, 'symbol'> {
-  symbol: 'MARS' | 'axlUSDC'
+  symbol: 'MARS' | ''
 }
 
 interface AssetPairInfo {

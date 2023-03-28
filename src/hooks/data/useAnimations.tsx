@@ -1,9 +1,10 @@
+import { ENABLE_ANIMATIONS_KEY } from 'constants/appConstants'
 import { useCallback, useEffect } from 'react'
 import useStore from 'store'
 
 export const useAnimations = () => {
   const enableAnimations = useStore((s) => s.enableAnimations)
-  const enableAnimationsLocalStorage = localStorage.getItem('enableAnimations')
+  const enableAnimationsLocalStorage = localStorage.getItem(ENABLE_ANIMATIONS_KEY)
 
   const queryChangeHandler = useCallback(
     (event: MediaQueryListEvent) => {

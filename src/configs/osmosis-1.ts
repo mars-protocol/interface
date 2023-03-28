@@ -55,6 +55,15 @@ const OTHER_ASSETS: { [denom: string]: OtherAsset } = {
     decimals: 6,
     poolId: 907,
   },
+  usd: {
+    symbol: '',
+    prefix: '$',
+    name: 'US Dollar',
+    denom: 'usd',
+    color: '',
+    logo: '',
+    decimals: 2,
+  },
 }
 
 export const NETWORK_CONFIG: NetworkConfig = {
@@ -64,7 +73,7 @@ export const NETWORK_CONFIG: NetworkConfig = {
   rpcUrl: URL_RPC ?? 'https://rpc-osmosis.blockapsis.com/',
   restUrl: URL_REST ?? 'https://lcd-osmosis.blockapsis.com/',
   apolloAprUrl: 'https://api.apollo.farm/api/vault_infos/v2/osmosis-1',
-  priceApiUrl: 'https://api-osmosis.imperator.co/tokens/v2/OSMO',
+  osmoUsdPriceUrl: 'https://api-osmosis.imperator.co/tokens/v2/OSMO',
   contracts: {
     redBank: 'osmo1c3ljch9dfw5kf52nfwpxd2zmj2ese7agnx0p9tenkrryasrle5sqf3ftpg',
     incentives: 'osmo1nkahswfr8shg8rlxqwup0vgahp0dk4x8w6tkv3rra8rratnut36sk22vrm',
@@ -75,14 +84,17 @@ export const NETWORK_CONFIG: NetworkConfig = {
   assets: {
     base: ASSETS.osmo,
     whitelist: [ASSETS.osmo, ASSETS.atom, ASSETS.axlusdc, ASSETS.statom],
-    other: [OTHER_ASSETS.mars],
+    other: [OTHER_ASSETS.usd, OTHER_ASSETS.mars],
+    currencies: [
+      OTHER_ASSETS.usd,
+      ASSETS.osmo,
+      ASSETS.atom,
+      ASSETS.axlusdc,
+      ASSETS.statom,
+      OTHER_ASSETS.mars,
+    ],
   },
-  displayCurrency: {
-    denom: 'ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858',
-    prefix: '',
-    suffix: 'axlUSDC',
-    decimals: 2,
-  },
+  displayCurrency: OTHER_ASSETS.usd,
   appUrl: 'https://app.osmosis.zone',
   wallets: [
     WalletID.Keplr,

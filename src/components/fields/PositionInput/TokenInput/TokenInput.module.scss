@@ -103,11 +103,12 @@
       border-left: 1px solid $alphaWhite20;
     }
   }
+
   .bottomInfo {
     display: flex;
     justify-content: space-between;
+    gap: space(4);
     align-items: center;
-    padding-right: space(2);
     line-height: 1rem;
   }
 }

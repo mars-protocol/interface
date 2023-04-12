@@ -51,7 +51,7 @@ const Create = () => {
 
   return (
     <Card
-      title={availableVault.name}
+      title={t('fields.vaultName', availableVault.name)}
       onClick={() => router.replace('/farm')}
       tooltip={
         <>

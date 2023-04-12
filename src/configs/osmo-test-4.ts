@@ -31,6 +31,7 @@ export const ASSETS: { [denom: string]: Asset } = {
     color: colors.juno,
     logo: juno,
     decimals: 6,
+    poolId: 497,
   },
 }
 
@@ -65,11 +66,11 @@ export const NETWORK_CONFIG: NetworkConfig = {
   apolloAprUrl: 'https://api.apollo.farm/api/vault_infos/v2/osmo-test-4',
   osmoUsdPriceUrl: 'https://api-osmosis.imperator.co/tokens/v2/OSMO',
   contracts: {
-    redBank: 'osmo1t0dl6r27phqetfu0geaxrng0u9zn8qgrdwztapt5xr32adtwptaq6vwg36',
-    incentives: 'osmo1zxs8fry3m8j94pqg7h4muunyx86en27cl0xgk76fc839xg2qnn6qtpjs48',
-    oracle: 'osmo1dqz2u3c8rs5e7w5fnchsr2mpzzsxew69wtdy0aq4jsd76w7upmsstqe0s8',
-    creditManager: 'osmo1dzk4y3s9am6773sglhfc60nstz09c3gy978h2jka6wre5z4hlavq4pcwk0',
-    accountNft: 'osmo16wwckvccarltl4mlnjhw3lcj3v59yglhldgw36ldkknmjavqyaasgcessw',
+    redBank: 'osmo1e9awnhgz8v2vmyx2yrquudfsany687mtn8zdyn255fn7k982h8wqm4t3gp',
+    incentives: 'osmo1cmuykglf6juftw0w97xgtg7808e27w7mgg63f5pvdncwecd7zmssgtltsj',
+    oracle: 'osmo1szpxhxnsy0lk2qs4lh6jnz5yqzn0huw037qp0qtypkfgc9k988js6wj9ge',
+    creditManager: 'osmo13pyg20kk48jad38x2cl7uejryjnyk03j9npgcm0ttvl55xyuar8sr6xlst',
+    accountNft: 'osmo1k8wmkpveumhzj2sp7kedhn39zm9f6726laqwflxjf4wygzgvzj0qnhjaef',
   },
   assets: {
     base: ASSETS.osmo,
@@ -85,7 +86,7 @@ export const NETWORK_CONFIG: NetworkConfig = {
 export const VAULT_CONFIGS: Vault[] = [
   {
     address: 'osmo1tp2m6g39h8mvhnu3plqjyen5s63023gj8w873l8wvly0cd77l6hsaa73wt',
-    name: 'OSMO-ATOM LP (14 day)',
+    name: { name: 'OSMO-ATOM LP', unlockDuration: 14, unlockTimeframe: 'days' },
     denoms: {
       primary: 'uosmo',
       secondary: 'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2',
@@ -98,8 +99,7 @@ export const VAULT_CONFIGS: Vault[] = [
     color: '#DD5B65',
     lockup: 86400 * 14,
     provider: 'Apollo vault',
-    description:
-      'Up to 1.43× leveraged yield farming with auto compounding of the OSMO-ATOM LP tokens.',
+    description: { maxLeverage: 1.43, lpName: 'OSMO-ATOM' },
     ltv: {
       max: 0.295,
       contract: 0.3,
@@ -109,7 +109,7 @@ export const VAULT_CONFIGS: Vault[] = [
   },
   {
     address: 'osmo1r6h0pafu3wq0kf6yv09qhc8qvuku2d6fua0rpwwv46h7hd8u586scxspjf',
-    name: 'OSMO-JUNO LP (1 day)',
+    name: { name: 'OSMO-JUNO LP', unlockDuration: 1, unlockTimeframe: 'days' },
     denoms: {
       primary: 'uosmo',
       secondary: 'ibc/46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED',
@@ -122,8 +122,7 @@ export const VAULT_CONFIGS: Vault[] = [
     color: '#DD5B65',
     lockup: 86400 * 1,
     provider: 'Apollo vault',
-    description:
-      'Up to 1.43× leveraged yield farming with auto compounding of the OSMO-JUNO LP tokens.',
+    description: { maxLeverage: 1.43, lpName: 'OSMO-JUNO' },
     ltv: {
       max: 0.295,
       contract: 0.3,
@@ -133,7 +132,7 @@ export const VAULT_CONFIGS: Vault[] = [
   },
   {
     address: 'osmo1d6knwkelyr9eklewnn9htkess4ttpxpf2cze9ec0xfw7e3fj0ggssqzfpp',
-    name: 'OSMO-JUNO LP (14 day)',
+    name: { name: 'OSMO-JUNO LP', unlockDuration: 14, unlockTimeframe: 'days' },
     denoms: {
       primary: 'uosmo',
       secondary: 'ibc/46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED',
@@ -146,8 +145,7 @@ export const VAULT_CONFIGS: Vault[] = [
     color: '#DD5B65',
     lockup: 86400 * 14,
     provider: 'Apollo vault',
-    description:
-      'Up to 1.43× leveraged yield farming with auto compounding of the OSMO-JUNO LP tokens.',
+    description: { maxLeverage: 1.43, lpName: 'OSMO-JUNO' },
     ltv: {
       max: 0.295,
       contract: 0.3,

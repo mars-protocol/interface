@@ -1,5 +1,6 @@
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import {
+  ChainInfoID,
   getChainInfo,
   getClient,
   useWallet,
@@ -38,7 +39,9 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
   const { status } = useWalletManager()
   const queryClient = useQueryClient()
 
-  const chainInfo = recentWallet?.network ? getChainInfo(recentWallet?.network.chainId) : undefined
+  const chainInfo = recentWallet?.network
+    ? getChainInfo(recentWallet?.network.chainId as ChainInfoID)
+    : undefined
   const address = status !== WalletConnectionStatus.Connected ? '' : recentWallet?.account.address
 
   const [cosmWasmClient, setCosmWasmClient] = useState<CosmWasmClient | undefined>()

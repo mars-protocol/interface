@@ -23,7 +23,6 @@ export const ASSETS: { [denom: string]: Asset } = {
     color: colors.axlusdc,
     logo: axlusdc,
     decimals: 6,
-    poolId: 678,
   },
   atom: {
     symbol: 'ATOM',
@@ -40,7 +39,6 @@ export const ASSETS: { [denom: string]: Asset } = {
     color: colors.statom,
     logo: statom,
     decimals: 6,
-    poolId: 803,
     poolBase: 'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2',
   },
 }
@@ -109,7 +107,7 @@ export const NETWORK_CONFIG: NetworkConfig = {
 export const VAULT_CONFIGS: Vault[] = [
   {
     address: 'osmo1g3kmqpp8608szfp0pdag3r6z85npph7wmccat8lgl3mp407kv73qlj7qwp',
-    name: 'OSMO-ATOM LP (14 day)',
+    name: { name: 'OSMO-ATOM LP', unlockDuration: 14, unlockTimeframe: 'days' },
     denoms: {
       primary: 'uosmo',
       secondary: 'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2',
@@ -122,8 +120,7 @@ export const VAULT_CONFIGS: Vault[] = [
     color: '#6f7390',
     lockup: 86400 * 14,
     provider: 'Apollo vault',
-    description:
-      'Up to 2.67× leveraged yield farming with auto compounding of the OSMO-ATOM LP tokens.',
+    description: { maxLeverage: 2.7, lpName: 'OSMO-ATOM' },
     ltv: {
       max: 0.625,
       contract: 0.63,
@@ -133,7 +130,7 @@ export const VAULT_CONFIGS: Vault[] = [
   },
   {
     address: 'osmo1jfmwayj8jqp9tfy4v4eks5c2jpnqdumn8x8xvfllng0wfes770qqp7jl4j',
-    name: 'OSMO-axlUSDC LP (14 day)',
+    name: { name: 'OSMO-axlUSDC LP', unlockDuration: 14, unlockTimeframe: 'days' },
     denoms: {
       primary: 'uosmo',
       secondary: 'ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858',
@@ -146,12 +143,34 @@ export const VAULT_CONFIGS: Vault[] = [
     color: '#478edc',
     lockup: 86400 * 14,
     provider: 'Apollo vault',
-    description:
-      'Up to 2.78× leveraged yield farming with auto compounding of the OSMO-axlUSDC LP tokens.',
+    description: { maxLeverage: 2.86, lpName: 'OSMO-axlUSDC' },
     ltv: {
       max: 0.645,
       contract: 0.65,
       liq: 0.66,
+    },
+    apy: 0,
+  },
+  {
+    address: 'osmo1a6tcf60pyz8qq2n532dzcs7s7sj8klcmra04tvaqympzcvxqg9esn7xz7l',
+    name: { name: 'stATOM-ATOM', unlockDuration: 14, unlockTimeframe: 'days' },
+    denoms: {
+      primary: 'ibc/C140AFD542AE77BD7DCC83F13FDD8C5E5BB8C4929785E6EC2F4C636F98F17901',
+      secondary: 'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2',
+      lpToken: 'gamm/pool/803',
+    },
+    symbols: {
+      primary: 'stATOM',
+      secondary: 'ATOM',
+    },
+    color: '#a446db',
+    lockup: 86400 * 14,
+    provider: 'Apollo vault',
+    description: { maxLeverage: 2.56, lpName: 'stATOM-ATOM' },
+    ltv: {
+      max: 0.6,
+      contract: 0.61,
+      liq: 0.625,
     },
     apy: 0,
   },

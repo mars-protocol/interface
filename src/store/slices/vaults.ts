@@ -416,8 +416,9 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
             }
 
             const leverage = getLeverageFromValues(values)
+
             const borrowRate =
-              redBankAssets.find((asset) => asset.denom === curr.denoms.secondary)?.borrowRate || 0
+              redBankAssets.find((asset) => asset.denom === borrowedDenom)?.borrowRate || 0
 
             const trueBorrowRate = (leverage - 1) * borrowRate
 

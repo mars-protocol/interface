@@ -7,14 +7,14 @@ export const vault: Vault = {
     secondary: 'ATOM',
     lpToken: 'LP',
   },
-  description: 'test vault',
+  description: { maxLeverage: 2.78, lpName: 'test' },
   ltv: {
     max: 0.5,
     contract: 0.52,
     liq: 0.6,
   },
   lockup: 5,
-  name: 'test vault',
+  name: { name: 'test LP', unlockDuration: 10, unlockTimeframe: 'minutes' },
   provider: 'testing',
   symbols: {
     primary: 'OSMO',

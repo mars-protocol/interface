@@ -3,7 +3,6 @@ import { AnimatedNumber, Apy, Card, DisplayCurrency, Loading, TextTooltip } from
 import { VaultLogo, VaultName } from 'components/fields'
 import { getTimeAndUnit, ltvToLeverage } from 'libs/parse'
 import Link from 'next/link'
-import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import useStore from 'store'
 
@@ -62,7 +61,7 @@ export const AvailableVaultsTableMobile = () => {
                       <span>
                         <TextTooltip
                           hideStyling
-                          text={<AnimatedNumber amount={minAPY} suffix='-' />}
+                          text={<AnimatedNumber amount={minAPY} suffix=' - ' />}
                           tooltip={<Apy apyData={apyDataNoLev} leverage={1} />}
                         />
                         <TextTooltip

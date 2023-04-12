@@ -27,21 +27,28 @@ export const BorrowInput = (props: Props) => {
   const containerClasses = classNames([styles.container])
   const [cachedPrimaryAmount, setCachedPrimaryAmount] = useState(props.borrowedPrimaryAmount)
   const [cachedSecondaryAmount, setCachedSecondaryAmount] = useState(props.borrowedSecondaryAmount)
+  const borrowEnabledAssets: string[] = []
+
+  if (primaryAsset?.borrowEnabled) borrowEnabledAssets.push(primaryAsset.symbol)
+  if (secondaryAsset?.borrowEnabled) borrowEnabledAssets.push(secondaryAsset.symbol)
 
   const primaryInputVisisble =
-    props.borrowedPrimaryAmount > 0 ||
-    props.prevPosition?.borrowDenom === props.vault.denoms.primary
+    (props.borrowedPrimaryAmount > 0 ||
+      props.prevPosition?.borrowDenom === props.vault.denoms.primary) &&
+    primaryAsset?.borrowEnabled
       ? true
       : false
 
   const [primaryInput, setPrimaryInput] = useState<Input>({
-    visible: primaryInputVisisble,
+    visible:
+      borrowEnabledAssets.length === 1 ? !!primaryAsset?.borrowEnabled : primaryInputVisisble,
     denom: props.vault.denoms.primary,
     symbol: props.vault.symbols.primary,
   })
 
   const [secondaryInput, setSecondaryInput] = useState<Input>({
-    visible: !primaryInputVisisble,
+    visible:
+      borrowEnabledAssets.length === 1 ? !!secondaryAsset?.borrowEnabled : !primaryInputVisisble,
     denom: props.vault.denoms.secondary,
     symbol: props.vault.symbols.secondary,
   })
@@ -83,7 +90,7 @@ export const BorrowInput = (props: Props) => {
           tokens={
             props.prevPosition?.borrowDenom === props.vault.denoms.primary
               ? [primaryInput.symbol]
-              : [primaryInput.symbol, secondaryInput.symbol]
+              : borrowEnabledAssets
           }
           onSelect={selectInput}
           maxAmountLabel={t('global.max')}
@@ -100,7 +107,7 @@ export const BorrowInput = (props: Props) => {
           tokens={
             props.prevPosition?.borrowDenom === props.vault.denoms.secondary
               ? [secondaryInput.symbol]
-              : [primaryInput.symbol, secondaryInput.symbol]
+              : borrowEnabledAssets
           }
           onSelect={selectInput}
           maxAmountLabel={t('global.max')}

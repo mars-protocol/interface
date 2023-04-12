@@ -99,7 +99,7 @@ export const BreakdownGraph = (props: Props) => {
         <div className={styles.bar1} style={{ height: `${getBarHeightPercentage(0)}%` }}>
           <AssetBar
             type='name'
-            symbol={props.vault.name}
+            symbol={t('fields.vaultName', props.vault.name)}
             height={getBarHeightPercentage(0)}
             showLabel={hasSpaceForLabel('name')}
           />

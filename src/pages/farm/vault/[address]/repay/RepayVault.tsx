@@ -70,7 +70,7 @@ const RepayVault = (props: Props) => {
         showNotification={props.activeVault.position.status !== 'active'}
       />
       <Card
-        title={props.activeVault.name}
+        title={t('fields.vaultName', props.activeVault.name)}
         onClick={() => router.back()}
         tooltip={
           <>

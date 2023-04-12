@@ -29,7 +29,7 @@ export const UnlockedNotification = () => {
         <div className={styles.container}>
           <span>
             {t('fields.notifications.unlocked.single.text', {
-              lp: 'OSMO-ATOM LP',
+              lp: vaultsUnlocked[0].name.name,
             })}
           </span>
           <Button

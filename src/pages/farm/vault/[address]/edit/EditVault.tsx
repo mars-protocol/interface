@@ -231,7 +231,7 @@ const EditVault = (props: Props) => {
     <>
       <div className={styles.actionButtons}>{actionButtons}</div>
       <Card
-        title={props.activeVault.name}
+        title={t('fields.vaultName', props.activeVault.name)}
         onClick={() => router.back()}
         tooltip={
           <>

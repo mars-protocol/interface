@@ -33,7 +33,7 @@ export const RepayInput = (props: Props) => {
       : props.vault.symbols.secondary
 
   const walletBalance = Number(
-    (findByDenom(userBalances, props.vault.denoms.secondary) as Coin)?.amount || 0,
+    (findByDenom(userBalances, props.vault.denoms[supplyKey]) as Coin)?.amount || 0,
   )
 
   const maxRepayAmount = Math.min(walletBalance, debtAmount)

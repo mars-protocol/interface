@@ -23,7 +23,7 @@ export const VaultName = (props: Props) => {
 
   return (
     <>
-      <p className='m'>{props.vault.name}</p>
+      <p className='m'>{t('fields.vaultName', props.vault.name)}</p>
       <p
         className={`s ${
           props.position?.position?.status === 'unlocked' ? 'colorInfoVoteAgainst' : 'faded'

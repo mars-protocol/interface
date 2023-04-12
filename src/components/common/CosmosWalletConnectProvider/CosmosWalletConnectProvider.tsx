@@ -1,4 +1,4 @@
-import { WalletID, WalletManagerProvider } from '@marsprotocol/wallet-connector'
+import { ChainInfoID, WalletID, WalletManagerProvider } from '@marsprotocol/wallet-connector'
 import { CircularProgress, SVG } from 'components/common'
 import { IS_TESTNET } from 'constants/env'
 import { useEffect, useState } from 'react'
@@ -13,7 +13,7 @@ export const CosmosWalletConnectProvider = ({ children }: Props) => {
   const [chainInfoOverrides, setChainInfoOverrides] = useState<{
     rpc: string
     rest: string
-    chainID: string
+    chainID: ChainInfoID
   }>()
   const [enabledWallets, setEnabledWallets] = useState<WalletID[]>([])
 

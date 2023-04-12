@@ -95,10 +95,11 @@ export const useAvailableVaultsColumns = () => {
             (asset) => asset.denom === row.original.denoms.secondary,
           )
 
-          const borrowRate = Math.min(
-            Number(primaryBorrowAsset?.borrowRate ?? 0),
-            Number(secondaryBorrowAsset?.borrowRate ?? 0),
-          )
+          const borrowRates = []
+          if (primaryBorrowAsset?.borrowEnabled) borrowRates.push(primaryBorrowAsset.borrowRate)
+          if (secondaryBorrowAsset?.borrowEnabled) borrowRates.push(secondaryBorrowAsset.borrowRate)
+
+          const borrowRate = Math.min(...borrowRates)
 
           const maxBorrowRate = borrowRate * (ltvToLeverage(row.original.ltv.contract) - 1)
 
@@ -126,7 +127,7 @@ export const useAvailableVaultsColumns = () => {
                 }
                 tooltip={<Apy apyData={apyDataNoLev} leverage={1} />}
               />
-              <span>-</span>
+              <span> - </span>
               <TextTooltip
                 hideStyling
                 text={
@@ -140,10 +141,7 @@ export const useAvailableVaultsColumns = () => {
                 }
               />
 
-              <p className='s faded'>
-                {minDailyAPY}-{maxDailyAPY}%/
-                {t('common.day')}
-              </p>
+              <p className='s faded'>{`${minDailyAPY} - ${maxDailyAPY}%/${t('common.day')}`}</p>
             </>
           )
         },
@@ -215,7 +213,17 @@ export const useAvailableVaultsColumns = () => {
         cell: ({ row }) => (
           <TextTooltip
             hideUnderline
-            text={row.original.description}
+            text={t('fields.vaultDescription', {
+              lpName: row.original.description.lpName,
+              maxLeverage: formatValue(
+                ltvToLeverage(row.original.ltv.contract),
+                2,
+                2,
+                false,
+                false,
+                false,
+              ),
+            })}
             tooltip={t('fields.tooltips.name', {
               asset1: row.original.symbols.primary,
               asset2: row.original.symbols.secondary,

@@ -35,14 +35,14 @@ export const ActiveVaultsTableMobile = () => {
       case 'unlocking':
         return (
           <>
-            <p className='m'>{vault.name}</p>
+            <p className='m'>{t('fields.vaultName', vault.name)}</p>
             <p className='m'>{t('fields.unlocking')}</p>
           </>
         )
       case 'unlocked':
         return (
           <>
-            <p className='m'>{vault.name}</p>
+            <p className='m'>{t('fields.vaultName', vault.name)}</p>
             <p className='m colorInfoVoteAgainst'>{t('common.unlocked')}</p>
           </>
         )

@@ -4,8 +4,15 @@ interface ActiveVault extends Vault {
 
 interface Vault {
   address: string
-  name: string
-  description: string
+  name: {
+    name: string
+    unlockDuration: number
+    unlockTimeframe: string
+  }
+  description: {
+    maxLeverage: number
+    lpName: string
+  }
   provider: string
   denoms: {
     primary: string

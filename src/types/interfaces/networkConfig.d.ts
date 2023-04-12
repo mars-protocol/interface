@@ -1,5 +1,5 @@
 interface NetworkConfig {
-  name: string
+  name: import('@marsprotocol/wallet-connector').ChainInfoID
   hiveUrl: string
   rpcUrl: string
   restUrl: string

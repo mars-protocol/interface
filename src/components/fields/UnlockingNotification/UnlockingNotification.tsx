@@ -48,7 +48,7 @@ export const UnlockingNotification = () => {
         <div className={styles.container}>
           <span>
             {t('fields.notifications.unlocking.single', {
-              lp: vaultsUnlocking[0].name,
+              lp: vaultsUnlocking[0].name.name,
               time: timeLeft,
             })}
           </span>

@@ -157,7 +157,7 @@ export const useAvailableVaultsColumns = () => {
               <>
                 <DisplayCurrency
                   coin={{
-                    denom: 'uosmo',
+                    denom: baseCurrency.denom,
                     amount: '0',
                   }}
                 />

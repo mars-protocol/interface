@@ -44,6 +44,7 @@ export const BreakdownTable = (props: Props) => {
   const secondaryAsset = useAsset({ denom: props.vault.denoms.secondary })
   const convertToDisplayCurrency = useStore((s) => s.convertToDisplayCurrency)
   const convertToBaseCurrency = useStore((s) => s.convertToBaseCurrency)
+  const baseCurrency = useStore((s) => s.baseCurrency)
 
   const primaryPrice = usePrice(props.vault.denoms.primary)
   const secondaryPrice = usePrice(props.vault.denoms.secondary)
@@ -137,7 +138,7 @@ export const BreakdownTable = (props: Props) => {
       isApproximation
       coin={{
         amount: props.newPosition.values[type].toString(),
-        denom: props.vault.denoms.primary,
+        denom: baseCurrency.denom,
       }}
     />
   )
@@ -195,7 +196,7 @@ export const BreakdownTable = (props: Props) => {
       const leftoverCap = vaultCapValue - vaultCapUsedValue
       const maxPositionValue = convertToDisplayCurrency({
         amount: ((props.isSetUp ? 0 : props.prevPosition.values.total) + leftoverCap).toString(),
-        denom: 'uosmo',
+        denom: baseCurrency.denom,
       })
 
       if (maxPositionValue <= 0) {
@@ -257,7 +258,9 @@ export const BreakdownTable = (props: Props) => {
           )}
         </div>
         <div className={styles.price}>
-          <span className='faded'>{formatValue(1, 0, 0, false, false, ' OSMO ≈ ')}</span>
+          <span className='faded'>
+            {formatValue(1, 0, 0, false, false, ` ${primaryAsset?.symbol} ≈ `)}
+          </span>
 
           <AnimatedNumber
             amount={primaryPrice / secondaryPrice}

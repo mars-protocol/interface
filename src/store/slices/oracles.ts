@@ -85,7 +85,6 @@ const oraclesSlice = (set: NamedSet<Store>, get: GetState<Store>): OraclesSlice 
   // SETTERS
   // ------------------
   setExchangeRatesState: (state: State) => set({ exchangeRatesState: state }),
-  setExchangeRates: (rates: Coin[]) => set({ exchangeRates: rates }),
 
   // ------------------
   // QUERY RELATED
@@ -112,12 +111,20 @@ const oraclesSlice = (set: NamedSet<Store>, get: GetState<Store>): OraclesSlice 
           return
         }
 
-        const symbol = asset.symbol
-        const exchangeRateResult = wasmQueryResults[`${symbol}`].price || '0.00'
+        const id = asset.id
+        const exchangeRateResult = wasmQueryResults[`${id}`].price || '0.00'
+        const additionalDecimals =
+          asset.decimals > get().baseCurrency.decimals
+            ? asset.decimals - get().baseCurrency.decimals
+            : 0
         // Fix for a LCDClientError object instead of string
         const exchangeRate: Coin = {
           denom,
-          amount: typeof exchangeRateResult === 'string' ? exchangeRateResult || '0.00' : '0.00',
+          amount:
+            typeof exchangeRateResult === 'string'
+              ? new BigNumber(exchangeRateResult).times(10 ** additionalDecimals).toString() ||
+                '0.00'
+              : '0.00',
         }
         if (asset.denom === displayCurrency.denom) {
           set({

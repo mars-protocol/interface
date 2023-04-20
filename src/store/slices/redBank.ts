@@ -4,7 +4,7 @@ import { SECONDS_IN_YEAR } from 'constants/timeConstants'
 import { findByDenom } from 'functions'
 import { UserDebtData } from 'hooks/queries/useUserDebt'
 import { UserDepositData } from 'hooks/queries/useUserDeposit'
-import { lookupDenomBySymbol } from 'libs/parse'
+import { demagnify, lookupDenomBySymbol } from 'libs/parse'
 import isEqual from 'lodash.isequal'
 import { RedBankSlice } from 'store/interfaces/redBank.interface'
 import { Store } from 'store/interfaces/store.interface'
@@ -99,18 +99,19 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
         { denom: asset.denom, amount: depositLiquidity.toString() },
       )
 
+      const additionalDecimals = asset.decimals - get().baseCurrency.decimals
       const redBankAsset: RedBankAsset = {
         ...asset,
         walletBalance: assetWallet?.amount.toString(),
         depositBalance: depositBalance.toString(),
         depositBalanceBaseCurrency: convertToBaseCurrency({
           denom: asset.denom,
-          amount: depositBalance.toString(),
+          amount: demagnify(depositBalance, additionalDecimals).toString(),
         }),
         borrowBalance: borrowBalance.toString(),
         borrowBalanceBaseCurrency: convertToBaseCurrency({
           denom: asset.denom,
-          amount: borrowBalance.toString(),
+          amount: demagnify(borrowBalance, additionalDecimals).toString(),
         }),
         borrowRate: borrowApy * 100 >= 0.01 ? borrowApy * 100 : 0.0,
         apy: depositApy * 100 >= 0.01 ? depositApy * 100 : 0.0,
@@ -147,16 +148,16 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
 
     whitelistedAssets?.forEach((asset: Asset) => {
       const denom = asset.denom
-      const symbol = asset.symbol
+      const id = asset.id
       const queryResult = data.rbwasmkey
       const marketData = {
-        ...queryResult[`${symbol}Market`],
+        ...queryResult[`${id}Market`],
         denom: denom,
       }
       marketInfo.push(marketData)
 
       const marketIncentiveData = {
-        ...queryResult[`${symbol}MarketIncentive`],
+        ...queryResult[`${id}MarketIncentive`],
         denom: denom,
       }
       marketIncentiveInfo.push(marketIncentiveData)

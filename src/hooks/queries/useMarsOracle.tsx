@@ -32,7 +32,7 @@ export const useMarsOracle = () => {
                 }`
 
       const querySegment = `
-                    ${whitelistAsset.symbol}: contractQuery(contractAddress: "${oracleAddress}", query: {
+                    ${whitelistAsset.id}: contractQuery(contractAddress: "${oracleAddress}", query: {
                         price: ${asset}
                     })
                 `

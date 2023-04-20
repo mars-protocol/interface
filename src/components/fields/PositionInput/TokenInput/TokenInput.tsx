@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { Button, DisplayCurrency, NumberInput } from 'components/common'
 import { findByDenom } from 'functions'
 import { useAsset } from 'hooks/data'
-import { formatValue, magnify } from 'libs/parse'
+import { formatValue } from 'libs/parse'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
 
@@ -43,9 +43,7 @@ export const TokenInput = (props: Props) => {
     props.borrowRate !== undefined && styles.isBorrow,
   ])
 
-  const onValueEntered = (newValue: number) => {
-    let microValue = Number(magnify(newValue, asset?.decimals || 0))
-
+  const onValueEntered = (microValue: number) => {
     if (props.maxAmount !== undefined) {
       if (microValue >= (props.maxAmount ?? 0)) microValue = props.maxAmount
     } else {
@@ -58,9 +56,7 @@ export const TokenInput = (props: Props) => {
 
   if (!asset) return null
 
-  const maxAmount =
-    (props.maxAmount === undefined ? Number(walletBalance.amount) : props.maxAmount) /
-    10 ** asset.decimals
+  const maxAmount = props.maxAmount === undefined ? Number(walletBalance.amount) : props.maxAmount
 
   const showGasWarning =
     props.maxAmount &&
@@ -74,22 +70,21 @@ export const TokenInput = (props: Props) => {
         color='quaternary'
         className={`xxsCaps faded ${styles.maxBtn}`}
         onClick={() => onValueEntered(maxAmount)}
-        text={`${props.maxAmountLabel}: ${maxAmount}`}
+        text={`${props.maxAmountLabel}: ${maxAmount / 10 ** asset.decimals}`}
         variant='transparent'
       />
       <div className={styles.input}>
         <div className={containerClasses}>
           <NumberInput
             onChange={onValueEntered}
-            onFocus={() => {}}
-            onBlur={() => {}}
             minValue={0}
-            maxValue={(props.maxAmount || 0) / 10 ** asset.decimals}
-            value={(props.amount / 10 ** asset.decimals).toString()}
-            maxDecimals={6}
+            maxValue={props.maxAmount || 0}
+            value={props.amount}
+            maxDecimals={asset.decimals}
             allowNegative={false}
             suffix={isSingleToken ? ` ${props.input.symbol}` : ''}
             className={inputClasses}
+            decimals={asset.decimals}
           />
           {!isSingleToken && (
             <>

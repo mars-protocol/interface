@@ -8,14 +8,14 @@ export const getDepositDebtQuery = (
   const wasmQueries = whitelistedAssets?.map((asset: Asset) => {
     let query = ''
     const denom = asset.denom
-    const symbol = asset.symbol
+    const id = asset.id
 
     if (!denom) return query
 
     const totalCollateralScaled =
       marketInfo.find((market) => market.denom === asset.denom)?.collateral_total_scaled || '0'
 
-    const depositMarketKey = `${symbol}Deposits`
+    const depositMarketKey = `${id}Deposits`
     query =
       query +
       getContractQuery(
@@ -32,7 +32,7 @@ export const getDepositDebtQuery = (
 
     const totalDebtScaled =
       marketInfo.find((market) => market.denom === asset.denom)?.debt_total_scaled || '0'
-    const debtMarketKey = `${symbol}Debt`
+    const debtMarketKey = `${id}Debt`
     query =
       query +
       getContractQuery(

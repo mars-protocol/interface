@@ -12,15 +12,13 @@ import styles from './Settings.module.scss'
 
 export const Settings = () => {
   const { t } = useTranslation()
-  const inputPlaceholder = '...'
   const queryClient = useQueryClient()
   const slippages = [0.02, 0.03]
   const [showDetails, setShowDetails] = useState(false)
   const slippage = useStore((s) => s.slippage)
   const networkConfig = useStore((s) => s.networkConfig)
-  const baseCurrency = useStore((s) => s.baseCurrency)
   const currencyAssets = useStore((s) => s.currencyAssets)
-  const [customSlippage, setCustomSlippage] = useState<string>(inputPlaceholder)
+  const [customSlippage, setCustomSlippage] = useState<number>(0)
   const [inputRef, setInputRef] = useState<React.RefObject<HTMLInputElement>>()
   const [isCustom, setIsCustom] = useState(false)
   const enableAnimations = useStore((s) => s.enableAnimations)
@@ -32,7 +30,8 @@ export const Settings = () => {
   )
 
   const onInputChange = (value: number) => {
-    setCustomSlippage(value.toString())
+    value = value / 100
+    setCustomSlippage(value)
     if (!value.toString()) {
       return
     }
@@ -42,14 +41,14 @@ export const Settings = () => {
     setIsCustom(false)
 
     if (!customSlippage) {
-      setCustomSlippage(inputPlaceholder)
+      setCustomSlippage(0)
       useStore.setState({ slippage })
       return
     }
 
     const value = Number(customSlippage || 0) / 100
     if (slippages.includes(value)) {
-      setCustomSlippage(inputPlaceholder)
+      setCustomSlippage(0)
       useStore.setState({ slippage: value })
       return
     }
@@ -178,12 +177,14 @@ export const Settings = () => {
                           onChange={onInputChange}
                           onBlur={onInputBlur}
                           onFocus={onInputFocus}
-                          value={customSlippage}
+                          value={customSlippage * 100}
                           maxValue={10}
                           maxDecimals={1}
                           maxLength={3}
                           className={styles.customSlippageBtn}
                           style={{ fontSize: 16 }}
+                          decimals={2}
+                          placeholder='...'
                         />
                         %
                       </button>

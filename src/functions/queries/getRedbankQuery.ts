@@ -18,22 +18,22 @@ export const getRedbankQuery = (
   const wasmQueries = whitelistedAssets?.map((asset: Asset) => {
     let query = ''
     const denom = asset.denom
-    const symbol = asset.symbol
+    const id = asset.id
     const contract_addr = asset.contract_addr
     if (!denom) return query
 
     // Load cw 20 balance
     if (contract_addr) {
-      query = getContractQuery(symbol, contract_addr, getBalanceQuery(redBankContractAddress || ''))
+      query = getContractQuery(id, contract_addr, getBalanceQuery(redBankContractAddress || ''))
     }
 
     // Load market info
     const marketQuery = getMarketQuery(denom)
 
-    const marketKey = `${symbol}Market`
+    const marketKey = `${id}Market`
     query = query + getContractQuery(marketKey, redBankContractAddress || '', marketQuery)
 
-    const incentiveKey = `${symbol}MarketIncentive`
+    const incentiveKey = `${id}MarketIncentive`
     query =
       query +
       getContractQuery(

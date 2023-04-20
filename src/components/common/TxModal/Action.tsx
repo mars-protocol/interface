@@ -86,6 +86,7 @@ export const Action = ({
   const convertToBaseCurrency = useStore((s) => s.convertToBaseCurrency)
   const findUserDebt = useStore((s) => s.findUserDebt)
   const enableAnimations = useStore((s) => s.enableAnimations)
+  const baseCurrencyDecimals = useStore((s) => s.baseCurrency.decimals)
 
   // ------------------
   // LOCAL STATE
@@ -135,6 +136,7 @@ export const Action = ({
         amount * currentAssetPrice, // amount in display currency
         activeView,
         relevantBalanceKey,
+        baseCurrencyDecimals,
       ),
     [
       activeView,
@@ -144,6 +146,7 @@ export const Action = ({
       denom,
       redBankAssets,
       relevantBalanceKey,
+      baseCurrencyDecimals,
     ],
   )
 
@@ -155,6 +158,7 @@ export const Action = ({
       0.0,
       activeView,
       relevantBalanceKey,
+      baseCurrencyDecimals,
     ),
     relevantBalanceKey,
   )
@@ -311,9 +315,7 @@ export const Action = ({
 
   const amountUntilDepositCap = currentAsset.depositCap - Number(currentAsset.depositLiquidity)
 
-  const onValueEntered = (newValue: number) => {
-    let microValue = Number(magnify(newValue, decimals)) || 0
-
+  const onValueEntered = (microValue: number) => {
     if (microValue >= maxUsableAmount) microValue = maxUsableAmount
     setAmountCallback(Number(formatValue(microValue, 0, 0, false, false, false, false, false)))
     setCapHit(amount > amountUntilDepositCap && activeView === ViewType.Deposit)

@@ -17,7 +17,6 @@ export interface OraclesSlice {
   // SETTERS
   // ------------------
   setExchangeRatesState: (state: State) => void
-  setExchangeRates: (rates: Coin[]) => void
   // ------------------
   // QUERY RELATED
   // ------------------

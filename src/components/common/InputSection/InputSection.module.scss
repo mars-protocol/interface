@@ -52,6 +52,12 @@
     }
   }
 
+  .input {
+    width: 100%;
+    text-align: center;
+    font-size: rem-calc(16);
+  }
+
   .warning {
     color: $colorInfoVoteAgainst;
     align-self: center;
@@ -107,40 +113,6 @@
     @include typoS;
   }
 
-  .inputWrapper {
-    align-self: center;
-    opacity: 1;
-    border: 1px solid $colorGreyHighlight;
-    width: rem-calc(448);
-    max-width: 100%;
-    height: rem-calc(56);
-    border-radius: $borderRadiusS;
-    display: flex;
-    justify-content: center;
-
-    .inputPercentage {
-      text-align: center;
-      opacity: 1;
-      background: none;
-      border: none;
-      color: $fontColorLightPrimary;
-      @include typoXXL;
-
-      &::placeholder {
-        text-indent: rem-calc(-14);
-      }
-
-      &:focus {
-        outline: none;
-      }
-    }
-
-    input::-webkit-inner-spin-button {
-      appearance: none;
-      @include margin(0);
-    }
-  }
-
   .inputRaw {
     align-self: center;
     background: none;
@@ -154,6 +126,18 @@
     justify-content: center;
     margin-bottom: space(3);
     flex-wrap: wrap;
+  }
+
+  .inputWrapper {
+    align-self: center;
+    opacity: 1;
+    border: 1px solid $colorGreyHighlight;
+    width: rem-calc(448);
+    max-width: 100%;
+    height: rem-calc(56);
+    border-radius: $borderRadiusS;
+    display: flex;
+    justify-content: center;
   }
 }
 

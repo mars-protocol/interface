@@ -1,7 +1,6 @@
-import { Button, DisplayCurrency, InputSlider } from 'components/common'
-import { formatValue, lookup, lookupSymbol, parseNumberInput } from 'libs/parse'
+import { Button, DisplayCurrency, InputSlider, NumberInput } from 'components/common'
+import { lookupSymbol } from 'libs/parse'
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import CurrencyInput from 'react-currency-input-field'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
 import { ViewType } from 'types/enums'
@@ -157,42 +156,16 @@ export const InputSection = ({
         {produceUpperInputInfo()}
 
         <div className={styles.inputWrapper}>
-          <CurrencyInput
-            allowNegativeValue={false}
-            autoFocus={true}
-            className={`h4 number ${styles.inputPercentage}`}
-            decimalSeparator='.'
-            decimalsLimit={asset.decimals}
-            disableAbbreviations={true}
-            disabled={disabled}
-            groupSeparator=','
-            name='currencyInput'
-            onKeyPress={(event) => {
-              if (event.key === 'Enter') {
-                onEnterHandler()
-              }
-            }}
-            onValueChange={(value) => {
-              if (value?.charAt(value.length - 1) !== '.') {
-                inputCallback(parseNumberInput(value))
-                setFakeAmount(undefined)
-              } else {
-                setFakeAmount(value)
-              }
-            }}
-            placeholder='0'
-            suffix={` ${suffix}`}
-            value={
-              fakeAmount
-                ? fakeAmount
-                : amount
-                ? lookup(
-                    Number(formatValue(amount, 0, 0, false, false, false, false, false)),
-                    asset.denom,
-                    asset.decimals,
-                  )
-                : ''
-            }
+          <NumberInput
+            onChange={inputCallback}
+            minValue={0}
+            maxValue={maxUsableAmount || 0}
+            value={amount}
+            maxDecimals={asset.decimals}
+            allowNegative={false}
+            suffix={suffix}
+            className={`number ${styles.input}`}
+            decimals={asset.decimals}
           />
         </div>
         <DisplayCurrency

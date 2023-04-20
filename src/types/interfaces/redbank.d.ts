@@ -11,6 +11,10 @@ interface RedBankData {
     JUNOMarketIncentive: MarketIncentive
     axlUSDCMarket: Market
     axlUSDCMarketIncentive: MarketIncentive
+    axlWBTCMarket: Market
+    axlWBTCMarketIncentive: MarketIncentive
+    axlWETHMarket: Market
+    axlWETHMarketIncentive: MarketIncentive
     stATOMMarket: Market
     stATOMMarketIncentive: MarketIncentive
     collateral: UserCollateral[]

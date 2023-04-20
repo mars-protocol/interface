@@ -15,8 +15,20 @@
     background-image: $colorGradientATOM;
   }
 
+  &.JUNO {
+    background-image: $colorGradientJUNO;
+  }
+
   &.axlUSDC {
     background-image: $colorGradientAxlUSDC;
+  }
+
+  &.axlWBTC {
+    background-image: $colorGradientAxlWBTC;
+  }
+
+  &.axlWETH {
+    background-image: $colorGradientAxlWETH;
   }
 }
 

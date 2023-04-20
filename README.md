@@ -45,7 +45,7 @@ docker run -it -p 3000:3000 \
       -e NETWORK=mainnet \
       -e URL_GQL=https://your-hive-endpoint.com \
       -e URL_REST=https://your-rest-endpoint.com \
-      -e URL_RPC=https://your-rpc-endpoint.com mars-interface:latest
+      -e URL_RPC=https://your-rpc-endpoint.com marsprotocol/interface:latest
 ```
 
 ## 3. Text and translations

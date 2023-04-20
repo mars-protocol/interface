@@ -1,6 +1,8 @@
 import { ChainInfoID, WalletID } from '@marsprotocol/wallet-connector'
 import { URL_GQL, URL_REST, URL_RPC } from 'constants/env'
 import atom from 'images/atom.svg'
+import axlwbtc from 'images/axlwbtc.svg'
+import axlweth from 'images/axlweth.svg'
 import juno from 'images/juno.svg'
 import mars from 'images/mars.svg'
 import osmo from 'images/osmo.svg'
@@ -10,22 +12,45 @@ export const ASSETS: { [denom: string]: Asset } = {
   osmo: {
     symbol: 'OSMO',
     name: 'Osmosis',
+    id: 'OSMO',
     denom: 'uosmo',
     color: colors.osmo,
-    decimals: 6,
     logo: osmo,
+    decimals: 6,
     poolId: 678,
   },
   atom: {
     symbol: 'ATOM',
     name: 'Atom',
+    id: 'ATOM',
     denom: 'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2',
     color: colors.atom,
     logo: atom,
     decimals: 6,
   },
+  axlwbtc: {
+    symbol: 'WBTC.axl',
+    id: 'axlWBTC',
+    name: 'Axelar Wrapped Bitcoin',
+    denom: 'ibc/1480B8FD20AD5FCAE81EA87584D269547DD4D436843C1D20F15E00EB64743EF4',
+    color: colors.axlwbtc,
+    logo: axlwbtc,
+    decimals: 8,
+    poolId: 43,
+  },
+  axlweth: {
+    symbol: 'WETH.axl',
+    id: 'axlWETH',
+    name: 'Axelar Wrapped Ethereum',
+    denom: 'ibc/1DCC8A6CB5689018431323953344A9F6CC4D0BFB261E88C9F7777372C10CD076',
+    color: colors.axlweth,
+    logo: axlweth,
+    decimals: 18,
+    poolId: 42,
+  },
   juno: {
     symbol: 'JUNO',
+    id: 'JUNO',
     name: 'Juno',
     denom: 'ibc/46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED',
     color: colors.juno,
@@ -74,9 +99,17 @@ export const NETWORK_CONFIG: NetworkConfig = {
   },
   assets: {
     base: ASSETS.osmo,
-    whitelist: [ASSETS.osmo, ASSETS.atom, ASSETS.juno],
+    whitelist: [ASSETS.osmo, ASSETS.atom, ASSETS.juno, ASSETS.axlwbtc, ASSETS.axlweth],
     other: [OTHER_ASSETS.usd, OTHER_ASSETS.mars],
-    currencies: [OTHER_ASSETS.usd, ASSETS.osmo, ASSETS.atom, ASSETS.juno, OTHER_ASSETS.mars],
+    currencies: [
+      OTHER_ASSETS.usd,
+      ASSETS.osmo,
+      ASSETS.atom,
+      ASSETS.axlweth,
+      ASSETS.juno,
+      ASSETS.axlwbtc,
+      OTHER_ASSETS.mars,
+    ],
   },
   displayCurrency: OTHER_ASSETS.usd,
   appUrl: 'https://testnet.osmosis.zone',

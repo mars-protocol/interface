@@ -21,7 +21,9 @@ export const CosmosWalletConnectProvider = ({ children }: Props) => {
     if (chainInfoOverrides) return
 
     const fetchConfig = async () => {
-      const file = await import(`../../../configs/${NETWORK !== 'mainnet' ? 'osmo-test-4' : 'osmosis-1'}.ts`)
+      const file = await import(
+        `../../../configs/${NETWORK !== 'mainnet' ? 'osmo-test-4' : 'osmosis-1'}.ts`
+      )
 
       const networkConfig: NetworkConfig = file.NETWORK_CONFIG
 

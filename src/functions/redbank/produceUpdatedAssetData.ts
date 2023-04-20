@@ -1,3 +1,4 @@
+import { demagnify } from 'libs/parse'
 import { ViewType } from 'types/enums'
 
 export const produceUpdatedAssetData = (
@@ -7,6 +8,7 @@ export const produceUpdatedAssetData = (
   updateAmount: number,
   activeView: ViewType,
   key: 'depositBalanceBaseCurrency' | 'borrowBalanceBaseCurrency',
+  baseCurrencyDecimals: number,
 ) => {
   const alreadyPresent = assetData.some((asset: RedBankAsset) => asset.denom === denom)
   // For first use, when the user has no borrow balance yet and this list will be empty
@@ -21,6 +23,8 @@ export const produceUpdatedAssetData = (
   }
 
   return assetData.map((asset) => {
+    const additionalDecimals = asset.decimals - baseCurrencyDecimals
+    const amountAdjustedForDecimals = demagnify(updateAmount, additionalDecimals)
     const newAsset = { ...asset }
     const assetbaseCurrencyBalance = asset[key] || 0
     let updatedAssetbaseCurrencyBalance = asset[key]
@@ -29,8 +33,8 @@ export const produceUpdatedAssetData = (
       // if we are repaaying or redeeming, we decrease the amount
       updatedAssetbaseCurrencyBalance =
         activeView === ViewType.Borrow || activeView === ViewType.Deposit
-          ? assetbaseCurrencyBalance + updateAmount
-          : assetbaseCurrencyBalance - updateAmount
+          ? assetbaseCurrencyBalance + amountAdjustedForDecimals
+          : assetbaseCurrencyBalance - amountAdjustedForDecimals
     }
     newAsset[key] = updatedAssetbaseCurrencyBalance
     return newAsset

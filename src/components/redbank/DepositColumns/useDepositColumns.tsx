@@ -23,7 +23,7 @@ export const useDepositColumns = () => {
         header: '',
         cell: (info) => (
           <div
-            className={`${styles.color} ${styles[info.row.original.symbol]} ${
+            className={`${styles.color} ${styles[info.row.original.id]} ${
               info.row.getIsExpanded() ? styles.expanded : ''
             }`}
           />
@@ -38,7 +38,7 @@ export const useDepositColumns = () => {
           </div>
         ),
       }),
-      columnHelper.accessor('name', {
+      columnHelper.accessor('symbol', {
         enableSorting: enableSorting,
         header: () => (
           <TextTooltip text={t('common.asset')} tooltip={t('redbank.tooltips.deposit.assets')} />
@@ -46,8 +46,8 @@ export const useDepositColumns = () => {
         id: 'name',
         cell: (info) => (
           <>
-            <p className='m'>{info.row.original.symbol}</p>
-            <p className='s faded'>{info.getValue()}</p>
+            <p className='m'>{info.getValue()}</p>
+            <p className='s faded'>{info.row.original.name}</p>
           </>
         ),
       }),

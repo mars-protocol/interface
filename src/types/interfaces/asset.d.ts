@@ -2,7 +2,8 @@ interface Asset {
   color: string
   name: string
   denom: string
-  symbol: 'OSMO' | 'ATOM' | 'JUNO' | 'axlUSDC' | 'stATOM'
+  symbol: 'OSMO' | 'ATOM' | 'JUNO' | 'USDC.axl' | 'stATOM' | 'WBTC.axl' | 'WETH.axl'
+  id: 'axlUSDC' | 'axlWBTC' | 'axlWETH' | 'OSMO' | 'ATOM' | 'JUNO' | 'stATOM'
   prefix?: string
   contract_addr?: string
   logo: string
@@ -13,6 +14,7 @@ interface Asset {
 
 interface OtherAsset extends Omit<Asset, 'symbol'> {
   symbol: 'MARS' | ''
+  id?: ''
 }
 
 interface AssetPairInfo {

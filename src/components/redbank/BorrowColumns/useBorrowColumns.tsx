@@ -19,7 +19,7 @@ export const useBorrowColumns = () => {
         header: '',
         cell: (info) => (
           <div
-            className={`${styles.color} ${styles[info.row.original.symbol]} ${
+            className={`${styles.color} ${styles[info.row.original.id]} ${
               info.row.getIsExpanded() ? styles.expanded : ''
             }`}
           />
@@ -34,7 +34,7 @@ export const useBorrowColumns = () => {
           </div>
         ),
       }),
-      columnHelper.accessor('name', {
+      columnHelper.accessor('symbol', {
         enableSorting: enableSorting,
         header: () => (
           <TextTooltip text={t('common.asset')} tooltip={t('redbank.tooltips.borrow.assets')} />
@@ -42,8 +42,8 @@ export const useBorrowColumns = () => {
         id: 'name',
         cell: (info) => (
           <>
-            <p className='m'>{info.row.original.symbol}</p>
-            <p className='s faded'>{info.getValue()}</p>
+            <p className='m'>{info.getValue()}</p>
+            <p className='s faded'>{info.row.original.name}</p>
           </>
         ),
       }),

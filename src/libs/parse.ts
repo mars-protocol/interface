@@ -7,7 +7,7 @@ import { ViewType } from 'types/enums'
 
 import { countDecimals } from './math'
 
-BigNumber.config({ EXPONENTIAL_AT: [-18, 20] })
+BigNumber.config({ EXPONENTIAL_AT: [-24, 20] })
 
 type Formatter = (amount: string, symbol: string, decimals: number) => string
 
@@ -16,9 +16,9 @@ const rm = BigNumber.ROUND_HALF_CEIL
 export const dp = (decimals: number, symbol?: string): number => decimals
 
 export const lookup = (amount: number, symbol: string, decimals: number): number => {
-  const value = symbol ? new BigNumber(amount).div(10 ** decimals) : new BigNumber(amount)
+  const value = new BigNumber(amount)
 
-  return value.dp(dp(decimals, symbol), rm).toNumber()
+  return demagnify(value.toNumber(), decimals)
 }
 
 export const findAssetByDenom = (denom: string, assets: Asset[]) =>
@@ -71,8 +71,13 @@ export const toAmount = (value: string, decimals: number): string =>
         .toString()
     : '0'
 
-export const magnify = (value: number, decimals: number): BigNumber | number =>
-  value ? new BigNumber(value).times(10 ** decimals).integerValue() : 0
+export const magnify = (value: number, decimals: number) => {
+  return value === 0 ? 0 : new BigNumber(value).shiftedBy(decimals).toNumber()
+}
+
+export const demagnify = (amount: number, decimals: number) => {
+  return amount === 0 ? 0 : new BigNumber(amount).shiftedBy(-1 * decimals).toNumber()
+}
 
 const addLeadingZero = (number: number | string): string => {
   return `${number.toString().length === 1 ? '0' : ''}${number.toString()}`

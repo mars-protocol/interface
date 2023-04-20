@@ -23,11 +23,11 @@ import styles from './RedbankAction.module.scss'
 
 interface Props {
   activeView: ViewType
-  symbol: string
+  id: string
 }
 
 export const RedbankAction = React.memo(
-  ({ activeView, symbol }: Props) => {
+  ({ activeView, id }: Props) => {
     // ------------------
     // EXTERNAL HOOKS
     // ------------------
@@ -62,8 +62,9 @@ export const RedbankAction = React.memo(
     // VARIABLES
     // ------------------
     const assets = [...whitelistedAssets, ...otherAssets]
-    const denom = assets.find((asset) => asset.symbol === symbol)?.denom || ''
+    const denom = assets.find((asset) => asset.id === id)?.denom || ''
     const decimals = lookupDecimals(denom, whitelistedAssets || []) || 6
+    const symbol = assets.find((asset) => asset.id === id)?.symbol || ''
     const walletBallance = Number(findByDenom(userBalances, denom)?.amount.toString())
 
     // Read only states
@@ -191,7 +192,7 @@ export const RedbankAction = React.memo(
     ) => {
       const finalisedArray: RedBankAsset[] = []
       for (let i = 0; i < assets.length; i++) {
-        if ((assets[i][key] || 0) > 0) {
+        if (Number(assets[i][key] ?? 0) > 0) {
           finalisedArray.push(assets[i])
         }
       }

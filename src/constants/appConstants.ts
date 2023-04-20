@@ -4,8 +4,6 @@ export const FORUM_URL = 'https://forum.marsprotocol.io/'
 /* asset:unit */
 export const MARS_SYMBOL = 'MARS'
 export const MARS_DECIMALS = 6
-export const USDC_SYMBOL = 'axlUSDC'
-export const STATOM_SYMBOL = 'stATOM'
 
 /* borrow capacity */
 export const DEFAULT_SLIPPAGE = 0.01

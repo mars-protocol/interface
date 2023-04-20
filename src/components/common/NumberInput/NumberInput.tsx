@@ -1,11 +1,14 @@
-import { lookup } from 'libs/parse'
-import React, { useEffect, useState } from 'react'
+import BigNumber from 'bignumber.js'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import styles from './NumberInput.module.scss'
 
+BigNumber.config({ EXPONENTIAL_AT: [-24, 20] })
+
 interface Props {
-  value: string
+  value: number
   className: string
+  decimals: number
   maxDecimals: number
   minValue?: number
   maxValue?: number
@@ -13,6 +16,7 @@ interface Props {
   allowNegative?: boolean
   suffix?: string
   style?: {}
+  placeholder?: string
   onChange: (value: number) => void
   onBlur?: () => void
   onFocus?: () => void
@@ -22,17 +26,40 @@ interface Props {
 export const NumberInput = (props: Props) => {
   const inputRef = React.useRef<HTMLInputElement>(null)
   const cursorRef = React.useRef(0)
+
+  const magnifyValue = (value: string) => {
+    return new BigNumber(value).shiftedBy(props.decimals).toString()
+  }
+
+  const minifyValue = useCallback(
+    (value: string) => {
+      return new BigNumber(value).shiftedBy(-1 * props.decimals).toString()
+    },
+    [props.decimals],
+  )
+
   const [inputValue, setInputValue] = useState({
-    formatted: props.value,
-    value: Number(props.value),
+    formatted: minifyValue(props.value.toString()),
+    value: props.value,
   })
+
+  const clearDots = (value: string) => {
+    const regex = new RegExp(/\.\./g)
+    if (regex.test(value)) {
+      const search = '.'
+      const replaceWith = ''
+      value = value.split(search).join(replaceWith)
+    }
+
+    return value
+  }
 
   useEffect(() => {
     setInputValue({
-      formatted: props.value,
+      formatted: minifyValue(props.value.toString()),
       value: Number(props.value),
     })
-  }, [props.value])
+  }, [props.value, minifyValue])
 
   useEffect(() => {
     if (!props.onRef) return
@@ -73,9 +100,14 @@ export const NumberInput = (props: Props) => {
   }, [inputValue, inputRef])
 
   const onInputChange = (value: string) => {
-    if (props.suffix) {
-      value = value.replace(props.suffix, '')
+    if (props.placeholder) {
+      value = clearDots(value)
     }
+
+    if (props.suffix) {
+      value = value.replace(' ' + props.suffix, '')
+    }
+
     const numberCount = value.match(/[0-9]/g)?.length || 0
     const decimals = value.split('.')[1]?.length || 0
     const lastChar = value.charAt(value.length - 1)
@@ -129,14 +161,25 @@ export const NumberInput = (props: Props) => {
       return
     }
 
-    updateValues(String(lookup(Number(value), '', 6)), Number(value))
+    if (Number(value) === 0) {
+      updateValues(value, 0)
+      return
+    }
+
+    updateValues(value, Number(magnifyValue(value)))
   }
 
   return (
     <input
       ref={inputRef}
       type='text'
-      value={`${inputValue.formatted}${props.suffix ? props.suffix : ''}`}
+      value={
+        props.placeholder && !props.value
+          ? props.placeholder
+          : `${inputValue.formatted ? inputValue.formatted : ''}${
+              props.suffix ? ' ' + props.suffix : ''
+            }`
+      }
       onFocus={onInputFocus}
       onChange={(e) => onInputChange(e.target.value)}
       onBlur={props.onBlur}

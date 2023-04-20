@@ -1,13 +1,12 @@
 import { RedbankAction } from 'components/redbank'
 import { useRouter } from 'next/router'
-import React from 'react'
 import { ViewType } from 'types/enums'
 
 const Borrow = () => {
   const router = useRouter()
-  const symbol = router.query.symbol as string
+  const id = router.query.id as string
 
-  return <RedbankAction activeView={ViewType.Borrow} symbol={symbol} />
+  return <RedbankAction activeView={ViewType.Borrow} id={id} />
 }
 
 export default Borrow

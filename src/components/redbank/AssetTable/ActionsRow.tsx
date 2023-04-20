@@ -29,7 +29,7 @@ export const ActionsRow = ({ row, type }: Props) => {
     tr: true,
     expanded: row.getIsExpanded(),
   })
-  const assetSymbol = row.original.symbol
+  const assetID = row.original.id
 
   return (
     <tr key={row.id} className={trClasses} onClick={() => row.toggleExpanded()}>
@@ -43,7 +43,7 @@ export const ActionsRow = ({ row, type }: Props) => {
                   window.open(
                     getSwapUrl({
                       baseUrl: appUrl,
-                      to: assetSymbol,
+                      to: assetID,
                     }),
                   )
                 }}
@@ -60,14 +60,14 @@ export const ActionsRow = ({ row, type }: Props) => {
                     prefix={<SVG.Deposit />}
                     size='small'
                     text={t('redbank.deposit')}
-                    onClick={() => router.push(`/redbank/deposit/${assetSymbol}`)}
+                    onClick={() => router.push(`/redbank/deposit/${assetID}`)}
                   />
                 }
                 tooltip={
                   hasBalance
                     ? null
                     : t('redbank.toDepositAssetOnChain', {
-                        asset: assetSymbol,
+                        asset: assetID,
                         chain: chainInfo?.name,
                       })
                 }
@@ -78,7 +78,7 @@ export const ActionsRow = ({ row, type }: Props) => {
                   prefix={<SVG.Withdraw />}
                   size='small'
                   text={t('redbank.withdraw')}
-                  onClick={() => router.push(`/redbank/withdraw/${assetSymbol}`)}
+                  onClick={() => router.push(`/redbank/withdraw/${assetID}`)}
                 />
               )}
             </>
@@ -94,7 +94,7 @@ export const ActionsRow = ({ row, type }: Props) => {
                         window.open(
                           getSwapUrl({
                             baseUrl: appUrl,
-                            to: assetSymbol,
+                            to: assetID,
                           }),
                         )
                       }}
@@ -112,13 +112,13 @@ export const ActionsRow = ({ row, type }: Props) => {
                         prefix={<SVG.Deposit />}
                         size='small'
                         text={t('common.repay')}
-                        onClick={() => router.push(`/redbank/repay/${assetSymbol}`)}
+                        onClick={() => router.push(`/redbank/repay/${assetID}`)}
                       />
                     }
                     tooltip={
                       !hasBalance
                         ? t('redbank.noFundsForRepay', {
-                            symbol: assetSymbol,
+                            symbol: assetID,
                           })
                         : null
                     }
@@ -134,7 +134,7 @@ export const ActionsRow = ({ row, type }: Props) => {
                     disabled={row.original.marketLiquidity === '0' || hasNeverDeposited}
                     size='small'
                     text={t('common.borrow')}
-                    onClick={() => router.push(`/redbank/borrow/${assetSymbol}`)}
+                    onClick={() => router.push(`/redbank/borrow/${assetID}`)}
                   />
                 }
                 tooltip={

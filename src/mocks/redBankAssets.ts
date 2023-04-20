@@ -19,6 +19,7 @@ export const redBankAssets: RedBankAsset[] = [
     walletBalance: '100',
     borrowEnabled: true,
     depositEnabled: true,
+    id: 'ATOM',
   },
   {
     borrowRate: 30,
@@ -40,5 +41,6 @@ export const redBankAssets: RedBankAsset[] = [
     walletBalance: '100',
     borrowEnabled: true,
     depositEnabled: true,
+    id: 'OSMO',
   },
 ]

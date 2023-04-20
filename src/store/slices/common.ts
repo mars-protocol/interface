@@ -216,12 +216,12 @@ const commonSlice = (
     if (!whitelistedAssets.length) return
 
     const depositCoins: Coin[] = whitelistedAssets.map((asset) => ({
-      amount: data.mdwasmkey[`${asset.symbol}Deposits`],
+      amount: data.mdwasmkey[`${asset.id}Deposits`],
       denom: asset.denom,
     }))
 
     const debtCoins: Coin[] = whitelistedAssets.map((asset) => ({
-      amount: data.mdwasmkey[`${asset.symbol}Debt`],
+      amount: data.mdwasmkey[`${asset.id}Debt`],
       denom: asset.denom,
     }))
 

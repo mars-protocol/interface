@@ -1,9 +1,9 @@
 import { WalletID } from '@marsprotocol/wallet-connector'
-import { IS_TESTNET } from 'constants/env'
+import { NETWORK } from 'constants/env'
 import { DocURL } from 'types/enums/docURL'
 
 export function getCouncilLink(currentProvider?: WalletID): string {
-  if (IS_TESTNET) return DocURL.COUNCIL_TESTNET_URL
+  if (NETWORK !== 'mainnet') return DocURL.COUNCIL_TESTNET_URL
 
   if (!currentProvider) return DocURL.COUNCIL_URL
 

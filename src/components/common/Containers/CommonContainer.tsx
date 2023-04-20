@@ -9,7 +9,7 @@ import {
 } from '@marsprotocol/wallet-connector'
 import { useQueryClient } from '@tanstack/react-query'
 import { MARS_SYMBOL } from 'constants/appConstants'
-import { IS_TESTNET } from 'constants/env'
+import { NETWORK } from 'constants/env'
 import {
   useBlockHeight,
   useDepositAndDebt,
@@ -77,7 +77,7 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
   // SETTERS
   // ------------------
   useEffect(() => {
-    if (!IS_TESTNET) {
+    if (NETWORK === 'mainnet') {
       setCurrentNetwork(Network.MAINNET)
     }
     loadNetworkConfig()

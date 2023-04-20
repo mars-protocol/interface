@@ -1,6 +1,6 @@
 import { ChainInfoID, WalletID, WalletManagerProvider } from '@marsprotocol/wallet-connector'
 import { CircularProgress, SVG } from 'components/common'
-import { IS_TESTNET } from 'constants/env'
+import { NETWORK } from 'constants/env'
 import { useEffect, useState } from 'react'
 
 import styles from './CosmosWalletConnectProvider.module.scss'
@@ -21,7 +21,7 @@ export const CosmosWalletConnectProvider = ({ children }: Props) => {
     if (chainInfoOverrides) return
 
     const fetchConfig = async () => {
-      const file = await import(`../../../configs/${IS_TESTNET ? 'osmo-test-4' : 'osmosis-1'}.ts`)
+      const file = await import(`../../../configs/${NETWORK !== 'mainnet' ? 'osmo-test-4' : 'osmosis-1'}.ts`)
 
       const networkConfig: NetworkConfig = file.NETWORK_CONFIG
 

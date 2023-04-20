@@ -20,6 +20,34 @@ Start web server
 yarn && yarn dev
 ```
 
+### 2.1 Custom node endpoints using non-Docker deployments
+
+Copy `.env.example` to `.env` and modify the values to suit your needs.
+
+### 2.2 Custom node endpoints using Docker
+
+We allow the use of environment variables to be passed to the Docker container to specify custom endpoints for the app. The variables are:
+
+
+|Variable|Description|Default|
+|--------|-----------|-------|
+|NETWORK|Flag for mainnet or testnet|mainnet|
+|URL_GQL|The Hive GraphQL endpoint to use|https://osmosis-node.marsprotocol.io/GGSFGSFGFG34/osmosis-hive-front/graphql|
+|URL_REST|The node REST endpoint to use|https://lcd-osmosis.blockapsis.com|
+|URL_RPC|The node RPC endpoint to use|https://rpc-osmosis.blockapsis.com|
+
+**Sample Docker run command**
+
+This command will start the container in interactive mode with port 3000 bound to localhost and print logs to stdout.
+
+```sh
+docker run -it -p 3000:3000 \
+      -e NETWORK=mainnet \
+      -e URL_GQL=https://your-hive-endpoint.com \
+      -e URL_REST=https://your-rest-endpoint.com \
+      -e URL_RPC=https://your-rpc-endpoint.com mars-interface:latest
+```
+
 ## 3. Text and translations
 
 This repository makes use of a [translation repository](https://github.com/mars-protocol/translations). This repository containes all of the translation key values that are used within the UI. The rationale is to have no _hardcoded_ display string values in this repository.

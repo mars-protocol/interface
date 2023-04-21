@@ -1,6 +1,5 @@
 import 'chart.js/auto'
 
-import { Coin } from '@cosmjs/stargate'
 import classNames from 'classnames'
 import {
   BorrowCapacity,
@@ -22,7 +21,7 @@ import {
   maintainanceMarginWeightedDepositValue,
   producePercentData,
 } from 'libs/assetInfo'
-import { formatValue, lookup, lookupSymbol, magnify } from 'libs/parse'
+import { formatValue, lookup, lookupSymbol } from 'libs/parse'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Bar } from 'react-chartjs-2'
 import { useTranslation } from 'react-i18next'
@@ -46,7 +45,6 @@ interface Props {
   actionButtonSpec: ModalActionButton
   submitted: boolean
   feeError?: string
-  txFee?: Coin
   activeView: ViewType
   denom: string
   decimals: number
@@ -67,7 +65,6 @@ export const Action = ({
   actionButtonSpec,
   submitted,
   feeError,
-  txFee,
   activeView,
   denom,
   decimals,
@@ -229,13 +226,8 @@ export const Action = ({
   }, [denom, availableBalanceBaseCurrency, currentAssetPrice, marketAssetLiquidity])
 
   const repayMax = useMemo((): number => {
-    let adjustedWalletBalance = walletBalance
-    if (denom === baseCurrency.denom) {
-      adjustedWalletBalance = walletBalance - Number(magnify(Number(txFee), 6))
-    }
-
-    return Math.min(assetBorrowBalance, adjustedWalletBalance)
-  }, [assetBorrowBalance, walletBalance, txFee, denom, baseCurrency.denom])
+    return Math.min(assetBorrowBalance, walletBalance)
+  }, [assetBorrowBalance, walletBalance, denom, baseCurrency.denom])
 
   const maxWithdrawableAmount = useMemo((): number => {
     const assetLtvRatio = findByDenom(marketInfo, denom)?.max_loan_to_value || 0

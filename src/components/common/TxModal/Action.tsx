@@ -1,5 +1,6 @@
 import 'chart.js/auto'
 
+import BigNumber from 'bignumber.js'
 import classNames from 'classnames'
 import {
   BorrowCapacity,
@@ -10,6 +11,7 @@ import {
   ErrorMessage,
   InputSection,
 } from 'components/common'
+import { DEFAULT_SLIPPAGE } from 'constants/appConstants'
 import { findByDenom } from 'functions'
 import { maxBorrowableAmount } from 'functions/redbank/maxBorrowableAmount'
 import { produceBarChartConfig } from 'functions/redbank/produceBarChartConfig'
@@ -222,7 +224,13 @@ export const Action = ({
   const calculateMaxBorrowableAmount = useMemo((): number => {
     const assetLiquidity = Number(findByDenom(marketAssetLiquidity, denom)?.amount || 0)
 
-    return maxBorrowableAmount(assetLiquidity, availableBalanceBaseCurrency, currentAssetPrice)
+    return maxBorrowableAmount(
+      assetLiquidity,
+      availableBalanceBaseCurrency,
+      new BigNumber(currentAssetPrice)
+        .shiftedBy(baseCurrency.decimals - (currentAsset?.decimals || 0))
+        .toNumber(),
+    )
   }, [denom, availableBalanceBaseCurrency, currentAssetPrice, marketAssetLiquidity])
 
   const repayMax = useMemo((): number => {
@@ -242,8 +250,12 @@ export const Action = ({
     // If we did not receive a usable asset there is nothing more to do.
     if (!asset || !asset.depositBalance || !asset.denom) return 0
 
-    const withdrawableAmountOfAsset =
-      availableBalanceBaseCurrency / (currentAssetPrice * assetLtvRatio)
+    // When withdrawing, we have to remove the slippage, otherwise we can't actually hit the borrow limit.
+    const withdrawableAmountOfAsset = new BigNumber(
+      availableBalanceBaseCurrency / (1 - DEFAULT_SLIPPAGE) / (currentAssetPrice * assetLtvRatio),
+    )
+      .shiftedBy(asset.decimals - baseCurrency.decimals)
+      .toNumber()
 
     return withdrawableAmountOfAsset < assetBalanceOrAvailableLiquidity
       ? withdrawableAmountOfAsset
@@ -408,7 +420,7 @@ export const Action = ({
   const produceBarChartData = (percentData: Array<number>, labels: string[]) => {
     const barColors: string[] = []
     labels.forEach((label) => {
-      barColors.push(colors[label.toLowerCase()])
+      barColors.push(colors[label.split('.')[0].toLowerCase()])
     })
     return {
       labels: labels,

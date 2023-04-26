@@ -14,10 +14,14 @@ export const produceUpdatedAssetData = (
   // For first use, when the user has no borrow balance yet and this list will be empty
   if (!alreadyPresent) {
     const asset = redBankAssets.find((redBankAsset) => redBankAsset.denom === denom)
+    if (!asset) return assetData
+
+    const additionalDecimals = asset.decimals - baseCurrencyDecimals
+    const amountAdjustedForDecimals = demagnify(updateAmount, additionalDecimals)
     // We are only interested in display currency balance. The asset  will update post tx.
     assetData.push({
-      ...asset!,
-      [key]: updateAmount,
+      ...asset,
+      [key]: amountAdjustedForDecimals,
     })
     return assetData
   }

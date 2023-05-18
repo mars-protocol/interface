@@ -2,8 +2,17 @@ interface Asset {
   color: string
   name: string
   denom: string
-  symbol: 'OSMO' | 'ATOM' | 'JUNO' | 'USDC.axl' | 'stATOM' | 'WBTC.axl' | 'WETH.axl'
-  id: 'axlUSDC' | 'axlWBTC' | 'axlWETH' | 'OSMO' | 'ATOM' | 'JUNO' | 'stATOM'
+  symbol:
+    | 'OSMO'
+    | 'ATOM'
+    | 'AXL'
+    | 'JUNO'
+    | 'USDC.axl'
+    | 'USDC.n'
+    | 'stATOM'
+    | 'WBTC.axl'
+    | 'WETH.axl'
+  id: 'axlUSDC' | 'nUSDC' | 'axlWBTC' | 'axlWETH' | 'OSMO' | 'ATOM' | 'AXL' | 'JUNO' | 'stATOM'
   prefix?: string
   contract_addr?: string
   logo: string

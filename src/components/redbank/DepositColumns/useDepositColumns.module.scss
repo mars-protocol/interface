@@ -15,11 +15,16 @@
     background-image: $colorGradientATOM;
   }
 
+  &.AXL {
+    background-image: $colorGradientAXL;
+  }
+
   &.JUNO {
     background-image: $colorGradientJUNO;
   }
 
-  &.axlUSDC {
+  &.axlUSDC,
+  &.nUSDC {
     background-image: $colorGradientAxlUSDC;
   }
 

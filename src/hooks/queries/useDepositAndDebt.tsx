@@ -11,10 +11,14 @@ export interface DepositAndDebtData {
     OSMODebt: string
     ATOMDeposits: string
     ATOMDebt: string
+    AXLDeposits: string
+    AXLDebt: string
     JUNODeposits: string
     JUNODebt: string
     axlUSDCDeposits: string
     axlUSDCDebt: string
+    nUSDCDeposits: string
+    nUSDCDebt: string
     axlWBTCDeposits: string
     axlWBTCDebt: string
     axlWETHDeposits: string

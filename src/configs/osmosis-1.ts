@@ -1,6 +1,7 @@
 import { ChainInfoID, WalletID } from '@marsprotocol/wallet-connector'
 import { URL_GQL, URL_REST, URL_RPC } from 'constants/env'
 import atom from 'images/atom.svg'
+import axl from 'images/axl.svg'
 import axlusdc from 'images/axlusdc.svg'
 import axlwbtc from 'images/axlwbtc.svg'
 import axlweth from 'images/axlweth.svg'
@@ -53,6 +54,15 @@ export const ASSETS: { [denom: string]: Asset } = {
     denom: 'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2',
     color: colors.atom,
     logo: atom,
+    decimals: 6,
+  },
+  axl: {
+    symbol: 'AXL',
+    name: 'Axelar',
+    id: 'AXL',
+    denom: 'ibc/903A61A498756EA560B85A85132D3AEE21B5DEDD41213725D22ABF276EA6945E',
+    color: colors.axl,
+    logo: axl,
     decimals: 6,
   },
   statom: {
@@ -108,6 +118,7 @@ export const NETWORK_CONFIG: NetworkConfig = {
     whitelist: [
       ASSETS.osmo,
       ASSETS.atom,
+      ASSETS.axl,
       ASSETS.axlusdc,
       ASSETS.axlwbtc,
       ASSETS.axlweth,
@@ -118,6 +129,7 @@ export const NETWORK_CONFIG: NetworkConfig = {
       OTHER_ASSETS.usd,
       ASSETS.osmo,
       ASSETS.atom,
+      ASSETS.axl,
       ASSETS.axlweth,
       ASSETS.axlwbtc,
       ASSETS.statom,
@@ -128,6 +140,7 @@ export const NETWORK_CONFIG: NetworkConfig = {
   appUrl: 'https://app.osmosis.zone',
   wallets: [
     WalletID.Keplr,
+    WalletID.Xdefi,
     WalletID.StationWallet,
     WalletID.Leap,
     WalletID.Cosmostation,

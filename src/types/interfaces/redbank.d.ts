@@ -7,6 +7,8 @@ interface RedBankData {
     OSMOMarketIncentive: MarketIncentive
     ATOMMarket: Market
     ATOMMarketIncentive: MarketIncentive
+    AXLMarket: Market
+    AXLMarketIncentive: MarketIncentive
     JUNOMarket: Market
     JUNOMarketIncentive: MarketIncentive
     axlUSDCMarket: Market
@@ -17,6 +19,8 @@ interface RedBankData {
     axlWETHMarketIncentive: MarketIncentive
     stATOMMarket: Market
     stATOMMarketIncentive: MarketIncentive
+    nUSDCMarket: Market
+    nUSDCMarketIncentive: MarketIncentive
     collateral: UserCollateral[]
     unclaimedRewards: string
   }

@@ -20,7 +20,7 @@ export const LiquidationNotification = () => {
 
   if (!elligiblePositions.length) return null
 
-  if (elligiblePositions.length === 1) {
+  if (elligiblePositions.length >= 1) {
     return (
       <Notification
         type={NotificationType.Warning}
@@ -29,7 +29,7 @@ export const LiquidationNotification = () => {
             <div className={styles.container}>
               <span>
                 {t('fields.notifications.liquidation.single.text', {
-                  lp: elligiblePositions[0].name,
+                  lp: elligiblePositions[0].name.name,
                 })}
               </span>
               <Button

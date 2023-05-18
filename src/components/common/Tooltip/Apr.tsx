@@ -23,6 +23,7 @@ export const Apr = ({ data }: Props) => {
     const items: HoverItem[] = []
 
     data.forEach((asset: IncentiveInfo, key: number) => {
+      if (key !== 0 && !asset.apy) return
       items.push({
         color: asset.color,
         symbol: asset.symbol,

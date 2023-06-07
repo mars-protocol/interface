@@ -26,6 +26,7 @@ export const UnlockContent = (props: Props) => {
                   props.position.amounts.borrowedSecondary,
                 ).toString(),
               }}
+              maxDecimals={6}
               showSymbol
             />
           </>
@@ -38,6 +39,7 @@ export const UnlockContent = (props: Props) => {
             denom: props.vault.denoms.primary,
             amount: props.position.amounts.primary.toString(),
           }}
+          maxDecimals={6}
           className={styles.marginRight}
           showSymbol
         />
@@ -49,6 +51,7 @@ export const UnlockContent = (props: Props) => {
                 denom: props.vault.denoms.secondary,
                 amount: props.position.amounts.secondary.toString(),
               }}
+              maxDecimals={6}
               showSymbol
             />
           </>

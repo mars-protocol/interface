@@ -1,9 +1,9 @@
 import { useWalletManager, WalletConnectionStatus } from '@marsprotocol/wallet-connector'
 import classNames from 'classnames'
-import { Footer, Header, MobileNav } from 'components/common'
+import { Footer, Header, MobileNav, TermsOfService } from 'components/common'
 import { FieldsNotConnected } from 'components/fields'
 import { RedbankNotConnected } from 'components/redbank'
-import { SESSION_WALLET_KEY } from 'constants/appConstants'
+import { SESSION_WALLET_KEY, TERMS_OF_SERVICE } from 'constants/appConstants'
 import { useAnimations } from 'hooks/data'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
@@ -14,6 +14,9 @@ type Props = {
 }
 
 export const Layout = ({ children }: Props) => {
+  const alreadyAcceptedTOS = localStorage.getItem(TERMS_OF_SERVICE)
+  const currentlyAcceptedROS = useStore((s) => s.acceptedTermsOfService)
+
   const router = useRouter()
   const { status } = useWalletManager()
   useAnimations()
@@ -35,6 +38,8 @@ export const Layout = ({ children }: Props) => {
 
   return (
     <div className={classNames('app', !enableAnimations && 'no-motion')}>
+      {alreadyAcceptedTOS || currentlyAcceptedROS ? null : <TermsOfService />}
+
       <div className={backgroundClasses} id='bg' />
       <Header />
       <div className='appContainer'>

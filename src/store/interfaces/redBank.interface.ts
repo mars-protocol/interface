@@ -1,6 +1,4 @@
 import { Coin } from '@cosmjs/stargate'
-import { UserDebtData } from 'hooks/queries/useUserDebt'
-import { UserDepositData } from 'hooks/queries/useUserDeposit'
 import { State } from 'types/enums'
 
 export interface RedBankSlice {
@@ -38,9 +36,5 @@ export interface RedBankSlice {
   // QUERY RELATED
   // ------------------
   previousRedBankQueryData?: RedBankData
-  previousUserDebtQueryData?: UserDebtData
-  previousUserDepositQueryData?: UserDepositData
   processRedBankQuery: (data: RedBankData, whitelistedAssets: Asset[]) => void
-  processUserDebtQuery: (data: UserDebtData) => void
-  processUserDepositQuery: (data: UserDepositData) => void
 }

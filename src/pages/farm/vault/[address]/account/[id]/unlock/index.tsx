@@ -12,8 +12,8 @@ import styles from './UnlockDisclaimer.module.scss'
 const Unlock = () => {
   const { t } = useTranslation()
   const router = useRouter()
-  const address = String(router.query.address)
-  const activeVault = useActiveVault(address)
+  const accountId = String(router.query.id)
+  const activeVault = useActiveVault(accountId)
   const {
     mutate: requestUnlock,
     data: unlockData,

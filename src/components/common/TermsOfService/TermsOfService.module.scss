@@ -1,0 +1,44 @@
+@import 'src/styles/master';
+
+.container {
+  backdrop-filter: blur(rem-calc(50));
+  background-color: rgba(0, 0, 0, 0.1);
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+
+  .card {
+    max-width: min(rem-calc(500), 95vw);
+    @include padding(2, 4, 4, 4);
+
+    .subtitle {
+      text-align: center;
+      @include padding(4, 0, 0, 0);
+    }
+
+    .checkbox {
+      display: grid;
+      grid-template-columns: auto auto;
+      align-items: baseline;
+      @include margin(4, 0);
+    }
+
+    .btn {
+      @include margin(6, 0, 0);
+      width: 100%;
+    }
+  }
+}
+
+@media only screen and (min-width: $bpXSmallLow) {
+  .container {
+    .card {
+      @include padding(2, 12, 12, 12);
+    }
+  }
+}

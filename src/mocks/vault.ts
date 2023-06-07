@@ -1,6 +1,11 @@
 export const vault: Vault = {
   address: 'test',
-  apy: 10,
+  apy: {
+    apys: null,
+    fees: null,
+    total: null,
+    vaultAddress: '',
+  },
   color: 'test',
   denoms: {
     primary: 'OSMO',

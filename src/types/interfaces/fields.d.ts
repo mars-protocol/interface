@@ -35,7 +35,7 @@ interface Vault {
     used: number
     max: number
   }
-  apy: number | null
+  apy: ApyBreakdown
 }
 
 interface Position {
@@ -62,11 +62,7 @@ interface Position {
     total: number
     net: number
   }
-  apy: {
-    total: number | null
-    borrow: number
-    net: number | null
-  }
+  apy: PositionApyBreakdown
   ltv: number
   currentLeverage: number
   unlockAtTimestamp?: number
@@ -88,16 +84,19 @@ interface LpTokenWithAddress {
   unlocked: string
   denom: string
   vaultAddress: string
+  accountId: string
 }
 
 interface VaultCoinsWithAddress {
   coins: Coin[]
   vaultAddress: string
+  accountId: string
 }
 
 interface UnlockTimeWithAddress {
   unlockAtTimestamp: number
   vaultAddress: string
+  accountId: string
 }
 
 interface FieldsAction {
@@ -105,23 +104,26 @@ interface FieldsAction {
   values: string[]
 }
 
-interface AprData {
-  contractAddress: string
-  apr: number
+interface PositionApyBreakdown extends ApyBreakdown {
+  borrow: number
+  net: number | null
 }
 
-interface FlatApr {
-  contract_address: string
-  apr: { type: string; value: number | string }[]
-  fees: { type: string; value: number | string }[]
+interface ApyBreakdown {
+  vaultAddress: string
+  apys: { type: string; value: number }[] | null
+  fees: { type: string; value: number }[] | null
+  total: number | null
 }
 
-interface NestedApr {
+interface ApolloAprResponse {
   contract_address: string
-  apr: {
-    aprs: { type: string; value: number | string }[]
-    fees: { type: string; value: number | string }[]
-  }
+  apr: AprBreakdown
+}
+
+interface AprBreakdown {
+  aprs: { type: string; value: number }[]
+  fees: { type: string; value: string | number }[]
 }
 
 interface VaultCapData {

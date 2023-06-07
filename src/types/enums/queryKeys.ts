@@ -16,4 +16,5 @@ export enum QUERY_KEYS {
   PROVIDE_LIQUIDITY = 'provideLiquidity',
   UNLOCK_MESSAGE = 'unlockMessage',
   USD_PRICE = 'usdPrice',
+  USER_COLLATERAL = 'userCollateral',
 }

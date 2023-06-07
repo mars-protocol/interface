@@ -5,14 +5,14 @@ export interface VaultsSlice {
   availableVaults: Vault[]
   activeVaults: ActiveVault[]
   creditAccounts?: Positions[]
-  addAprToVaults: (aprs: AprData[]) => void
+  addApyToVaults: (apys: ApyBreakdown[]) => void
   getCreditAccounts: (options?: Options) => Promise<Positions[]>
   vaultAssets?: VaultCoinsWithAddress[]
   getVaultAssets: (options?: Options) => Promise<VaultCoinsWithAddress[]>
   unlockTimes?: UnlockTimeWithAddress[]
   getUnlockTimes: (options?: Options) => Promise<UnlockTimeWithAddress[]>
-  aprs?: AprData[] | null
-  getAprs: (options?: Options) => Promise<null>
+  apys?: ApyBreakdown[] | null
+  getApys: (options?: Options) => Promise<null>
   caps?: VaultCapData[]
   getCaps: (options?: Options) => Promise<VaultCapData[]>
   lpTokens?: LpTokenWithAddress[]

@@ -103,18 +103,19 @@ export const useAvailableVaultsColumns = () => {
 
           const maxBorrowRate = borrowRate * (ltvToLeverage(row.original.ltv.contract) - 1)
 
-          const minAPY = new BigNumber(row.original.apy).toNumber()
+          const minAPY = row.original.apy.total ?? 0
 
           const maxAPY = new BigNumber(minAPY).times(maxLeverage).toNumber() - maxBorrowRate
-          const minDailyAPY = new BigNumber(convertApyToDailyApy(row.original.apy))
+
+          const minDailyAPY = new BigNumber(convertApyToDailyApy(minAPY))
             .decimalPlaces(2)
             .toNumber()
           const maxDailyAPY = new BigNumber(minDailyAPY)
             .times(maxLeverage)
             .decimalPlaces(2)
             .toNumber()
-          const apyDataNoLev = { total: row.original.apy || 0, borrow: 0 }
-          const apyDataLev = { total: row.original.apy || 0, borrow: maxBorrowRate }
+          const apyDataNoLev = { ...row.original.apy }
+          const apyDataLev = { ...row.original.apy }
 
           return (
             <>
@@ -122,26 +123,37 @@ export const useAvailableVaultsColumns = () => {
                 hideStyling
                 text={
                   <AnimatedNumber
-                    amount={Number(formatValue(minAPY, 2, 2, true, false, false, true))}
+                    amount={Number(
+                      formatValue(Math.min(minAPY, maxAPY), 2, 2, true, false, false, true),
+                    )}
                   />
                 }
-                tooltip={<Apy apyData={apyDataNoLev} leverage={1} />}
+                tooltip={<Apy apyData={apyDataNoLev} borrowRate={0} leverage={1} />}
               />
               <span> - </span>
               <TextTooltip
                 hideStyling
                 text={
                   <AnimatedNumber
-                    amount={Number(formatValue(maxAPY, 2, 2, true, false, false, true))}
+                    amount={Number(
+                      formatValue(Math.max(minAPY, maxAPY), 2, 2, true, false, false, true),
+                    )}
                     suffix='%'
                   />
                 }
                 tooltip={
-                  <Apy apyData={apyDataLev} leverage={ltvToLeverage(row.original.ltv.contract)} />
+                  <Apy
+                    apyData={apyDataLev}
+                    borrowRate={maxBorrowRate}
+                    leverage={ltvToLeverage(row.original.ltv.contract)}
+                  />
                 }
               />
 
-              <p className='s faded'>{`${minDailyAPY} - ${maxDailyAPY}%/${t('common.day')}`}</p>
+              <p className='s faded'>{`${Math.min(minDailyAPY, maxDailyAPY)} - ${Math.max(
+                minDailyAPY,
+                maxDailyAPY,
+              )}%/${t('common.day')}`}</p>
             </>
           )
         },

@@ -52,13 +52,13 @@ export const ActiveVaultsTable = () => {
   const handleRowClick = (vault: ActiveVault) => {
     switch (vault.position.status) {
       case 'active':
-        router.push(`/farm/vault/${vault.address}/edit`)
+        router.push(`/farm/vault/${vault.address}/account/${vault.position.accountId}/edit`)
         return
       case 'unlocked':
-        router.push(`/farm/vault/${vault.address}/close`)
+        router.push(`/farm/vault/${vault.address}/account/${vault.position.accountId}/close`)
         return
       case 'unlocking':
-        router.push(`/farm/vault/${vault.address}/repay`)
+        router.push(`/farm/vault/${vault.address}/account/${vault.position.accountId}/repay`)
         return
     }
   }

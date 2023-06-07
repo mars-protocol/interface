@@ -13,8 +13,8 @@ export const LiquidationNotification = () => {
 
   const elligiblePositions = activeVaults.filter((vault) => vault.position.ltv > vault.ltv.contract)
 
-  const repayHandler = (address: string) => {
-    router.push(`/farm/vault/${address}/repay`)
+  const repayHandler = (address: string, accountId: string) => {
+    router.push(`/farm/vault/${address}/account/${accountId}/repay`)
     return
   }
 
@@ -33,7 +33,12 @@ export const LiquidationNotification = () => {
                 })}
               </span>
               <Button
-                onClick={() => repayHandler(elligiblePositions[0].address)}
+                onClick={() =>
+                  repayHandler(
+                    elligiblePositions[0].address,
+                    elligiblePositions[0].position.accountId,
+                  )
+                }
                 color='tertiary'
                 text={t('fields.notifications.liquidation.single.button')}
               ></Button>

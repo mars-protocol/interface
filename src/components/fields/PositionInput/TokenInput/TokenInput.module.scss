@@ -18,6 +18,7 @@
     @include typoXXS;
     border: none;
     min-height: unset;
+    white-space: nowrap;
 
     &:hover,
     &:focus,

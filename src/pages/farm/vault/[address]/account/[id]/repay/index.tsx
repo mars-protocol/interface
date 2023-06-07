@@ -7,8 +7,8 @@ import RepayVault from './RepayVault'
 const Repay = () => {
   const router = useRouter()
 
-  const vaultAddress = String(router.query.address)
-  const activeVault = useActiveVault(vaultAddress)
+  const accountId = String(router.query.id)
+  const activeVault = useActiveVault(accountId)
 
   if (!activeVault) return <></>
 

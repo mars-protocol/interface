@@ -45,6 +45,7 @@ const commonSlice = (
   marketDebts: [],
   otherAssets: [],
   queryErrors: [],
+  acceptedTermsOfService: false,
   slippage: 0.02,
   tutorialSteps: { redbank: 1, fields: 1 },
   userBalances: [],
@@ -65,8 +66,16 @@ const commonSlice = (
       (exchangeRate) => exchangeRate.denom === coin.denom,
     )?.amount
     if (!exchangeRate) return 0
+    const assets = [...get().whitelistedAssets, ...get().otherAssets]
+    const baseDecimals = get().baseAsset?.decimals ?? 0
+    const coinDecimals = assets.find((currency) => currency.denom === coin.denom)?.decimals ?? 0
 
-    return new BigNumber(coin.amount).times(exchangeRate).toNumber()
+    const additionalDecimals = coinDecimals - baseDecimals
+
+    return new BigNumber(coin.amount)
+      .times(exchangeRate)
+      .shiftedBy(-1 * additionalDecimals)
+      .toNumber()
   },
   convertValueToAmount: (coin: Coin) => {
     const exchangeRates = get().exchangeRates

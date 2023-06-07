@@ -88,10 +88,8 @@ export const ActiveVaultsTableMobile = () => {
                         }
                         tooltip={
                           <Apy
-                            apyData={{
-                              borrow: vault.position.apy.borrow,
-                              total: vault.position.apy.total,
-                            }}
+                            apyData={vault.position.apy}
+                            borrowRate={vault.position.apy.borrow}
                             leverage={vault.position.currentLeverage}
                           />
                         }

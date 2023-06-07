@@ -113,7 +113,9 @@ const EditVault = (props: Props) => {
   const handleUnlockClick = useCallback(() => {
     if (!unlockFee) return
     if (showDisclaimer) {
-      router.push(`/farm/vault/${props.activeVault.address}/unlock`)
+      router.push(
+        `/farm/vault/${props.activeVault.address}/account/${props.activeVault.position.accountId}/unlock`,
+      )
       return
     }
 
@@ -125,6 +127,7 @@ const EditVault = (props: Props) => {
     })
   }, [
     props.activeVault.address,
+    props.activeVault.position.accountId,
     showDisclaimer,
     router,
     unlockFee,

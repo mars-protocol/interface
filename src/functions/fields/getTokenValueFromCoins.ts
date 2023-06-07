@@ -12,7 +12,7 @@ export const getTokenValueFromCoins = (assets: Asset[], coins: Coin[] = []) => {
     return formatValue(
       convertedValue,
       2,
-      2,
+      asset.decimals,
       true,
       convertedValue >= 0.01 ? false : '>',
       ` ${asset.symbol}`,

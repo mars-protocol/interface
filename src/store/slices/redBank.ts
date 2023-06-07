@@ -2,8 +2,6 @@ import { Coin } from '@cosmjs/stargate'
 import { MARS_SYMBOL } from 'constants/appConstants'
 import { SECONDS_IN_YEAR } from 'constants/timeConstants'
 import { findByDenom } from 'functions'
-import { UserDebtData } from 'hooks/queries/useUserDebt'
-import { UserDepositData } from 'hooks/queries/useUserDeposit'
 import { demagnify, lookupDenomBySymbol } from 'libs/parse'
 import isEqual from 'lodash.isequal'
 import { RedBankSlice } from 'store/interfaces/redBank.interface'
@@ -166,37 +164,12 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
       marketInfo,
       marketIncentiveInfo,
       previousRedBankQueryData: data,
-      userCollateral: data.rbwasmkey.collateral,
       userUnclaimedRewards,
       redBankState: State.READY,
     })
   },
   findCollateral: (denom: string) => {
     return get().userCollateral && get().userCollateral!.find((item) => item.denom === denom)
-  },
-  processUserDebtQuery: (data: UserDebtData) => {
-    if (isEqual(data, get().previousUserDebtQueryData)) return
-
-    const debtsResponse = data.debts.debts
-    set({
-      previousUserDebtQueryData: data,
-      userDebts: debtsResponse.map((debt) => {
-        return { denom: debt.denom, amount: debt.amount }
-      }),
-    })
-  },
-  processUserDepositQuery: (data: UserDepositData) => {
-    if (isEqual(data, get().previousUserDepositQueryData)) return
-
-    const deposits = data.deposits.deposits
-
-    if (!deposits) return
-
-    const userDeposits = deposits.map((deposit) => ({
-      denom: deposit.denom,
-      amount: deposit.amount,
-    }))
-    set({ previousUserDepositQueryData: data, userDeposits })
   },
 })
 

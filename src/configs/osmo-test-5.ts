@@ -125,7 +125,7 @@ export const VAULT_CONFIGS: Vault[] = [
       secondary: 'USDC.n',
     },
     color: colors.usdc,
-    lockup: 86400 * 14,
+    lockup: 86400 * 1,
     provider: 'Apollo vault',
     description: { maxLeverage: 1.43, lpName: 'OSMO-USDC.n' },
     ltv: {
@@ -133,7 +133,12 @@ export const VAULT_CONFIGS: Vault[] = [
       contract: 0.3,
       liq: 0.4,
     },
-    apy: 0,
+    apy: {
+      apys: null,
+      fees: null,
+      total: null,
+      vaultAddress: '',
+    },
   },
   {
     address: 'osmo14lu7m4ganxs20258dazafrjfaulmfxruq9n0r0th90gs46jk3tuqwfkqwn',
@@ -148,7 +153,7 @@ export const VAULT_CONFIGS: Vault[] = [
       secondary: 'USDC.n',
     },
     color: colors.usdc,
-    lockup: 86400 * 14,
+    lockup: 86400 * 7,
     provider: 'Apollo vault',
     description: { maxLeverage: 1.43, lpName: 'OSMO-USDC.n' },
     ltv: {
@@ -156,7 +161,12 @@ export const VAULT_CONFIGS: Vault[] = [
       contract: 0.3,
       liq: 0.4,
     },
-    apy: 0,
+    apy: {
+      apys: null,
+      fees: null,
+      total: null,
+      vaultAddress: '',
+    },
   },
   {
     address: 'osmo1fmq9hw224fgz8lk48wyd0gfg028kvvzggt6c3zvnaqkw23x68cws5nd5em',
@@ -179,6 +189,11 @@ export const VAULT_CONFIGS: Vault[] = [
       contract: 0.3,
       liq: 0.4,
     },
-    apy: 0,
+    apy: {
+      apys: null,
+      fees: null,
+      total: null,
+      vaultAddress: '',
+    },
   },
 ]

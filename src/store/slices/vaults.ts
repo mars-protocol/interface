@@ -19,21 +19,29 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
   isLoading: false,
   availableVaults: [],
   activeVaults: [],
-  addAprToVaults: (aprs: AprData[]) => {
+  addApyToVaults: (apys: ApyBreakdown[]) => {
     const updatedAvailableVaults = get().availableVaults.map((availableVault) => {
-      const apr =
-        (aprs?.find((apr) => apr.contractAddress === availableVault.address)?.apr || 0) * 100
-      availableVault.apy = convertAprToApy(apr, 365)
+      const apy = apys?.find((apy) => apy.vaultAddress === availableVault.address)
+
+      if (!apy) return availableVault
+      availableVault.apy = apy
       return availableVault
     })
 
     const updatedActiveVaults = get().activeVaults.map((activeVault) => {
-      const apr = (aprs?.find((apr) => apr.contractAddress === activeVault.address)?.apr || 0) * 100
-      const apy = convertAprToApy(apr, 365)
+      const apy = apys?.find((apy) => apy.vaultAddress === activeVault.address)
+
+      if (!apy) return activeVault
+
       activeVault.apy = apy
-      activeVault.position.apy.total = apy
-      activeVault.position.apy.net =
-        apy * activeVault.position.currentLeverage - activeVault.position.apy.borrow
+      activeVault.position.apy.borrow
+      activeVault.position.apy = {
+        ...apy,
+        borrow: activeVault.position.apy.borrow,
+        net:
+          (apy.total || 0) * activeVault.position.currentLeverage - activeVault.position.apy.borrow,
+      }
+
       return activeVault
     })
 
@@ -93,6 +101,7 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
           },
         }),
         vaultAddress: lpToken.vaultAddress,
+        accountId: lpToken.accountId,
       }
     })
 
@@ -133,6 +142,7 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
           ) / 1e6,
         ),
         vaultAddress: creditAccount.vaults[0].vault.address,
+        accountId: creditAccount.account_id,
       }
     })
 
@@ -144,13 +154,14 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
 
     return newUnlockTimes
   },
-  getAprs: async (options?: Options) => {
-    const aprs = get().aprs
-    if (aprs && !options?.refetch) {
-      get().addAprToVaults(aprs)
+  getApys: async (options?: Options) => {
+    const apys = get().apys
+    if (apys && !options?.refetch) {
+      get().addApyToVaults(apys)
       return null
     }
 
+    const vaultAddresses = get().vaultConfigs.map((vault) => vault.address)
     const networkConfig = get().networkConfig
     if (!networkConfig) return null
 
@@ -158,31 +169,40 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
       const response = await fetch(networkConfig!.apolloAprUrl)
 
       if (response.ok) {
-        const data: FlatApr[] | NestedApr[] = await response.json()
+        const data: ApolloAprResponse[] = await response.json()
 
-        const newAprs = data.map((aprData) => {
-          try {
-            const apr = aprData as FlatApr
-            const aprTotal = apr.apr.reduce((prev, curr) => Number(curr.value) + prev, 0)
-            const feeTotal = apr.fees.reduce((prev, curr) => Number(curr.value) + prev, 0)
+        const filteredData = data.filter((aprData) =>
+          vaultAddresses.includes(aprData.contract_address),
+        )
 
-            const finalApr = aprTotal + feeTotal
+        const newApys: ApyBreakdown[] = filteredData.map((aprData) => {
+          const aprTotal = aprData.apr.aprs.reduce((prev, curr) => Number(curr.value) + prev, 0)
+          const feeTotal = aprData.apr.fees.reduce((prev, curr) => Number(curr.value) + prev, 0)
+          const finalApr = (aprTotal - feeTotal) * 100
+          const finalApy = convertAprToApy(finalApr, 365)
 
-            return { contractAddress: aprData.contract_address, apr: finalApr }
-          } catch {
-            const apr = aprData as NestedApr
-            const aprTotal = apr.apr.aprs.reduce((prev, curr) => Number(curr.value) + prev, 0)
-            const feeTotal = apr.apr.fees.reduce((prev, curr) => Number(curr.value) + prev, 0)
+          const apys = aprData.apr.aprs.map((apr) => ({
+            type: apr.type,
+            value: new BigNumber(apr.value).dividedBy(aprTotal).multipliedBy(finalApy).toNumber(),
+          }))
 
-            const finalApr = aprTotal + feeTotal
-            return { contractAddress: aprData.contract_address, apr: finalApr }
+          const fees = aprData.apr.fees.map((fee) => ({
+            type: fee.type,
+            value: new BigNumber(fee.value).dividedBy(feeTotal).multipliedBy(finalApy).toNumber(),
+          }))
+
+          return {
+            vaultAddress: aprData.contract_address,
+            total: finalApy,
+            apys,
+            fees,
           }
         })
 
         set({
-          aprs: newAprs,
+          apys: newApys,
         })
-        get().addAprToVaults(newAprs)
+        get().addApyToVaults(newApys)
       }
 
       return null
@@ -256,6 +276,7 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
         unlocked: amounts.unlocked,
         denom: vault?.denoms.lpToken || '',
         vaultAddress: creditAccount.vaults[0].vault.address,
+        accountId: creditAccount.account_id,
       }
     })
 
@@ -275,199 +296,218 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
     return Promise.all([vaultAssets, unlockTimes, caps]).then(
       ([vaultAssets, unlockTimes, caps]) => {
         const { activeVaults, availableVaults } = get().vaultConfigs.reduce(
-          (prev, curr) => {
+          (prev, vaultConfig) => {
             const lpTokens = get().lpTokens
             const creditAccounts = get().creditAccounts
 
-            const creditAccountPosition = creditAccounts?.find(
-              (position) => position.vaults[0].vault.address === curr.address,
+            const creditAccountPositions = creditAccounts?.filter(
+              (position) => position.vaults[0].vault.address === vaultConfig.address,
             )
 
-            curr.apy = null
+            vaultConfig.apy = {
+              apys: null,
+              fees: null,
+              total: null,
+              vaultAddress: vaultConfig.address,
+            }
 
-            curr.vaultCap = caps?.find((cap) => cap.address === curr.address)?.vaultCap
+            vaultConfig.vaultCap = caps?.find(
+              (cap) => cap.address === vaultConfig.address,
+            )?.vaultCap
 
             // No position = available vault
-            if (!creditAccountPosition) {
-              prev.availableVaults.push(curr)
+            if (!creditAccountPositions?.length) {
+              prev.availableVaults.push(vaultConfig)
               return prev
             }
 
-            // Position = active vault
-            const primaryAndSecondaryAmount = vaultAssets.find(
-              (vaultAsset) => vaultAsset.vaultAddress === curr.address,
-            )
+            creditAccountPositions.forEach((creditAccountPosition) => {
+              const primaryAndSecondaryAmount = vaultAssets.find(
+                (vaultAsset) => vaultAsset.accountId === creditAccountPosition.account_id,
+              )
 
-            const vaultTokenAmounts = getAmountsFromActiveVault(
-              creditAccountPosition.vaults[0].amount,
-            )
+              const vaultTokenAmounts = getAmountsFromActiveVault(
+                creditAccountPosition.vaults[0].amount,
+              )
 
-            const lpTokenAmounts = lpTokens?.find(
-              (lpToken) => lpToken.vaultAddress === curr.address,
-            )
+              const lpTokenAmounts = lpTokens?.find(
+                (lpToken) => lpToken.accountId === creditAccountPosition.account_id,
+              )
 
-            if (!primaryAndSecondaryAmount || !vaultTokenAmounts || !lpTokenAmounts) {
-              prev.availableVaults.push(curr)
-              return prev
-            }
-
-            let id: number | undefined
-            try {
-              id = (creditAccountPosition.vaults[0].amount as { locking: LockingVaultAmount })
-                .locking.unlocking[0].id
-            } catch {
-              id = undefined
-            }
-
-            // Should already filter out null values
-            const unlockTime = unlockTimes.find(
-              (unlockTime) => unlockTime?.vaultAddress === curr.address,
-            )?.unlockAtTimestamp
-
-            const primaryAmount = Number(
-              findByDenom(primaryAndSecondaryAmount.coins, curr.denoms.primary)?.amount || 0,
-            )
-            const secondaryAmount = Number(
-              findByDenom(primaryAndSecondaryAmount.coins, curr.denoms.secondary)?.amount || 0,
-            )
-
-            let primarySupplyAmount = 0
-            let secondarySupplyAmount = 0
-            let borrowedPrimaryAmount = 0
-            let borrowedSecondaryAmount = 0
-
-            const debt = creditAccountPosition.debts[0]
-
-            if (debt) {
-              if (debt.denom === curr.denoms.primary) {
-                borrowedPrimaryAmount = Number(debt.amount)
-              } else {
-                borrowedSecondaryAmount = Number(debt.amount)
+              if (!primaryAndSecondaryAmount || !vaultTokenAmounts || !lpTokenAmounts) {
+                prev.availableVaults.push(vaultConfig)
+                return prev
               }
-            }
 
-            const borrowedDenom = debt?.denom || ''
+              let id: number | undefined
+              try {
+                id = (creditAccountPosition.vaults[0].amount as { locking: LockingVaultAmount })
+                  .locking.unlocking[0].id
+              } catch {
+                id = undefined
+              }
 
-            if (borrowedDenom === curr.denoms.primary) {
-              if (borrowedPrimaryAmount > primaryAmount) {
-                const swapped = Math.round(
-                  get().convertToBaseCurrency({
-                    denom: borrowedDenom,
-                    amount: (borrowedPrimaryAmount - primaryAmount).toString(),
-                  }),
-                )
+              // Should already filter out null values
+              const unlockTime = unlockTimes.find(
+                (unlockTime) => unlockTime?.accountId === creditAccountPosition.account_id,
+              )?.unlockAtTimestamp
 
-                const rate = Number(
-                  get().exchangeRates?.find((coin) => coin.denom === curr.denoms.secondary)
-                    ?.amount ?? 0,
-                )
-                primarySupplyAmount = 0
-                secondarySupplyAmount = Math.floor(secondaryAmount - swapped / rate)
+              const primaryAmount = Number(
+                findByDenom(primaryAndSecondaryAmount.coins, vaultConfig.denoms.primary)?.amount ||
+                  0,
+              )
+              const secondaryAmount = Number(
+                findByDenom(primaryAndSecondaryAmount.coins, vaultConfig.denoms.secondary)
+                  ?.amount || 0,
+              )
+
+              let primarySupplyAmount = 0
+              let secondarySupplyAmount = 0
+              let borrowedPrimaryAmount = 0
+              let borrowedSecondaryAmount = 0
+
+              const debt = creditAccountPosition.debts[0]
+
+              if (debt) {
+                if (debt.denom === vaultConfig.denoms.primary) {
+                  borrowedPrimaryAmount = Number(debt.amount)
+                } else {
+                  borrowedSecondaryAmount = Number(debt.amount)
+                }
+              }
+
+              const borrowedDenom = debt?.denom || ''
+
+              if (borrowedDenom === vaultConfig.denoms.primary) {
+                if (borrowedPrimaryAmount > primaryAmount) {
+                  const swapped = Math.round(
+                    get().convertToBaseCurrency({
+                      denom: borrowedDenom,
+                      amount: (borrowedPrimaryAmount - primaryAmount).toString(),
+                    }),
+                  )
+
+                  const rate = Number(
+                    get().exchangeRates?.find((coin) => coin.denom === vaultConfig.denoms.secondary)
+                      ?.amount ?? 0,
+                  )
+                  primarySupplyAmount = 0
+                  secondarySupplyAmount = Math.floor(secondaryAmount - swapped / rate)
+                } else {
+                  primarySupplyAmount = primaryAmount - borrowedPrimaryAmount
+                  secondarySupplyAmount = secondaryAmount
+                }
+              } else if (borrowedDenom === vaultConfig.denoms.secondary) {
+                if (borrowedSecondaryAmount > secondaryAmount) {
+                  const swapped = Math.round(
+                    get().convertToBaseCurrency({
+                      denom: borrowedDenom,
+                      amount: (borrowedSecondaryAmount - secondaryAmount).toString(),
+                    }),
+                  )
+                  const rate = Number(
+                    get().exchangeRates?.find((coin) => coin.denom === vaultConfig.denoms.primary)
+                      ?.amount ?? 0,
+                  )
+                  secondarySupplyAmount = 0
+                  primarySupplyAmount = Math.floor(primaryAmount - swapped / rate)
+                } else {
+                  secondarySupplyAmount = secondaryAmount - borrowedSecondaryAmount
+                  primarySupplyAmount = primaryAmount
+                }
               } else {
-                primarySupplyAmount = primaryAmount - borrowedPrimaryAmount
+                primarySupplyAmount = primaryAmount
                 secondarySupplyAmount = secondaryAmount
               }
-            } else if (borrowedDenom === curr.denoms.secondary) {
-              if (borrowedSecondaryAmount > secondaryAmount) {
-                const swapped = Math.round(
-                  get().convertToBaseCurrency({
-                    denom: borrowedDenom,
-                    amount: (borrowedSecondaryAmount - secondaryAmount).toString(),
-                  }),
-                )
-                const rate = Number(
-                  get().exchangeRates?.find((coin) => coin.denom === curr.denoms.primary)?.amount ??
-                    0,
-                )
-                secondarySupplyAmount = 0
-                primarySupplyAmount = Math.floor(primaryAmount - swapped / rate)
-              } else {
-                secondarySupplyAmount = secondaryAmount - borrowedSecondaryAmount
-                primarySupplyAmount = primaryAmount
+
+              const borrowedAmount = Math.max(borrowedPrimaryAmount, borrowedSecondaryAmount)
+
+              const convertToBaseCurrency = get().convertToBaseCurrency
+              const redBankAssets = get().redBankAssets
+              const primarySupplyValue = convertToBaseCurrency({
+                denom: vaultConfig.denoms.primary,
+                amount: primarySupplyAmount.toString(),
+              })
+
+              const secondarySupplyValue = convertToBaseCurrency({
+                denom: vaultConfig.denoms.secondary,
+                amount: secondarySupplyAmount.toString(),
+              })
+
+              const borrowedValue = convertToBaseCurrency({
+                denom: borrowedDenom,
+                amount: borrowedAmount.toString(),
+              })
+
+              const values = {
+                primary: primarySupplyValue,
+                secondary: secondarySupplyValue,
+                borrowedPrimary: borrowedDenom === vaultConfig.denoms.primary ? borrowedValue : 0,
+                borrowedSecondary:
+                  borrowedDenom === vaultConfig.denoms.secondary ? borrowedValue : 0,
+                net: primarySupplyValue + secondarySupplyValue,
+                total: primarySupplyValue + secondarySupplyValue + borrowedValue,
               }
-            }
 
-            const borrowedAmount = Math.max(borrowedPrimaryAmount, borrowedSecondaryAmount)
+              const leverage = getLeverageFromValues(values)
 
-            const convertToBaseCurrency = get().convertToBaseCurrency
-            const redBankAssets = get().redBankAssets
-            const primarySupplyValue = convertToBaseCurrency({
-              denom: curr.denoms.primary,
-              amount: primarySupplyAmount.toString(),
-            })
+              const borrowRate =
+                redBankAssets.find((asset) => asset.denom === borrowedDenom)?.borrowRate || 0
 
-            const secondarySupplyValue = convertToBaseCurrency({
-              denom: curr.denoms.secondary,
-              amount: secondarySupplyAmount.toString(),
-            })
+              const trueBorrowRate = (leverage - 1) * borrowRate
 
-            const borrowedValue = convertToBaseCurrency({
-              denom: borrowedDenom,
-              amount: borrowedAmount.toString(),
-            })
+              const getPositionStatus = (unlockTime?: number) => {
+                if (!unlockTime) return 'active'
 
-            const values = {
-              primary: primarySupplyValue,
-              secondary: secondarySupplyValue,
-              borrowedPrimary: borrowedDenom === curr.denoms.primary ? borrowedValue : 0,
-              borrowedSecondary: borrowedDenom === curr.denoms.secondary ? borrowedValue : 0,
-              net: primarySupplyValue + secondarySupplyValue,
-              total: primarySupplyValue + secondarySupplyValue + borrowedValue,
-            }
+                const isUnlocked = moment(unlockTime).isBefore(new Date())
+                if (isUnlocked) return 'unlocked'
 
-            const leverage = getLeverageFromValues(values)
+                return 'unlocking'
+              }
 
-            const borrowRate =
-              redBankAssets.find((asset) => asset.denom === borrowedDenom)?.borrowRate || 0
-
-            const trueBorrowRate = (leverage - 1) * borrowRate
-
-            const getPositionStatus = (unlockTime?: number) => {
-              if (!unlockTime) return 'active'
-
-              const isUnlocked = moment(unlockTime).isBefore(new Date())
-              if (isUnlocked) return 'unlocked'
-
-              return 'unlocking'
-            }
-
-            const position: Position = {
-              id: id,
-              accountId: creditAccountPosition.account_id,
-              amounts: {
-                primary: primarySupplyAmount,
-                secondary: secondarySupplyAmount,
-                borrowedPrimary: borrowedDenom === curr.denoms.primary ? borrowedAmount : 0,
-                borrowedSecondary: borrowedDenom === curr.denoms.secondary ? borrowedAmount : 0,
-                lp: {
-                  amount: vaultTokenAmounts.unlocking,
-                  primary: Number(
-                    primaryAndSecondaryAmount.coins.find(
-                      (coin) => coin.denom === curr.denoms.primary,
-                    )?.amount || 0,
-                  ),
-                  secondary: Number(
-                    primaryAndSecondaryAmount.coins.find(
-                      (coin) => coin.denom === curr.denoms.secondary,
-                    )?.amount || 0,
-                  ),
+              const position: Position = {
+                id: id,
+                accountId: creditAccountPosition.account_id,
+                amounts: {
+                  primary: primarySupplyAmount,
+                  secondary: secondarySupplyAmount,
+                  borrowedPrimary:
+                    borrowedDenom === vaultConfig.denoms.primary ? borrowedAmount : 0,
+                  borrowedSecondary:
+                    borrowedDenom === vaultConfig.denoms.secondary ? borrowedAmount : 0,
+                  lp: {
+                    amount: vaultTokenAmounts.unlocking,
+                    primary: Number(
+                      primaryAndSecondaryAmount.coins.find(
+                        (coin) => coin.denom === vaultConfig.denoms.primary,
+                      )?.amount || 0,
+                    ),
+                    secondary: Number(
+                      primaryAndSecondaryAmount.coins.find(
+                        (coin) => coin.denom === vaultConfig.denoms.secondary,
+                      )?.amount || 0,
+                    ),
+                  },
+                  vault: vaultTokenAmounts.locked,
                 },
-                vault: vaultTokenAmounts.locked,
-              },
-              values,
-              apy: {
-                total: null,
-                borrow: trueBorrowRate,
-                net: null,
-              },
-              currentLeverage: leverage,
-              ltv: leverageToLtv(leverage),
-              ...(unlockTime ? { unlockAtTimestamp: unlockTime } : {}),
-              status: getPositionStatus(unlockTime),
-              borrowDenom: borrowedDenom,
-            }
+                values,
+                apy: {
+                  vaultAddress: vaultConfig.address,
+                  borrow: trueBorrowRate,
+                  total: null,
+                  net: null,
+                  apys: null,
+                  fees: null,
+                },
+                currentLeverage: leverage,
+                ltv: leverageToLtv(leverage),
+                ...(unlockTime ? { unlockAtTimestamp: unlockTime } : {}),
+                status: getPositionStatus(unlockTime),
+                borrowDenom: borrowedDenom,
+              }
 
-            prev.activeVaults.push({ ...curr, position })
+              prev.activeVaults.push({ ...vaultConfig, position })
+            })
 
             return prev
           },
@@ -478,7 +518,7 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
         )
 
         set({ activeVaults, availableVaults, isLoading: false })
-        get().getAprs(options)
+        get().getApys(options)
       },
     )
   },

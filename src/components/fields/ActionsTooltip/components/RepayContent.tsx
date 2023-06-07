@@ -21,6 +21,7 @@ export const RepayContent = (props: Props) => {
             denom: props.vault.denoms.secondary,
             amount: props.repayAmount.toString(),
           }}
+          maxDecimals={6}
           showSymbol
         />
       </li>
@@ -31,6 +32,7 @@ export const RepayContent = (props: Props) => {
             denom: props.vault.denoms.secondary,
             amount: props.repayAmount.toString(),
           }}
+          maxDecimals={6}
           showSymbol
         />
       </li>

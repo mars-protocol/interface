@@ -1,55 +1,67 @@
+import { Coin } from '@cosmjs/stargate'
 import { useQuery } from '@tanstack/react-query'
-import { getContractQuery, getDebtQuery } from 'functions/queries'
-import { gql, request } from 'graphql-request'
 import useStore from 'store'
 import { QUERY_KEYS } from 'types/enums/queryKeys'
 
+const QUERY_LIMIT = 10
+
 export interface UserDebtData {
-  debts: {
-    debts: [
-      {
-        denom: string
-        amount_scaled: string
-        amount: string
-        enabled: boolean
-      },
-    ]
-  }
+  denom: string
+  amount_scaled: string
+  amount: string
+  enabled: boolean
 }
 
-// ! Implement pagination. Currently there is a limit of 5 assets from the SC
 export const useUserDebt = () => {
-  const hiveUrl = useStore((s) => s.networkConfig?.hiveUrl)
   const userWalletAddress = useStore((s) => s.userWalletAddress)
   const redbankContractAddress = useStore((s) => s.networkConfig?.contracts.redBank)
-  const processUserDebtQuery = useStore((s) => s.processUserDebtQuery)
+  const client = useStore((s) => s.client)
 
-  const debtsQuery = getContractQuery(
-    'debts',
-    redbankContractAddress || '',
-    getDebtQuery(userWalletAddress),
-  )
+  const resolveDebtResponse = (debts: UserDebtData[]): Coin[] => {
+    return debts.map((debt) => {
+      return {
+        denom: debt.denom,
+        amount: debt.amount,
+      }
+    })
+  }
 
-  useQuery<UserDebtData>(
+  const getDebts = async (contract: string, startAfter?: string): Promise<UserDebtData[]> => {
+    if (!client) return []
+    return client.cosmWasmClient.queryContractSmart(contract, {
+      user_debts: {
+        user: userWalletAddress,
+        limit: QUERY_LIMIT,
+        start_after: startAfter,
+      },
+    })
+  }
+
+  useQuery<Coin[]>(
     [QUERY_KEYS.USER_DEBT],
     async () => {
-      return await request(
-        hiveUrl!,
-        gql`
-          query UserDebtQuery {
-              debts: wasm {
-                  ${debtsQuery}
-              }
-          }
-      `,
-      )
+      let userDebts: Coin[] = []
+      if (!redbankContractAddress) return userDebts
+
+      let isMoreDebts = true
+
+      while (isMoreDebts) {
+        const debts = await getDebts(
+          redbankContractAddress,
+          userDebts[userDebts.length - 1]?.denom || '',
+        )
+        userDebts = userDebts.concat(resolveDebtResponse(debts))
+
+        if (debts.length < QUERY_LIMIT) isMoreDebts = false
+      }
+
+      useStore.setState({ userDebts: userDebts })
+      return userDebts
     },
     {
-      enabled:
-        !!hiveUrl && !!redbankContractAddress && !!processUserDebtQuery && !!userWalletAddress,
+      enabled: !!redbankContractAddress && !!userWalletAddress && !!client,
       staleTime: 30000,
       refetchInterval: 30000,
-      onSuccess: processUserDebtQuery,
     },
   )
 }

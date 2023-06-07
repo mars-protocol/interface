@@ -21,7 +21,6 @@ interface RedBankData {
     stATOMMarketIncentive: MarketIncentive
     nUSDCMarket: Market
     nUSDCMarketIncentive: MarketIncentive
-    collateral: UserCollateral[]
     unclaimedRewards: string
   }
 }

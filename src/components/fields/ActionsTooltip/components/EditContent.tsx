@@ -32,6 +32,7 @@ export const EditContent = (props: Props) => {
         denom: props.vault.denoms.primary,
         amount: primaryAmount.toString(),
       }}
+      maxDecimals={6}
       className={styles.marginRight}
       showSymbol
     />
@@ -43,6 +44,7 @@ export const EditContent = (props: Props) => {
         denom: props.vault.denoms.secondary,
         amount: secondaryAmount.toString(),
       }}
+      maxDecimals={6}
       className={styles.marginRight}
       showSymbol
     />
@@ -54,6 +56,7 @@ export const EditContent = (props: Props) => {
         denom: props.position.borrowDenom || props.vault.denoms.secondary,
         amount: borrowedAmount.toString(),
       }}
+      maxDecimals={6}
       className={styles.marginRight}
       showSymbol
     />
@@ -113,6 +116,7 @@ export const EditContent = (props: Props) => {
               amount: (difference / 2).toString(),
             }).toString(),
           }}
+          maxDecimals={6}
           className={styles.marginRight}
           showSymbol
         />
@@ -125,6 +129,7 @@ export const EditContent = (props: Props) => {
               amount: (difference / 2).toString(),
             }).toString(),
           }}
+          maxDecimals={6}
           className={styles.marginRight}
           showSymbol
         />

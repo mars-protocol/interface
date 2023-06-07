@@ -97,7 +97,7 @@ export const BreakdownTable = (props: Props) => {
           denom,
           amount: amount.toString(),
         }}
-        maxDecimals={2}
+        maxDecimals={6}
       />
     )
   }
@@ -225,12 +225,7 @@ export const BreakdownTable = (props: Props) => {
   )
   const trueBorrowRate = borrowRate * (Number(currentLeverage) - 1)
 
-  const apy = (props.vault.apy || 0) * currentLeverage - trueBorrowRate
-
-  const apyData = {
-    total: props.vault.apy || 0,
-    borrow: trueBorrowRate,
-  }
+  const apy = (props.vault.apy.total || 0) * currentLeverage - trueBorrowRate
 
   return (
     <div className={containerClasses}>
@@ -251,7 +246,13 @@ export const BreakdownTable = (props: Props) => {
                   abbreviated={false}
                 />
               }
-              tooltip={<Apy apyData={apyData} leverage={currentLeverage} />}
+              tooltip={
+                <Apy
+                  apyData={props.vault.apy}
+                  borrowRate={trueBorrowRate}
+                  leverage={currentLeverage}
+                />
+              }
             />
           ) : (
             <Loading />

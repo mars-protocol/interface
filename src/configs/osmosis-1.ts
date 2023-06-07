@@ -171,7 +171,12 @@ export const VAULT_CONFIGS: Vault[] = [
       contract: 0.63,
       liq: 0.65,
     },
-    apy: 0,
+    apy: {
+      apys: null,
+      fees: null,
+      total: null,
+      vaultAddress: '',
+    },
   },
   {
     address: 'osmo1jfmwayj8jqp9tfy4v4eks5c2jpnqdumn8x8xvfllng0wfes770qqp7jl4j',
@@ -194,7 +199,12 @@ export const VAULT_CONFIGS: Vault[] = [
       contract: 0.65,
       liq: 0.66,
     },
-    apy: 0,
+    apy: {
+      apys: null,
+      fees: null,
+      total: null,
+      vaultAddress: '',
+    },
   },
   {
     address: 'osmo1a6tcf60pyz8qq2n532dzcs7s7sj8klcmra04tvaqympzcvxqg9esn7xz7l',
@@ -217,6 +227,11 @@ export const VAULT_CONFIGS: Vault[] = [
       contract: 0.61,
       liq: 0.625,
     },
-    apy: 0,
+    apy: {
+      apys: null,
+      fees: null,
+      total: null,
+      vaultAddress: '',
+    },
   },
 ]

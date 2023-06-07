@@ -7,8 +7,8 @@ import EditVault from './EditVault'
 const Edit = () => {
   const router = useRouter()
 
-  const vaultAddress = String(router.query.address)
-  const activeVault = useActiveVault(vaultAddress)
+  const accountId = String(router.query.id)
+  const activeVault = useActiveVault(accountId)
 
   if (!activeVault) return <></>
 

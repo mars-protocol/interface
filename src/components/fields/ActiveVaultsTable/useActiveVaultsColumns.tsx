@@ -259,10 +259,6 @@ export const useActiveVaultsColumns = () => {
               if (row.original.position.apy?.net !== null) {
                 const apy = new BigNumber(row.original.position.apy.net).toNumber()
 
-                const apyData = {
-                  total: row.original.apy || 0,
-                  borrow: row.original.position.apy.borrow,
-                }
                 return (
                   <>
                     <TextTooltip
@@ -276,7 +272,11 @@ export const useActiveVaultsColumns = () => {
                         </>
                       }
                       tooltip={
-                        <Apy apyData={apyData} leverage={row.original.position.currentLeverage} />
+                        <Apy
+                          apyData={row.original.apy}
+                          borrowRate={row.original.position.apy.borrow}
+                          leverage={row.original.position.currentLeverage}
+                        />
                       }
                     />
                   </>
@@ -374,7 +374,11 @@ export const useActiveVaultsColumns = () => {
 
           return (
             <Button
-              onClick={() => router.push(`/farm/vault/${row.original.address}/${route}`)}
+              onClick={() =>
+                router.push(
+                  `/farm/vault/${row.original.address}/account/${row.original.position.accountId}/${route}`,
+                )
+              }
               color='quaternary'
               prefix={prefix}
               variant='round'

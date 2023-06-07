@@ -30,17 +30,16 @@ export const AvailableVaultsTableMobile = () => {
             (asset) => asset.denom === vault.denoms.secondary,
           )
           const borrowRate = Math.min(
-            Number(primaryBorrowAsset?.borrowRate ?? 0),
-            Number(secondaryBorrowAsset?.borrowRate ?? 0),
+            Number(primaryBorrowAsset?.borrowRate || 1000),
+            Number(secondaryBorrowAsset?.borrowRate || 1000),
           )
           const maxBorrowRate = borrowRate * (ltvToLeverage(vault.ltv.contract) - 1)
-          const minAPY = new BigNumber(vault.apy || 0).toNumber()
+          const minAPY = new BigNumber(vault.apy.total || 0).toNumber()
 
           const leverage = ltvToLeverage(vault.ltv.contract)
           const maxAPY =
             new BigNumber(minAPY).times(leverage).decimalPlaces(2).toNumber() - maxBorrowRate
-          const apyDataNoLev = { total: vault.apy || 0, borrow: 0 }
-          const apyDataLev = { total: vault.apy || 0, borrow: maxBorrowRate }
+
           return (
             <Link
               key={`${vault.address}-${i}`}
@@ -61,15 +60,16 @@ export const AvailableVaultsTableMobile = () => {
                       <span>
                         <TextTooltip
                           hideStyling
-                          text={<AnimatedNumber amount={minAPY} suffix=' - ' />}
-                          tooltip={<Apy apyData={apyDataNoLev} leverage={1} />}
+                          text={<AnimatedNumber amount={Math.min(minAPY, maxAPY)} suffix=' - ' />}
+                          tooltip={<Apy apyData={vault.apy} borrowRate={0} leverage={1} />}
                         />
                         <TextTooltip
                           hideStyling
-                          text={<AnimatedNumber amount={maxAPY} suffix='%' />}
+                          text={<AnimatedNumber amount={Math.max(minAPY, maxAPY)} suffix='%' />}
                           tooltip={
                             <Apy
-                              apyData={apyDataLev}
+                              apyData={vault.apy}
+                              borrowRate={maxBorrowRate}
                               leverage={ltvToLeverage(vault.ltv.contract)}
                             />
                           }

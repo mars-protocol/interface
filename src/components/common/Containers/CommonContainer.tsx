@@ -18,10 +18,10 @@ import {
   useUsdPrice,
   useUserBalance,
   useUserDebt,
-  useUserDeposit,
   useUserIcns,
 } from 'hooks/queries'
 import { useSpotPrice } from 'hooks/queries/useSpotPrice'
+import { useUserCollaterals } from 'hooks/queries/useUserCollaterals'
 import { ReactNode, useEffect, useState } from 'react'
 import useStore from 'store'
 import { State } from 'types/enums'
@@ -155,8 +155,8 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
   useRedBank()
   useUserBalance()
   useUserIcns()
-  useUserDeposit()
   useUserDebt()
+  useUserCollaterals()
   useMarsOracle()
   useSpotPrice(MARS_SYMBOL)
   useUsdPrice()

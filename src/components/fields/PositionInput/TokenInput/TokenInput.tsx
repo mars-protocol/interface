@@ -1,4 +1,5 @@
 import { Coin } from '@cosmjs/proto-signing'
+import BigNumber from 'bignumber.js'
 import classNames from 'classnames'
 import { Button, DisplayCurrency, NumberInput } from 'components/common'
 import { findByDenom } from 'functions'
@@ -8,6 +9,8 @@ import { useTranslation } from 'react-i18next'
 import useStore from 'store'
 
 import styles from './TokenInput.module.scss'
+
+BigNumber.config({ EXPONENTIAL_AT: [-24, 20] })
 
 interface Props {
   tokens: string[]
@@ -70,7 +73,7 @@ export const TokenInput = (props: Props) => {
         color='quaternary'
         className={`xxsCaps faded ${styles.maxBtn}`}
         onClick={() => onValueEntered(maxAmount)}
-        text={`${props.maxAmountLabel}: ${maxAmount / 10 ** asset.decimals}`}
+        text={`${props.maxAmountLabel}: ${new BigNumber(maxAmount).shiftedBy(-1 * asset.decimals)}`}
         variant='transparent'
       />
       <div className={styles.input}>

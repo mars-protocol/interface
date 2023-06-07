@@ -26,22 +26,22 @@ const moduleExports = {
         permanent: true,
       },
       {
-        source: '/farm/vault/:address/edit',
+        source: '/farm/vault/:address/account/:id/edit',
         destination: '/farm/',
         permanent: true,
       },
       {
-        source: '/farm/vault/:address/unlock',
+        source: '/farm/vault/:address/account/:id/unlock',
         destination: '/farm',
         permanent: true,
       },
       {
-        source: '/farm/vault/:address/close',
+        source: '/farm/vault/:address/account/:id/close',
         destination: '/farm',
         permanent: true,
       },
       {
-        source: '/farm/vault/:address/repay',
+        source: '/farm/vault/:address/account/:id/repay',
         destination: '/farm',
         permanent: true,
       },

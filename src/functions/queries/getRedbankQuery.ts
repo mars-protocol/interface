@@ -3,7 +3,6 @@ import {
   getContractQuery,
   getIncentiveQuery,
   getMarketQuery,
-  getUserCollateralQuery,
   getUserIncentivesQuery,
 } from '.'
 
@@ -47,14 +46,6 @@ export const getRedbankQuery = (
   return `query RedbankQuery {
                 ${REDBANK_WASM_KEY}: wasm {
                     ${wasmQueries}
-                    ${
-                      address &&
-                      getContractQuery(
-                        'collateral',
-                        redBankContractAddress || '',
-                        getUserCollateralQuery(address),
-                      )
-                    }
                     ${
                       address &&
                       getContractQuery(

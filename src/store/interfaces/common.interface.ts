@@ -43,6 +43,7 @@ export interface CommonSlice {
   networkConfig?: NetworkConfig
   otherAssets: Asset[]
   queryErrors: string[]
+  acceptedTermsOfService: boolean
   slippage: number
   tutorialSteps: { redbank: number; fields: number }
   userBalances: Coin[]

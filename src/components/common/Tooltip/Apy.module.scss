@@ -6,6 +6,23 @@
   @include layoutTooltip;
   min-width: rem-calc(280);
 
+  .border {
+    @include devider20;
+  }
+
+  .list {
+    padding-inline-start: 1rem;
+    font-style: italic;
+    @include padding(0, 0, 1);
+    @include typoXS;
+
+    .listItem {
+      list-style-type: circle;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
   .item {
     @include padding(1, 0);
     display: flex;

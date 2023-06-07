@@ -20,7 +20,9 @@ export const UnlockedNotification = () => {
   if (!vaultsUnlocked.length) return null
 
   const exitVaultHandler = () => {
-    router.push(`/farm/vault/${vaultsUnlocked[0].address}/close`)
+    router.push(
+      `/farm/vault/${vaultsUnlocked[0].address}/account/${vaultsUnlocked[0].position.accountId}/close`,
+    )
   }
 
   const unlockedContent = () => {

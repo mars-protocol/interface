@@ -14,7 +14,7 @@ export { useSpotPrice } from './useSpotPrice'
 export { useUnlockMessages } from './useUnlockMessages'
 export { useUsdPrice } from './useUsdPrice'
 export { useUserBalance } from './useUserBalance'
+export { useUserCollaterals } from './useUserCollaterals'
 export { useUserDebt } from './useUserDebt'
-export { useUserDeposit } from './useUserDeposit'
 export { useUserIcns } from './useUserIcns'
 // @endindex

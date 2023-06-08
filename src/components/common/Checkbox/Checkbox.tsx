@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import classNames from 'classnames'
+import { useState } from 'react'
 
 import styles from './Checkbox.module.scss'
 
@@ -6,6 +7,7 @@ interface Props {
   text: string
   className?: string
   onChecked: (isChecked: boolean) => void
+  name?: string
 }
 
 export const Checkbox = (props: Props) => {
@@ -16,9 +18,17 @@ export const Checkbox = (props: Props) => {
     props.onChecked(!isChecked)
   }
   return (
-    <label className={`${props.className} ${styles.container}`}>
-      <input type='checkbox' onChange={handleChange} className={styles.checkbox} />
-      {props.text}
-    </label>
+    <div className={styles.wrapper}>
+      <input
+        type='checkbox'
+        onChange={handleChange}
+        className={styles.checkbox}
+        name={`${props.name}-checkbox`}
+        id={props.name}
+      />
+      <label htmlFor={props.name} className={classNames(props.className, styles.label)}>
+        {props.text}
+      </label>
+    </div>
   )
 }

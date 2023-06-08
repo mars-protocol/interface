@@ -16,7 +16,7 @@ export const Apy = ({ apyData, leverage, borrowRate }: Props) => {
 
   const totalApy = useMemo(
     () => (apyData.total ?? 0) * leverage - borrowRate ?? 0,
-    [apyData, leverage],
+    [apyData, leverage, borrowRate],
   )
   const leveragedApy = useMemo(() => (apyData.total ?? 0) * leverage, [apyData, leverage])
   const performanceFee = apyData.fees && apyData.fees[0].value > 0 ? apyData.fees[0] : null

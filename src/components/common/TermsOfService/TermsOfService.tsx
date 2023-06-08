@@ -42,11 +42,13 @@ export const TermsOfService = () => {
           className={styles.checkbox}
           onChecked={(isChecked) => setIsFirstAccepted(isChecked)}
           text={t('common.termsOfService.term1')}
+          name='term1'
         />
         <Checkbox
           className={styles.checkbox}
           onChecked={(isChecked) => setIsSecondAccepted(isChecked)}
           text={t('common.termsOfService.term2')}
+          name='term2'
         />
         <Button
           onClick={onTermsConfirmed}

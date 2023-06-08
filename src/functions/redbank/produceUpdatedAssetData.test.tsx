@@ -12,7 +12,6 @@ describe('produceUpdatedAssetData', () => {
       100,
       ViewType.Deposit,
       'borrowBalanceBaseCurrency',
-      6,
     )
     expect(assets.length).toBe(1)
     expect(assets[0]).toEqual({
@@ -28,7 +27,6 @@ describe('produceUpdatedAssetData', () => {
       100,
       ViewType.Deposit,
       'borrowBalanceBaseCurrency',
-      6,
     )
     expect(assets.length).toBe(2)
     expect(assets[1]).toEqual({
@@ -44,7 +42,6 @@ describe('produceUpdatedAssetData', () => {
       100,
       ViewType.Deposit,
       'borrowBalanceBaseCurrency',
-      6,
     )
     expect(assets.length).toBe(2)
     expect(assets[1]).toEqual({
@@ -62,7 +59,6 @@ describe('produceUpdatedAssetData', () => {
         50,
         ViewType.Deposit,
         'depositBalanceBaseCurrency',
-        6,
       )
       expect(assets.length).toBe(1)
       expect(assets[0]).toEqual({
@@ -78,7 +74,6 @@ describe('produceUpdatedAssetData', () => {
         100,
         ViewType.Deposit,
         'depositBalanceBaseCurrency',
-        6,
       )
       expect(assets.length).toBe(1)
       expect(assets[0]).toEqual({
@@ -97,7 +92,6 @@ describe('produceUpdatedAssetData', () => {
         50,
         ViewType.Borrow,
         'borrowBalanceBaseCurrency',
-        6,
       )
       expect(assets.length).toBe(1)
       expect(assets[0]).toEqual({
@@ -113,7 +107,6 @@ describe('produceUpdatedAssetData', () => {
         100,
         ViewType.Borrow,
         'borrowBalanceBaseCurrency',
-        6,
       )
       expect(assets.length).toBe(1)
       expect(assets[0]).toEqual({
@@ -132,7 +125,6 @@ describe('produceUpdatedAssetData', () => {
         100,
         ViewType.Repay,
         'borrowBalanceBaseCurrency',
-        6,
       )
       expect(assets.length).toBe(1)
       expect(assets[0]).toEqual({

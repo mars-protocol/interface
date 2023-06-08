@@ -2,7 +2,7 @@ import { Coin } from '@cosmjs/stargate'
 import { MARS_SYMBOL } from 'constants/appConstants'
 import { SECONDS_IN_YEAR } from 'constants/timeConstants'
 import { findByDenom } from 'functions'
-import { demagnify, lookupDenomBySymbol } from 'libs/parse'
+import { lookupDenomBySymbol } from 'libs/parse'
 import isEqual from 'lodash.isequal'
 import { RedBankSlice } from 'store/interfaces/redBank.interface'
 import { Store } from 'store/interfaces/store.interface'
@@ -97,19 +97,18 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
         { denom: asset.denom, amount: depositLiquidity.toString() },
       )
 
-      const additionalDecimals = asset.decimals - get().baseCurrency.decimals
       const redBankAsset: RedBankAsset = {
         ...asset,
         walletBalance: assetWallet?.amount.toString(),
         depositBalance: depositBalance.toString(),
         depositBalanceBaseCurrency: convertToBaseCurrency({
           denom: asset.denom,
-          amount: demagnify(depositBalance, additionalDecimals).toString(),
+          amount: depositBalance.toString(),
         }),
         borrowBalance: borrowBalance.toString(),
         borrowBalanceBaseCurrency: convertToBaseCurrency({
           denom: asset.denom,
-          amount: demagnify(borrowBalance, additionalDecimals).toString(),
+          amount: borrowBalance.toString(),
         }),
         borrowRate: borrowApy * 100 >= 0.01 ? borrowApy * 100 : 0.0,
         apy: depositApy * 100 >= 0.01 ? depositApy * 100 : 0.0,

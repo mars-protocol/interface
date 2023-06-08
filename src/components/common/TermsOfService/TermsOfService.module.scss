@@ -14,18 +14,13 @@
 
   .card {
     max-width: min(rem-calc(500), 95vw);
-    @include padding(2, 4, 4, 4);
+    @include padding(2, 4, 8, 4);
+    max-height: 100vh;
+    overflow-y: auto;
 
     .subtitle {
       text-align: center;
       @include padding(4, 0, 0, 0);
-    }
-
-    .checkbox {
-      display: grid;
-      grid-template-columns: auto auto;
-      align-items: baseline;
-      @include margin(4, 0);
     }
 
     .btn {

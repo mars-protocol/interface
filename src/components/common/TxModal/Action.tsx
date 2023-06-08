@@ -85,7 +85,6 @@ export const Action = ({
   const convertToBaseCurrency = useStore((s) => s.convertToBaseCurrency)
   const findUserDebt = useStore((s) => s.findUserDebt)
   const enableAnimations = useStore((s) => s.enableAnimations)
-  const baseCurrencyDecimals = useStore((s) => s.baseCurrency.decimals)
 
   // ------------------
   // LOCAL STATE
@@ -135,7 +134,6 @@ export const Action = ({
         amount * currentAssetPrice, // amount in display currency
         activeView,
         relevantBalanceKey,
-        baseCurrencyDecimals,
       ),
     [
       activeView,
@@ -145,7 +143,6 @@ export const Action = ({
       denom,
       redBankAssets,
       relevantBalanceKey,
-      baseCurrencyDecimals,
     ],
   )
 
@@ -157,7 +154,6 @@ export const Action = ({
       0.0,
       activeView,
       relevantBalanceKey,
-      baseCurrencyDecimals,
     ),
     relevantBalanceKey,
   )
@@ -231,11 +227,18 @@ export const Action = ({
         .shiftedBy(baseCurrency.decimals - (currentAsset?.decimals || 0))
         .toNumber(),
     )
-  }, [denom, availableBalanceBaseCurrency, currentAssetPrice, marketAssetLiquidity])
+  }, [
+    denom,
+    availableBalanceBaseCurrency,
+    currentAssetPrice,
+    marketAssetLiquidity,
+    baseCurrency.decimals,
+    currentAsset?.decimals,
+  ])
 
   const repayMax = useMemo((): number => {
     return Math.min(assetBorrowBalance, walletBalance)
-  }, [assetBorrowBalance, walletBalance, denom, baseCurrency.denom])
+  }, [assetBorrowBalance, walletBalance])
 
   const maxWithdrawableAmount = useMemo((): number => {
     const assetLtvRatio = findByDenom(marketInfo, denom)?.max_loan_to_value || 0
@@ -268,6 +271,7 @@ export const Action = ({
     totalBorrowBaseCurrencyAmount,
     marketInfo,
     marketAssetLiquidity,
+    baseCurrency.decimals,
   ])
 
   const maxUsableAmount = useMemo(() => {

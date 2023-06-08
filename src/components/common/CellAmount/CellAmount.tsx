@@ -20,7 +20,7 @@ export const CellAmount = ({ denom, decimals, amount, noBalanceText }: Props) =>
       <p className='m'>
         <AnimatedNumber
           amount={assetAmount > 0 && assetAmount < 0.01 ? 0.01 : assetAmount}
-          suffix={assetAmount > 0 && assetAmount < 0.01 ? '< ' : false}
+          prefix={assetAmount > 0 && assetAmount < 0.01 ? '< ' : false}
         />
       </p>
       {amount === 0 ? (

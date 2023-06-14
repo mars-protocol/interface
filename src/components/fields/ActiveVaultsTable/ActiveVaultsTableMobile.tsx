@@ -153,12 +153,11 @@ export const ActiveVaultsTableMobile = () => {
             return content
           }
 
+          const route = vault.position.status === 'active' ? 'edit' : 'close'
           return (
             <Link
               key={`${vault.address}-${i}`}
-              href={`/farm/vault/${vault.address}/${
-                vault.position.status === 'active' ? 'edit' : 'close'
-              }`}
+              href={`/farm/vault/${vault.address}/account/${vault.position.accountId}/${route}`}
               className={styles.link}
             >
               <div>{content}</div>

@@ -4,7 +4,6 @@ const path = require('path')
 
 const moduleExports = {
   reactStrictMode: true,
-  experimental: { images: { unoptimized: true } },
   sassOptions: {
     includePaths: [path.join(__dirname, 'src/styles')],
   },

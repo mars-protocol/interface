@@ -62,12 +62,7 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
   // SETTERS
   // ------------------
   setRedBankAssets: () => {
-    if (
-      get().exchangeRatesState !== State.READY ||
-      get().userBalancesState !== State.READY ||
-      get().redBankState !== State.READY
-    )
-      return
+    if (get().exchangeRatesState !== State.READY || get().userBalancesState !== State.READY) return
     const redBankAssets: RedBankAsset[] = []
     const marketAssetLiquidity: Coin[] = []
     const whitelistedAssets = get().whitelistedAssets
@@ -137,7 +132,7 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
   // QUERY RELATED
   // ------------------
   processRedBankQuery: (data: RedBankData, whitelistedAssets: Asset[]) => {
-    if (isEqual(data, get().previousRedBankQueryData)) return
+    if (isEqual(data, get().previousRedBankQueryData) && get().marketInfo.length) return
 
     const userUnclaimedRewards = data.rbwasmkey.unclaimedRewards
     const marketInfo: Market[] = []
@@ -164,7 +159,6 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
       marketIncentiveInfo,
       previousRedBankQueryData: data,
       userUnclaimedRewards,
-      redBankState: State.READY,
     })
   },
   findCollateral: (denom: string) => {

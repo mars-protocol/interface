@@ -8,7 +8,7 @@ import { useMemo } from 'react'
 import { isMobile, isTablet } from 'react-device-detect'
 import { useTranslation } from 'react-i18next'
 
-import styles from './useDepositColumns.module.scss'
+import styles from '../RedbankColumns.module.scss'
 
 export const useDepositColumns = () => {
   const { t } = useTranslation()
@@ -23,7 +23,7 @@ export const useDepositColumns = () => {
         header: '',
         cell: (info) => (
           <div
-            className={`${styles.color} ${styles[info.row.original.id]} ${
+            className={`${styles.color} ${styles[info.row.original.id.toLowerCase()]} ${
               info.row.getIsExpanded() ? styles.expanded : ''
             }`}
           />

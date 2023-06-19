@@ -2,9 +2,9 @@ import { useWalletManager, WalletConnectionStatus } from '@marsprotocol/wallet-c
 import { ConnectButton, ConnectedButton } from 'components/common'
 
 export const Connect = () => {
-  const { status } = useWalletManager()
+  const { status, connectedWallet } = useWalletManager()
 
-  if (status === WalletConnectionStatus.Connected) return <ConnectedButton />
+  if (status === WalletConnectionStatus.Connected && connectedWallet) return <ConnectedButton />
 
   return <ConnectButton />
 }

@@ -1,3 +1,5 @@
+import { ChainInfoID } from '@marsprotocol/wallet-connector'
+
 /* cosmos:network */
 export const FORUM_URL = 'https://forum.marsprotocol.io/'
 
@@ -14,11 +16,6 @@ export const SESSION_WALLET_KEY = 'shuttle'
 export const SWAP_THRESHOLD = 10
 export const VAULT_DEPOSIT_BUFFER = 0.99
 export const GAS_ADJUSTMENT = 1.3
-export const GAS_PRICE = '0.025uosmo'
-
-/* feature flags */
-export const FIELDS_FEATURE = true
-export const PROPOSAL_ACTION_BUTTONS_FEATURE = false
 
 /* fields query keys */
 export const CONFIG = 'config'
@@ -37,4 +34,12 @@ export const FIELDS_TUTORIAL_KEY = 'fieldsHideTutorial'
 export const RED_BANK_TUTORIAL_KEY = 'redbankHideTutorial'
 export const DISPLAY_CURRENCY_KEY = 'displayCurrency'
 export const ENABLE_ANIMATIONS_KEY = 'enableAnimations'
+export const CHAIN_ID_KEY = 'currentChainId'
 export const TERMS_OF_SERVICE = 'termsOfService'
+
+/* chains */
+export const SUPPORTED_CHAINS: { chainId: ChainInfoID; type: 'testnet' | 'mainnet' }[] = [
+  { chainId: ChainInfoID.Osmosis1, type: 'mainnet' },
+  { chainId: ChainInfoID.OsmosisTestnet, type: 'testnet' },
+  { chainId: ChainInfoID.NeutronTestnet, type: 'testnet' },
+]

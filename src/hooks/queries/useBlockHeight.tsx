@@ -24,7 +24,7 @@ export interface BlockHeightData {
 }
 
 export const useBlockHeight = () => {
-  const hiveUrl = useStore((s) => s.networkConfig?.hiveUrl)
+  const hiveUrl = useStore((s) => s.networkConfig.hiveUrl)
   const processBlockHeightQuery = useStore((s) => s.processBlockHeightQuery)
   useQuery<BlockHeightData>(
     [QUERY_KEYS.BLOCK_HEIGHT],

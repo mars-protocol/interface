@@ -2,7 +2,6 @@ import { Coin } from '@cosmjs/proto-signing'
 import { AnimatedNumber } from 'components/common'
 import { useAsset } from 'hooks/data'
 import { lookup } from 'libs/parse'
-import React from 'react'
 
 interface Props {
   coin: Coin

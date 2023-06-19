@@ -1,12 +1,12 @@
-import { useWalletManager, WalletConnectionStatus } from '@marsprotocol/wallet-connector'
+import { useWallet, useWalletManager, WalletConnectionStatus } from '@marsprotocol/wallet-connector'
 import classNames from 'classnames'
 import { Footer, Header, MobileNav, TermsOfService } from 'components/common'
 import { FieldsNotConnected } from 'components/fields'
 import { RedbankNotConnected } from 'components/redbank'
-import { SESSION_WALLET_KEY, TERMS_OF_SERVICE } from 'constants/appConstants'
+import { TERMS_OF_SERVICE } from 'constants/appConstants'
 import { useAnimations } from 'hooks/data'
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import useStore from 'store'
 
 type Props = {
@@ -19,16 +19,20 @@ export const Layout = ({ children }: Props) => {
 
   const router = useRouter()
   const { status } = useWalletManager()
+  const currentNetwork = useStore((s) => s.currentNetwork)
+  const { wallets } = useWallet()
+  const [isConnected, setIsConnected] = useState(false)
+  const [wasConnectedBefore, setWasConnectedBefore] = useState(false)
   useAnimations()
 
   const enableAnimations = useStore((s) => s.enableAnimations)
-  const isConnected = status === WalletConnectionStatus.Connected
   const backgroundClasses = classNames('background', !isConnected && 'night')
   const vaultConfigs = useStore((s) => s.vaultConfigs)
-  const wasConnectedBefore =
-    localStorage.getItem(SESSION_WALLET_KEY) &&
-    localStorage.getItem(SESSION_WALLET_KEY) !== '[]' &&
-    status !== WalletConnectionStatus.Errored
+
+  useEffect(() => {
+    setIsConnected(status === WalletConnectionStatus.Connected)
+    setWasConnectedBefore(!!wallets.find((w) => w.network.chainId === currentNetwork))
+  }, [status, wallets, currentNetwork])
 
   useEffect(() => {
     if (!isConnected) {

@@ -4,6 +4,7 @@ interface Asset {
   denom: string
   symbol:
     | 'OSMO'
+    | 'NTRN'
     | 'ATOM'
     | 'AXL'
     | 'JUNO'
@@ -12,24 +13,37 @@ interface Asset {
     | 'stATOM'
     | 'WBTC.axl'
     | 'WETH.axl'
-  id: 'axlUSDC' | 'nUSDC' | 'axlWBTC' | 'axlWETH' | 'OSMO' | 'ATOM' | 'AXL' | 'JUNO' | 'stATOM'
+  id:
+    | 'OSMO'
+    | 'NTRN'
+    | 'axlUSDC'
+    | 'nUSDC'
+    | 'axlWBTC'
+    | 'axlWETH'
+    | 'ATOM'
+    | 'AXL'
+    | 'JUNO'
+    | 'stATOM'
   prefix?: string
   contract_addr?: string
   logo: string
   decimals: number
   poolId?: number
   poolBase?: string
+  priceFeedId?: string
 }
 
 interface OtherAsset extends Omit<Asset, 'symbol'> {
-  symbol: 'MARS' | ''
-  id?: ''
+  symbol: string
+  id?: string
 }
 
 interface AssetPairInfo {
   denom: string
   contract_addr: string
 }
+
+type NetworkAssets = { [denom: string]: Asset }
 
 interface RedBankAsset extends Asset {
   borrowRate: number

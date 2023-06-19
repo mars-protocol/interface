@@ -1,26 +1,25 @@
 import { useQuery } from '@tanstack/react-query'
+import { getContractQuery } from 'functions/queries'
 import { gql, request } from 'graphql-request'
 import useStore from 'store'
 import { State } from 'types/enums'
 import { QUERY_KEYS } from 'types/enums/queryKeys'
 
-export interface MarsOracleData {
-  prices: {
-    [key: string]: {
-      denom: string
-      price: string
-    }
-  }
-}
-
 export const useMarsOracle = () => {
-  const hiveUrl = useStore((s) => s.networkConfig?.hiveUrl)
-  const oracleAddress = useStore((s) => s.networkConfig?.contracts.oracle)
+  const hiveUrl = useStore((s) => s.networkConfig.hiveUrl)
+  const oracleAddress = useStore((s) => s.networkConfig.contracts.oracle)
   const whitelistedAssets = useStore((s) => s.whitelistedAssets) || []
+  const basePriceState = useStore((s) => s.basePriceState)
   const processMarsOracleQuery = useStore((s) => s.processMarsOracleQuery)
   const setExchangeRatesState = useStore((s) => s.setExchangeRatesState)
 
-  let queries = ``
+  let priceQueries = ``
+  const configQuery = getContractQuery('config', oracleAddress || '', '{ config: {} }')
+  const priceSourcesQuery = getContractQuery(
+    'price_sources',
+    oracleAddress || '',
+    '{ price_sources: {} }',
+  )
 
   whitelistedAssets
     .filter((asset: Asset) => !!asset.denom)
@@ -28,33 +27,39 @@ export const useMarsOracle = () => {
       const denom = whitelistAsset.denom
 
       const asset = `{
-                    denom: "${denom}"
-                }`
+          denom: "${denom}"
+      }`
 
       const querySegment = `
-                    ${whitelistAsset.id}: contractQuery(contractAddress: "${oracleAddress}", query: {
-                        price: ${asset}
-                    })
-                `
-      queries = queries + querySegment
+        ${whitelistAsset.id}: contractQuery(contractAddress: "${oracleAddress}", query: {
+            price: ${asset}
+        })
+      `
+      priceQueries = priceQueries + querySegment
     })
 
-  useQuery<MarsOracleData>(
+  useQuery<OracleData>(
     [QUERY_KEYS.MARS_ORACLE],
     async () => {
       return await request(
         hiveUrl!,
         gql`
-                    query MarsOracle {
-                     prices: wasm {
-                         ${queries}
-                     }
-                    }
-                `,
+          query MarsOracle {
+            oracle: wasm {
+              ${configQuery}
+            }, 
+            sources: wasm {
+              ${priceSourcesQuery}
+            }, 
+            prices: wasm {
+                ${priceQueries}
+            }
+          }
+        `,
       )
     },
     {
-      enabled: !!hiveUrl && !!oracleAddress,
+      enabled: !!hiveUrl && !!oracleAddress && basePriceState === State.READY,
       staleTime: 30000,
       refetchInterval: 30000,
       onError: () => setExchangeRatesState(State.ERROR),

@@ -3,37 +3,45 @@
 .color {
   position: absolute;
   top: 0;
-  width: rem-calc(7);
+  width: space(2);
   height: space(16);
-  margin-left: rem-calc(-7);
+  @include margin(0, 0, 0, -2);
 
-  &.OSMO {
+  &.osmo {
     background-image: $colorGradientOSMO;
   }
 
-  &.ATOM {
+  &.atom {
     background-image: $colorGradientATOM;
   }
 
-  &.AXL {
+  &.axl {
     background-image: $colorGradientAXL;
   }
 
-  &.JUNO {
+  &.juno {
     background-image: $colorGradientJUNO;
   }
 
-  &.axlUSDC,
-  &.nUSDC {
+  &.axlusdc,
+  &.nusdc {
     background-image: $colorGradientAxlUSDC;
   }
 
-  &.axlWBTC {
+  &.statom {
+    background-image: $colorGradientStATOM;
+  }
+
+  &.axlwbtc {
     background-image: $colorGradientAxlWBTC;
   }
 
-  &.axlWETH {
+  &.axlweth {
     background-image: $colorGradientAxlWETH;
+  }
+
+  &.ntrn {
+    background-image: $colorGradientNTRN;
   }
 }
 
@@ -41,4 +49,9 @@
   display: grid;
   margin: auto;
   width: rem-calc(32);
+}
+
+.notBorrowable {
+  width: 100%;
+  display: block;
 }

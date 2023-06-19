@@ -2,7 +2,8 @@ import classNames from 'classnames/bind'
 import { SVG } from 'components/common'
 import { ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NotificationType } from 'types/enums'
+import useStore from 'store'
+import { NotificationType, State } from 'types/enums'
 
 import styles from './Notification.module.scss'
 
@@ -17,6 +18,7 @@ export const Notification = ({ showNotification, content, type, hideCloseBtn = f
   const { t } = useTranslation()
   const [closeNotification, setCloseNotification] = useState(false)
   const classes = classNames.bind(styles)
+  const redBankState = useStore((s) => s.redBankState)
 
   const notificationClasses = classes({
     notification: true,
@@ -25,7 +27,7 @@ export const Notification = ({ showNotification, content, type, hideCloseBtn = f
     warning: type === NotificationType.Warning,
   })
 
-  if (!showNotification || closeNotification) return <></>
+  if (!showNotification || closeNotification || redBankState !== State.READY) return null
 
   return (
     <div className={notificationClasses}>

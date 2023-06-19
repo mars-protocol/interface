@@ -1,6 +1,5 @@
 import { Coin } from '@cosmjs/stargate'
 import { AnimatedNumber } from 'components/common'
-import { useEffect, useState } from 'react'
 import useStore from 'store'
 
 interface Props {
@@ -21,15 +20,7 @@ export const DisplayCurrency = ({
   const networkConfig = useStore((s) => s.networkConfig)
   const convertToDisplayCurrency = useStore((s) => s.convertToDisplayCurrency)
   const amount = convertToDisplayCurrency(coin)
-  const [displayCurrency, setDisplayCurrency] = useState<DisplayCurrency>(
-    networkConfig?.displayCurrency,
-  )
-
-  useEffect(() => {
-    if (!networkConfig) return
-    if (displayCurrency.denom !== networkConfig?.displayCurrency.denom)
-      setDisplayCurrency(networkConfig?.displayCurrency)
-  }, [networkConfig?.displayCurrency, displayCurrency.denom, networkConfig])
+  const displayCurrency = networkConfig.displayCurrency
 
   if (!displayCurrency) return null
 

@@ -1,6 +1,5 @@
 import { WalletID } from '@marsprotocol/wallet-connector'
 import { SVG } from 'components/common'
-import { FIELDS_FEATURE } from 'constants/appConstants'
 import { getCouncilLink } from 'libs/council'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
@@ -13,6 +12,8 @@ export const Footer = () => {
   const { t } = useTranslation()
 
   const client = useStore((s) => s.client)
+  const currentNetwork = useStore((s) => s.currentNetwork)
+  const networkConfig = useStore((s) => s.networkConfig)
 
   return (
     <footer className={styles.footer}>
@@ -22,17 +23,17 @@ export const Footer = () => {
             <div className={styles.header}>{t('global.mars')}</div>
             <a
               className={styles.item}
-              href='https://osmosis.marsprotocol.io/#/redbank'
+              href='https://app.marsprotocol.io/#/redbank'
               rel='noopener noreferrer'
               target='_blank'
               title={t('global.redBank')}
             >
               {t('global.redBank')}
             </a>
-            {FIELDS_FEATURE && (
+            {networkConfig.isFieldsEnabled && (
               <a
                 className={styles.item}
-                href='https://osmosis.marsprotocol.io/#/farm'
+                href='https://app.marsprotocol.io/#/farm'
                 rel='noopener noreferrer'
                 target='_blank'
                 title={t('global.fields')}
@@ -42,7 +43,7 @@ export const Footer = () => {
             )}
             <a
               className={styles.item}
-              href={getCouncilLink(client?.recentWallet.providerId as WalletID)}
+              href={getCouncilLink(currentNetwork, client?.connectedWallet.providerId as WalletID)}
               rel='noopener noreferrer'
               target='_blank'
               title={t('global.council')}

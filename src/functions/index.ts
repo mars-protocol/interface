@@ -4,5 +4,6 @@ export { findByDenom } from './findByDenom'
 export { formatToValueSymbol } from './formatToValueSymbol'
 export { getFeeFromResponse } from './getFeeFromResponse'
 export { getSwapUrl } from './getSwapUrl'
+export { updateAssetPrices } from './updateAssetPrices'
 export { updateExchangeRate } from './updateExchangeRate'
 // @endindex

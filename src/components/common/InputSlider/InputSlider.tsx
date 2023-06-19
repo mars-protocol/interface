@@ -4,7 +4,6 @@ import BigNumber from 'bignumber.js'
 import { getLeverageRatio } from 'functions/fields'
 import { formatValue, roundToDecimals } from 'libs/parse'
 import throttle from 'lodash.throttle'
-import React from 'react'
 import { useTranslation } from 'react-i18next'
 import colors from 'styles/_assets.module.scss'
 
@@ -67,6 +66,7 @@ export const InputSlider = ({
   // -------------------------
   // Presentation
   // -------------------------
+
   const leverageRatio = getLeverageRatio(leverageMax, maxValue)
   const marksArray =
     minValue === 0 && maxValue === 100

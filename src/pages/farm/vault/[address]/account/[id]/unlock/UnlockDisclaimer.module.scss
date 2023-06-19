@@ -25,5 +25,18 @@
     a {
       display: inline-block;
     }
+
+    .checkbox {
+      padding-top: 0;
+      @include typoXS;
+
+      &:before {
+        top: 0;
+      }
+
+      &:after {
+        top: space(0.75);
+      }
+    }
   }
 }

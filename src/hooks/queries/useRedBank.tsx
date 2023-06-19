@@ -6,11 +6,11 @@ import { State } from 'types/enums'
 import { QUERY_KEYS } from 'types/enums/queryKeys'
 
 export const useRedBank = () => {
-  const hiveUrl = useStore((s) => s.networkConfig?.hiveUrl)
+  const hiveUrl = useStore((s) => s.networkConfig.hiveUrl)
   const userWalletAddress = useStore((s) => s.userWalletAddress)
   const whitelistedAssets = useStore((s) => s.whitelistedAssets)
-  const redbankContractAddress = useStore((s) => s.networkConfig?.contracts.redBank)
-  const incentivesContractAddress = useStore((s) => s.networkConfig?.contracts.incentives)
+  const redbankAddress = useStore((s) => s.networkConfig.contracts.redBank)
+  const incentivesAddress = useStore((s) => s.networkConfig.contracts.incentives)
   const processRedBankQuery = useStore((s) => s.processRedBankQuery)
   const setRedBankState = useStore((s) => s.setRedBankState)
 
@@ -21,20 +21,15 @@ export const useRedBank = () => {
         hiveUrl!,
         gql`
           ${getRedbankQuery(
-            userWalletAddress!,
-            redbankContractAddress!,
-            incentivesContractAddress!,
+            userWalletAddress,
+            redbankAddress,
+            incentivesAddress,
             whitelistedAssets,
           )}
         `,
       ),
     {
-      enabled:
-        !!hiveUrl &&
-        !!userWalletAddress &&
-        !!redbankContractAddress &&
-        !!incentivesContractAddress &&
-        !!whitelistedAssets?.length,
+      enabled: !!userWalletAddress && !!whitelistedAssets?.length,
       staleTime: 30000,
       refetchInterval: 30000,
       onError: () => setRedBankState(State.ERROR),

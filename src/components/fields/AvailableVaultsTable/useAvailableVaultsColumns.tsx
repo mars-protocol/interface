@@ -100,13 +100,9 @@ export const useAvailableVaultsColumns = () => {
           if (secondaryBorrowAsset?.borrowEnabled) borrowRates.push(secondaryBorrowAsset.borrowRate)
 
           const borrowRate = Math.min(...borrowRates)
-
           const maxBorrowRate = borrowRate * (ltvToLeverage(row.original.ltv.contract) - 1)
-
           const minAPY = row.original.apy.total ?? 0
-
           const maxAPY = new BigNumber(minAPY).times(maxLeverage).toNumber() - maxBorrowRate
-
           const minDailyAPY = new BigNumber(convertApyToDailyApy(minAPY))
             .decimalPlaces(2)
             .toNumber()

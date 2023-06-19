@@ -1,45 +1,68 @@
+import { Coin } from '@cosmjs/proto-signing'
 import { useQuery } from '@tanstack/react-query'
-import { updateExchangeRate } from 'functions'
+import BigNumber from 'bignumber.js'
+import { updateAssetPrices } from 'functions/updateAssetPrices'
 import useStore from 'store'
+import { State } from 'types/enums'
 import { QUERY_KEYS } from 'types/enums/queryKeys'
 
-interface CoinPriceData {
-  price: number
-  denom: string
-  symbol: string
-  liquidity: number
-  liquidity_24h_change: number
-  volume_24h: number
-  volume_24h_change: number
-  name: string
-  price_24h_change: number
-  exponent: number
-  display: string
-}
-
 export const useUsdPrice = () => {
-  const osmoUsdPriceUrl = useStore((s) => s.networkConfig?.osmoUsdPriceUrl ?? '')
-  const exchangeRates = useStore((s) => s.exchangeRates ?? [])
-  const networkConfig = useStore((s) => s.networkConfig)
-  const displayCurrency = networkConfig?.displayCurrency
+  let usdPriceUrl = useStore((s) => s.networkConfig.usdPriceUrl)
+  let hasPriceFeeds = false
+  const whitelistedAssets = useStore((s) => s.whitelistedAssets)
+  const assetPricesUSD = useStore((s) => s.assetPricesUSD ?? [])
+  const basePriceState = useStore((s) => s.basePriceState)
+  const baseAsset = useStore((s) => s.networkConfig.assets.base)
+
+  if (!usdPriceUrl && basePriceState !== State.READY) {
+    useStore.setState({ basePriceState: State.READY })
+  }
+
+  if (usdPriceUrl && whitelistedAssets) {
+    const pythApiUrl = new URL(usdPriceUrl + 'latest_price_feeds')
+    whitelistedAssets.forEach((asset) => {
+      if (asset.priceFeedId) {
+        hasPriceFeeds = true
+        pythApiUrl.searchParams.append('ids[]', asset.priceFeedId)
+      }
+    })
+    usdPriceUrl = pythApiUrl.href
+  }
 
   useQuery<CoinPriceData[]>(
     [QUERY_KEYS.USD_PRICE],
     async () => {
-      const res = await fetch(osmoUsdPriceUrl)
+      if (!usdPriceUrl || !whitelistedAssets || !hasPriceFeeds) return
+      const res = await fetch(usdPriceUrl)
       return res.json()
     },
     {
-      enabled: !!osmoUsdPriceUrl && !!exchangeRates.length && !!displayCurrency,
+      enabled: !!usdPriceUrl || !!whitelistedAssets,
       staleTime: 30000,
       refetchInterval: 30000,
       onSuccess: (data) => {
-        const coin = { denom: 'usd', amount: (1 / data[0].price).toString() }
-        if (displayCurrency.denom === coin.denom) {
-          useStore.setState({ baseToDisplayCurrencyRatio: data[0].price })
-        }
+        let updatedAssetPricesUSD: Coin[] = []
+        data.map((priceData) => {
+          const denom = whitelistedAssets.find(
+            (asset) => asset?.priceFeedId === priceData.id,
+          )?.denom
 
-        useStore.setState({ exchangeRates: updateExchangeRate(coin, exchangeRates) })
+          if (denom) {
+            const amount = new BigNumber(priceData.price.price)
+              .times(new BigNumber(10).pow(priceData.price.expo))
+              .toString()
+
+            const coin = { denom, amount }
+
+            updatedAssetPricesUSD = updateAssetPrices(coin, assetPricesUSD, true)
+            if (denom === baseAsset?.denom) {
+              useStore.setState({
+                basePriceState: State.READY,
+              })
+            }
+          }
+        })
+        useStore.setState({ assetPricesUSD: updatedAssetPricesUSD })
       },
     },
   )

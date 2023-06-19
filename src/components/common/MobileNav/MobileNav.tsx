@@ -1,7 +1,6 @@
 import { WalletID } from '@marsprotocol/wallet-connector'
 import classNames from 'classnames'
 import { SVG } from 'components/common'
-import { FIELDS_FEATURE } from 'constants/appConstants'
 import { getCouncilLink } from 'libs/council'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -14,6 +13,8 @@ export const MobileNav = () => {
   const { t } = useTranslation()
   const router = useRouter()
   const client = useStore((s) => s.client)
+  const networkConfig = useStore((s) => s.networkConfig)
+  const currentNetwork = useStore((s) => s.currentNetwork)
 
   return (
     <nav className={styles.mobileNav}>
@@ -29,7 +30,7 @@ export const MobileNav = () => {
       <a
         className={styles.nav}
         target='_blank'
-        href={getCouncilLink(client?.recentWallet.providerId as WalletID)}
+        href={getCouncilLink(currentNetwork, client?.connectedWallet.providerId as WalletID)}
         rel='noreferrer'
       >
         <div className={styles.icon}>
@@ -37,7 +38,7 @@ export const MobileNav = () => {
         </div>
         <span>{t('global.council')}</span>
       </a>
-      {FIELDS_FEATURE && (
+      {networkConfig.isFieldsEnabled && (
         <Link
           href='/farm'
           passHref

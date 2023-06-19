@@ -4,6 +4,7 @@ import { MsgExecuteContract } from '@marsprotocol/wallet-connector'
 import { useQuery } from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
 import { GAS_ADJUSTMENT } from 'constants/appConstants'
+import { getPythVaaMessage } from 'libs/pyth'
 import useStore from 'store'
 import { QUERY_KEYS } from 'types/enums/queryKeys'
 import { ContractMsg } from 'types/types'
@@ -19,6 +20,16 @@ interface Props {
 export const useEstimateFee = (props: Props) => {
   const userWalletAddress = useStore((s) => s.userWalletAddress)
   const client = useStore((s) => s.client)
+  const pythVaa = useStore((s) => s.pythVaa)
+  const networkConfig = useStore((s) => s.networkConfig)
+  const baseCurrencyDenom = networkConfig.assets.base.denom
+  const pythContractAddress = networkConfig.contracts?.pyth
+  const pythVaaMessage = getPythVaaMessage(
+    pythVaa,
+    baseCurrencyDenom,
+    pythContractAddress,
+    userWalletAddress,
+  )
 
   return useQuery(
     [QUERY_KEYS.ESTIMATE_FEE, props.msg],
@@ -28,17 +39,20 @@ export const useEstimateFee = (props: Props) => {
 
       if (!client || !props.contract || !props.msg) return
 
+      const messages = [
+        new MsgExecuteContract({
+          sender: sender,
+          contract: props.contract,
+          msg: props.msg,
+          funds: props.funds,
+        }),
+      ]
+      if (pythVaaMessage) messages.unshift(pythVaaMessage)
+
       try {
         const simulateOptions = {
-          messages: [
-            new MsgExecuteContract({
-              sender: sender,
-              contract: props.contract,
-              msg: props.msg,
-              funds: props.funds,
-            }),
-          ],
-          wallet: client.recentWallet,
+          messages,
+          wallet: client.connectedWallet,
         }
 
         const result = await client.simulate(simulateOptions)
@@ -53,6 +67,7 @@ export const useEstimateFee = (props: Props) => {
         }
         throw result.error
       } catch (e) {
+        console.error(e)
         throw e
       }
     },

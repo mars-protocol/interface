@@ -7,7 +7,7 @@ const QUERY_LIMIT = 10
 
 export const useUserCollaterals = () => {
   const userWalletAddress = useStore((s) => s.userWalletAddress)
-  const redbankContractAddress = useStore((s) => s.networkConfig?.contracts.redBank)
+  const redbankContractAddress = useStore((s) => s.networkConfig.contracts.redBank)
   const client = useStore((s) => s.client)
 
   const resolveUserDeposits = (collaterals: UserCollateral[]): Coin[] => {

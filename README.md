@@ -31,10 +31,15 @@ We allow the use of environment variables to be passed to the Docker container t
 
 |Variable|Description|Default|
 |--------|-----------|-------|
-|NETWORK|Flag for mainnet or testnet|mainnet|
-|URL_GQL|The Hive GraphQL endpoint to use|https://osmosis-node.marsprotocol.io/GGSFGSFGFG34/osmosis-hive-front/graphql|
-|URL_REST|The node REST endpoint to use|https://lcd-osmosis.blockapsis.com|
-|URL_RPC|The node RPC endpoint to use|https://rpc-osmosis.blockapsis.com|
+|URL_OSMOSIS_GQL|The Osmosis Hive GraphQL endpoint to use|https://osmosis-node.marsprotocol.io/GGSFGSFGFG34/osmosis-hive-front/graphql|
+|URL_OSMOSIS_REST|The Osmosis node REST endpoint to use|https://lcd-osmosis.blockapsis.com|
+|URL_OSMOSIS_RPC|The Osmosis node RPC endpoint to use|https://rpc-osmosis.blockapsis.com|
+|URL_OSMOSIS_TEST_GQL|The Osmosis Testnet Hive GraphQL endpoint to use|https://testnet-osmosis-node.marsprotocol.io/XF32UOOU55CX/osmosis-hive-front/graphql|
+|URL_OSMOSIS_TEST_REST|The Osmosis Testnet node REST endpoint to use|https://lcd.osmotest5.osmosis.zone|
+|URL_OSMOSIS_TEST_RPC|The Osmosis Testnet node RPC endpoint to use|https://rpc.osmotest5.osmosis.zone|
+|URL_NEUTRON_TEST_GQL|The Neutron Testnet Hive GraphQL endpoint to use|https://testnet-neutron-gql.marsprotocol.io/graphql|
+|URL_NEUTRON_TEST_REST|The Neutron Testnet node REST endpoint to use|https://rest-palvus.pion-1.ntrn.tech|
+|URL_NEUTRON_TEST_RPC|The Neutron Testnet node RPC endpoint to use|https://rpc-palvus.pion-1.ntrn.tech|
 
 **Sample Docker run command**
 
@@ -43,9 +48,15 @@ This command will start the container in interactive mode with port 3000 bound t
 ```sh
 docker run -it -p 3000:3000 \
       -e NETWORK=mainnet \
-      -e URL_GQL=https://your-hive-endpoint.com \
-      -e URL_REST=https://your-rest-endpoint.com \
-      -e URL_RPC=https://your-rpc-endpoint.com marsprotocol/interface:latest
+      -e URL_OSMOSIS_GQL=https://your-osmosis-hive-endpoint.com \
+      -e URL_OSMOSIS_REST=https://your-osmosis-rest-endpoint.com \
+      -e URL_OSMOSIS_RPC=https://your-osmosis-rpc-endpoint.com \
+      -e URL_OSMOSIS_TEST_GQL=https://your-osmosis-testnet-hive-endpoint.com \
+      -e URL_OSMOSIS_TEST_REST=https://your-osmosis-testnet-rest-endpoint.com \
+      -e URL_OSMOSIS_TEST_RPC=https://your-osmosis-testnet-rpc-endpoint.com \
+      -e URL_NEUTRON_TEST_GQL=https://your-neutron-testnet-hive-endpoint.com \
+      -e URL_NEUTRON_TEST_REST=https://your-neutron-testnet-rest-endpoint.com \
+      -e URL_NEUTRON_TEST_RPC=https://your-neutron-testnet-rpc-endpoint.com marsprotocol/interface:latest 
 ```
 
 ## 3. Text and translations

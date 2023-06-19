@@ -1,5 +1,4 @@
 import { Coin } from '@cosmjs/stargate'
-import { MarsOracleData } from 'hooks/queries/useMarsOracle'
 import { State } from 'types/enums'
 
 export interface OraclesSlice {
@@ -8,18 +7,26 @@ export interface OraclesSlice {
   // ------------------
   exchangeRates?: Coin[]
   exchangeRatesState: State
+  assetPricesUSD?: Coin[]
+  assetPricesUSDState: State
+  basePriceState: State
+  migrationInProgress: boolean
+  pythVaa: VaaInformation
   // ------------------
   // GENERAL FUNCTIONS
   // ------------------
+  handleMigration: () => void
   convertToDisplayCurrency: (coin: Coin) => number
   getExchangeRate: (denom1: string, denom2?: string) => number
+  calculateExchangeRates: () => void
   // ------------------
   // SETTERS
   // ------------------
   setExchangeRatesState: (state: State) => void
+  setPythVaa: (sources: PriceSource[]) => void
   // ------------------
   // QUERY RELATED
   // ------------------
-  previousMarsOracleQueryData?: MarsOracleData
-  processMarsOracleQuery: (data: MarsOracleData) => void
+  previousMarsOracleQueryData?: OracleData
+  processMarsOracleQuery: (data: OracleData) => void
 }

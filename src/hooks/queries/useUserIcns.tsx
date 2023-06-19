@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query'
-import { NETWORK_CONFIG } from 'configs/osmosis-1'
 import { gql, request } from 'graphql-request'
 import { useMemo } from 'react'
 import useStore from 'store'
@@ -16,17 +15,16 @@ export interface UserIcnsData {
 
 export const useUserIcns = () => {
   /* only possible to query on mainnet */
-  const hiveUrl = NETWORK_CONFIG.hiveUrl
   const resolverContract = 'osmo1xk0s8xgktn9x5vwcgtjdxqzadg88fgn33p8u9cnpdxwemvxscvast52cdd'
-
+  const networkConfig = useStore((s) => s.networkConfig)
   const userWalletAddress = useStore((s) => s.userWalletAddress)
-  const setUserIcns = useStore((s) => s.setUserIcns)
+  const hiveUrl = networkConfig.hiveUrl
 
   const result = useQuery<UserIcnsData>(
     [QUERY_KEYS.USER_ICNS],
     async () => {
       return await request(
-        hiveUrl!,
+        hiveUrl,
         gql`
         query UserIcnsQuery {
           wasm {
@@ -40,10 +38,10 @@ export const useUserIcns = () => {
       )
     },
     {
-      enabled: !!userWalletAddress || false,
+      enabled: !!userWalletAddress,
       onSuccess: (data) => {
-        const icns = data.wasm.contractQuery.primary_name
-        if (icns !== '') setUserIcns(icns)
+        const userIcns = data.wasm.contractQuery.primary_name
+        if (userIcns !== '') useStore.setState({ userIcns })
       },
     },
   )

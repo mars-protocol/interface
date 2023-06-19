@@ -131,17 +131,19 @@ export const BreakdownTable = (props: Props) => {
 
   const getValueText = (
     type: 'primary' | 'secondary' | 'net' | 'borrowedPrimary' | 'borrowedSecondary' | 'total',
-  ) => (
-    <DisplayCurrency
-      prefixClass='s faded'
-      valueClass='m faded'
-      isApproximation
-      coin={{
-        amount: props.newPosition.values[type].toString(),
-        denom: baseCurrency.denom,
-      }}
-    />
-  )
+  ) => {
+    return (
+      <DisplayCurrency
+        prefixClass='s faded'
+        valueClass='m faded'
+        isApproximation
+        coin={{
+          amount: props.newPosition.values[type].toString(),
+          denom: baseCurrency.denom,
+        }}
+      />
+    )
+  }
 
   const maxBorrowValue = useMemo(
     () => getMaxBorrowValue(props.vault, props.newPosition),

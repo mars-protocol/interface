@@ -30,14 +30,14 @@ export const TxResponse = ({
   const [txFee, setTxFee] = useState<Coin>()
   const [txStatus, setTxStatus] = useState<TxStatus>(TxStatus.LOADING)
   const rpc = useStore((s) => s.chainInfo?.rpc)
-  const chainID = useStore((s) => s.chainInfo?.chainId)
+  const chainId = useStore((s) => s.chainInfo?.chainId)
   const client = useStore((s) => s.client)
   const baseCurrency = useStore((s) => s.baseCurrency)
 
   useEffect(() => {
     const getTxInfo = async (hash?: string) => {
       if (txStatus !== TxStatus.LOADING) return
-      if (!rpc || !chainID || !hash || !response) return
+      if (!rpc || !chainId || !hash || !response) return
 
       try {
         const coin = getFeeFromResponse(response)
@@ -56,7 +56,7 @@ export const TxResponse = ({
     }
 
     getTxInfo(response?.hash || undefined)
-  }, [client, response, rpc, chainID, checkTxStatus, onSuccess, txStatus, baseCurrency.denom])
+  }, [client, response, rpc, chainId, checkTxStatus, onSuccess, txStatus, baseCurrency.denom])
 
   // reset scroll
   useEffect(() => {

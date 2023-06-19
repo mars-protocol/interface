@@ -1,5 +1,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Backdrop, Card, Highlight, Notification, Title, Tutorial } from 'components/common'
+import {
+  Backdrop,
+  Card,
+  CircularProgress,
+  Highlight,
+  Notification,
+  Title,
+  Tutorial,
+} from 'components/common'
 import { AssetTable, Portfolio, useBorrowColumns, useDepositColumns } from 'components/redbank'
 import { RED_BANK_TUTORIAL_KEY } from 'constants/appConstants'
 import {
@@ -21,6 +29,8 @@ const RedBank = () => {
   // ------------------
   const { t } = useTranslation()
   const redBankAssets = useStore((s) => s.redBankAssets)
+  const redBankState = useStore((s) => s.redBankState)
+  const setRedBankState = useStore((s) => s.setRedBankState)
   const defaultDepositColumns = useDepositColumns()
   const defaultBorrowColumns = useBorrowColumns()
 
@@ -67,9 +77,27 @@ const RedBank = () => {
     </Trans>
   )
 
+  useEffect(() => {
+    if (
+      redBankAssets.length === 0 ||
+      marketInfo.length === 0 ||
+      userBalancesState !== State.READY ||
+      redBankState === State.READY
+    )
+      return
+    setRedBankState(State.READY)
+  }, [redBankAssets, marketInfo, redBankState, userBalancesState, setRedBankState])
+
   const borrowBalance = Number(balanceSum(redBankAssets, 'borrowBalanceBaseCurrency'))
 
-  const showLiquidationWarning = borrowBalance >= maxBorrowLimit && borrowBalance > 0
+  const showLiquidationWarning =
+    borrowBalance >= maxBorrowLimit && borrowBalance > 0 && redBankState === State.READY
+
+  const loader = (
+    <div className={styles.loader}>
+      <CircularProgress size={40} />
+    </div>
+  )
 
   const depositCard = (
     <Card
@@ -77,7 +105,11 @@ const RedBank = () => {
       title={t('redbank.myDeposits')}
       tooltip={<Trans i18nKey='redbank.tooltips.deposit.market.connected' />}
     >
-      <AssetTable columns={defaultDepositColumns} data={redBankAssets} type='deposit' />
+      {redBankState === State.READY ? (
+        <AssetTable columns={defaultDepositColumns} data={redBankAssets} type='deposit' />
+      ) : (
+        loader
+      )}
     </Card>
   )
 
@@ -87,7 +119,11 @@ const RedBank = () => {
       title={t('redbank.myBorrowings')}
       tooltip={<Trans i18nKey='redbank.tooltips.borrow.market.connected' />}
     >
-      <AssetTable columns={defaultBorrowColumns} data={redBankAssets} type='borrow' />
+      {redBankState === State.READY ? (
+        <AssetTable columns={defaultBorrowColumns} data={redBankAssets} type='borrow' />
+      ) : (
+        loader
+      )}
     </Card>
   )
 
@@ -108,7 +144,7 @@ const RedBank = () => {
 
   return (
     <div className={styles.markets}>
-      <Backdrop show={showTutorial} />
+      <Backdrop show={showTutorial && redBankState === State.READY} />
       <Notification
         content={maxLtvExceeded}
         showNotification={showLiquidationWarning}

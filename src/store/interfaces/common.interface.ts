@@ -1,6 +1,7 @@
 import { LcdClient } from '@cosmjs/launchpad'
 import { Coin, StdFee } from '@cosmjs/stargate'
 import {
+  ChainInfoID,
   SimplifiedChainInfo,
   TxBroadcastResult,
   WalletClient,
@@ -9,7 +10,6 @@ import { BlockHeightData } from 'hooks/queries/useBlockHeight'
 import { DepositAndDebtData } from 'hooks/queries/useDepositAndDebt'
 import { UserBalanceData } from 'hooks/queries/useUserBalance'
 import { UserIcnsData } from 'hooks/queries/useUserIcns'
-import { Network } from 'types/enums/network'
 import { ContractMsg } from 'types/types'
 
 export interface CommonSlice {
@@ -24,11 +24,10 @@ export interface CommonSlice {
     symbol: string
     decimals: number
   }
-  baseToDisplayCurrencyRatio?: number
   chainInfo?: SimplifiedChainInfo
   client?: WalletClient
   currencyAssets: (Asset | OtherAsset)[]
-  currentNetwork: Network
+  currentNetwork: ChainInfoID
   marketDebts: Coin[]
   enableAnimations?: boolean
   errors: {
@@ -36,12 +35,11 @@ export interface CommonSlice {
     query: boolean
     server: boolean
   }
-  isNetworkLoaded: boolean
   latestBlockHeight: number
   lcdClient?: LcdClient
   marketDeposits: Coin[]
-  networkConfig?: NetworkConfig
-  otherAssets: Asset[]
+  networkConfig: NetworkConfig
+  otherAssets: OtherAsset[]
   queryErrors: string[]
   acceptedTermsOfService: boolean
   slippage: number
@@ -65,6 +63,7 @@ export interface CommonSlice {
     fee: StdFee
     sender?: string
   }) => Promise<TxBroadcastResult | undefined>
+  getAdditionalDecimals(denom: string): number
   loadNetworkConfig: () => void
   queryContract: <T>(
     contractAddress: string,
@@ -76,14 +75,12 @@ export interface CommonSlice {
   // SETTERS
   // ------------------
   setChainInfo: (chainInfo: SimplifiedChainInfo) => void
-  setCurrentNetwork: (network: Network) => void
+  setCurrentNetwork: (network: ChainInfoID) => void
   setTutorialStep: (type: 'fields' | 'redbank', step?: number) => void
-  setLcdClient: (rpc: string, chainID: string) => void
+  setLcdClient: (rpc: string, chainId: string) => void
   setNetworkError: (isError: boolean) => void
-  setClient: (client: WalletClient) => void
   setQueryError: (name: string, isError: boolean) => void
   setServerError: (isError: boolean) => void
-  setUserIcns: (icns: string) => void
   setUserWalletAddress: (address: string) => void
   // ------------------
   // QUERY RELATED

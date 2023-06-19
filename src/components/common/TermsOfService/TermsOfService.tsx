@@ -22,7 +22,7 @@ export const TermsOfService = () => {
 
   return (
     <div className={styles.container}>
-      <Card title='Disclaimer' className={styles.card}>
+      <Card title={t('common.disclaimers')} className={styles.card}>
         <div className={classNames('xs', styles.subtitle)}>
           <Trans i18nKey='common.termsOfService.intro'>
             <span className={classNames('faded xs')}>

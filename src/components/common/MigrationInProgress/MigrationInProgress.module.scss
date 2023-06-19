@@ -1,0 +1,34 @@
+@import 'src/styles/master';
+
+.container {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+
+  .card {
+    max-width: min(rem-calc(500), 95vw);
+    @include padding(2, 0, 4, 0);
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+
+    .headline {
+      @include margin(4, 0);
+      @include typoLcaps;
+      text-align: center;
+      width: 100%;
+    }
+
+    .text {
+      @include typoM;
+      @include margin(0, 0, 4);
+      text-align: center;
+      width: 100%;
+    }
+  }
+}

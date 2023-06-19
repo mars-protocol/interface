@@ -19,17 +19,20 @@ export const ActionsRow = ({ row, type }: Props) => {
   const router = useRouter()
   const chainInfo = useStore((s) => s.chainInfo)
   const redBankAssets = useStore((s) => s.redBankAssets)
+  const assetPricesUSD = useStore((s) => s.assetPricesUSD)
   const hasBalance = Number(row.original.walletBalance ?? 0) > 0
 
   const hasDeposits = Number(row.original.depositBalance ?? 0) > 0
   const hasNeverDeposited = Number(balanceSum(redBankAssets, 'depositBalanceBaseCurrency')) === 0
-  const appUrl = useStore((s) => s.networkConfig?.appUrl) || ''
+  const appUrl = useStore((s) => s.networkConfig.appUrl) || ''
   const classes = classNames.bind(styles)
   const trClasses = classes({
     tr: true,
     expanded: row.getIsExpanded(),
   })
   const assetID = row.original.id
+
+  const assetPrice = assetPricesUSD?.find((asset) => asset.denom === row.original.denom)?.amount
 
   return (
     <tr key={row.id} className={trClasses} onClick={() => row.toggleExpanded()}>
@@ -56,7 +59,7 @@ export const ActionsRow = ({ row, type }: Props) => {
                 text={
                   <Button
                     color='tertiary'
-                    disabled={!hasBalance}
+                    disabled={!hasBalance || !assetPrice}
                     prefix={<SVG.Deposit />}
                     size='small'
                     text={t('redbank.deposit')}
@@ -64,12 +67,14 @@ export const ActionsRow = ({ row, type }: Props) => {
                   />
                 }
                 tooltip={
-                  hasBalance
-                    ? null
-                    : t('redbank.toDepositAssetOnChain', {
+                  !assetPrice
+                    ? t('redbank.noPriceAvailable', { symbol: row.original.symbol })
+                    : !hasBalance
+                    ? t('redbank.toDepositAssetOnChain', {
                         asset: assetID,
                         chain: chainInfo?.name,
                       })
+                    : null
                 }
               />
               {hasDeposits && (
@@ -131,16 +136,20 @@ export const ActionsRow = ({ row, type }: Props) => {
                   <Button
                     color='tertiary'
                     prefix={<SVG.Withdraw />}
-                    disabled={row.original.marketLiquidity === '0' || hasNeverDeposited}
+                    disabled={
+                      row.original.marketLiquidity === '0' || hasNeverDeposited || !assetPrice
+                    }
                     size='small'
                     text={t('common.borrow')}
                     onClick={() => router.push(`/redbank/borrow/${assetID}`)}
                   />
                 }
                 tooltip={
-                  row.original.marketLiquidity === '0' || hasNeverDeposited
+                  row.original.marketLiquidity === '0' || hasNeverDeposited || !assetPrice
                     ? hasNeverDeposited
                       ? t('redbank.warning.borrow')
+                      : !assetPrice
+                      ? t('redbank.noPriceAvailable', { symbol: row.original.symbol })
                       : t('redbank.notEnoughMarketLiquidity')
                     : null
                 }

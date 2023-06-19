@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from 'react'
+import { ReactNode, useEffect } from 'react'
 import useStore from 'store'
 import { AccountNftClient, CreditManagerClient } from 'types/classes'
 
@@ -8,24 +8,39 @@ interface FieldsContainerProps {
 
 export const FieldsContainer = ({ children }: FieldsContainerProps) => {
   const client = useStore((s) => s.client)
+  const currentNetwork = useStore((s) => s.currentNetwork)
   const networkConfig = useStore((s) => s.networkConfig)
   const userWalletAddress = useStore((s) => s.userWalletAddress)
+  const getVaults = useStore((s) => s.getVaults)
   const setCreditManagerMsgComposer = useStore((s) => s.setCreditManagerMsgComposer)
 
-  useEffect(() => {
-    if (!client || !networkConfig) return
-    useStore.setState({
-      creditManagerClient: new CreditManagerClient(networkConfig?.contracts.creditManager, client),
-    })
-    useStore.setState({
-      accountNftClient: new AccountNftClient(networkConfig?.contracts.accountNft, client),
-    })
-  }, [client, networkConfig])
+  const creditManagerAddress = networkConfig.contracts.creditManager
+  const accountNftContractAddress = networkConfig.contracts.accountNft
 
   useEffect(() => {
-    if (!userWalletAddress || !networkConfig?.contracts.creditManager) return
+    if (!networkConfig.isFieldsEnabled || !creditManagerAddress || !accountNftContractAddress)
+      return
+    if (!client || client.connectedWallet.network.chainId !== currentNetwork) return
+    useStore.setState({
+      creditManagerClient: new CreditManagerClient(creditManagerAddress, client),
+      accountNftClient: new AccountNftClient(accountNftContractAddress, client),
+      apys: null,
+    })
+
+    getVaults({ refetch: true })
+  }, [
+    client,
+    networkConfig,
+    accountNftContractAddress,
+    creditManagerAddress,
+    currentNetwork,
+    getVaults,
+  ])
+
+  useEffect(() => {
+    if (!userWalletAddress || !networkConfig.contracts.creditManager) return
     setCreditManagerMsgComposer(userWalletAddress, networkConfig.contracts.creditManager)
-  }, [userWalletAddress, networkConfig, setCreditManagerMsgComposer])
+  }, [userWalletAddress, networkConfig.contracts.creditManager, setCreditManagerMsgComposer])
 
   return <>{children}</>
 }

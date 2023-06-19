@@ -43,6 +43,9 @@ export const PositionInput = (props: Props) => {
       denom: props.vault.denoms.secondary,
       amount: position.amounts.borrowedSecondary.toString(),
     })
+
+    position.values.primary = primaryValue
+    position.values.secondary = secondaryValue
     position.values.borrowedPrimary = borrowedPrimaryValue
     position.values.borrowedSecondary = borrowedSecondaryValue
     position.values.total =
@@ -71,6 +74,7 @@ export const PositionInput = (props: Props) => {
   const onBorrowChange = (amount: number, type: 'primary' | 'secondary') => {
     props.position.borrowDenom =
       type === 'primary' ? props.vault.denoms.primary : props.vault.denoms.secondary
+
     const borrowValue = convertToBaseCurrency({
       denom: props.position.borrowDenom,
       amount: amount.toString(),

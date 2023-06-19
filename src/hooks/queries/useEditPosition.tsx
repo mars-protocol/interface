@@ -148,18 +148,19 @@ export const useEditPosition = (props: Props) => {
 
     const primaryBaseAmount = convertToBaseCurrency({
       denom: props.vault.denoms.primary,
-      amount: String(editPosition.amounts.primary + editPosition.amounts.borrowedPrimary),
+      amount: (editPosition.amounts.primary + editPosition.amounts.borrowedPrimary).toString(),
     })
 
     const secondaryBaseAmount = convertToBaseCurrency({
       denom: props.vault.denoms.secondary,
-      amount: String(editPosition.amounts.secondary + editPosition.amounts.borrowedSecondary),
+      amount: (editPosition.amounts.secondary + editPosition.amounts.borrowedSecondary).toString(),
     })
 
     const swapMessage: Action[] = []
 
     // If difference is larger than 10 ubase, initiate a swap
     const difference = primaryBaseAmount - secondaryBaseAmount
+
     if (Math.abs(difference) > SWAP_THRESHOLD) {
       const inputDenom = difference > 0 ? props.vault.denoms.primary : props.vault.denoms.secondary
       const outputDenom = difference < 0 ? props.vault.denoms.primary : props.vault.denoms.secondary

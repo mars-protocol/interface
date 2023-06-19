@@ -1,16 +1,19 @@
 interface NetworkConfig {
   name: import('@marsprotocol/wallet-connector').ChainInfoID
+  displayName: string
   hiveUrl: string
   rpcUrl: string
   restUrl: string
-  apolloAprUrl: string
-  osmoUsdPriceUrl: string
+  apolloAprUrl?: string
+  usdPriceUrl?: string
+  chainIcon: string
   contracts: {
     redBank: string
     incentives: string
     oracle: string
-    accountNft: string
-    creditManager: string
+    accountNft?: string
+    creditManager?: string
+    pyth?: string
   }
   assets: {
     base: Asset
@@ -20,7 +23,7 @@ interface NetworkConfig {
   }
   displayCurrency: displayCurrency
   appUrl: string
-  wallets: import('@marsprotocol/wallet-connector').WalletID[]
+  isFieldsEnabled: boolean
 }
 
 interface DisplayCurrency {

@@ -3,10 +3,11 @@ import { useQueryClient } from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
 import classNames from 'classnames'
 import { Button, NumberInput, SVG, Toggle, Tooltip } from 'components/common'
-import { DISPLAY_CURRENCY_KEY, ENABLE_ANIMATIONS_KEY, FIELDS_FEATURE } from 'constants/appConstants'
-import React, { useState } from 'react'
+import { DISPLAY_CURRENCY_KEY, ENABLE_ANIMATIONS_KEY } from 'constants/appConstants'
+import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import useStore from 'store'
+import { State } from 'types/enums'
 
 import styles from './Settings.module.scss'
 
@@ -18,6 +19,7 @@ export const Settings = () => {
   const slippage = useStore((s) => s.slippage)
   const networkConfig = useStore((s) => s.networkConfig)
   const currencyAssets = useStore((s) => s.currencyAssets)
+  const calculateExchangeRates = useStore((s) => s.calculateExchangeRates)
   const [customSlippage, setCustomSlippage] = useState<number>(0)
   const [inputRef, setInputRef] = useState<React.RefObject<HTMLInputElement>>()
   const [isCustom, setIsCustom] = useState(false)
@@ -26,7 +28,7 @@ export const Settings = () => {
   const exchangeRates = useStore((s) => s.exchangeRates)
 
   const [displayCurrency, setDisplayCurrency] = useState<DisplayCurrency>(
-    networkConfig?.displayCurrency,
+    networkConfig.displayCurrency,
   )
 
   const onInputChange = (value: number) => {
@@ -67,7 +69,7 @@ export const Settings = () => {
 
   const changeDisplayCurrency = (denom: string) => {
     const selectedAsset = currencyAssets.find((asset) => asset.denom === denom)
-    if (!selectedAsset || !networkConfig || !exchangeRates?.length) return
+    if (!selectedAsset || !exchangeRates?.length) return
     const newDisplayCurrency = {
       denom: selectedAsset.denom,
       prefix: selectedAsset.prefix ?? '',
@@ -76,13 +78,22 @@ export const Settings = () => {
     }
 
     const exchangeRate = exchangeRates.find((rate) => rate.denom === newDisplayCurrency.denom)
-    if (!exchangeRate) return
+    if (!exchangeRate && newDisplayCurrency.denom !== 'usd') return
     setDisplayCurrency(newDisplayCurrency)
-    useStore.setState({ networkConfig: { ...networkConfig, displayCurrency: newDisplayCurrency } })
-    useStore.setState({ baseToDisplayCurrencyRatio: 1 / Number(exchangeRate.amount) })
+    useStore.setState({
+      networkConfig: { ...networkConfig, displayCurrency: newDisplayCurrency },
+      exchangeRates: [],
+      exchangeRatesState: State.INITIALISING,
+    })
     localStorage.setItem(DISPLAY_CURRENCY_KEY, JSON.stringify(newDisplayCurrency))
     queryClient.invalidateQueries()
+    calculateExchangeRates()
   }
+
+  useEffect(() => {
+    if (networkConfig.displayCurrency && networkConfig.displayCurrency !== displayCurrency)
+      setDisplayCurrency(networkConfig.displayCurrency)
+  }, [networkConfig.displayCurrency, displayCurrency])
 
   if (status !== WalletConnectionStatus.Connected) return null
 
@@ -139,7 +150,7 @@ export const Settings = () => {
                 </div>
               </div>
             </div>
-            {FIELDS_FEATURE && (
+            {networkConfig.isFieldsEnabled && (
               <>
                 <div className={styles.header}>
                   <p className={styles.text}>{t('fields.settings')}</p>

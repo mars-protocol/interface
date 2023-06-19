@@ -1,18 +1,25 @@
 import { useQuery } from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
+import { updateAssetPrices } from 'functions/updateAssetPrices'
 import { updateExchangeRate } from 'functions/updateExchangeRate'
 import { useAsset } from 'hooks/data'
 import useStore from 'store'
+import { State } from 'types/enums'
 import { QUERY_KEYS } from 'types/enums/queryKeys'
 
 const poolsEndpoint = 'osmosis/gamm/v1beta1/pools/'
 
 export const useSpotPrice = (symbol: string) => {
   const networkConfig = useStore((s) => s.networkConfig)
-  const displayCurrency = networkConfig?.displayCurrency
-  const lcd = useStore((s) => s.chainInfo?.rest)
+  const baseCurrency = networkConfig.assets.base
+  const displayCurrency = networkConfig.displayCurrency
   const exchangeRates = useStore((s) => s.exchangeRates)
+  const assetPricesUSD = useStore((s) => s.assetPricesUSD)
+  const exchangeRatesState = useStore((s) => s.assetPricesUSDState)
+  const basePriceState = useStore((s) => s.assetPricesUSDState)
   const asset = useAsset({ symbol })
+  const lcd = networkConfig.restUrl ?? ''
+
   const poolBase = asset?.poolBase
     ? exchangeRates?.find((ratesAsset) => ratesAsset.denom === asset.poolBase)
     : true
@@ -26,41 +33,70 @@ export const useSpotPrice = (symbol: string) => {
       })
     },
     {
-      enabled: !!lcd && !!asset && !!asset.poolId && !!poolBase,
+      enabled:
+        !!asset &&
+        !!asset.poolId &&
+        !!poolBase &&
+        basePriceState === State.READY &&
+        exchangeRatesState === State.READY,
       staleTime: 30000,
       refetchInterval: 30000,
       onSuccess: (data) => {
-        if (!asset || !displayCurrency) return
+        if (!asset || !assetPricesUSD) return
         const poolDataAssets = data.pool.pool_assets
         const assetFirst = poolDataAssets[0].token.denom === asset.denom
-        const targetAsset = poolDataAssets[assetFirst ? 0 : 1]
-        const otherAsset = poolDataAssets[assetFirst ? 1 : 0]
+        const primaryAsset = poolDataAssets[assetFirst ? 0 : 1]
+        const secondaryAsset = poolDataAssets[assetFirst ? 1 : 0]
 
-        const targetAssetAmount = new BigNumber(targetAsset.token.amount)
-        const targetAssetWeight = new BigNumber(targetAsset.weight)
-        const otherAssetAmount = new BigNumber(otherAsset.token.amount)
-        const otherAssetWeight = new BigNumber(otherAsset.weight)
+        const primaryAssetAmount = new BigNumber(primaryAsset.token.amount)
+        const primaryAssetWeight = new BigNumber(primaryAsset.weight)
+        const secondaryAssetAmount = new BigNumber(secondaryAsset.token.amount)
+        const secondaryAssetWeight = new BigNumber(secondaryAsset.weight)
 
-        const rate = otherAssetAmount
-          .div(targetAssetAmount)
-          .multipliedBy(otherAssetWeight.div(targetAssetWeight))
+        const rate = secondaryAssetAmount
+          .div(primaryAssetAmount)
+          .multipliedBy(secondaryAssetWeight.div(primaryAssetWeight))
 
         const hasDisplayCurrency = exchangeRates?.find(
           (ratesAsset) => ratesAsset.denom === displayCurrency.denom,
         )
 
         if (displayCurrency.denom === asset.denom && !hasDisplayCurrency) {
-          useStore.setState({ baseToDisplayCurrencyRatio: 1 / rate.toNumber() })
+          const coinExchangeRate = { denom: asset.denom, amount: '1' }
+          useStore.setState({
+            exchangeRates: updateExchangeRate(coinExchangeRate, exchangeRates || []),
+          })
         } else {
-          const coin = { denom: asset.denom, amount: rate.toString() }
+          const secondaryRate =
+            exchangeRates?.find((rate) => rate.denom === secondaryAsset.token.denom)?.amount ?? 1
+          const coinExchangeRate = {
+            denom: asset.denom,
+            amount: rate.times(secondaryRate).toString(),
+          }
 
           if (typeof poolBase === 'object') {
             const baseRate = Number(rate.toString()) * Number(poolBase.amount)
-            coin.amount = baseRate.toString()
-            useStore.setState({ exchangeRates: updateExchangeRate(coin, exchangeRates || []) })
+            coinExchangeRate.amount = baseRate.toString()
+            useStore.setState({
+              exchangeRates: updateExchangeRate(coinExchangeRate, exchangeRates || []),
+            })
           } else {
-            useStore.setState({ exchangeRates: updateExchangeRate(coin, exchangeRates || []) })
+            useStore.setState({
+              exchangeRates: updateExchangeRate(coinExchangeRate, exchangeRates || []),
+            })
           }
+          const baseCurrencyPrice = assetPricesUSD.find(
+            (asset) => asset.denom === baseCurrency.denom,
+          )?.amount
+          if (!baseCurrencyPrice) return
+
+          const assetPriceCoin = {
+            denom: coinExchangeRate.denom,
+            amount: new BigNumber(coinExchangeRate.amount).times(baseCurrencyPrice).toString(),
+          }
+          useStore.setState({
+            assetPricesUSD: updateAssetPrices(assetPriceCoin, assetPricesUSD || []),
+          })
         }
       },
     },

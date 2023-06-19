@@ -5,7 +5,6 @@ import {
   UnlockedNotification,
   UnlockingNotification,
 } from 'components/fields'
-import { FIELDS_FEATURE } from 'constants/appConstants'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import useStore from 'store'
@@ -21,8 +20,10 @@ const Fields = () => {
   const creditManagerClient = useStore((s) => s.creditManagerClient)
   const getVaults = useStore((s) => s.getVaults)
   const userWalletAddress = useStore((s) => s.userWalletAddress)
+  const networkConfig = useStore((s) => s.networkConfig)
 
   useEffect(() => {
+    if (!networkConfig.isFieldsEnabled) return
     if (!getVaults || !accountNftClient || !client || !creditManagerClient || !userWalletAddress)
       return
     if (userWalletAddress && prefUserWalletAddress !== userWalletAddress) {
@@ -31,10 +32,17 @@ const Fields = () => {
     } else {
       getVaults()
     }
-  }, [getVaults, client, accountNftClient, creditManagerClient, userWalletAddress])
+  }, [
+    getVaults,
+    client,
+    accountNftClient,
+    creditManagerClient,
+    userWalletAddress,
+    networkConfig.isFieldsEnabled,
+  ])
 
   useEffect(() => {
-    if (!FIELDS_FEATURE) {
+    if (!networkConfig.isFieldsEnabled) {
       router.push('/')
     }
   })

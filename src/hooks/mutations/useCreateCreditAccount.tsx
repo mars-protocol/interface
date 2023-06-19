@@ -9,12 +9,13 @@ export const useCreateCreditAccount = () => {
 
   return useMutation(async (fee: StdFee) => {
     const message = { create_credit_account: {} }
+    const creditManagerAddress = networkConfig.contracts?.creditManager
 
-    if (!networkConfig) return null
+    if (!creditManagerAddress) return null
     return executeMsg({
       msg: message,
       fee,
-      contract: networkConfig.contracts.creditManager,
+      contract: creditManagerAddress,
     }).then((broadcastResult) => {
       if (broadcastResult) {
         try {

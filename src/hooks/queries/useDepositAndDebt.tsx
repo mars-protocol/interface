@@ -25,13 +25,15 @@ export interface DepositAndDebtData {
     axlWETHDebt: string
     stATOMDeposits: string
     stATOMDebt: string
+    NTRNDeposits: string
+    NTRNDebt: string
   }
 }
 
 export const useDepositAndDebt = () => {
-  const hiveUrl = useStore((s) => s.networkConfig?.hiveUrl)
+  const hiveUrl = useStore((s) => s.networkConfig.hiveUrl)
   const whitelistedAssets = useStore((s) => s.whitelistedAssets)
-  const redBankAddress = useStore((s) => s.networkConfig?.contracts.redBank) || ''
+  const redBankAddress = useStore((s) => s.networkConfig.contracts.redBank) || ''
   const marketInfo = useStore((s) => s.marketInfo)
   const processDepositAndDebtQuery = useStore((s) => s.processDepositAndDebtQuery)
 

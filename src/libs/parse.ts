@@ -21,16 +21,16 @@ export const lookup = (amount: number, symbol: string, decimals: number): number
   return demagnify(value.toNumber(), decimals)
 }
 
-export const findAssetByDenom = (denom: string, assets: Asset[]) =>
+export const findAssetByDenom = (denom: string, assets: Asset[] | OtherAsset[]) =>
   assets.find((asset) => asset.denom.toLowerCase() === denom.toLowerCase())
 
-export const lookupSymbol = (denom: string, assets: Asset[]) =>
+export const lookupSymbol = (denom: string, assets: Asset[] | OtherAsset[]) =>
   assets.find((asset) => asset.denom.toLowerCase() === denom.toLowerCase())?.symbol || ''
 
-export const lookupDecimals = (denom: string, assets: Asset[]) =>
+export const lookupDecimals = (denom: string, assets: Asset[] | OtherAsset[]) =>
   assets.find((asset) => asset.denom === denom)?.decimals || 6
 
-export const lookupDenomBySymbol = (symbol: string, assets: Asset[]) =>
+export const lookupDenomBySymbol = (symbol: string, assets: Asset[] | OtherAsset[]) =>
   assets.find((asset) => asset.symbol.toLowerCase() === symbol.toLowerCase())?.denom || ''
 
 export const format: Formatter = (amount, symbol, decimals): string => {

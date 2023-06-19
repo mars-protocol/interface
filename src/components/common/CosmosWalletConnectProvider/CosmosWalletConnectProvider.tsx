@@ -1,7 +1,9 @@
-import { ChainInfoID, WalletID, WalletManagerProvider } from '@marsprotocol/wallet-connector'
+import { WalletID, WalletManagerProvider } from '@marsprotocol/wallet-connector'
 import { CircularProgress, SVG } from 'components/common'
-import { NETWORK } from 'constants/env'
-import { useEffect, useState } from 'react'
+import { SUPPORTED_CHAINS } from 'constants/appConstants'
+import { getCurrentChainId } from 'libs/chainId'
+import { useEffect } from 'react'
+import useStore from 'store'
 
 import styles from './CosmosWalletConnectProvider.module.scss'
 
@@ -10,42 +12,36 @@ type Props = {
 }
 
 export const CosmosWalletConnectProvider = ({ children }: Props) => {
-  const [chainInfoOverrides, setChainInfoOverrides] = useState<{
-    rpc: string
-    rest: string
-    chainID: ChainInfoID
-  }>()
-  const [enabledWallets, setEnabledWallets] = useState<WalletID[]>([])
+  const currentNetwork = useStore((s) => s.currentNetwork)
+  const setCurrentNetwork = useStore((s) => s.setCurrentNetwork)
+  const loadNetworkConfig = useStore((s) => s.loadNetworkConfig)
+  const networkConfig = useStore((s) => s.networkConfig)
 
   useEffect(() => {
-    if (chainInfoOverrides) return
+    setCurrentNetwork(getCurrentChainId())
+    loadNetworkConfig()
+  }, [loadNetworkConfig, setCurrentNetwork])
 
-    const fetchConfig = async () => {
-      const file = await import(
-        `../../../configs/${NETWORK !== 'mainnet' ? 'osmo-test-5' : 'osmosis-1'}.ts`
-      )
-
-      const networkConfig: NetworkConfig = file.NETWORK_CONFIG
-
-      setChainInfoOverrides({
-        rpc: networkConfig.rpcUrl,
-        rest: networkConfig.restUrl,
-        chainID: networkConfig.name,
-      })
-      setEnabledWallets(networkConfig.wallets)
-    }
-
-    fetchConfig()
-  })
-
-  if (!chainInfoOverrides || !enabledWallets?.length) return null
+  const supportedChains = SUPPORTED_CHAINS.map((chain) => chain.chainId)
 
   return (
     <WalletManagerProvider
-      chainInfoOverrides={chainInfoOverrides}
+      chainInfoOverrides={{
+        rpc: networkConfig.rpcUrl,
+        rest: networkConfig.restUrl,
+      }}
+      chainIds={supportedChains}
       closeIcon={<SVG.Close />}
-      defaultChainId={chainInfoOverrides.chainID}
-      enabledWallets={enabledWallets}
+      defaultChainId={currentNetwork}
+      enabledWallets={[
+        WalletID.Keplr,
+        WalletID.Xdefi,
+        WalletID.StationWallet,
+        WalletID.Leap,
+        WalletID.Cosmostation,
+        WalletID.KeplrMobile,
+        WalletID.CosmostationMobile,
+      ]}
       persistent
       renderLoader={() => (
         <div className={styles.loader}>

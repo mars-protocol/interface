@@ -35,7 +35,7 @@ export const IncentivesButton = () => {
   const otherAssets = useStore((s) => s.otherAssets)
   const userWalletAddress = useStore((s) => s.userWalletAddress)
   const unclaimedRewards = useStore((s) => s.userUnclaimedRewards)
-  const incentivesContractAddress = useStore((s) => s.networkConfig?.contracts.incentives)
+  const incentivesContractAddress = useStore((s) => s.networkConfig.contracts.incentives)
   const chainInfo = useStore((s) => s.chainInfo)
   const executeMsg = useStore((s) => s.executeMsg)
 

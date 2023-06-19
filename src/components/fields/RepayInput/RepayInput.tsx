@@ -60,6 +60,7 @@ export const RepayInput = (props: Props) => {
       denom: props.vault.denoms.secondary,
       amount: position.amounts.borrowedSecondary.toString(),
     })
+
     position.values.primary = primaryValue
     position.values.secondary = secondaryValue
     position.values.borrowedPrimary = borrowedPrimaryValue

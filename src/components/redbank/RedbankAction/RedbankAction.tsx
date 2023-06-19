@@ -69,7 +69,7 @@ export const RedbankAction = React.memo(
 
     // Read only states
     const borrowAssetName = redBankAssets.find((asset) => asset.denom === denom)
-    const redBankContractAddress = networkConfig?.contracts.redBank
+    const redBankContractAddress = networkConfig.contracts.redBank
     const totalScaledDepositbaseCurrencyBalance = useMemo(() => {
       if (!userCollateral) return 0
       return ltvWeightedDepositValue(

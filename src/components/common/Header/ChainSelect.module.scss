@@ -1,0 +1,109 @@
+@import 'src/styles/master';
+
+.container {
+  position: relative;
+  display: inline;
+
+  .menu {
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    justify-content: flex-start;
+    max-width: calc(100vw - 2 * #{$spacingBase}px);
+    top: rem-calc(40);
+    width: rem-calc(240);
+    right: left(1);
+    z-index: 100;
+    @include layoutPopover;
+  }
+
+  .header {
+    display: flex;
+    flex: 0 0 100%;
+    flex-wrap: nowrap;
+    width: 100%;
+    @include padding(4, 0, 2);
+    @include margin(0);
+    position: relative;
+    border-bottom: 1px solid $alphaBlack20;
+    text-align: center;
+
+    .text {
+      @include margin(0);
+      @include typoScaps;
+      color: $colorSecondaryDark;
+      width: 100%;
+    }
+  }
+
+  .subheader {
+    text-align: center;
+    flex: 0 0 100%;
+    @include typoScaps;
+    opacity: 0.6;
+  }
+
+  .chains {
+    @include padding(2, 2, 4);
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .chain {
+    display: flex;
+    flex: 0 0 100%;
+    align-items: center;
+    @include padding(1, 2);
+    @include margin(0.5, 0);
+    opacity: 0.6;
+    transition: background-color 0.2s ease-in-out;
+
+    &.active {
+      color: $colorSecondaryDark;
+      pointer-events: none;
+      opacity: 1;
+      &:hover {
+        background-color: transparent;
+      }
+    }
+
+    &:hover {
+      cursor: pointer;
+      opacity: 1;
+      border-radius: $borderRadiusXS;
+      background-color: $alphaBlack10;
+    }
+
+    .image {
+      @include margin(0, 2, 0, 0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .chainId {
+      @include margin(0);
+      @include typoXS;
+      opacity: 0.6;
+    }
+  }
+}
+
+.button {
+  font-size: rem-calc(16);
+  @include margin(0, 2, 0, 0);
+}
+
+.clickAway {
+  display: block;
+  position: fixed;
+  z-index: 99;
+  height: 100vh;
+  width: 100vw;
+  left: 0;
+  top: 0;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

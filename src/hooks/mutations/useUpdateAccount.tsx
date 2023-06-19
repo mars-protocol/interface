@@ -16,6 +16,7 @@ export const useUpdateAccount = () => {
   const executeMsg = useStore((s) => s.executeMsg)
   const networkConfig = useStore((s) => s.networkConfig)
   const getVaults = useStore((s) => s.getVaults)
+  const creditManagerAddress = networkConfig.contracts?.creditManager
 
   return useMutation(async (props: Props) => {
     queryClient.removeQueries([QUERY_KEYS.ESTIMATE_FARM_FEE])
@@ -26,12 +27,12 @@ export const useUpdateAccount = () => {
       },
     }
 
-    if (!networkConfig) return
+    if (!creditManagerAddress) return
 
     return executeMsg({
       msg: message,
       fee: props.fee,
-      contract: networkConfig.contracts.creditManager,
+      contract: creditManagerAddress,
       funds: props.funds,
     }).then((broadcastResult) => {
       if (broadcastResult?.response.code === 0) {

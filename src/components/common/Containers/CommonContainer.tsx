@@ -1,6 +1,5 @@
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import {
-  ChainInfoID,
   getChainInfo,
   getClient,
   useWallet,
@@ -9,7 +8,6 @@ import {
 } from '@marsprotocol/wallet-connector'
 import { useQueryClient } from '@tanstack/react-query'
 import { MARS_SYMBOL } from 'constants/appConstants'
-import { NETWORK } from 'constants/env'
 import {
   useBlockHeight,
   useDepositAndDebt,
@@ -20,12 +18,14 @@ import {
   useUserDebt,
   useUserIcns,
 } from 'hooks/queries'
+import { usePythVaa } from 'hooks/queries/usePythVaa'
 import { useSpotPrice } from 'hooks/queries/useSpotPrice'
 import { useUserCollaterals } from 'hooks/queries/useUserCollaterals'
 import { ReactNode, useEffect, useState } from 'react'
 import useStore from 'store'
 import { State } from 'types/enums'
-import { Network } from 'types/enums/network'
+
+import { MigrationInProgress } from '../MigrationInProgress/MigrationInProgress'
 
 interface CommonContainerProps {
   children: ReactNode
@@ -35,70 +35,76 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
   // ------------------
   // EXTERNAL HOOKS
   // ---------------
-  const { recentWallet, simulate, sign, broadcast } = useWallet()
-  const { status } = useWalletManager()
+  const { simulate, sign, broadcast } = useWallet()
+  const { status, connectedWallet } = useWalletManager()
   const queryClient = useQueryClient()
-
-  const chainInfo = recentWallet?.network
-    ? getChainInfo(recentWallet?.network.chainId as ChainInfoID)
-    : undefined
-  const address = status !== WalletConnectionStatus.Connected ? '' : recentWallet?.account.address
 
   const [cosmWasmClient, setCosmWasmClient] = useState<CosmWasmClient | undefined>()
 
   // ------------------
   // STORE STATE
   // ------------------
-  const chainID = useStore((s) => s.chainInfo?.chainId)
+  const assetPricesUSDState = useStore((s) => s.assetPricesUSDState)
+  const assetPricesUSD = useStore((s) => s.assetPricesUSD)
+  const chainId = useStore((s) => s.currentNetwork)
   const exchangeRates = useStore((s) => s.exchangeRates)
   const exchangeRatesState = useStore((s) => s.exchangeRatesState)
-  const isNetworkLoaded = useStore((s) => s.isNetworkLoaded)
-  const rpc = useStore((s) => s.chainInfo?.rpc)
+  const networkConfig = useStore((s) => s.networkConfig)
   const marketDeposits = useStore((s) => s.marketDeposits)
   const marketInfo = useStore((s) => s.marketInfo)
   const marketIncentiveInfo = useStore((s) => s.marketIncentiveInfo)
+  const migrationInProgress = useStore((s) => s.migrationInProgress)
   const redBankState = useStore((s) => s.redBankState)
+  const rpc = useStore((s) => s.networkConfig.rpcUrl)
   const userBalances = useStore((s) => s.userBalances)
   const userBalancesState = useStore((s) => s.userBalancesState)
   const userDebts = useStore((s) => s.userDebts)
   const userDeposits = useStore((s) => s.userDeposits)
   const userWalletAddress = useStore((s) => s.userWalletAddress)
   const whitelistedAssets = useStore((s) => s.whitelistedAssets)
-  const loadNetworkConfig = useStore((s) => s.loadNetworkConfig)
   const setRedBankAssets = useStore((s) => s.setRedBankAssets)
-  const setChainInfo = useStore((s) => s.setChainInfo)
-  const setCurrentNetwork = useStore((s) => s.setCurrentNetwork)
   const setLcdClient = useStore((s) => s.setLcdClient)
-  const setClient = useStore((s) => s.setClient)
+  const setChainInfo = useStore((s) => s.setChainInfo)
   const setUserBalancesState = useStore((s) => s.setUserBalancesState)
   const setUserWalletAddress = useStore((s) => s.setUserWalletAddress)
+  const pythVaa = useStore((s) => s.pythVaa)
 
   // ------------------
   // SETTERS
   // ------------------
+
   useEffect(() => {
-    if (NETWORK === 'mainnet') {
-      setCurrentNetwork(Network.MAINNET)
+    if (status !== WalletConnectionStatus.Connected && cosmWasmClient) {
+      setCosmWasmClient(undefined)
+      useStore.setState({
+        client: undefined,
+        creditManagerClient: undefined,
+        accountNftClient: undefined,
+        userWalletAddress: '',
+      })
     }
-    loadNetworkConfig()
-  }, [loadNetworkConfig, setCurrentNetwork])
+  }, [status, cosmWasmClient])
 
   useEffect(() => {
-    if (!chainInfo) return
+    const chainInfo = getChainInfo(chainId, {
+      rpc: networkConfig.rpcUrl,
+      rest: networkConfig.restUrl,
+    })
     setChainInfo(chainInfo)
-  }, [chainInfo, setChainInfo])
+  }, [chainId, networkConfig, setChainInfo])
 
   useEffect(() => {
-    setUserWalletAddress(address || '')
-  }, [setUserWalletAddress, address])
+    if (!connectedWallet || connectedWallet.network.chainId !== chainId) return
+    setUserWalletAddress(connectedWallet.account.address)
+  }, [setUserWalletAddress, connectedWallet, chainId])
 
   useEffect(() => {
-    if (!rpc || !chainID) return
-    setLcdClient(rpc, chainID)
-  }, [rpc, chainID, setLcdClient])
+    if (!rpc || !chainId) return
+    setLcdClient(rpc, chainId)
+  }, [rpc, chainId, setLcdClient])
 
   useEffect(() => {
-    if (userDebts && userDeposits && userBalances) {
+    if (userBalances) {
       setUserBalancesState(State.READY)
     } else {
       setUserBalancesState(State.ERROR)
@@ -106,10 +112,10 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
   }, [userDebts, userDeposits, userBalances, setUserBalancesState])
 
   useEffect(() => {
-    if (!recentWallet) return
+    if (!connectedWallet || connectedWallet.network.chainId !== chainId) return
     if (!cosmWasmClient) {
       const getCosmWasmClient = async () => {
-        const cosmClient = await getClient(recentWallet.network.rpc)
+        const cosmClient = await getClient(networkConfig.rpcUrl)
         setCosmWasmClient(cosmClient)
       }
 
@@ -117,19 +123,22 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
       return
     }
 
-    const client = {
-      broadcast,
-      cosmWasmClient,
-      recentWallet,
-      sign,
-      simulate,
-    }
-    setClient(client)
-  }, [simulate, sign, recentWallet, cosmWasmClient, broadcast, setClient])
+    useStore.setState({
+      client: {
+        broadcast,
+        cosmWasmClient,
+        connectedWallet,
+        sign,
+        simulate,
+      },
+    })
+  }, [simulate, sign, connectedWallet, cosmWasmClient, broadcast, networkConfig, chainId])
 
   useEffect(() => {
     setRedBankAssets()
   }, [
+    assetPricesUSD,
+    assetPricesUSDState,
     exchangeRatesState,
     redBankState,
     userBalancesState,
@@ -151,17 +160,19 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
   // ------------------
   // QUERY RELATED
   // ------------------
+  useUsdPrice()
   useBlockHeight()
-  useRedBank()
   useUserBalance()
   useUserIcns()
   useUserDebt()
   useUserCollaterals()
   useMarsOracle()
   useSpotPrice(MARS_SYMBOL)
-  useUsdPrice()
   useDepositAndDebt()
   useRedBank()
+  usePythVaa()
 
-  return <>{isNetworkLoaded && children}</>
+  if (migrationInProgress) return <MigrationInProgress />
+
+  return <>{children}</>
 }

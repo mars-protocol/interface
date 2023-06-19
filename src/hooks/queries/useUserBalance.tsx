@@ -12,7 +12,7 @@ export interface UserBalanceData {
 }
 
 export const useUserBalance = () => {
-  const hiveUrl = useStore((s) => s.networkConfig?.hiveUrl)
+  const hiveUrl = useStore((s) => s.networkConfig.hiveUrl)
   const userWalletAddress = useStore((s) => s.userWalletAddress)
   const processUserBalanceQuery = useStore((s) => s.processUserBalanceQuery)
 
@@ -36,7 +36,7 @@ export const useUserBalance = () => {
       )
     },
     {
-      enabled: (!!hiveUrl && !!userWalletAddress) || false,
+      enabled: !!userWalletAddress,
       staleTime: 30000,
       refetchInterval: 30000,
       onSuccess: processUserBalanceQuery,

@@ -72,7 +72,8 @@ const Unlock = () => {
         <Checkbox
           onChecked={handleChange}
           text={t('fields.disclaimers.dontShowAgain')}
-          className={'xs'}
+          className={styles.checkbox}
+          name='fields-disclaimer'
         />
       </div>
     </Card>

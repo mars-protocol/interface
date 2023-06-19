@@ -1,8 +1,8 @@
 import { Coin } from '@cosmjs/stargate'
 import BigNumber from 'bignumber.js'
-import { updateExchangeRate } from 'functions/updateExchangeRate'
-import { MarsOracleData } from 'hooks/queries/useMarsOracle'
-import { findAssetByDenom, lookup } from 'libs/parse'
+import { updateExchangeRate } from 'functions'
+import { updateAssetPrices } from 'functions/updateAssetPrices'
+import { findAssetByDenom, lookup, magnify } from 'libs/parse'
 import isEqual from 'lodash.isequal'
 import { OraclesSlice } from 'store/interfaces/oracles.interface'
 import { Store } from 'store/interfaces/store.interface'
@@ -15,71 +15,157 @@ const oraclesSlice = (set: NamedSet<Store>, get: GetState<Store>): OraclesSlice 
   // VARIABLES
   // ------------------
   exchangeRatesState: State.INITIALISING,
+  assetPricesUSDState: State.INITIALISING,
+  basePriceState: State.INITIALISING,
+  migrationInProgress: false,
+  pythVaa: {
+    priceFeeds: [],
+    data: [],
+  },
   // ------------------
   // GENERAL FUNCTIONS
   // ------------------
   convertToDisplayCurrency: (coin: Coin) => {
     const whitelistedAssets = get().whitelistedAssets
     const exchangeRates = get().exchangeRates
+    const assetPricesUSD = get().assetPricesUSD
     const otherAssets = get().otherAssets
-    const baseCurrency = get().baseCurrency
     const networkConfig = get().networkConfig
-    const displayCurrency = networkConfig?.displayCurrency
+    const displayCurrency = networkConfig.displayCurrency
     const exchangeRatesState = get().exchangeRatesState
-    const assets: Asset[] = [...whitelistedAssets, ...otherAssets]
+    const assetPricesUSDState = get().assetPricesUSDState
+    const assets: OtherAsset[] = [...whitelistedAssets, ...otherAssets]
 
     if (
       !coin ||
       exchangeRatesState === State.INITIALISING ||
-      !exchangeRates?.find((rate) => rate.denom === displayCurrency.denom) ||
+      assetPricesUSDState === State.INITIALISING ||
+      !assetPricesUSD ||
+      !exchangeRates ||
       !assets.length ||
       !displayCurrency
     ) {
       return 0
     }
 
-    if (coin.denom.toLowerCase() === displayCurrency.denom.toLowerCase()) {
+    if (coin.denom === displayCurrency.denom) {
       const displayAsset = findAssetByDenom(displayCurrency.denom, assets)
       if (!displayAsset) return 0
       return lookup(Number(coin.amount), displayAsset.symbol, displayAsset.decimals)
     }
 
-    const assetToBaseRatio = Number(
-      exchangeRates.find((exchangeRate) => exchangeRate.denom === coin.denom)?.amount,
-    )
-    const baseToDisplayCurrencyRatio = get().baseToDisplayCurrencyRatio
     const assetInfo = assets.find((asset) => asset.denom === coin.denom)
 
-    if (!assetToBaseRatio || !baseToDisplayCurrencyRatio || !assetInfo) return 0
+    const assetPrice = Number(
+      assetPricesUSD.find((assetPrice) => assetPrice.denom === coin.denom)?.amount,
+    )
 
+    if (!assetInfo || !assetPrice) return 0
     const decimals = assetInfo.decimals
-    let amount = 0
-    if (coin.denom === baseCurrency.denom) {
-      amount = new BigNumber(coin.amount)
+
+    if (displayCurrency.denom === 'usd') {
+      const amount = new BigNumber(coin.amount)
         .dividedBy(10 ** decimals)
-        .times(baseToDisplayCurrencyRatio)
+        .times(assetPrice)
         .toNumber()
-    } else {
-      amount = new BigNumber(coin.amount)
-        .dividedBy(10 ** decimals)
-        .times(assetToBaseRatio)
-        .times(baseToDisplayCurrencyRatio)
-        .toNumber()
+      return amount < 0.01 ? 0 : amount
     }
+
+    const exchangeRate = Number(
+      exchangeRates.find((exchangeRate) => exchangeRate.denom === coin.denom)?.amount,
+    )
+    if (!exchangeRate) return 0
+
+    const amount = new BigNumber(coin.amount)
+      .dividedBy(10 ** decimals)
+      .times(exchangeRate)
+      .toNumber()
+
     // Prevent extremely small numbers
-    return amount < 0.005 ? 0 : amount
+    return amount < 0.001 ? 0 : amount
   },
   getExchangeRate: (denom1: string, denom2?: string) => {
+    const assets = [...get().whitelistedAssets, ...get().otherAssets]
     if (!denom2) {
-      denom2 = get().baseAsset?.denom
+      denom2 = get().baseCurrency?.denom
     }
-    const exchangeRates = get().exchangeRates
-    const asset1 = exchangeRates?.find((coin) => coin.denom === denom1)
-    const asset2 = exchangeRates?.find((coin) => coin.denom === denom2)
-    if (asset1 && asset2) {
-      return new BigNumber(asset1.amount).div(asset2.amount).toNumber()
+
+    const asset1 = assets.find((asset) => asset.denom === denom1)
+    const asset2 = assets.find((asset) => asset.denom === denom2)
+
+    const assetPricesUSD = get().assetPricesUSD
+    const asset1Price = assetPricesUSD?.find((coin) => coin.denom === denom1)?.amount
+    const asset2Price = assetPricesUSD?.find((coin) => coin.denom === denom2)?.amount
+
+    if (asset1Price && asset1 && asset2Price && asset2) {
+      return new BigNumber(magnify(Number(asset1Price), asset1.decimals))
+        .div(magnify(Number(asset2Price), asset2.decimals))
+        .toNumber()
     }
     return 1
+  },
+  calculateExchangeRates: () => {
+    const assetPricesUSD = get().assetPricesUSD
+    const displayCurrency = get().networkConfig.displayCurrency
+    let exchangeRates: Coin[] = get().exchangeRates ?? []
+
+    if (!displayCurrency || !assetPricesUSD) return
+
+    const displayCurrencyPrice = assetPricesUSD?.find(
+      (asset) => asset.denom === displayCurrency.denom,
+    ) ?? { denom: displayCurrency.denom, amount: '1' }
+    assetPricesUSD.forEach((asset) => {
+      if (asset.denom === displayCurrency.denom) {
+        exchangeRates = updateExchangeRate({ denom: asset.denom, amount: '1' }, exchangeRates)
+      } else {
+        exchangeRates = updateExchangeRate(
+          {
+            denom: asset.denom,
+            amount: new BigNumber(asset.amount).div(displayCurrencyPrice.amount).toString(),
+          },
+          exchangeRates,
+        )
+      }
+    })
+    set({
+      exchangeRates,
+      exchangeRatesState: State.READY,
+    })
+  },
+  handleMigration: () => {
+    if (!get().migrationInProgress) return
+
+    set({
+      exchangeRates: [],
+      exchangeRatesState: State.INITIALISING,
+      assetPricesUSD: [],
+      assetPricesUSDState: State.INITIALISING,
+      basePriceState: State.INITIALISING,
+    })
+  },
+  setPythVaa: (sources: PriceSource[]) => {
+    if (!sources || sources.length === 0) return
+
+    const whitelistedAssets = get().whitelistedAssets
+    const otherAssets = get().otherAssets
+    const allAssets = [...whitelistedAssets, ...otherAssets]
+
+    if (allAssets.length === 0) return
+
+    const pythAssetFeedIds: string[] = []
+    allAssets.forEach((asset) => {
+      const priceSource = sources.find((source) => source.denom === asset.denom)?.price_source
+      const isPyth = priceSource && !!(priceSource as PythPriceSource).pyth
+
+      if (isPyth) {
+        pythAssetFeedIds.push((priceSource as PythPriceSource).pyth.price_feed_id)
+      }
+    })
+
+    if (pythAssetFeedIds.length === 0) return
+
+    const data = get().pythVaa.data
+    set({ pythVaa: { priceFeeds: pythAssetFeedIds, data } })
   },
   // ------------------
   // SETTERS
@@ -89,55 +175,72 @@ const oraclesSlice = (set: NamedSet<Store>, get: GetState<Store>): OraclesSlice 
   // ------------------
   // QUERY RELATED
   // ------------------
-  processMarsOracleQuery: (data: MarsOracleData) => {
+  processMarsOracleQuery: (data: OracleData) => {
     if (isEqual(data, get().previousMarsOracleQueryData)) return
 
-    const wasmQueryResults = data.prices
-    const exchangeRates: Coin[] = get().exchangeRates ?? []
-    const baseCurrency = get().baseCurrency
-    const networkConfig = get().networkConfig
-    const displayCurrency = networkConfig?.displayCurrency
+    const migrationInProgress = data.sources.price_sources.length === 0
+    set({ migrationInProgress })
+
+    if (migrationInProgress) {
+      get().handleMigration()
+      return
+    }
+
+    get().setPythVaa(data.sources.price_sources)
+
+    const pricesQueryResult = data.prices
+    const oracleBaseDenom = data.oracle.config.base_denom.toLocaleLowerCase()
+    let assetPricesUSD: Coin[] = get().assetPricesUSD ?? []
 
     get()
       .whitelistedAssets?.filter((asset: Asset) => !!asset.denom)
       .forEach((asset: Asset) => {
         const denom = asset.denom
-        const hasBaseCurrency = exchangeRates?.find(
-          (ratesAsset) => ratesAsset.denom === baseCurrency.denom,
-        )
-
-        if (denom === baseCurrency.denom && !hasBaseCurrency) {
-          exchangeRates.push({ denom, amount: '1' })
-          return
-        }
-
         const id = asset.id
-        const exchangeRateResult = wasmQueryResults[`${id}`].price || '0.00'
-        const additionalDecimals =
-          asset.decimals > get().baseCurrency.decimals
-            ? asset.decimals - get().baseCurrency.decimals
-            : 0
-        // Fix for a LCDClientError object instead of string
-        const exchangeRate: Coin = {
-          denom,
-          amount:
-            typeof exchangeRateResult === 'string'
-              ? new BigNumber(exchangeRateResult).times(10 ** additionalDecimals).toString() ||
-                '0.00'
-              : '0.00',
+
+        const queryResult = pricesQueryResult[`${id}`]?.price ?? '0.00'
+
+        // Non-USD denominated oracle prices
+        if (oracleBaseDenom.toLowerCase().indexOf('usd') === -1) {
+          const baseCurrencyPrice = assetPricesUSD.find(
+            (assetPrice) => assetPrice.denom === oracleBaseDenom,
+          )
+          if (baseCurrencyPrice && denom !== oracleBaseDenom) {
+            const additionalDecimals =
+              asset.decimals > get().baseCurrency.decimals
+                ? asset.decimals - get().baseCurrency.decimals
+                : 0
+
+            const assetPrice = {
+              denom,
+              amount:
+                typeof queryResult === 'string'
+                  ? new BigNumber(queryResult)
+                      .times(10 ** additionalDecimals)
+                      .times(baseCurrencyPrice.amount)
+                      .toString() || '0.00'
+                  : '0.00',
+            }
+            assetPricesUSD = updateAssetPrices(assetPrice, assetPricesUSD)
+          }
+        } else {
+          // USD denominated oracle prices
+          const assetPrice = {
+            denom,
+            amount: typeof queryResult === 'string' ? queryResult : '0.00',
+          }
+
+          assetPricesUSD = updateAssetPrices(assetPrice, assetPricesUSD)
         }
-        if (asset.denom === displayCurrency.denom) {
-          set({
-            baseToDisplayCurrencyRatio: 1 / Number(exchangeRate.amount),
-          })
-        }
-        updateExchangeRate(exchangeRate, exchangeRates)
       })
+
     set({
       previousMarsOracleQueryData: data,
-      exchangeRatesState: State.READY,
-      exchangeRates,
+      assetPricesUSD,
+      assetPricesUSDState: State.READY,
     })
+
+    get().calculateExchangeRates()
   },
 })
 

@@ -1,22 +1,23 @@
 import { LcdClient } from '@cosmjs/launchpad'
 import { Coin } from '@cosmjs/stargate'
 import {
+  ChainInfoID,
   MsgExecuteContract,
   SimplifiedChainInfo,
   TxBroadcastResult,
-  WalletClient,
 } from '@marsprotocol/wallet-connector'
 import BigNumber from 'bignumber.js'
-import { DISPLAY_CURRENCY_KEY } from 'constants/appConstants'
+import { DISPLAY_CURRENCY_KEY, SUPPORTED_CHAINS } from 'constants/appConstants'
 import { BlockHeightData } from 'hooks/queries/useBlockHeight'
 import { DepositAndDebtData } from 'hooks/queries/useDepositAndDebt'
 import { UserBalanceData } from 'hooks/queries/useUserBalance'
-import { serializeUrl } from 'libs/parse'
+import { getNetworkConfig, getNetworkVaultConfig } from 'libs/networkConfig'
+import { demagnify, magnify, serializeUrl } from 'libs/parse'
+import { getPythVaaMessage } from 'libs/pyth'
 import isEqual from 'lodash.isequal'
 import { isMobile } from 'react-device-detect'
 import { CommonSlice } from 'store/interfaces/common.interface'
 import { OraclesSlice } from 'store/interfaces/oracles.interface'
-import { Network } from 'types/enums/network'
 import { GetState } from 'zustand'
 import { NamedSet } from 'zustand/middleware'
 
@@ -33,14 +34,14 @@ const commonSlice = (
     decimals: 6,
   },
   currencyAssets: [],
-  currentNetwork: Network.TESTNET,
+  currentNetwork: SUPPORTED_CHAINS[0].chainId,
   errors: {
     network: false,
     query: false,
     server: false,
   },
-  isNetworkLoaded: false,
   latestBlockHeight: 0,
+  networkConfig: getNetworkConfig(SUPPORTED_CHAINS[0].chainId),
   marketDeposits: [],
   marketDebts: [],
   otherAssets: [],
@@ -59,56 +60,85 @@ const commonSlice = (
   // ------------------
   convertToBaseCurrency: (coin: Coin) => {
     const exchangeRates = get().exchangeRates
-
-    if (!exchangeRates || !coin) return 0
-
-    const exchangeRate = exchangeRates?.find(
-      (exchangeRate) => exchangeRate.denom === coin.denom,
-    )?.amount
-    if (!exchangeRate) return 0
+    const assetPricesUSD = get().assetPricesUSD
+    const baseCurrency = get().baseCurrency
     const assets = [...get().whitelistedAssets, ...get().otherAssets]
-    const baseDecimals = get().baseAsset?.decimals ?? 0
-    const coinDecimals = assets.find((currency) => currency.denom === coin.denom)?.decimals ?? 0
+    const asset = assets.find((asset) => asset.denom === coin.denom)
 
-    const additionalDecimals = coinDecimals - baseDecimals
+    if (!exchangeRates || !assetPricesUSD || !coin || !asset) return 0
 
-    return new BigNumber(coin.amount)
-      .times(exchangeRate)
-      .shiftedBy(-1 * additionalDecimals)
-      .toNumber()
+    const additionalDecimals = asset.decimals - baseCurrency.decimals
+
+    if (coin.denom === baseCurrency.denom) return new BigNumber(coin.amount).toNumber()
+
+    const baseAssetPrice = assetPricesUSD?.find(
+      (assetPrice) => assetPrice.denom === baseCurrency.denom,
+    )?.amount
+    const assetPrice = assetPricesUSD?.find((assetPrice) => assetPrice.denom === coin.denom)?.amount
+    if (!baseAssetPrice || !assetPrice) return 0
+
+    return demagnify(
+      new BigNumber(coin.amount).times(assetPrice).dividedBy(baseAssetPrice).toNumber(),
+      additionalDecimals,
+    )
   },
   convertValueToAmount: (coin: Coin) => {
     const exchangeRates = get().exchangeRates
+    const baseCurrency = get().baseCurrency
+    const whitelistedAssets = get().whitelistedAssets
+
+    const asset = whitelistedAssets.find((asset) => asset.denom === coin.denom)
+    const additionalDecimals = (asset?.decimals || 6) - baseCurrency.decimals
 
     if (!exchangeRates || !coin) return 0
 
     const exchangeRate = exchangeRates?.find(
       (exchangeRate) => exchangeRate.denom === coin.denom,
     )?.amount
-    if (!exchangeRate) return 0
 
-    return new BigNumber(coin.amount).div(exchangeRate).toNumber()
+    const baseExchangeRate = exchangeRates?.find(
+      (exchangeRate) => exchangeRate.denom === baseCurrency.denom,
+    )?.amount
+    if (!exchangeRate || !baseExchangeRate) return 0
+
+    return magnify(
+      new BigNumber(coin.amount).div(exchangeRate).times(baseExchangeRate).toNumber(),
+      additionalDecimals,
+    )
   },
   executeMsg: async (
     options: StrategyExecuteMsgOptions,
   ): Promise<TxBroadcastResult | undefined> => {
     const client = get().client!
+    const networkConfig = get().networkConfig
+    const baseCurrencyDenom = networkConfig.assets.base.denom
+    const pythContractAddress = networkConfig.contracts?.pyth
+    const pythVaaMessage = getPythVaaMessage(
+      get().pythVaa,
+      baseCurrencyDenom,
+      pythContractAddress,
+      get().userWalletAddress,
+    )
 
     if (!options.sender) options.sender = get().userWalletAddress
 
+    const messages = [
+      new MsgExecuteContract({
+        sender: options.sender,
+        contract: options.contract,
+        msg: options.msg,
+        funds: options.funds,
+      }),
+    ]
+
+    if (pythVaaMessage) messages.unshift(pythVaaMessage)
+
     const broadcastOptions = {
-      messages: [
-        new MsgExecuteContract({
-          sender: options.sender,
-          contract: options.contract,
-          msg: options.msg,
-          funds: options.funds,
-        }),
-      ],
+      messages,
       feeAmount: options.fee.amount[0].amount,
       gasLimit: options.fee.gas,
       memo: undefined,
-      wallet: client.recentWallet,
+      wallet: client.connectedWallet,
       mobile: isMobile,
     }
 
@@ -118,31 +148,47 @@ const commonSlice = (
       console.error('transaction', e)
     }
   },
-  loadNetworkConfig: async () => {
-    try {
-      const config = await import(`../../configs/${get().currentNetwork}.ts`)
+  getAdditionalDecimals: (denom: string) => {
+    const assets = [...get().whitelistedAssets, ...get().otherAssets]
+    const assetDecimals = assets.find((asset) => asset.denom === denom)?.decimals
+    const baseCurrencyDecimals = get().baseCurrency.decimals
+    if (!assetDecimals) return 0
 
-      config.NETWORK_CONFIG.hiveUrl = serializeUrl(config.NETWORK_CONFIG.hiveUrl)
-      config.NETWORK_CONFIG.rpcUrl = serializeUrl(config.NETWORK_CONFIG.rpcUrl)
-      config.NETWORK_CONFIG.restUrl = serializeUrl(config.NETWORK_CONFIG.restUrl)
+    return assetDecimals - baseCurrencyDecimals
+  },
+  loadNetworkConfig: () => {
+    const networkConfig = getNetworkConfig(get().currentNetwork)
+    const vaultConfig = getNetworkVaultConfig(get().currentNetwork)
 
-      const storageDisplayCurrency = localStorage.getItem(DISPLAY_CURRENCY_KEY)
-      if (storageDisplayCurrency) {
-        config.NETWORK_CONFIG.displayCurrency = JSON.parse(storageDisplayCurrency)
+    networkConfig.hiveUrl = serializeUrl(networkConfig.hiveUrl)
+    networkConfig.rpcUrl = serializeUrl(networkConfig.rpcUrl)
+    networkConfig.restUrl = serializeUrl(networkConfig.restUrl)
+
+    const storageDisplayCurrency = localStorage.getItem(DISPLAY_CURRENCY_KEY)
+    if (storageDisplayCurrency) {
+      const displayCurrency = networkConfig.assets.currencies.find(
+        (currency) => currency.denom === JSON.parse(storageDisplayCurrency).denom,
+      )
+      if (displayCurrency) {
+        networkConfig.displayCurrency = JSON.parse(storageDisplayCurrency)
+      } else {
+        localStorage.setItem(DISPLAY_CURRENCY_KEY, JSON.stringify(networkConfig.displayCurrency))
       }
-
-      set({
-        otherAssets: config.NETWORK_CONFIG.assets.other,
-        whitelistedAssets: config.NETWORK_CONFIG.assets.whitelist,
-        currencyAssets: config.NETWORK_CONFIG.assets.currencies,
-        networkConfig: config.NETWORK_CONFIG,
-        isNetworkLoaded: true,
-        baseAsset: config.NETWORK_CONFIG.assets.base,
-        vaultConfigs: config.VAULT_CONFIGS,
-      })
-    } catch (e) {
-      set({ isNetworkLoaded: false })
     }
+
+    set({
+      networkConfig: networkConfig,
+      otherAssets: networkConfig.assets.other,
+      whitelistedAssets: networkConfig.assets.whitelist,
+      currencyAssets: networkConfig.assets.currencies,
+      vaultConfigs: vaultConfig,
+      baseCurrency: networkConfig.assets.base,
+      marketDebts: [],
+      marketDeposits: [],
+      userBalances: [],
+      userMarsTokenBalances: [],
+      userUnclaimedRewards: '0',
+    })
   },
   queryContract: async <T>(contractAddress: string, queryMsg: object, retries = 3) => {
     let attempts = 0
@@ -167,11 +213,11 @@ const commonSlice = (
     })
   },
   setChainInfo: (chainInfo: SimplifiedChainInfo) => {
-    if (chainInfo?.rpc) chainInfo.rpc = serializeUrl(chainInfo.rpc)
-    if (chainInfo?.rest) chainInfo.rest = serializeUrl(chainInfo.rest)
+    chainInfo.rpc = serializeUrl(get().networkConfig.rpcUrl)
+    chainInfo.rest = serializeUrl(get().networkConfig.restUrl)
     set({ chainInfo })
   },
-  setCurrentNetwork: (network: Network) => set({ currentNetwork: network }),
+  setCurrentNetwork: (network: ChainInfoID) => set({ currentNetwork: network }),
   setNetworkError: (isError: boolean) => {
     const errors = get().errors
     if (isError !== errors.network) {
@@ -179,7 +225,6 @@ const commonSlice = (
       set({ errors })
     }
   },
-  setClient: (client: WalletClient) => set({ client }),
   setQueryError: (name: string, isError: boolean) => {
     const errors = get().errors
     const queryErrors = get().queryErrors
@@ -208,7 +253,6 @@ const commonSlice = (
     set({ tutorialSteps })
   },
   setUserWalletAddress: (address: string) => set({ userWalletAddress: address }),
-  setUserIcns: (icns: string) => set({ userIcns: icns }),
   // -------------------
   // QUERY RELATED
   // -------------------

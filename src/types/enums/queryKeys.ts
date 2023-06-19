@@ -17,4 +17,5 @@ export enum QUERY_KEYS {
   UNLOCK_MESSAGE = 'unlockMessage',
   USD_PRICE = 'usdPrice',
   USER_COLLATERAL = 'userCollateral',
+  PYTH_VAA = 'pythVaa',
 }

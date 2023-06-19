@@ -85,6 +85,7 @@ export const Action = ({
   const convertToBaseCurrency = useStore((s) => s.convertToBaseCurrency)
   const findUserDebt = useStore((s) => s.findUserDebt)
   const enableAnimations = useStore((s) => s.enableAnimations)
+  const baseCurrencyDecimals = useStore((s) => s.baseCurrency.decimals)
 
   // ------------------
   // LOCAL STATE
@@ -134,6 +135,7 @@ export const Action = ({
         amount * currentAssetPrice, // amount in display currency
         activeView,
         relevantBalanceKey,
+        baseCurrencyDecimals,
       ),
     [
       activeView,
@@ -143,6 +145,7 @@ export const Action = ({
       denom,
       redBankAssets,
       relevantBalanceKey,
+      baseCurrencyDecimals,
     ],
   )
 
@@ -154,6 +157,7 @@ export const Action = ({
       0.0,
       activeView,
       relevantBalanceKey,
+      baseCurrencyDecimals,
     ),
     relevantBalanceKey,
   )
@@ -220,7 +224,13 @@ export const Action = ({
   const calculateMaxBorrowableAmount = useMemo((): number => {
     const assetLiquidity = Number(findByDenom(marketAssetLiquidity, denom)?.amount || 0)
 
-    return maxBorrowableAmount(assetLiquidity, availableBalanceBaseCurrency, currentAssetPrice)
+    return maxBorrowableAmount(
+      assetLiquidity,
+      availableBalanceBaseCurrency,
+      new BigNumber(currentAssetPrice)
+        .shiftedBy(baseCurrency.decimals - (currentAsset?.decimals || 0))
+        .toNumber(),
+    )
   }, [
     denom,
     availableBalanceBaseCurrency,
@@ -230,9 +240,7 @@ export const Action = ({
     currentAsset?.decimals,
   ])
 
-  const repayMax = useMemo((): number => {
-    return Math.min(assetBorrowBalance, walletBalance)
-  }, [assetBorrowBalance, walletBalance])
+  const repayMax = Math.min(assetBorrowBalance, walletBalance)
 
   const maxWithdrawableAmount = useMemo((): number => {
     const assetLtvRatio = findByDenom(marketInfo, denom)?.max_loan_to_value || 0
@@ -248,9 +256,10 @@ export const Action = ({
     if (!asset || !asset.depositBalance || !asset.denom) return 0
 
     // When withdrawing, we have to remove the slippage, otherwise we can't actually hit the borrow limit.
-    const withdrawableAmountOfAsset = new BigNumber(availableBalanceBaseCurrency)
-      .div(1 - DEFAULT_SLIPPAGE)
-      .div(currentAssetPrice * assetLtvRatio)
+    const withdrawableAmountOfAsset = new BigNumber(
+      availableBalanceBaseCurrency / (1 - DEFAULT_SLIPPAGE) / (currentAssetPrice * assetLtvRatio),
+    )
+      .shiftedBy(asset.decimals - baseCurrency.decimals)
       .toNumber()
 
     return withdrawableAmountOfAsset < assetBalanceOrAvailableLiquidity

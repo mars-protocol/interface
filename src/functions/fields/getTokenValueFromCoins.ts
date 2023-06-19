@@ -9,13 +9,6 @@ export const getTokenValueFromCoins = (assets: Asset[], coins: Coin[] = []) => {
 
     const convertedValue = lookup(Number(token.amount), asset.symbol, asset.decimals)
 
-    return formatValue(
-      convertedValue,
-      2,
-      asset.decimals,
-      true,
-      convertedValue >= 0.01 ? false : '>',
-      ` ${asset.symbol}`,
-    )
+    return formatValue(convertedValue, 2, asset.decimals, true, false, ` ${asset.symbol}`)
   })
 }

@@ -17,13 +17,13 @@ export default function Document() {
         <meta content='summary_large_image' name='twitter:card' />
         <meta content='@mars_protocol' name='twitter:site' />
         <meta content='@mars_protocol' name='twitter:creator' />
-        <meta content='https://osmosis.marsprotocol.io' property='og:url' />
-        <meta content='Mars Protocol - Osmosis Outpost' property='og:title' />
+        <meta content='https://app.marsprotocol.io' property='og:url' />
+        <meta content='Mars Protocol - Outpost' property='og:title' />
         <meta
           content="Lend, borrow and earn on the galaxy's most powerful credit protocol or enter the Fields of Mars for advanced DeFi strategies."
           property='og:description'
         />
-        <meta content='https://osmosis.marsprotocol.io/banner.png' property='og:image' />
+        <meta content='https://app.marsprotocol.io/banner.png' property='og:image' />
         <meta content='Mars Protocol' property='og:site_name' />
         <meta content='#ffffff' name='msapplication-TileColor' />
         <meta content='#ffffff' name='theme-color' />

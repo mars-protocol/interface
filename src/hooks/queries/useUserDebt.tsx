@@ -14,7 +14,7 @@ export interface UserDebtData {
 
 export const useUserDebt = () => {
   const userWalletAddress = useStore((s) => s.userWalletAddress)
-  const redbankContractAddress = useStore((s) => s.networkConfig?.contracts.redBank)
+  const redbankContractAddress = useStore((s) => s.networkConfig.contracts.redBank)
   const client = useStore((s) => s.client)
 
   const resolveDebtResponse = (debts: UserDebtData[]): Coin[] => {

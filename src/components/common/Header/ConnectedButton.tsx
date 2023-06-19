@@ -1,14 +1,16 @@
-import { ChainInfoID, useWallet, useWalletManager } from '@marsprotocol/wallet-connector'
+import { useWalletManager } from '@marsprotocol/wallet-connector'
 import { AnimatedNumber, Button, CircularProgress, DisplayCurrency, SVG } from 'components/common'
+import { SUPPORTED_CHAINS } from 'constants/appConstants'
 import { findByDenom } from 'functions'
 import { useUserBalance } from 'hooks/queries'
 import { formatValue, lookup } from 'libs/parse'
 import { truncate } from 'libs/text'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import useClipboard from 'react-use-clipboard'
 import useStore from 'store'
 import colors from 'styles/_assets.module.scss'
+import { State } from 'types/enums'
 
 import styles from './ConnectedButton.module.scss'
 
@@ -16,8 +18,7 @@ export const ConnectedButton = () => {
   // ---------------
   // EXTERNAL HOOKS
   // ---------------
-  const { disconnect } = useWallet()
-  const { disconnect: terminate } = useWalletManager()
+  const { disconnect, connectedWallet } = useWalletManager()
   const { t } = useTranslation()
 
   // ---------------
@@ -27,6 +28,7 @@ export const ConnectedButton = () => {
   const chainInfo = useStore((s) => s.chainInfo)
   const userWalletAddress = useStore((s) => s.userWalletAddress)
   const userIcns = useStore((s) => s.userIcns)
+  const [isTestnet, setIsTestnet] = useState(false)
 
   // ---------------
   // LOCAL STATE
@@ -59,23 +61,37 @@ export const ConnectedButton = () => {
     baseCurrency.decimals,
   )
 
-  const handleDisconnect = () => {
-    disconnect()
-    terminate()
-  }
+  useEffect(() => {
+    if (!chainInfo) return
+    setIsTestnet(
+      !!SUPPORTED_CHAINS.find(
+        (chain) => chain.type === 'testnet' && chain.chainId === chainInfo?.chainId,
+      ),
+    )
+  }, [chainInfo])
+
+  useEffect(() => {
+    if (userWalletAddress === connectedWallet?.account.address) return
+    useStore.setState({
+      userWalletAddress: connectedWallet?.account.address,
+      marketAssetLiquidity: [],
+      marketInfo: [],
+      userIcns: undefined,
+      redBankAssets: [],
+      redBankState: State.INITIALISING,
+      userBalancesState: State.INITIALISING,
+    })
+  }, [connectedWallet?.account.address, userWalletAddress])
 
   return (
     <div className={styles.wrapper}>
-      {chainInfo?.chainId !== ChainInfoID.Osmosis1 && (
-        <span className={styles.network}>{chainInfo?.chainId}</span>
-      )}
+      {isTestnet && <span className={styles.network}>{chainInfo?.chainId}</span>}
       <Button
         className={styles.button}
         onClick={() => {
           setShowDetails(!showDetails)
         }}
         color='tertiary'
-        prefix={<SVG.Osmo className={styles.svg} />}
         text={
           <>
             <span className={styles.address}>
@@ -98,7 +114,7 @@ export const ConnectedButton = () => {
               <div className={styles.detailsBalance}>
                 <div className={styles.detailsDenom}>{baseCurrency.symbol}</div>
                 <div className={`${styles.detailsBalanceAmount}`}>
-                  <AnimatedNumber amount={currentBalanceAmount} abbreviated={false} />
+                  <AnimatedNumber amount={currentBalanceAmount} />
                   <DisplayCurrency
                     className='s faded'
                     coin={{
@@ -109,11 +125,7 @@ export const ConnectedButton = () => {
                 </div>
               </div>
               <div className={styles.detailsButton}>
-                <Button
-                  color='secondary'
-                  onClick={handleDisconnect}
-                  text={t('common.disconnect')}
-                />
+                <Button color='secondary' onClick={disconnect} text={t('common.disconnect')} />
               </div>
             </div>
             <div className={styles.detailsBody}>

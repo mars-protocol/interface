@@ -1,13 +1,13 @@
 import { WalletID } from '@marsprotocol/wallet-connector'
 import classNames from 'classnames'
 import { IncentivesButton, Settings, SVG } from 'components/common'
-import { FIELDS_FEATURE } from 'constants/appConstants'
 import { getCouncilLink } from 'libs/council'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
 
+import { ChainSelect } from './ChainSelect'
 import { Connect } from './Connect'
 import styles from './Header.module.scss'
 
@@ -15,6 +15,8 @@ export const Header = () => {
   const { t } = useTranslation()
   const router = useRouter()
   const client = useStore((s) => s.client)
+  const networkConfig = useStore((s) => s.networkConfig)
+  const currentNetwork = useStore((s) => s.currentNetwork)
 
   return (
     <header className={styles.header}>
@@ -33,7 +35,7 @@ export const Header = () => {
         >
           {t('global.redBank')}
         </Link>
-        {FIELDS_FEATURE && (
+        {networkConfig.isFieldsEnabled && (
           <Link
             passHref
             href='/farm'
@@ -48,7 +50,7 @@ export const Header = () => {
         )}
         <a
           className={styles.nav}
-          href={getCouncilLink(client?.recentWallet.providerId as WalletID)}
+          href={getCouncilLink(currentNetwork, client?.connectedWallet.providerId as WalletID)}
           target='_blank'
           rel='noreferrer'
         >
@@ -57,6 +59,7 @@ export const Header = () => {
       </div>
       <div className={styles.connector}>
         <IncentivesButton />
+        <ChainSelect />
         <Connect />
         <Settings />
       </div>

@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js'
 import { findByDenom } from 'functions'
 import { getAmountsFromActiveVault, getLeverageFromValues } from 'functions/fields'
-import { convertAprToApy, leverageToLtv } from 'libs/parse'
+import { convertAprToApy, demagnify, leverageToLtv, magnify } from 'libs/parse'
 import moment from 'moment'
 import { Store } from 'store/interfaces/store.interface'
 import { Options, VaultsSlice } from 'store/interfaces/vaults.interface.'
@@ -67,7 +67,7 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
     )
 
     const newCreditAccounts = await Promise.all(promises).then((result) =>
-      result.map((value) => value as Positions).filter((positions) => positions.vaults.length),
+      result.map((value) => value as Positions).filter((positions) => positions?.vaults.length),
     )
 
     set({ creditAccounts: newCreditAccounts })
@@ -163,10 +163,10 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
 
     const vaultAddresses = get().vaultConfigs.map((vault) => vault.address)
     const networkConfig = get().networkConfig
-    if (!networkConfig) return null
+    if (!networkConfig.apolloAprUrl) return null
 
     try {
-      const response = await fetch(networkConfig!.apolloAprUrl)
+      const response = await fetch(networkConfig.apolloAprUrl)
 
       if (response.ok) {
         const data: ApolloAprResponse[] = await response.json()
@@ -377,40 +377,53 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
               }
 
               const borrowedDenom = debt?.denom || ''
+              const secondaryUSDPrice = Number(
+                get().assetPricesUSD?.find((coin) => coin.denom === vaultConfig.denoms.secondary)
+                  ?.amount || 1,
+              )
+              const primaryUSDPrice = Number(
+                get().assetPricesUSD?.find((coin) => coin.denom === vaultConfig.denoms.primary)
+                  ?.amount || 1,
+              )
+              const primaryAsset = get().whitelistedAssets.find(
+                (asset) => asset.denom === vaultConfig.denoms.primary,
+              )
+              const secondaryAsset = get().whitelistedAssets.find(
+                (asset) => asset.denom === vaultConfig.denoms.secondary,
+              )
 
               if (borrowedDenom === vaultConfig.denoms.primary) {
                 if (borrowedPrimaryAmount > primaryAmount) {
-                  const swapped = Math.round(
-                    get().convertToBaseCurrency({
-                      denom: borrowedDenom,
-                      amount: (borrowedPrimaryAmount - primaryAmount).toString(),
-                    }),
+                  const swapAmount = demagnify(
+                    borrowedPrimaryAmount - primaryAmount,
+                    primaryAsset?.decimals ?? 6,
+                  )
+                  const primaryToSwapValue = swapAmount * primaryUSDPrice
+                  const secondaryNeeded = magnify(
+                    primaryToSwapValue / secondaryUSDPrice,
+                    secondaryAsset?.decimals ?? 6,
                   )
 
-                  const rate = Number(
-                    get().exchangeRates?.find((coin) => coin.denom === vaultConfig.denoms.secondary)
-                      ?.amount ?? 0,
-                  )
                   primarySupplyAmount = 0
-                  secondarySupplyAmount = Math.floor(secondaryAmount - swapped / rate)
+                  secondarySupplyAmount = Math.floor(secondaryAmount - secondaryNeeded)
                 } else {
                   primarySupplyAmount = primaryAmount - borrowedPrimaryAmount
                   secondarySupplyAmount = secondaryAmount
                 }
               } else if (borrowedDenom === vaultConfig.denoms.secondary) {
                 if (borrowedSecondaryAmount > secondaryAmount) {
-                  const swapped = Math.round(
-                    get().convertToBaseCurrency({
-                      denom: borrowedDenom,
-                      amount: (borrowedSecondaryAmount - secondaryAmount).toString(),
-                    }),
+                  const swapAmount = demagnify(
+                    borrowedSecondaryAmount - secondaryAmount,
+                    secondaryAsset?.decimals ?? 6,
                   )
-                  const rate = Number(
-                    get().exchangeRates?.find((coin) => coin.denom === vaultConfig.denoms.primary)
-                      ?.amount ?? 0,
+                  const secondaryToSwapValue = swapAmount * secondaryUSDPrice
+                  const primaryNeeded = magnify(
+                    secondaryToSwapValue / primaryUSDPrice,
+                    primaryAsset?.decimals ?? 6,
                   )
+
                   secondarySupplyAmount = 0
-                  primarySupplyAmount = Math.floor(primaryAmount - swapped / rate)
+                  primarySupplyAmount = Math.floor(primaryAmount - primaryNeeded)
                 } else {
                   secondarySupplyAmount = secondaryAmount - borrowedSecondaryAmount
                   primarySupplyAmount = primaryAmount
@@ -516,7 +529,6 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
             availableVaults: Vault[]
           },
         )
-
         set({ activeVaults, availableVaults, isLoading: false })
         get().getApys(options)
       },

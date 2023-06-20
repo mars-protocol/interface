@@ -18,7 +18,7 @@ export const useMarsOracle = () => {
   const priceSourcesQuery = getContractQuery(
     'price_sources',
     oracleAddress || '',
-    '{ price_sources: {} }',
+    '{ price_sources: {limit: 20} }',
   )
 
   whitelistedAssets

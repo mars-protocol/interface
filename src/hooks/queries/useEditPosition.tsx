@@ -59,8 +59,8 @@ export const useEditPosition = (props: Props) => {
       amount: (secondaryAmount + borrowedSecondaryAmount).toString(),
     })
 
-    let primaryAfterSwap = primaryAmount + borrowedPrimaryAmount
-    let secondaryAfterSwap = secondaryAmount + borrowedSecondaryAmount
+    let primaryAfterSwap = new BigNumber(primaryAmount).plus(borrowedPrimaryAmount)
+    let secondaryAfterSwap = new BigNumber(secondaryAmount).plus(borrowedSecondaryAmount)
 
     // If difference is larger than threshold, initiate a swap
     const difference = primaryBaseAmount - secondaryBaseAmount
@@ -91,8 +91,8 @@ export const useEditPosition = (props: Props) => {
         }),
       )
 
-      primaryAfterSwap = primaryAfterSwap + primaryAmountChange
-      secondaryAfterSwap = secondaryAfterSwap + secondaryAmountChange
+      primaryAfterSwap = primaryAfterSwap.plus(primaryAmountChange)
+      secondaryAfterSwap = secondaryAfterSwap.plus(secondaryAmountChange)
     }
     const coins: Coin[] = [
       {

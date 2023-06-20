@@ -58,6 +58,8 @@ export const BreakdownTable = (props: Props) => {
       : 'borrowedSecondary'
   const borrowedChange =
     props.newPosition.amounts[borrowKey] - props.prevPosition.amounts[borrowKey]
+  const borrowDenom =
+    borrowKey === 'borrowedPrimary' ? props.vault.denoms.primary : props.vault.denoms.secondary
 
   const containerClasses = classNames([
     props.className,
@@ -79,7 +81,7 @@ export const BreakdownTable = (props: Props) => {
         break
       case AmountType.DEBT:
         amount = props.newPosition.amounts[borrowKey]
-        denom = props.vault.denoms.secondary
+        denom = borrowDenom
         break
       case AmountType.POSITION_PRIMARY:
         amount = props.newPosition.amounts.primary + props.newPosition.amounts.borrowedPrimary

@@ -16,8 +16,7 @@ export const produceUpdatedAssetData = (
     const asset = redBankAssets.find((redBankAsset) => redBankAsset.denom === denom)
     if (!asset) return assetData
 
-    const additionalDecimals = asset.decimals - baseCurrencyDecimals
-    const amountAdjustedForDecimals = demagnify(updateAmount, additionalDecimals)
+    const amountAdjustedForDecimals = updateAmount
     // We are only interested in display currency balance. The asset  will update post tx.
     assetData.push({
       ...asset,

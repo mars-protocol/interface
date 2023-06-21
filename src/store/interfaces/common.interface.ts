@@ -37,6 +37,7 @@ export interface CommonSlice {
   }
   latestBlockHeight: number
   lcdClient?: LcdClient
+  isLedger: boolean
   marketDeposits: Coin[]
   networkConfig: NetworkConfig
   otherAssets: OtherAsset[]
@@ -81,7 +82,6 @@ export interface CommonSlice {
   setNetworkError: (isError: boolean) => void
   setQueryError: (name: string, isError: boolean) => void
   setServerError: (isError: boolean) => void
-  setUserWalletAddress: (address: string) => void
   // ------------------
   // QUERY RELATED
   // ------------------

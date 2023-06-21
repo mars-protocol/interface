@@ -21,9 +21,11 @@ export const useEstimateFarmFee = (props: Props) => {
   const networkConfig = useStore((s) => s.networkConfig)
   const pythVaa = useStore((s) => s.pythVaa)
   const pythContractAddress = useStore((s) => s.networkConfig.contracts?.pyth)
+  const isLedger = useStore((s) => s.isLedger)
   const pythVaaMessage = getPythVaaMessage(
     pythVaa,
     networkConfig.assets.base.denom,
+    isLedger,
     pythContractAddress,
     userWalletAddress,
   )

@@ -3,10 +3,11 @@ import { MsgExecuteContract } from '@marsprotocol/wallet-connector'
 export const getPythVaaMessage = (
   pythVaa: VaaInformation,
   baseCurrencyDenom: string,
+  isLedger: boolean,
   pythContractAddress?: string,
   sender?: string,
 ): MsgExecuteContract | undefined => {
-  if (!sender || pythVaa.data.length === 0 || !pythContractAddress) return
+  if (!sender || pythVaa.data.length === 0 || !pythContractAddress || isLedger) return
 
   return new MsgExecuteContract({
     sender,

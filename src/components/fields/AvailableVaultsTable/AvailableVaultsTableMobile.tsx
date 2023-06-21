@@ -23,22 +23,23 @@ export const AvailableVaultsTableMobile = () => {
     >
       <div className={styles.container}>
         {availableVaults.map((vault, i) => {
+          const maxLeverage = ltvToLeverage(vault.ltv.contract)
           const primaryBorrowAsset = redBankAssets.find(
             (asset) => asset.denom === vault.denoms.primary,
           )
           const secondaryBorrowAsset = redBankAssets.find(
             (asset) => asset.denom === vault.denoms.secondary,
           )
-          const borrowRate = Math.min(
-            Number(primaryBorrowAsset?.borrowRate || 1000),
-            Number(secondaryBorrowAsset?.borrowRate || 1000),
-          )
-          const maxBorrowRate = borrowRate * (ltvToLeverage(vault.ltv.contract) - 1)
-          const minAPY = new BigNumber(vault.apy.total || 0).toNumber()
 
-          const leverage = ltvToLeverage(vault.ltv.contract)
-          const maxAPY =
-            new BigNumber(minAPY).times(leverage).decimalPlaces(2).toNumber() - maxBorrowRate
+          const borrowRates = [0]
+          if (primaryBorrowAsset?.borrowEnabled) borrowRates.push(primaryBorrowAsset.borrowRate)
+          if (secondaryBorrowAsset?.borrowEnabled) borrowRates.push(secondaryBorrowAsset.borrowRate)
+
+          const borrowRate = Math.min(...borrowRates)
+
+          const maxBorrowRate = borrowRate * (ltvToLeverage(vault.ltv.contract) - 1)
+          const minAPY = vault.apy.total ?? 0
+          const maxAPY = new BigNumber(minAPY).times(maxLeverage).toNumber() - maxBorrowRate
 
           return (
             <Link
@@ -81,7 +82,7 @@ export const AvailableVaultsTableMobile = () => {
                   </div>
                   <div className='s'>
                     <span className='faded'>{t('fields.leverage')} </span>
-                    <AnimatedNumber amount={leverage} suffix='x' />
+                    <AnimatedNumber amount={maxLeverage} suffix='x' />
                   </div>
                   <div className='s'>
                     <span className='faded'>{t('fields.vaultCap')} </span>

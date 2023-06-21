@@ -73,6 +73,7 @@ export const ConnectedButton = () => {
   useEffect(() => {
     if (userWalletAddress === connectedWallet?.account.address) return
     useStore.setState({
+      isLedger: !!connectedWallet?.account.isLedger,
       userWalletAddress: connectedWallet?.account.address,
       marketAssetLiquidity: [],
       marketInfo: [],

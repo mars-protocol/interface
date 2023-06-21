@@ -66,8 +66,6 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
   const setLcdClient = useStore((s) => s.setLcdClient)
   const setChainInfo = useStore((s) => s.setChainInfo)
   const setUserBalancesState = useStore((s) => s.setUserBalancesState)
-  const setUserWalletAddress = useStore((s) => s.setUserWalletAddress)
-  const pythVaa = useStore((s) => s.pythVaa)
 
   // ------------------
   // SETTERS
@@ -95,8 +93,11 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
 
   useEffect(() => {
     if (!connectedWallet || connectedWallet.network.chainId !== chainId) return
-    setUserWalletAddress(connectedWallet.account.address)
-  }, [setUserWalletAddress, connectedWallet, chainId])
+    useStore.setState({
+      userWalletAddress: connectedWallet.account.address,
+      isLedger: connectedWallet.account.isLedger,
+    })
+  }, [connectedWallet, chainId])
 
   useEffect(() => {
     if (!rpc || !chainId) return

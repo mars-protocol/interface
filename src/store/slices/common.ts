@@ -40,6 +40,7 @@ const commonSlice = (
     query: false,
     server: false,
   },
+  isLedger: false,
   latestBlockHeight: 0,
   networkConfig: getNetworkConfig(SUPPORTED_CHAINS[0].chainId),
   marketDeposits: [],
@@ -116,6 +117,7 @@ const commonSlice = (
     const pythVaaMessage = getPythVaaMessage(
       get().pythVaa,
       baseCurrencyDenom,
+      get().isLedger,
       pythContractAddress,
       get().userWalletAddress,
     )
@@ -252,7 +254,6 @@ const commonSlice = (
     tutorialSteps[type] = step ? step : tutorialSteps[type] + 1
     set({ tutorialSteps })
   },
-  setUserWalletAddress: (address: string) => set({ userWalletAddress: address }),
   // -------------------
   // QUERY RELATED
   // -------------------

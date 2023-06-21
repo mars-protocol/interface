@@ -224,13 +224,7 @@ export const Action = ({
   const calculateMaxBorrowableAmount = useMemo((): number => {
     const assetLiquidity = Number(findByDenom(marketAssetLiquidity, denom)?.amount || 0)
 
-    return maxBorrowableAmount(
-      assetLiquidity,
-      availableBalanceBaseCurrency,
-      new BigNumber(currentAssetPrice)
-        .shiftedBy(baseCurrency.decimals - (currentAsset?.decimals || 0))
-        .toNumber(),
-    )
+    return maxBorrowableAmount(assetLiquidity, availableBalanceBaseCurrency, currentAssetPrice)
   }, [
     denom,
     availableBalanceBaseCurrency,

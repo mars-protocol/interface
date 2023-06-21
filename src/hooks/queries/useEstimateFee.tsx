@@ -24,9 +24,11 @@ export const useEstimateFee = (props: Props) => {
   const networkConfig = useStore((s) => s.networkConfig)
   const baseCurrencyDenom = networkConfig.assets.base.denom
   const pythContractAddress = networkConfig.contracts?.pyth
+  const isLedger = useStore((s) => s.isLedger)
   const pythVaaMessage = getPythVaaMessage(
     pythVaa,
     baseCurrencyDenom,
+    isLedger,
     pythContractAddress,
     userWalletAddress,
   )

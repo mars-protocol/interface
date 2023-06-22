@@ -15,11 +15,11 @@ export const useClosePosition = (props: Props) => {
 
   const actions = useMemo(() => {
     if (!props.activeVault) return []
-    const exchangeRate = getExchangeRate(
+    const primaryToSecondaryRate = getExchangeRate(
       props.activeVault.denoms.primary,
       props.activeVault.denoms.secondary,
     )
-    return getClosePositionActions(props.activeVault, exchangeRate, slippage)
+    return getClosePositionActions(props.activeVault, primaryToSecondaryRate, slippage)
   }, [props.activeVault, getExchangeRate, slippage])
 
   const { data: fee } = useEstimateFarmFee({

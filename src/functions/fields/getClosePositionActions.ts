@@ -1,8 +1,9 @@
+import BigNumber from 'bignumber.js'
 import { Action, ActionAmount } from 'types/generated/mars-credit-manager/MarsCreditManager.types'
 
 export const getClosePositionActions = (
   vault: ActiveVault,
-  exchangeRate: number,
+  primaryToSecondaryRate: number,
   slippage: number,
 ): Action[] => {
   const swapMessage: Action[] = []
@@ -12,20 +13,33 @@ export const getClosePositionActions = (
     Math.max(vault.position.amounts.borrowedPrimary, vault.position.amounts.borrowedSecondary) *
       1.001,
   )
-  const secondaryAmount = vault.position.amounts.lp.secondary
+  const borrowType =
+    vault.position.amounts.borrowedPrimary > vault.position.amounts.borrowedSecondary
+      ? 'primary'
+      : 'secondary'
 
-  if (secondaryAmount < borrowAmount) {
-    const swapTargetAmount = borrowAmount - secondaryAmount
-    const swapAmount = Math.max(Math.ceil(swapTargetAmount / exchangeRate), 10)
+  const availableAmountForRepay = vault.position.amounts.lp[borrowType]
+
+  if (availableAmountForRepay < borrowAmount) {
+    const swapTargetAmount = borrowAmount - availableAmountForRepay
+    const exchangeRate =
+      borrowType === 'secondary'
+        ? new BigNumber(1).div(primaryToSecondaryRate)
+        : new BigNumber(primaryToSecondaryRate)
+    const swapAmount = Math.max(
+      exchangeRate.times(swapTargetAmount).integerValue(BigNumber.ROUND_CEIL).toNumber(),
+      10,
+    )
+
     swapMessage.push({
       swap_exact_in: {
         coin_in: {
           amount: {
             exact: swapAmount.toString(),
           },
-          denom: vault.denoms.primary,
+          denom: borrowType === 'secondary' ? vault.denoms.primary : vault.denoms.secondary,
         },
-        denom_out: vault.denoms.secondary,
+        denom_out: vault.denoms[borrowType],
         slippage: slippage.toString(),
       },
     })

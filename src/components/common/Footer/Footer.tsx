@@ -82,7 +82,7 @@ export const Footer = () => {
             </a>
             <a
               className={styles.item}
-              href={DocURL.TERMS_OF_SERVICE_URL}
+              href={DocURL.TERMS_OF_SERVICE}
               rel='noopener noreferrer'
               target='_blank'
               title={t('global.termsOfService')}
@@ -91,7 +91,7 @@ export const Footer = () => {
             </a>
             <a
               className={styles.item}
-              href={DocURL.COOKIE_POLICY_URL}
+              href={DocURL.COOKIE_POLICY}
               rel='noopener noreferrer'
               target='_blank'
               title={t('global.cookiePolicy')}
@@ -100,7 +100,7 @@ export const Footer = () => {
             </a>
             <a
               className={styles.item}
-              href={DocURL.PRIVACY_POLICY_URL}
+              href={DocURL.PRIVACY_POLICY}
               rel='noopener noreferrer'
               target='_blank'
               title={t('global.privacyPolicy')}

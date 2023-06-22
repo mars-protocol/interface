@@ -6,6 +6,7 @@ import { useUpdateAccount } from 'hooks/mutations'
 import { useRequestUnlockPosition } from 'hooks/queries/useRequestUnlockPosition'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
+import { DocURL } from 'types/enums/docURL'
 
 import styles from './UnlockDisclaimer.module.scss'
 
@@ -59,7 +60,7 @@ const Unlock = () => {
         <p className={`${styles.title} xxlCaps`}>{t('fields.disclaimers.unlock.title')}</p>
         <p>
           {t('fields.disclaimers.unlock.description')}{' '}
-          <a href='' rel='noreferrer' target='_blank'>
+          <a href={DocURL.UNLOCK_POSITION} rel='noreferrer' target='_blank'>
             {t('common.learnMore')}
           </a>
         </p>

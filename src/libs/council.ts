@@ -6,18 +6,18 @@ export function getCouncilLink(currentNetwork: ChainInfoID, currentProvider?: Wa
   const isTestnet =
     SUPPORTED_CHAINS.find((chain) => chain.chainId === currentNetwork)?.type === 'testnet'
 
-  if (isTestnet) return DocURL.COUNCIL_TESTNET_URL
+  if (isTestnet) return DocURL.COUNCIL_TESTNET
 
-  if (!currentProvider) return DocURL.COUNCIL_URL
+  if (!currentProvider) return DocURL.COUNCIL
 
   switch (currentProvider) {
     case WalletID.Leap:
-      return DocURL.COUNCIL_LEAP_URL
+      return DocURL.COUNCIL_LEAP
 
     case WalletID.StationWallet || WalletID.StationWalletMobile:
-      return DocURL.COUNCIL_STATION_URL
+      return DocURL.COUNCIL_STATION
 
     default:
-      return DocURL.COUNCIL_KEPLR_URL
+      return DocURL.COUNCIL_KEPLR
   }
 }

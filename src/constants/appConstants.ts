@@ -1,8 +1,5 @@
 import { ChainInfoID } from '@marsprotocol/wallet-connector'
 
-/* cosmos:network */
-export const FORUM_URL = 'https://forum.marsprotocol.io/'
-
 /* asset:unit */
 export const MARS_SYMBOL = 'MARS'
 export const MARS_DECIMALS = 6

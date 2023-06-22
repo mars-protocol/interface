@@ -23,24 +23,26 @@ export const useEditPosition = (props: Props) => {
   const slippage = useStore((s) => s.slippage)
 
   const [editPosition, coinsAfterSwap] = useMemo<[Position, Coin[]]>(() => {
-    const primaryAmount =
-      props.position.amounts.primary - (props.prevPosition?.amounts.primary || 0)
-    const secondaryAmount =
-      props.position.amounts.secondary - (props.prevPosition?.amounts.secondary || 0)
-    const borrowedPrimaryAmount =
-      props.position.amounts.borrowedPrimary - (props.prevPosition?.amounts.borrowedPrimary || 0)
-
-    const borrowedSecondaryAmount =
-      props.position.amounts.borrowedSecondary -
-      (props.prevPosition?.amounts.borrowedSecondary || 0)
+    const primaryAmount = new BigNumber(props.position.amounts.primary)
+      .minus(props.prevPosition?.amounts.primary || 0)
+      .integerValue(BigNumber.ROUND_CEIL)
+    const secondaryAmount = new BigNumber(props.position.amounts.secondary)
+      .minus(props.prevPosition?.amounts.secondary || 0)
+      .integerValue(BigNumber.ROUND_CEIL)
+    const borrowedPrimaryAmount = new BigNumber(props.position.amounts.borrowedPrimary)
+      .minus(props.prevPosition?.amounts.borrowedPrimary || 0)
+      .integerValue(BigNumber.ROUND_CEIL)
+    const borrowedSecondaryAmount = new BigNumber(props.position.amounts.borrowedSecondary)
+      .minus(props.prevPosition?.amounts.borrowedSecondary || 0)
+      .integerValue(BigNumber.ROUND_CEIL)
 
     const editPosition = {
       ...props.position,
       amounts: {
-        primary: primaryAmount,
-        secondary: secondaryAmount,
-        borrowedPrimary: borrowedPrimaryAmount,
-        borrowedSecondary: borrowedSecondaryAmount,
+        primary: primaryAmount.toNumber(),
+        secondary: secondaryAmount.toNumber(),
+        borrowedPrimary: borrowedPrimaryAmount.toNumber(),
+        borrowedSecondary: borrowedSecondaryAmount.toNumber(),
         lp: {
           amount: '0',
           primary: 0,
@@ -52,11 +54,11 @@ export const useEditPosition = (props: Props) => {
 
     const primaryBaseAmount = convertToBaseCurrency({
       denom: props.vault.denoms.primary,
-      amount: (primaryAmount + borrowedPrimaryAmount).toString(),
+      amount: primaryAmount.plus(borrowedPrimaryAmount).toString(),
     })
     const secondaryBaseAmount = convertToBaseCurrency({
       denom: props.vault.denoms.secondary,
-      amount: (secondaryAmount + borrowedSecondaryAmount).toString(),
+      amount: secondaryAmount.plus(borrowedSecondaryAmount).toString(),
     })
 
     let primaryAfterSwap = new BigNumber(primaryAmount).plus(borrowedPrimaryAmount)
@@ -71,7 +73,7 @@ export const useEditPosition = (props: Props) => {
       const amount = Math.floor(
         convertValueToAmount({
           denom: props.vault.denoms[swapTarget],
-          amount: inputAmount.toString(),
+          amount: new BigNumber(inputAmount).toString(),
         }),
       )
 
@@ -126,12 +128,12 @@ export const useEditPosition = (props: Props) => {
 
     const primary = editPosition.amounts.primary && {
       denom: props.vault.denoms.primary,
-      amount: editPosition.amounts.primary.toString(),
+      amount: new BigNumber(editPosition.amounts.primary).toString(),
     }
 
     const secondary = editPosition.amounts.secondary && {
       denom: props.vault.denoms.secondary,
-      amount: editPosition.amounts.secondary.toString(),
+      amount: new BigNumber(editPosition.amounts.secondary).toString(),
     }
 
     const borrow = editPosition.borrowDenom && {
@@ -148,12 +150,16 @@ export const useEditPosition = (props: Props) => {
 
     const primaryBaseAmount = convertToBaseCurrency({
       denom: props.vault.denoms.primary,
-      amount: (editPosition.amounts.primary + editPosition.amounts.borrowedPrimary).toString(),
+      amount: new BigNumber(editPosition.amounts.primary)
+        .plus(editPosition.amounts.borrowedPrimary)
+        .toString(),
     })
 
     const secondaryBaseAmount = convertToBaseCurrency({
       denom: props.vault.denoms.secondary,
-      amount: (editPosition.amounts.secondary + editPosition.amounts.borrowedSecondary).toString(),
+      amount: new BigNumber(editPosition.amounts.secondary)
+        .plus(editPosition.amounts.borrowedSecondary)
+        .toString(),
     })
 
     const swapMessage: Action[] = []
@@ -164,15 +170,21 @@ export const useEditPosition = (props: Props) => {
     if (Math.abs(difference) > SWAP_THRESHOLD) {
       const inputDenom = difference > 0 ? props.vault.denoms.primary : props.vault.denoms.secondary
       const outputDenom = difference < 0 ? props.vault.denoms.primary : props.vault.denoms.secondary
-      const amount = new BigNumber(difference).abs().div(2).toString()
-      const swapAmount = Math.ceil(convertValueToAmount({ denom: inputDenom, amount: amount }))
+      const amount = new BigNumber(difference)
+        .abs()
+        .div(2)
+        .integerValue(BigNumber.ROUND_CEIL)
+        .toString()
+      const swapAmount = new BigNumber(
+        Math.ceil(convertValueToAmount({ denom: inputDenom, amount: amount })),
+      ).toString()
 
       swapMessage.push({
         swap_exact_in: {
           coin_in: {
             denom: inputDenom,
             amount: {
-              exact: swapAmount.toString(),
+              exact: swapAmount,
             },
           },
           denom_out: outputDenom,
@@ -184,7 +196,7 @@ export const useEditPosition = (props: Props) => {
     BigNumber.config({ EXPONENTIAL_AT: [-7, 30] })
     const minimumReceive = new BigNumber(minLpToReceive)
       .times(1 - slippage)
-      .dp(0)
+      .integerValue(BigNumber.ROUND_CEIL)
       .toString()
 
     const actions: Action[] = [

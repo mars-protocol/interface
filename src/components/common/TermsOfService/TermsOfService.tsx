@@ -29,7 +29,7 @@ export const TermsOfService = () => {
               Please check the boxes below to confirm your agreement to the{' '}
             </span>
             <a
-              href={DocURL.TERMS_OF_SERVICE_URL}
+              href={DocURL.TERMS_OF_SERVICE}
               rel='noreferrer'
               target='_blank'
               className={classNames('xs')}

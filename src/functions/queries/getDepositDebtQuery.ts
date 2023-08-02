@@ -46,7 +46,6 @@ export const getDepositDebtQuery = (
             }
         }`,
       )
-
     return query
   })
 

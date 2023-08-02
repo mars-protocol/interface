@@ -11,6 +11,8 @@ export interface DepositAndDebtData {
     OSMODebt: string
     ATOMDeposits: string
     ATOMDebt: string
+    ASTRODeposits: string
+    ASTRODebt: string
     AXLDeposits: string
     AXLDebt: string
     JUNODeposits: string

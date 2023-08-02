@@ -90,7 +90,6 @@ const OTHER_ASSETS: { [denom: string]: OtherAsset } = {
     color: colors.mars,
     logo: mars,
     decimals: 6,
-    poolId: 907,
   },
   usd: {
     symbol: '',
@@ -166,11 +165,11 @@ export const VAULT_CONFIGS: Vault[] = [
     color: '#6f7390',
     lockup: 86400 * 14,
     provider: 'Apollo vault',
-    description: { maxLeverage: 2.7, lpName: 'OSMO-ATOM' },
+    description: { maxLeverage: 3.7, lpName: 'OSMO-ATOM' },
     ltv: {
-      max: 0.625,
-      contract: 0.63,
-      liq: 0.65,
+      max: 0.725,
+      contract: 0.73,
+      liq: 0.75,
     },
     apy: {
       apys: null,
@@ -194,11 +193,11 @@ export const VAULT_CONFIGS: Vault[] = [
     color: '#478edc',
     lockup: 86400 * 14,
     provider: 'Apollo vault',
-    description: { maxLeverage: 2.86, lpName: 'OSMO-USDC.axl' },
+    description: { maxLeverage: 4, lpName: 'OSMO-USDC.axl' },
     ltv: {
-      max: 0.645,
-      contract: 0.65,
-      liq: 0.66,
+      max: 0.745,
+      contract: 0.75,
+      liq: 0.77,
     },
     apy: {
       apys: null,
@@ -222,11 +221,11 @@ export const VAULT_CONFIGS: Vault[] = [
     color: '#a446db',
     lockup: 86400 * 14,
     provider: 'Apollo vault',
-    description: { maxLeverage: 2.56, lpName: 'stATOM-ATOM' },
+    description: { maxLeverage: 2.78, lpName: 'stATOM-ATOM' },
     ltv: {
-      max: 0.6,
-      contract: 0.61,
-      liq: 0.625,
+      max: 0.635,
+      contract: 0.64,
+      liq: 0.65,
     },
     apy: {
       apys: null,
@@ -250,11 +249,11 @@ export const VAULT_CONFIGS: Vault[] = [
     color: colors.wbtc,
     lockup: 86400 * 14,
     provider: 'Apollo vault',
-    description: { maxLeverage: 2.44, lpName: 'OSMO-WBTC.axl' },
+    description: { maxLeverage: 4, lpName: 'OSMO-WBTC.axl' },
     ltv: {
-      max: 0.58,
-      contract: 0.59,
-      liq: 0.62,
+      max: 0.745,
+      contract: 0.75,
+      liq: 0.77,
     },
     apy: {
       apys: null,
@@ -278,11 +277,11 @@ export const VAULT_CONFIGS: Vault[] = [
     color: colors.weth,
     lockup: 86400 * 14,
     provider: 'Apollo vault',
-    description: { maxLeverage: 2.86, lpName: 'OSMO-WETH.axl' },
+    description: { maxLeverage: 4, lpName: 'OSMO-WETH.axl' },
     ltv: {
-      max: 0.645,
-      contract: 0.65,
-      liq: 0.67,
+      max: 0.745,
+      contract: 0.75,
+      liq: 0.77,
     },
     apy: {
       apys: null,

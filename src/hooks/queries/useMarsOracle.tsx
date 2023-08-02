@@ -9,7 +9,6 @@ export const useMarsOracle = () => {
   const hiveUrl = useStore((s) => s.networkConfig.hiveUrl)
   const oracleAddress = useStore((s) => s.networkConfig.contracts.oracle)
   const whitelistedAssets = useStore((s) => s.whitelistedAssets) || []
-  const basePriceState = useStore((s) => s.basePriceState)
   const processMarsOracleQuery = useStore((s) => s.processMarsOracleQuery)
   const setExchangeRatesState = useStore((s) => s.setExchangeRatesState)
 
@@ -42,7 +41,7 @@ export const useMarsOracle = () => {
     [QUERY_KEYS.MARS_ORACLE],
     async () => {
       return await request(
-        hiveUrl!,
+        hiveUrl,
         gql`
           query MarsOracle {
             oracle: wasm {
@@ -59,7 +58,7 @@ export const useMarsOracle = () => {
       )
     },
     {
-      enabled: !!hiveUrl && !!oracleAddress && basePriceState === State.READY,
+      enabled: !!hiveUrl && !!oracleAddress,
       staleTime: 30000,
       refetchInterval: 30000,
       onError: () => setExchangeRatesState(State.ERROR),

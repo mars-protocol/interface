@@ -78,12 +78,7 @@ const RedBank = () => {
   )
 
   useEffect(() => {
-    if (
-      redBankAssets.length === 0 ||
-      marketInfo.length === 0 ||
-      userBalancesState !== State.READY ||
-      redBankState === State.READY
-    )
+    if (redBankAssets.length === 0 || marketInfo.length === 0 || redBankState === State.READY)
       return
     setRedBankState(State.READY)
   }, [redBankAssets, marketInfo, redBankState, userBalancesState, setRedBankState])

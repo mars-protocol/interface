@@ -46,7 +46,7 @@ export interface CommonSlice {
   slippage: number
   tutorialSteps: { redbank: number; fields: number }
   userBalances: Coin[]
-  userUnclaimedRewards: string
+  userUnclaimedRewards: Coin[]
   userMarsTokenBalances: Coin[]
   userWalletAddress: string
   userIcns?: string

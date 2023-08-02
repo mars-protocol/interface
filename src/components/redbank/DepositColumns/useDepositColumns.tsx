@@ -73,22 +73,34 @@ export const useDepositColumns = () => {
         header: () => (
           <TextTooltip text={t('common.apr')} tooltip={t('redbank.tooltips.deposit.apy')} />
         ),
-        cell: (info) =>
-          info.row.original.borrowEnabled ? (
-            <TextTooltip
-              hideStyling
-              text={
-                <AnimatedNumber
-                  amount={info.getValue() + Number(info.row.original.incentiveInfo?.apy || 0)}
-                  suffix='%'
-                  abbreviated={false}
-                  rounded={false}
-                  className='m'
-                />
-              }
-              tooltip={<Apr data={info.row.original} />}
-            />
-          ) : (
+        cell: (info) => {
+          const isEnabled = info.row.original.borrowEnabled
+          const incentives = info.row.original.incentiveInfo
+          let borrowApy = 0
+
+          if (!!incentives) {
+            incentives.forEach((incentive) => {
+              borrowApy += Number(incentive.apy)
+            })
+          }
+
+          if (isEnabled)
+            return (
+              <TextTooltip
+                hideStyling
+                text={
+                  <AnimatedNumber
+                    amount={info.getValue() + borrowApy}
+                    suffix='%'
+                    abbreviated={false}
+                    rounded={false}
+                    className='m'
+                  />
+                }
+                tooltip={<Apr data={info.row.original} />}
+              />
+            )
+          return (
             <TextTooltip
               text='–'
               hideUnderline
@@ -97,7 +109,8 @@ export const useDepositColumns = () => {
                 symbol: info.row.original.symbol,
               })}
             />
-          ),
+          )
+        },
       }),
       columnHelper.accessor('depositCap', {
         enableSorting: enableSorting,

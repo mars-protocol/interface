@@ -225,14 +225,7 @@ export const Action = ({
     const assetLiquidity = Number(findByDenom(marketAssetLiquidity, denom)?.amount || 0)
 
     return maxBorrowableAmount(assetLiquidity, availableBalanceBaseCurrency, currentAssetPrice)
-  }, [
-    denom,
-    availableBalanceBaseCurrency,
-    currentAssetPrice,
-    marketAssetLiquidity,
-    baseCurrency.decimals,
-    currentAsset?.decimals,
-  ])
+  }, [denom, availableBalanceBaseCurrency, currentAssetPrice, marketAssetLiquidity])
 
   const repayMax = Math.min(assetBorrowBalance, walletBalance)
 

@@ -6,6 +6,7 @@ interface Asset {
     | 'OSMO'
     | 'NTRN'
     | 'ATOM'
+    | 'ASTRO'
     | 'AXL'
     | 'JUNO'
     | 'USDC.axl'
@@ -21,6 +22,7 @@ interface Asset {
     | 'axlWBTC'
     | 'axlWETH'
     | 'ATOM'
+    | 'ASTRO'
     | 'AXL'
     | 'JUNO'
     | 'stATOM'
@@ -28,7 +30,6 @@ interface Asset {
   contract_addr?: string
   logo: string
   decimals: number
-  poolId?: number
   poolBase?: string
   priceFeedId?: string
 }
@@ -56,7 +57,7 @@ interface RedBankAsset extends Asset {
   depositBalanceBaseCurrency: number
   marketLiquidity: string
   isCollateral: boolean
-  incentiveInfo?: IncentiveInfo
+  incentiveInfo?: IncentiveInfo[]
   depositCap: number
   depositLiquidity: numnber
   borrowEnabled: boolean

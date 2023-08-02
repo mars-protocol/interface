@@ -28,17 +28,20 @@ Copy `.env.example` to `.env` and modify the values to suit your needs.
 
 We allow the use of environment variables to be passed to the Docker container to specify custom endpoints for the app. The variables are:
 
-| Variable              | Description                                      | Default                                                                              |
-| --------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------ |
-| URL_OSMOSIS_GQL       | The Osmosis Hive GraphQL endpoint to use         | https://osmosis-node.marsprotocol.io/GGSFGSFGFG34/osmosis-hive-front/graphql         |
-| URL_OSMOSIS_REST      | The Osmosis node REST endpoint to use            | https://lcd-osmosis.blockapsis.com                                                   |
-| URL_OSMOSIS_RPC       | The Osmosis node RPC endpoint to use             | https://rpc-osmosis.blockapsis.com                                                   |
-| URL_OSMOSIS_TEST_GQL  | The Osmosis Testnet Hive GraphQL endpoint to use | https://testnet-osmosis-node.marsprotocol.io/XF32UOOU55CX/osmosis-hive-front/graphql |
-| URL_OSMOSIS_TEST_REST | The Osmosis Testnet node REST endpoint to use    | https://lcd.osmotest5.osmosis.zone                                                   |
-| URL_OSMOSIS_TEST_RPC  | The Osmosis Testnet node RPC endpoint to use     | https://rpc.osmotest5.osmosis.zone                                                   |
-| URL_NEUTRON_TEST_GQL  | The Neutron Testnet Hive GraphQL endpoint to use | https://testnet-neutron-gql.marsprotocol.io/graphql                                  |
-| URL_NEUTRON_TEST_REST | The Neutron Testnet node REST endpoint to use    | https://rest-palvus.pion-1.ntrn.tech                                                 |
-| URL_NEUTRON_TEST_RPC  | The Neutron Testnet node RPC endpoint to use     | https://rpc-palvus.pion-1.ntrn.tech                                                  |
+| Variable              | Description                                      | Default                                                                                   |
+| --------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------- |
+| URL_OSMOSIS_GQL       | The Osmosis Hive GraphQL endpoint to use         | https://osmosis-node.marsprotocol.io/GGSFGSFGFG34/osmosis-hive-front/graphql              |
+| URL_OSMOSIS_REST      | The Osmosis node REST endpoint to use            | https://lcd-osmosis.blockapsis.com                                                        |
+| URL_OSMOSIS_RPC       | The Osmosis node RPC endpoint to use             | https://rpc-osmosis.blockapsis.com                                                        |
+| URL_OSMOSIS_TEST_GQL  | The Osmosis Testnet Hive GraphQL endpoint to use | https://testnet-osmosis-node.marsprotocol.io/XF32UOOU55CX/osmosis-hive-front/graphql      |
+| URL_OSMOSIS_TEST_REST | The Osmosis Testnet node REST endpoint to use    | https://lcd.osmotest5.osmosis.zone                                                        |
+| URL_OSMOSIS_TEST_RPC  | The Osmosis Testnet node RPC endpoint to use     | https://rpc.osmotest5.osmosis.zone                                                        |
+| URL_NEUTRON_GQL       | The Neutron Hive GraphQL endpoint to use         | https://neutron.rpc.p2p.world/qgrnU6PsQZA8F9S5Fb8Fn3tV3kXmMBl2M9bcc9jWLjQy8p/hive/graphql |
+| URL_NEUTRON_REST      | The Neutron node REST endpoint to use            | https://rest-kralum.neutron-1.neutron.org                                                 |
+| URL_NEUTRON_RPC       | The Neutron node RPC endpoint to use             | https://rpc-kralum.neutron-1.neutron.org                                                  |
+| URL_NEUTRON_TEST_GQL  | The Neutron Testnet Hive GraphQL endpoint to use | https://testnet-neutron-gql.marsprotocol.io/graphql                                       |
+| URL_NEUTRON_TEST_REST | The Neutron Testnet node REST endpoint to use    | https://rest-palvus.pion-1.ntrn.tech                                                      |
+| URL_NEUTRON_TEST_RPC  | The Neutron Testnet node RPC endpoint to use     | https://rpc-palvus.pion-1.ntrn.tech                                                       |
 
 **Sample Docker run command**
 
@@ -52,6 +55,9 @@ docker run -it -p 3000:3000 \
       -e URL_OSMOSIS_TEST_GQL=https://testnet-osmosis-node.marsprotocol.io/XF32UOOU55CX/osmosis-hive-front/graphql \
       -e URL_OSMOSIS_TEST_REST=https://lcd.osmotest5.osmosis.zone \
       -e URL_OSMOSIS_TEST_RPC=https://rpc.osmotest5.osmosis.zone \
+      -e URL_NEUTRON_GQL=https://neutron.rpc.p2p.world/qgrnU6PsQZA8F9S5Fb8Fn3tV3kXmMBl2M9bcc9jWLjQy8p/hive/graphql \
+      -e URL_NEUTRON_REST=https://rest-palvus.pion-1.ntrn.tech \
+      -e URL_NEUTRON_RPC=https://rpc-palvus.pion-1.ntrn.tech \
       -e URL_NEUTRON_TEST_GQL=https://testnet-neutron-gql.marsprotocol.io/graphql \
       -e URL_NEUTRON_TEST_REST=https://rest-palvus.pion-1.ntrn.tech \
       -e URL_NEUTRON_TEST_RPC=https://rpc-palvus.pion-1.ntrn.tech marsprotocol/interface:latest

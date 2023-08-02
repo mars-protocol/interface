@@ -65,7 +65,6 @@ export const ChainSelect = () => {
       exchangeRates: [],
       assetPricesUSD: [],
       marketAssetLiquidity: [],
-      marketIncentiveInfo: [],
       marketInfo: [],
       userIcns: undefined,
       redBankAssets: [],

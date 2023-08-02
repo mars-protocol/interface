@@ -5,7 +5,7 @@ import { findByDenom } from 'functions'
 import { useUserBalance } from 'hooks/queries'
 import { formatValue, lookup } from 'libs/parse'
 import { truncate } from 'libs/text'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import useClipboard from 'react-use-clipboard'
 import useStore from 'store'
@@ -61,6 +61,11 @@ export const ConnectedButton = () => {
     baseCurrency.decimals,
   )
 
+  const [connectedWalletAddress, connectedWalletIsLedger] = useMemo(() => {
+    if (!connectedWallet?.account) return ['', false]
+    return [connectedWallet.account.address, connectedWallet.account.isLedger]
+  }, [connectedWallet])
+
   useEffect(() => {
     if (!chainInfo) return
     setIsTestnet(
@@ -71,10 +76,10 @@ export const ConnectedButton = () => {
   }, [chainInfo])
 
   useEffect(() => {
-    if (userWalletAddress === connectedWallet?.account.address) return
+    if (userWalletAddress === connectedWalletAddress) return
     useStore.setState({
-      isLedger: !!connectedWallet?.account.isLedger,
-      userWalletAddress: connectedWallet?.account.address,
+      isLedger: connectedWalletIsLedger,
+      userWalletAddress: connectedWalletAddress,
       marketAssetLiquidity: [],
       marketInfo: [],
       userIcns: undefined,
@@ -82,7 +87,7 @@ export const ConnectedButton = () => {
       redBankState: State.INITIALISING,
       userBalancesState: State.INITIALISING,
     })
-  }, [connectedWallet?.account.address, userWalletAddress])
+  }, [connectedWalletAddress, connectedWalletIsLedger, userWalletAddress])
 
   return (
     <div className={styles.wrapper}>

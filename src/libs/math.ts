@@ -1,16 +1,10 @@
 import BN from 'bignumber.js'
-import { isNil } from 'ramda'
 
 export const plus = (a?: BN.Value, b?: BN.Value): string => new BN(a || 0).plus(b || 0).toString()
 
 export const times = (a?: BN.Value, b?: BN.Value): string => new BN(a || 0).times(b || 0).toString()
 
-export const min = (array: BN.Value[]): string =>
-  BN.min.apply(null, array.filter(isFinite)).toString()
-
 export const ceil = (n: BN.Value): string => new BN(n).integerValue(BN.ROUND_CEIL).toString()
-
-export const isFinite = (n?: BN.Value): boolean => !isNil(n) && new BN(n).isFinite()
 
 export const safeGetInputPercentage = (value: number) => {
   let increasePercentage = 0

@@ -6,13 +6,16 @@ import { State } from 'types/enums'
 import { QUERY_KEYS } from 'types/enums/queryKeys'
 
 export const useRedBank = () => {
-  const hiveUrl = useStore((s) => s.networkConfig.hiveUrl)
+  const networkConfig = useStore((s) => s.networkConfig)
   const userWalletAddress = useStore((s) => s.userWalletAddress)
   const whitelistedAssets = useStore((s) => s.whitelistedAssets)
-  const redbankAddress = useStore((s) => s.networkConfig.contracts.redBank)
-  const incentivesAddress = useStore((s) => s.networkConfig.contracts.incentives)
   const processRedBankQuery = useStore((s) => s.processRedBankQuery)
   const setRedBankState = useStore((s) => s.setRedBankState)
+
+  const hiveUrl = networkConfig.hiveUrl
+  const redbankAddress = networkConfig.contracts.redBank
+  const incentivesAddress = networkConfig.contracts.incentives
+  const hasMultiAssetIncentives = networkConfig.hasMultiAssetIncentives
 
   useQuery<RedBankData>(
     [QUERY_KEYS.REDBANK],
@@ -24,6 +27,7 @@ export const useRedBank = () => {
             userWalletAddress,
             redbankAddress,
             incentivesAddress,
+            !!hasMultiAssetIncentives,
             whitelistedAssets,
           )}
         `,

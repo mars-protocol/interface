@@ -10,13 +10,15 @@ import {
   Tooltip,
   TxLink,
 } from 'components/common'
-import { MARS_DECIMALS, MARS_SYMBOL } from 'constants/appConstants'
+import { MARS_SYMBOL } from 'constants/appConstants'
+import { findByDenom } from 'functions'
 import { getClaimUserRewardsMsgOptions } from 'functions/messages'
 import { useEstimateFee } from 'hooks/queries'
-import { lookup, lookupDenomBySymbol, lookupSymbol } from 'libs/parse'
+import { lookup, lookupSymbol } from 'libs/parse'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
+import { State } from 'types/enums'
 import { QUERY_KEYS } from 'types/enums/queryKeys'
 
 import styles from './IncentivesButton.module.scss'
@@ -32,9 +34,13 @@ export const IncentivesButton = () => {
   // STORE STATE
   // ---------------
   const client = useStore((s) => s.client)
+  const whitelistedAssets = useStore((s) => s.whitelistedAssets)
   const otherAssets = useStore((s) => s.otherAssets)
   const userWalletAddress = useStore((s) => s.userWalletAddress)
+  const networkConfig = useStore((s) => s.networkConfig)
   const unclaimedRewards = useStore((s) => s.userUnclaimedRewards)
+  const convertToDisplayCurrency = useStore((s) => s.convertToDisplayCurrency)
+  const marsPriceState = useStore((s) => s.marsPriceState)
   const incentivesContractAddress = useStore((s) => s.networkConfig.contracts.incentives)
   const chainInfo = useStore((s) => s.chainInfo)
   const executeMsg = useStore((s) => s.executeMsg)
@@ -49,12 +55,13 @@ export const IncentivesButton = () => {
   const [response, setResponse] = useState<TxBroadcastResult>()
   const [error, setError] = useState<string>()
   const [hasUnclaimedRewards, setHasUnclaimedRewards] = useState(false)
+  const [unclaimedRewardsValue, setUnclaimedRewardsValue] = useState(0)
 
   // ---------------
   // LOCAL VARIABLES
   // ---------------
-  const marsDenom = lookupDenomBySymbol(MARS_SYMBOL, otherAssets)
   const explorerUrl = chainInfo && SimpleChainInfoList[chainInfo.chainId as ChainInfoID].explorer
+  const assets = [...whitelistedAssets, ...otherAssets]
 
   // ---------------
   // FUNCTIONS
@@ -66,8 +73,18 @@ export const IncentivesButton = () => {
   }, [])
 
   useEffect(() => {
-    setHasUnclaimedRewards(Number(unclaimedRewards) > 0)
-  }, [unclaimedRewards])
+    let rewardsValue = 0
+    let rewardsAmount = 0
+
+    if (marsPriceState !== State.READY) return
+    unclaimedRewards.forEach((reward) => {
+      rewardsValue += convertToDisplayCurrency(reward)
+      rewardsAmount += Number(reward.amount)
+    })
+
+    setUnclaimedRewardsValue(rewardsValue)
+    setHasUnclaimedRewards(rewardsAmount > 0)
+  }, [unclaimedRewards, convertToDisplayCurrency, marsPriceState])
 
   const txMsgOptions = useMemo(() => {
     if (!hasUnclaimedRewards) return
@@ -137,31 +154,39 @@ export const IncentivesButton = () => {
   }
 
   const transactionHash = response?.hash || ''
-
   if (!userWalletAddress) return null
 
   return (
     <div className={styles.wrapper}>
       <button
         className={classNames(
-          Number(unclaimedRewards) > 1000000
-            ? `${styles.button} ${styles.buttonHighlight}`
-            : styles.button,
+          unclaimedRewardsValue > 1 ? `${styles.button} ${styles.buttonHighlight}` : styles.button,
         )}
         onClick={() => {
           setShowDetails(!showDetails)
         }}
       >
-        <SVG.Logo />
-        <span>
+        {networkConfig.hasMultiAssetIncentives ? (
           <AnimatedNumber
-            amount={Number(unclaimedRewards) / 1e6}
+            amount={unclaimedRewardsValue}
             minDecimals={2}
             maxDecimals={2}
-            className={styles.marsAmount}
+            prefix='$'
           />
-          {MARS_SYMBOL}
-        </span>
+        ) : (
+          <>
+            <SVG.Logo />
+            <span>
+              <AnimatedNumber
+                className={styles.marsAmount}
+                amount={Number(unclaimedRewards[0]?.amount ?? 0) / 1e6}
+                minDecimals={2}
+                maxDecimals={2}
+              />
+            </span>
+            {MARS_SYMBOL}
+          </>
+        )}
       </button>
 
       {showDetails && (
@@ -181,36 +206,48 @@ export const IncentivesButton = () => {
                   <TxLink hash={transactionHash} link={`${explorerUrl}/txs/${transactionHash}`} />
                 </div>
               ) : (
-                <div className={styles.container}>
-                  <div className={styles.position}>
-                    <div className={styles.label}>
-                      <p className={styles.token}>{lookupSymbol(marsDenom, otherAssets)}</p>
-                      <p className={styles.subhead}>{t('redbank.redBankRewards')}</p>
-                    </div>
-                    <div className={styles.value}>
-                      <AnimatedNumber
-                        className={styles.tokenAmount}
-                        amount={lookup(Number(unclaimedRewards) || 0, MARS_SYMBOL, MARS_DECIMALS)}
-                        maxDecimals={MARS_DECIMALS}
-                        minDecimals={2}
-                      />
-                      <DisplayCurrency
-                        className={styles.tokenValue}
-                        coin={{
-                          amount: unclaimedRewards,
-                          denom: marsDenom,
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
+                <>
+                  {unclaimedRewards.map((rewards, index) => {
+                    const asset = findByDenom(assets, rewards.denom)
+                    if (!asset) return null
+                    return (
+                      <div className={styles.container} key={index}>
+                        <div className={styles.position}>
+                          <div className={styles.label}>
+                            <p className={styles.token}>{lookupSymbol(asset.denom, assets)}</p>
+                            <p className={styles.subhead}>{t('redbank.redBankRewards')}</p>
+                          </div>
+                          <div className={styles.value}>
+                            <AnimatedNumber
+                              className={styles.tokenAmount}
+                              amount={lookup(
+                                Number(rewards.amount) || 0,
+                                asset.symbol,
+                                asset.decimals,
+                              )}
+                              maxDecimals={asset.decimals}
+                              minDecimals={2}
+                            />
+                            <DisplayCurrency
+                              className={styles.tokenValue}
+                              coin={{
+                                amount: rewards.amount,
+                                denom: asset.denom,
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </>
               )}
               <div className={styles.claimButton}>
                 <Button
                   disabled={disabled}
                   showProgressIndicator={fetching}
                   text={
-                    Number(unclaimedRewards) > 0 && !disabled
+                    hasUnclaimedRewards && !disabled
                       ? t('incentives.claimRewards')
                       : t('incentives.nothingToClaim')
                   }

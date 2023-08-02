@@ -3,7 +3,6 @@ import atom from 'images/atom.svg'
 import axl from 'images/axl.svg'
 import axlusdc from 'images/axlusdc.svg'
 import mars from 'images/mars.svg'
-import nusdc from 'images/nusdc.svg'
 import osmo from 'images/osmo.svg'
 import colors from 'styles/_assets.module.scss'
 
@@ -36,6 +35,7 @@ const ASSETS: NetworkAssets = {
     color: colors.axl,
     logo: axl,
     decimals: 6,
+    priceFeedId: '60144b1d5c9e9851732ad1d9760e3485ef80be39b984f6bf60f82b28a2b7f126',
   },
   axlusdc: {
     symbol: 'USDC.axl',
@@ -45,16 +45,6 @@ const ASSETS: NetworkAssets = {
     color: colors.usdc,
     decimals: 6,
     logo: axlusdc,
-    priceFeedId: 'eaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a',
-  },
-  nusdc: {
-    symbol: 'USDC.n',
-    name: 'Noble USDC',
-    id: 'nUSDC',
-    denom: 'ibc/B3504E092456BA618CC28AC671A71FB08C6CA0FD0BE7C8A5B5A3E2DD933CC9E4',
-    color: colors.usdc,
-    decimals: 6,
-    logo: nusdc,
     priceFeedId: 'eaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a',
   },
 }
@@ -68,7 +58,6 @@ const OTHER_ASSETS: { [denom: string]: OtherAsset } = {
     color: colors.mars,
     logo: mars,
     decimals: 6,
-    poolId: 9,
   },
   usd: {
     symbol: '',
@@ -95,14 +84,14 @@ export const NETWORK_CONFIG: NetworkConfig = {
   contracts: {
     redBank: 'osmo1dl4rylasnd7mtfzlkdqn2gr0ss4gvyykpvr6d7t5ylzf6z535n9s5jjt8u',
     incentives: 'osmo1zyz57xf82963mcsgqu3hq5y0h9mrltm4ttq2qe5mjth9ezp3375qe0sm7d',
-    oracle: 'osmo1tx9987hjkx3kc9jvxmdzaf9uz8ukzscl88c476r7854205rkhecsc20tnk',
+    oracle: 'osmo1khe29uw3t85nmmp3mtr8dls7v2qwsfk3tndu5h4w5g2r5tzlz5qqarq2e2',
     creditManager: 'osmo15ywk53ck3wp6tnqgedfd8cnfx7fuhz9dr583hw8scp0xjgw46m0sf3kyyp',
     accountNft: 'osmo1ye2rntzz9qmxgv7eg09supww6k6xs0y0sekcr3x5clp087fymn4q3y33s4',
     pyth: 'osmo12u2vqdecdte84kg6c3d40nwzjsya59hsj048n687m9q3t6wdmqgsq6zrlx',
   },
   assets: {
     base: ASSETS.osmo,
-    whitelist: [ASSETS.osmo, ASSETS.atom, ASSETS.axl, ASSETS.axlusdc, ASSETS.nusdc],
+    whitelist: [ASSETS.osmo, ASSETS.atom, ASSETS.axl, ASSETS.axlusdc],
     other: [OTHER_ASSETS.usd, OTHER_ASSETS.mars],
     currencies: [
       OTHER_ASSETS.usd,
@@ -110,7 +99,6 @@ export const NETWORK_CONFIG: NetworkConfig = {
       ASSETS.atom,
       ASSETS.axl,
       ASSETS.axlusdc,
-      ASSETS.nusdc,
       OTHER_ASSETS.mars,
     ],
   },
@@ -121,21 +109,21 @@ export const NETWORK_CONFIG: NetworkConfig = {
 
 export const VAULT_CONFIGS: Vault[] = [
   {
-    address: 'osmo1q40xvrzpldwq5he4ftsf7zm2jf80tj373qaven38yqrvhex8r9rs8n94kv',
-    name: { name: 'OSMO-USDC.n LP', unlockDuration: 1, unlockTimeframe: 'day' },
+    address: 'osmo1m45ap4rq4m2mfjkcqu9ks9mxmyx2hvx0cdca9sjmrg46q7lghzqqhxxup5',
+    name: { name: 'OSMO-ATOM LP', unlockDuration: 1, unlockTimeframe: 'day' },
     denoms: {
       primary: 'uosmo',
-      secondary: 'ibc/B3504E092456BA618CC28AC671A71FB08C6CA0FD0BE7C8A5B5A3E2DD933CC9E4',
-      lpToken: 'gamm/pool/6',
+      secondary: 'ibc/A8C2D23A1E6F95DA4E48BA349667E322BD7A6C996D8A4AAE8BA72E190F3D1477',
+      lpToken: 'gamm/pool/12',
     },
     symbols: {
       primary: 'OSMO',
-      secondary: 'USDC.n',
+      secondary: 'ATOM',
     },
     color: colors.usdc,
     lockup: 86400 * 1,
     provider: 'Apollo vault',
-    description: { maxLeverage: 1.43, lpName: 'OSMO-USDC.n' },
+    description: { maxLeverage: 1.43, lpName: 'OSMO-ATOM' },
     ltv: {
       max: 0.295,
       contract: 0.3,
@@ -150,48 +138,20 @@ export const VAULT_CONFIGS: Vault[] = [
   },
   {
     address: 'osmo14lu7m4ganxs20258dazafrjfaulmfxruq9n0r0th90gs46jk3tuqwfkqwn',
-    name: { name: 'OSMO-USDC.n LP', unlockDuration: 7, unlockTimeframe: 'days' },
+    name: { name: 'OSMO-USDC.axl LP', unlockDuration: 7, unlockTimeframe: 'days' },
     denoms: {
       primary: 'uosmo',
-      secondary: 'ibc/B3504E092456BA618CC28AC671A71FB08C6CA0FD0BE7C8A5B5A3E2DD933CC9E4',
-      lpToken: 'gamm/pool/6',
+      secondary: 'ibc/6F34E1BD664C36CE49ACC28E60D62559A5F96C4F9A6CCE4FC5A67B2852E24CFE',
+      lpToken: 'gamm/pool/5',
     },
     symbols: {
       primary: 'OSMO',
-      secondary: 'USDC.n',
+      secondary: 'USDC.axl',
     },
     color: colors.usdc,
     lockup: 86400 * 7,
     provider: 'Apollo vault',
-    description: { maxLeverage: 1.43, lpName: 'OSMO-USDC.n' },
-    ltv: {
-      max: 0.295,
-      contract: 0.3,
-      liq: 0.4,
-    },
-    apy: {
-      apys: null,
-      fees: null,
-      total: null,
-      vaultAddress: '',
-    },
-  },
-  {
-    address: 'osmo1fmq9hw224fgz8lk48wyd0gfg028kvvzggt6c3zvnaqkw23x68cws5nd5em',
-    name: { name: 'OSMO-USDC.n LP', unlockDuration: 14, unlockTimeframe: 'days' },
-    denoms: {
-      primary: 'uosmo',
-      secondary: 'ibc/B3504E092456BA618CC28AC671A71FB08C6CA0FD0BE7C8A5B5A3E2DD933CC9E4',
-      lpToken: 'gamm/pool/6',
-    },
-    symbols: {
-      primary: 'OSMO',
-      secondary: 'USDC.n',
-    },
-    color: colors.usdc,
-    lockup: 86400 * 14,
-    provider: 'Apollo vault',
-    description: { maxLeverage: 1.43, lpName: 'OSMO-USDC.n' },
+    description: { maxLeverage: 1.43, lpName: 'OSMO-USDC.axl' },
     ltv: {
       max: 0.295,
       contract: 0.3,

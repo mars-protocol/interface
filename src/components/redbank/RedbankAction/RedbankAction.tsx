@@ -180,6 +180,9 @@ export const RedbankAction = React.memo(
     }
 
     const handleClose = () => {
+      queryClient.invalidateQueries([QUERY_KEYS.REDBANK])
+      queryClient.invalidateQueries([QUERY_KEYS.USER_DEPOSIT])
+      queryClient.invalidateQueries([QUERY_KEYS.USER_DEBT])
       reset()
 
       // path on redbank action will always be /redbank/deposit/<denom> etce
@@ -236,10 +239,7 @@ export const RedbankAction = React.memo(
             error={error}
             handleClose={handleClose}
             onSuccess={() => {
-              queryClient.invalidateQueries([QUERY_KEYS.USER_DEPOSIT])
-              queryClient.invalidateQueries([QUERY_KEYS.REDBANK])
               queryClient.invalidateQueries([QUERY_KEYS.USER_BALANCE])
-              queryClient.invalidateQueries([QUERY_KEYS.USER_DEBT])
             }}
             response={response}
             title={t('common.summaryOfTheTransaction')}

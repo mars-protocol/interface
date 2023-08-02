@@ -1,19 +1,34 @@
+import { ChainInfoID } from '@marsprotocol/wallet-connector'
+
 type Options = {
-  from?: string
-  to: string
+  from: Asset
+  to: Asset
   baseUrl: string
+  chain?: ChainInfoID
 }
 
 export const getSwapUrl = (options: Options) => {
-  const { from, to, baseUrl } = options
-  let fromName = from
-  let toName = to
+  const { from, to, baseUrl, chain } = options
+  let fromName: string
+  let toName: string
 
-  if (!fromName) fromName = 'OSMO'
-  if (fromName === to) fromName = 'ATOM'
-  if (to === 'axlUSDC') toName = 'USDC'
-  if (to === 'axlWBTC') toName = 'WBTC'
-  if (to === 'axlWETH') toName = 'ETH'
+  if (!chain) return '#'
 
-  return `${baseUrl}?from=${fromName}&to=${toName}`
+  if (chain === ChainInfoID.Osmosis1 || chain === ChainInfoID.OsmosisTestnet) {
+    fromName = from.id
+    toName = to.id
+
+    if (fromName === to.id) fromName = 'ATOM'
+    if (to.id === 'axlUSDC') toName = 'USDC'
+    if (to.id === 'axlWBTC') toName = 'WBTC'
+    if (to.id === 'axlWETH') toName = 'ETH'
+
+    return `${baseUrl}?from=${fromName}&to=${toName}`
+  }
+
+  if (chain === ChainInfoID.Neutron || chain === ChainInfoID.NeutronTestnet) {
+    fromName = from.denom.replace('/', '%2F')
+    toName = to.denom.replace('/', '%2F')
+    return `${baseUrl}?from=${fromName}&to=${toName}`
+  }
 }

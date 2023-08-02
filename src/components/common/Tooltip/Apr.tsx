@@ -31,12 +31,13 @@ export const Apr = ({ data }: Props) => {
         subtitle: key === 0 ? t('incentives.interestApr') : t('incentives.depositRewards'),
       })
     })
+
     return items
   }
 
   useEffect(
     () => {
-      const baseData = data.incentiveInfo ? [data, data.incentiveInfo] : [data]
+      const baseData = data.incentiveInfo ? [data, ...data.incentiveInfo] : [data]
       setAprData(produceData(baseData))
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

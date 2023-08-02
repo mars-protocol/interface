@@ -10,17 +10,19 @@ export const useUsdPrice = () => {
   let usdPriceUrl = useStore((s) => s.networkConfig.usdPriceUrl)
   let hasPriceFeeds = false
   const whitelistedAssets = useStore((s) => s.whitelistedAssets)
+  const otherAssets = useStore((s) => s.otherAssets)
   const assetPricesUSD = useStore((s) => s.assetPricesUSD ?? [])
   const basePriceState = useStore((s) => s.basePriceState)
   const baseAsset = useStore((s) => s.networkConfig.assets.base)
 
-  if (!usdPriceUrl && basePriceState !== State.READY) {
-    useStore.setState({ basePriceState: State.READY })
-  }
+  const assets = [...whitelistedAssets, ...otherAssets]
 
-  if (usdPriceUrl && whitelistedAssets) {
+  if (!usdPriceUrl && basePriceState !== State.READY)
+    useStore.setState({ basePriceState: State.READY })
+
+  if (usdPriceUrl && assets) {
     const pythApiUrl = new URL(usdPriceUrl + 'latest_price_feeds')
-    whitelistedAssets.forEach((asset) => {
+    assets.forEach((asset) => {
       if (asset.priceFeedId) {
         hasPriceFeeds = true
         pythApiUrl.searchParams.append('ids[]', asset.priceFeedId)
@@ -32,20 +34,18 @@ export const useUsdPrice = () => {
   useQuery<CoinPriceData[]>(
     [QUERY_KEYS.USD_PRICE],
     async () => {
-      if (!usdPriceUrl || !whitelistedAssets || !hasPriceFeeds) return
+      if (!usdPriceUrl || !assets || !hasPriceFeeds) return
       const res = await fetch(usdPriceUrl)
       return res.json()
     },
     {
-      enabled: !!usdPriceUrl || !!whitelistedAssets,
+      enabled: !!usdPriceUrl || !!assets,
       staleTime: 30000,
       refetchInterval: 30000,
       onSuccess: (data) => {
         let updatedAssetPricesUSD: Coin[] = []
         data.map((priceData) => {
-          const denom = whitelistedAssets.find(
-            (asset) => asset?.priceFeedId === priceData.id,
-          )?.denom
+          const denom = assets.find((asset) => asset?.priceFeedId === priceData.id)?.denom
 
           if (denom) {
             const amount = new BigNumber(priceData.price.price)

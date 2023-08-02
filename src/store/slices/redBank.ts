@@ -2,18 +2,17 @@ import { Coin } from '@cosmjs/stargate'
 import { MARS_SYMBOL } from 'constants/appConstants'
 import { SECONDS_IN_YEAR } from 'constants/timeConstants'
 import { findByDenom } from 'functions'
-import { lookupDenomBySymbol } from 'libs/parse'
+import { findAssetByDenom, lookupDenomBySymbol } from 'libs/parse'
 import isEqual from 'lodash.isequal'
+import moment from 'moment'
 import { RedBankSlice } from 'store/interfaces/redBank.interface'
 import { Store } from 'store/interfaces/store.interface'
-import colors from 'styles/_assets.module.scss'
 import { State } from 'types/enums'
 import { GetState } from 'zustand'
 import { NamedSet } from 'zustand/middleware'
 
 const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice => ({
   marketAssetLiquidity: [],
-  marketIncentiveInfo: [],
   marketInfo: [],
   redBankAssets: [],
   redBankState: State.INITIALISING,
@@ -22,30 +21,33 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
   // ------------------
   // GENERAL FUNCTIONS
   // ------------------
-  calculateIncentiveAssetInfo: (
-    incentive?: MarketIncentive | Record<string, any>,
+  calculateIncentiveAssetsInfo: (
+    incentives?: MarketIncentive[] | Record<string, any>,
     marketTotalLiquidity?: Coin,
-  ): IncentiveInfo | undefined => {
-    const otherAssets = get().otherAssets
-    const whitelistedAssets = get().whitelistedAssets
+  ): IncentiveInfo[] | undefined => {
+    const assets = [...get().otherAssets, ...get().whitelistedAssets]
     const convertToBaseCurrency = get().convertToBaseCurrency
-    const marsAsset = get().otherAssets?.find((asset) => asset.denom === MARS_SYMBOL)
+    if (!incentives?.length || !marketTotalLiquidity || !assets || !convertToBaseCurrency) return
 
-    if (!incentive || !marketTotalLiquidity || !whitelistedAssets || !convertToBaseCurrency) return
+    const incentiveAssetsInfo = incentives.map((incentive: MarketIncentive) => {
+      const incentiveAsset = findAssetByDenom(incentive.denom, assets)
+      if (!incentiveAsset) return
+      const anualEmission = Number(incentive.emission_per_second) * SECONDS_IN_YEAR
+      const anualEmissionVaule = convertToBaseCurrency({
+        denom: incentive.denom,
+        amount: anualEmission.toString(),
+      })
+      const liquidityValue = convertToBaseCurrency(marketTotalLiquidity)
+      const incentiveApr = anualEmissionVaule / liquidityValue
 
-    const anualEmission = Number(incentive.emission_per_second) * SECONDS_IN_YEAR
-    const anualEmissionVaule = convertToBaseCurrency({
-      denom: lookupDenomBySymbol(MARS_SYMBOL, otherAssets),
-      amount: anualEmission.toString(),
+      return {
+        symbol: incentiveAsset.symbol,
+        color: incentiveAsset.color,
+        apy: incentiveApr * 100,
+      }
     })
-    const liquidityValue = convertToBaseCurrency(marketTotalLiquidity)
-    const incentiveApr = anualEmissionVaule / liquidityValue
 
-    return {
-      symbol: marsAsset?.symbol || MARS_SYMBOL,
-      color: marsAsset?.color || colors.mars,
-      apy: incentiveApr * 100,
-    }
+    return incentiveAssetsInfo
   },
   computeMarketLiquidity: (denom: string) => {
     return Number(get().marketAssetLiquidity.find((asset) => asset.denom === denom)?.amount) || 0
@@ -87,8 +89,8 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
       const marketLiquidity = (depositLiquidity - debtLiquidity).toString()
       marketAssetLiquidity.push({ denom: asset.denom, amount: marketLiquidity })
 
-      const incentiveInfo = get().calculateIncentiveAssetInfo(
-        findByDenom(get().marketIncentiveInfo, asset.denom),
+      const incentiveInfo = get().calculateIncentiveAssetsInfo(
+        findByDenom(get().marketInfo, asset.denom)?.incentives,
         { denom: asset.denom, amount: depositLiquidity.toString() },
       )
 
@@ -134,29 +136,52 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
   processRedBankQuery: (data: RedBankData, whitelistedAssets: Asset[]) => {
     if (isEqual(data, get().previousRedBankQueryData) && get().marketInfo.length) return
 
-    const userUnclaimedRewards = data.rbwasmkey.unclaimedRewards
     const marketInfo: Market[] = []
-    const marketIncentiveInfo: MarketIncentive[] = []
-
+    const assets = [...whitelistedAssets, ...get().otherAssets]
+    const MARS_DENOM = lookupDenomBySymbol(MARS_SYMBOL, assets)
+    const hasMultiAssetIncentives = get().networkConfig.hasMultiAssetIncentives
     whitelistedAssets?.forEach((asset: Asset) => {
       const denom = asset.denom
       const id = asset.id
       const queryResult = data.rbwasmkey
-      const marketData = {
+      const marketData: Market = {
         ...queryResult[`${id}Market`],
         denom: denom,
+        incentives: [],
+      }
+
+      if (hasMultiAssetIncentives) {
+        const marketIncentiveData = queryResult[
+          `${id}MarketIncentive`
+        ] as MultiAssetMarketIncentive[]
+        marketIncentiveData.forEach((incentive) => {
+          marketData.incentives.push({
+            denom: incentive.denom,
+            emission_per_second: String(incentive.emission_rate),
+          })
+        })
+      } else {
+        const marketIncentiveData = {
+          ...queryResult[`${id}MarketIncentive`],
+          denom: MARS_DENOM,
+        } as MarketIncentive
+        const isValid =
+          marketIncentiveData?.emission_per_second &&
+          moment(
+            (marketIncentiveData?.start_time ?? 0) + (marketIncentiveData?.duration ?? 0),
+          ).isBefore(moment.now())
+        if (isValid) marketData.incentives.push(marketIncentiveData)
       }
       marketInfo.push(marketData)
-
-      const marketIncentiveData = {
-        ...queryResult[`${id}MarketIncentive`],
-        denom: denom,
-      }
-      marketIncentiveInfo.push(marketIncentiveData)
     })
+
+    const userUnclaimedRewards =
+      hasMultiAssetIncentives && typeof data.rbwasmkey.unclaimedRewards === 'object'
+        ? data.rbwasmkey.unclaimedRewards
+        : [{ denom: MARS_DENOM, amount: data.rbwasmkey.unclaimedRewards }]
+
     set({
       marketInfo,
-      marketIncentiveInfo,
       previousRedBankQueryData: data,
       userUnclaimedRewards,
     })

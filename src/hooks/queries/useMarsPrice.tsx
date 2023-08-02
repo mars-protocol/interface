@@ -7,44 +7,34 @@ import useStore from 'store'
 import { State } from 'types/enums'
 import { QUERY_KEYS } from 'types/enums/queryKeys'
 
-const poolsEndpoint = 'osmosis/gamm/v1beta1/pools/'
+const poolsEndpoint = `${process.env.NEXT_PUBLIC_OSMOSIS_REST}osmosis/gamm/v1beta1/pools/`
 
-export const useSpotPrice = (symbol: string) => {
+export const useMarsPrice = () => {
   const networkConfig = useStore((s) => s.networkConfig)
-  const baseCurrency = networkConfig.assets.base
   const displayCurrency = networkConfig.displayCurrency
   const exchangeRates = useStore((s) => s.exchangeRates)
   const assetPricesUSD = useStore((s) => s.assetPricesUSD)
   const exchangeRatesState = useStore((s) => s.assetPricesUSDState)
-  const basePriceState = useStore((s) => s.assetPricesUSDState)
-  const asset = useAsset({ symbol })
-  const lcd = networkConfig.restUrl ?? ''
-
-  const poolBase = asset?.poolBase
-    ? exchangeRates?.find((ratesAsset) => ratesAsset.denom === asset.poolBase)
-    : true
+  const asset = useAsset({ symbol: 'MARS' })
+  const marsOsmosDenom = 'ibc/573FCD90FACEE750F55A8864EF7D38265F07E5A9273FA0E8DAFD39951332B580'
+  const marsPoolId = 907
 
   useQuery<PoolResponse>(
-    [QUERY_KEYS.SPOT_PRICE, asset?.poolId],
+    [QUERY_KEYS.SPOT_PRICE, marsPoolId],
     async () => {
-      return fetch(`${lcd}${poolsEndpoint}${asset?.poolId}`).then(async (response) => {
+      return fetch(`${poolsEndpoint}${marsPoolId}`).then(async (response) => {
         const data = await response.json()
         return data
       })
     },
     {
-      enabled:
-        !!asset &&
-        !!asset.poolId &&
-        !!poolBase &&
-        basePriceState === State.READY &&
-        exchangeRatesState === State.READY,
+      enabled: !!asset && exchangeRatesState === State.READY,
       staleTime: 30000,
       refetchInterval: 30000,
       onSuccess: (data) => {
         if (!asset || !assetPricesUSD) return
         const poolDataAssets = data.pool.pool_assets
-        const assetFirst = poolDataAssets[0].token.denom === asset.denom
+        const assetFirst = poolDataAssets[0].token.denom === marsOsmosDenom
         const primaryAsset = poolDataAssets[assetFirst ? 0 : 1]
         const secondaryAsset = poolDataAssets[assetFirst ? 1 : 0]
 
@@ -74,28 +64,23 @@ export const useSpotPrice = (symbol: string) => {
             amount: rate.times(secondaryRate).toString(),
           }
 
-          if (typeof poolBase === 'object') {
-            const baseRate = Number(rate.toString()) * Number(poolBase.amount)
-            coinExchangeRate.amount = baseRate.toString()
-            useStore.setState({
-              exchangeRates: updateExchangeRate(coinExchangeRate, exchangeRates || []),
-            })
-          } else {
-            useStore.setState({
-              exchangeRates: updateExchangeRate(coinExchangeRate, exchangeRates || []),
-            })
-          }
-          const baseCurrencyPrice = assetPricesUSD.find(
-            (asset) => asset.denom === baseCurrency.denom,
+          useStore.setState({
+            exchangeRates: updateExchangeRate(coinExchangeRate, exchangeRates || []),
+          })
+
+          const secondaryAssetPrice = assetPricesUSD.find(
+            (asset) => asset.denom === secondaryAsset.token.denom,
           )?.amount
-          if (!baseCurrencyPrice) return
+          if (!secondaryAssetPrice) return
 
           const assetPriceCoin = {
             denom: coinExchangeRate.denom,
-            amount: new BigNumber(coinExchangeRate.amount).times(baseCurrencyPrice).toString(),
+            amount: new BigNumber(coinExchangeRate.amount).times(secondaryAssetPrice).toString(),
           }
+
           useStore.setState({
             assetPricesUSD: updateAssetPrices(assetPriceCoin, assetPricesUSD || []),
+            marsPriceState: State.READY,
           })
         }
       },

@@ -3,6 +3,7 @@ import 'index.scss'
 import 'styles/App.scss'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import BigNumber from 'bignumber.js'
 import {
   CommonContainer,
   CosmosWalletConnectProvider,
@@ -13,6 +14,7 @@ import type { AppProps, NextWebVitalsMetric } from 'next/app'
 import Head from 'next/head'
 import { Suspense } from 'react'
 
+BigNumber.config({ EXPONENTIAL_AT: 1e9 })
 const queryClient = new QueryClient()
 
 const App = ({ Component, pageProps }: AppProps) => {

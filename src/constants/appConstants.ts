@@ -37,6 +37,7 @@ export const TERMS_OF_SERVICE = 'termsOfService'
 /* chains */
 export const SUPPORTED_CHAINS: { chainId: ChainInfoID; type: 'testnet' | 'mainnet' }[] = [
   { chainId: ChainInfoID.Osmosis1, type: 'mainnet' },
+  { chainId: ChainInfoID.Neutron, type: 'mainnet' },
   { chainId: ChainInfoID.OsmosisTestnet, type: 'testnet' },
   { chainId: ChainInfoID.NeutronTestnet, type: 'testnet' },
 ]

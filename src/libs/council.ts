@@ -14,7 +14,7 @@ export function getCouncilLink(currentNetwork: ChainInfoID, currentProvider?: Wa
     case WalletID.Leap:
       return DocURL.COUNCIL_LEAP
 
-    case WalletID.StationWallet || WalletID.StationWalletMobile:
+    case WalletID.Station:
       return DocURL.COUNCIL_STATION
 
     default:

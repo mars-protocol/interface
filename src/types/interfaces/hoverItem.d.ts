@@ -1,6 +1,6 @@
 interface HoverItem {
   color?: string
   name: string
-  coin: import('@cosmjs/proto-signing').Coin
+  coin: import('@cosmjs/stargate').Coin
   negative?: boolean
 }

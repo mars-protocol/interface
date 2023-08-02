@@ -7,7 +7,6 @@ import {
   WalletConnectionStatus,
 } from '@marsprotocol/wallet-connector'
 import { useQueryClient } from '@tanstack/react-query'
-import { MARS_SYMBOL } from 'constants/appConstants'
 import {
   useBlockHeight,
   useDepositAndDebt,
@@ -18,8 +17,8 @@ import {
   useUserDebt,
   useUserIcns,
 } from 'hooks/queries'
+import { useMarsPrice } from 'hooks/queries/useMarsPrice'
 import { usePythVaa } from 'hooks/queries/usePythVaa'
-import { useSpotPrice } from 'hooks/queries/useSpotPrice'
 import { useUserCollaterals } from 'hooks/queries/useUserCollaterals'
 import { ReactNode, useEffect, useState } from 'react'
 import useStore from 'store'
@@ -52,7 +51,6 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
   const networkConfig = useStore((s) => s.networkConfig)
   const marketDeposits = useStore((s) => s.marketDeposits)
   const marketInfo = useStore((s) => s.marketInfo)
-  const marketIncentiveInfo = useStore((s) => s.marketIncentiveInfo)
   const migrationInProgress = useStore((s) => s.migrationInProgress)
   const redBankState = useStore((s) => s.redBankState)
   const rpc = useStore((s) => s.networkConfig.rpcUrl)
@@ -145,7 +143,6 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
     userBalancesState,
     exchangeRates,
     marketInfo,
-    marketIncentiveInfo,
     userDebts,
     userDeposits,
     whitelistedAssets,
@@ -168,7 +165,7 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
   useUserDebt()
   useUserCollaterals()
   useMarsOracle()
-  useSpotPrice(MARS_SYMBOL)
+  useMarsPrice()
   useDepositAndDebt()
   useRedBank()
   usePythVaa()

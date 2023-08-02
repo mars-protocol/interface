@@ -30,15 +30,17 @@ export const CosmosWalletConnectProvider = ({ children }: Props) => {
         rpc: networkConfig.rpcUrl,
         rest: networkConfig.restUrl,
       }}
+      walletConnectProjectId='d93fdffb159bae5ec87d8fee4cdbb045'
       chainIds={supportedChains}
       closeIcon={<SVG.Close />}
       defaultChainId={currentNetwork}
       enabledWallets={[
         WalletID.Keplr,
         WalletID.Xdefi,
-        WalletID.StationWallet,
+        WalletID.Station,
         WalletID.Leap,
         WalletID.Cosmostation,
+        WalletID.Vectis,
         WalletID.KeplrMobile,
         WalletID.CosmostationMobile,
       ]}

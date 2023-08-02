@@ -4,27 +4,29 @@ interface RedBankData {
   }
   rbwasmkey: {
     OSMOMarket: Market
-    OSMOMarketIncentive: MarketIncentive
+    OSMOMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     ATOMMarket: Market
-    ATOMMarketIncentive: MarketIncentive
+    ATOMMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     AXLMarket: Market
-    AXLMarketIncentive: MarketIncentive
+    AXLMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     JUNOMarket: Market
-    JUNOMarketIncentive: MarketIncentive
+    JUNOMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
+    ASTROMarket: Market
+    ASTROMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     axlUSDCMarket: Market
-    axlUSDCMarketIncentive: MarketIncentive
+    axlUSDCMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     axlWBTCMarket: Market
-    axlWBTCMarketIncentive: MarketIncentive
+    axlWBTCMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     axlWETHMarket: Market
-    axlWETHMarketIncentive: MarketIncentive
+    axlWETHMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     stATOMMarket: Market
-    stATOMMarketIncentive: MarketIncentive
+    stATOMMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     nUSDCMarket: Market
-    nUSDCMarketIncentive: MarketIncentive
+    nUSDCMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     NTRNMarket: Market
-    NTRNMarketIncentive: MarketIncentive
+    NTRNMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     collateral: UserCollateral[]
-    unclaimedRewards: string
+    unclaimedRewards: string | Coin[]
   }
 }
 
@@ -45,6 +47,7 @@ interface Market {
   deposit_enabled: boolean
   borrow_enabled: boolean
   deposit_cap: string
+  incentives: MarketIncentive[]
 }
 
 interface InterestRateModel {
@@ -57,8 +60,13 @@ interface InterestRateModel {
 interface MarketIncentive {
   denom: string
   emission_per_second: string
-  index: string
-  last_updated: number
-  start_time: number
-  duration: number
+  index?: string
+  last_updated?: number
+  start_time?: number
+  duration?: number
+}
+
+interface MultiAssetMarketIncentive {
+  denom: string
+  emission_rate: number
 }

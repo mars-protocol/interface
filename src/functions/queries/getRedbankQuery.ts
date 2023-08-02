@@ -12,6 +12,7 @@ export const getRedbankQuery = (
   address: string,
   redBankContractAddress: string,
   incentivesContractAddress: string,
+  hasMultiAssetIncentives: boolean,
   whitelistedAssets?: Asset[],
 ) => {
   const wasmQueries = whitelistedAssets?.map((asset: Asset) => {
@@ -38,7 +39,7 @@ export const getRedbankQuery = (
       getContractQuery(
         incentiveKey,
         incentivesContractAddress || '',
-        getIncentiveQuery(asset.denom || ''),
+        getIncentiveQuery(asset.denom || '', hasMultiAssetIncentives),
       )
     return query
   })

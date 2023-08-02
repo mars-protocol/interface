@@ -24,6 +24,7 @@ interface NetworkConfig {
   displayCurrency: displayCurrency
   appUrl: string
   isFieldsEnabled: boolean
+  hasMultiAssetIncentives?: boolean
 }
 
 interface DisplayCurrency {

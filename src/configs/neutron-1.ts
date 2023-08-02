@@ -17,6 +17,16 @@ export const ASSETS: NetworkAssets = {
     decimals: 6,
     priceFeedId: 'a8e6517966a52cb1df864b2764f3629fde3f21d2b640b5c572fcd654cbccd65e',
   },
+  axlusdc: {
+    symbol: 'USDC.axl',
+    name: 'Axelar USDC',
+    id: 'axlUSDC',
+    denom: 'ibc/F082B65C88E4B6D5EF1DB243CDA1D331D002759E938A0F5CD3FFDC5D53B3E349',
+    color: colors.usdc,
+    decimals: 6,
+    logo: axlusdc,
+    priceFeedId: 'eaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a',
+  },
   atom: {
     symbol: 'ATOM',
     name: 'Atom',
@@ -27,16 +37,6 @@ export const ASSETS: NetworkAssets = {
     decimals: 6,
     priceFeedId: 'b00b60f88b03a6a625a8d1c048c3f66653edf217439983d037e7222c4e612819',
   },
-  axlusdc: {
-    symbol: 'USDC.axl',
-    name: 'Axelar USDC',
-    id: 'axlUSDC',
-    denom: 'ibc/F91EA2C0A23697A1048E08C2F787E3A58AC6F706A1CD2257A504925158CFC0F3',
-    color: colors.usdc,
-    decimals: 6,
-    logo: axlusdc,
-    priceFeedId: 'eaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a',
-  },
 }
 
 const OTHER_ASSETS: { [denom: string]: OtherAsset } = {
@@ -44,7 +44,7 @@ const OTHER_ASSETS: { [denom: string]: OtherAsset } = {
     symbol: 'MARS',
     id: 'MARS',
     name: 'Mars',
-    denom: 'ibc/584A4A23736884E0C198FD1EE932455A9357A492A7B94324E4A02B5628687831',
+    denom: 'ibc/9598CDEB7C6DB7FC21E746C8E0250B30CD5154F39CA111A9D4948A4362F638BD',
     color: colors.mars,
     logo: mars,
     decimals: 6,
@@ -71,29 +71,29 @@ const OTHER_ASSETS: { [denom: string]: OtherAsset } = {
 }
 
 export const NETWORK_CONFIG: NetworkConfig = {
-  name: ChainInfoID.NeutronTestnet,
-  displayName: 'Neutron Testnet',
+  name: ChainInfoID.Neutron,
+  displayName: 'Neutron',
   hiveUrl:
-    process.env.NEXT_PUBLIC_NEUTRON_TEST_GQL ??
-    'https://testnet-neutron-gql.marsprotocol.io/graphql',
-  rpcUrl: process.env.NEXT_PUBLIC_NEUTRON_TEST_RPC ?? 'https://rpc-palvus.pion-1.ntrn.tech/',
-  restUrl: process.env.NEXT_PUBLIC_NEUTRON_TEST_REST ?? 'https://rest-palvus.pion-1.ntrn.tech/',
+    process.env.NEXT_PUBLIC_NEUTRON_GQL ??
+    'https://neutron.rpc.p2p.world/qgrnU6PsQZA8F9S5Fb8Fn3tV3kXmMBl2M9bcc9jWLjQy8p/hive/graphql',
+  rpcUrl: process.env.NEXT_PUBLIC_NEUTRON_RPC ?? 'https://rpc-kralum.neutron-1.neutron.org',
+  restUrl: process.env.NEXT_PUBLIC_NEUTRON_REST ?? 'https://rest-kralum.neutron-1.neutron.org',
   usdPriceUrl: 'https://xc-mainnet.pyth.network/api/',
   chainIcon: ntrn,
   contracts: {
-    redBank: 'neutron1q53jr6wwus0c6g5had2zs6fzzachu5zun0c6etxuyarh5w7phxpq4wf39z',
-    incentives: 'neutron1pg2fxw87fkzfwyn8q45hes4mmlt4ywjg53hf655mh83edd9yq65quqe07u',
-    oracle: 'neutron1u3lmzs3zhhhlvkmrnq9u4ep6pgqp3gxawt3xg82hl9jydwmug7jsgmhjrn',
-    pyth: 'neutron1f86ct5az9qpz2hqfd5uxru02px2a3tz5zkw7hugd7acqq496dcms22ehpy',
+    redBank: 'neutron1n97wnm7q6d2hrcna3rqlnyqw2we6k0l8uqvmyqq6gsml92epdu7quugyph',
+    incentives: 'neutron1aszpdh35zsaz0yj80mz7f5dtl9zq5jfl8hgm094y0j0vsychfekqxhzd39',
+    oracle: 'neutron1dwp6m7pdrz6rnhdyrx5ha0acsduydqcpzkylvfgspsz60pj2agxqaqrr7g',
+    pyth: 'neutron1m2emc93m9gpwgsrsf2vylv9xvgqh654630v7dfrhrkmr5slly53spg85wv',
   },
   assets: {
     base: ASSETS.ntrn,
-    whitelist: [ASSETS.ntrn, ASSETS.atom, ASSETS.axlusdc],
+    whitelist: [ASSETS.axlusdc, ASSETS.ntrn, ASSETS.atom],
     other: [OTHER_ASSETS.usd, OTHER_ASSETS.mars, OTHER_ASSETS.osmo],
-    currencies: [OTHER_ASSETS.usd, ASSETS.ntrn, ASSETS.atom, ASSETS.axlusdc, OTHER_ASSETS.mars],
+    currencies: [OTHER_ASSETS.usd, ASSETS.axlusdc, ASSETS.ntrn, ASSETS.atom, OTHER_ASSETS.mars],
   },
   displayCurrency: OTHER_ASSETS.usd,
-  appUrl: 'https://testnet-neutron.astroport.fi/swap',
+  appUrl: 'https://neutron.astroport.fi/swap',
   isFieldsEnabled: false,
   hasMultiAssetIncentives: true,
 }

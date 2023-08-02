@@ -9,6 +9,7 @@ export interface OraclesSlice {
   exchangeRatesState: State
   assetPricesUSD?: Coin[]
   assetPricesUSDState: State
+  marsPriceState: State
   basePriceState: State
   migrationInProgress: boolean
   pythVaa: VaaInformation

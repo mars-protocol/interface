@@ -2,7 +2,7 @@ import { Coin } from '@cosmjs/stargate'
 import BigNumber from 'bignumber.js'
 import { updateExchangeRate } from 'functions'
 import { updateAssetPrices } from 'functions/updateAssetPrices'
-import { findAssetByDenom, lookup, magnify } from 'libs/parse'
+import { findAssetByDenom, lookup } from 'libs/parse'
 import isEqual from 'lodash.isequal'
 import { OraclesSlice } from 'store/interfaces/oracles.interface'
 import { Store } from 'store/interfaces/store.interface'
@@ -16,6 +16,7 @@ const oraclesSlice = (set: NamedSet<Store>, get: GetState<Store>): OraclesSlice 
   // ------------------
   exchangeRatesState: State.INITIALISING,
   assetPricesUSDState: State.INITIALISING,
+  marsPriceState: State.INITIALISING,
   basePriceState: State.INITIALISING,
   migrationInProgress: false,
   pythVaa: {
@@ -98,9 +99,7 @@ const oraclesSlice = (set: NamedSet<Store>, get: GetState<Store>): OraclesSlice 
     const asset2Price = assetPricesUSD?.find((coin) => coin.denom === denom2)?.amount
 
     if (asset1Price && asset1 && asset2Price && asset2) {
-      return new BigNumber(magnify(Number(asset1Price), asset1.decimals))
-        .div(magnify(Number(asset2Price), asset2.decimals))
-        .toNumber()
+      return new BigNumber(asset1Price).div(asset2Price).toNumber()
     }
     return 1
   },
@@ -199,9 +198,11 @@ const oraclesSlice = (set: NamedSet<Store>, get: GetState<Store>): OraclesSlice 
         const id = asset.id
 
         const queryResult = pricesQueryResult[`${id}`]?.price ?? '0.00'
+        const isNonUSDOracle = oracleBaseDenom.toLowerCase().indexOf('usd') === -1
 
         // Non-USD denominated oracle prices
-        if (oracleBaseDenom.toLowerCase().indexOf('usd') === -1) {
+        if (isNonUSDOracle) {
+          if (get().basePriceState !== State.READY) return
           const baseCurrencyPrice = assetPricesUSD.find(
             (assetPrice) => assetPrice.denom === oracleBaseDenom,
           )
@@ -225,6 +226,10 @@ const oraclesSlice = (set: NamedSet<Store>, get: GetState<Store>): OraclesSlice 
           }
         } else {
           // USD denominated oracle prices
+
+          if (asset.denom === get().baseAsset?.denom) {
+            set({ basePriceState: State.READY })
+          }
           const assetPrice = {
             denom,
             amount: typeof queryResult === 'string' ? queryResult : '0.00',

@@ -6,7 +6,6 @@ export interface RedBankSlice {
   // VARIABLES
   // ------------------
   marketAssetLiquidity: Coin[]
-  marketIncentiveInfo: MarketIncentive[]
   marketInfo: Market[]
   redBankAssets: RedBankAsset[]
   redBankState: State
@@ -18,10 +17,10 @@ export interface RedBankSlice {
   // ------------------
   // GENERAL FUNCTIONS
   // ------------------
-  calculateIncentiveAssetInfo: (
+  calculateIncentiveAssetsInfo: (
     incentive?: MarketIncentive | Record<string, any>,
     marketTotalLiquidity?: Coin,
-  ) => IncentiveInfo | undefined
+  ) => IncentiveInfo[] | undefined
   computeMarketLiquidity: (denom: string) => number
   findUserDebt: (denom: string) => number
   findUserDeposit: (denom: string) => number

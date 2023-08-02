@@ -52,7 +52,7 @@ const commonSlice = (
   tutorialSteps: { redbank: 1, fields: 1 },
   userBalances: [],
   userMarsTokenBalances: [],
-  userUnclaimedRewards: '0',
+  userUnclaimedRewards: [],
   userWalletAddress: '',
   vaultConfigs: [],
   whitelistedAssets: [],
@@ -189,7 +189,7 @@ const commonSlice = (
       marketDeposits: [],
       userBalances: [],
       userMarsTokenBalances: [],
-      userUnclaimedRewards: '0',
+      userUnclaimedRewards: [],
     })
   },
   queryContract: async <T>(contractAddress: string, queryMsg: object, retries = 3) => {

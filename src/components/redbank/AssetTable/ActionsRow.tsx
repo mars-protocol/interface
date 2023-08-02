@@ -21,18 +21,23 @@ export const ActionsRow = ({ row, type }: Props) => {
   const redBankAssets = useStore((s) => s.redBankAssets)
   const assetPricesUSD = useStore((s) => s.assetPricesUSD)
   const hasBalance = Number(row.original.walletBalance ?? 0) > 0
-
   const hasDeposits = Number(row.original.depositBalance ?? 0) > 0
   const hasNeverDeposited = Number(balanceSum(redBankAssets, 'depositBalanceBaseCurrency')) === 0
-  const appUrl = useStore((s) => s.networkConfig.appUrl) || ''
+  const networkConfig = useStore((s) => s.networkConfig)
+  const appUrl = networkConfig.appUrl
   const classes = classNames.bind(styles)
   const trClasses = classes({
     tr: true,
     expanded: row.getIsExpanded(),
   })
-  const assetID = row.original.id
-
   const assetPrice = assetPricesUSD?.find((asset) => asset.denom === row.original.denom)?.amount
+  const fromAsset =
+    networkConfig.assets.base.denom === row.original.denom
+      ? networkConfig.assets.whitelist[1]
+      : networkConfig.assets.base
+
+  const toAsset = row.original
+  const assetID = row.original.id
 
   return (
     <tr key={row.id} className={trClasses} onClick={() => row.toggleExpanded()}>
@@ -46,7 +51,9 @@ export const ActionsRow = ({ row, type }: Props) => {
                   window.open(
                     getSwapUrl({
                       baseUrl: appUrl,
-                      to: assetID,
+                      from: fromAsset,
+                      to: toAsset,
+                      chain: networkConfig.name,
                     }),
                   )
                 }}
@@ -99,7 +106,9 @@ export const ActionsRow = ({ row, type }: Props) => {
                         window.open(
                           getSwapUrl({
                             baseUrl: appUrl,
-                            to: assetID,
+                            from: fromAsset,
+                            to: toAsset,
+                            chain: networkConfig.name,
                           }),
                         )
                       }}

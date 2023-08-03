@@ -1,4 +1,5 @@
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
+import BigNumber from 'bignumber.js'
 import { AnimatedNumber, Button, CellAmount, SVG, TextTooltip } from 'components/common'
 import Image from 'next/image'
 import { useMemo } from 'react'
@@ -49,6 +50,11 @@ export const useBorrowColumns = () => {
       }),
       columnHelper.accessor('borrowBalance', {
         enableSorting: enableSorting,
+        sortingFn: (a, b): number => {
+          const balanceA = new BigNumber(a.original.borrowBalance).shiftedBy(-a.original.decimals)
+          const balanceB = new BigNumber(b.original.borrowBalance).shiftedBy(-b.original.decimals)
+          return balanceA.minus(balanceB).toNumber()
+        },
         header: () => (
           <TextTooltip
             text={t('common.borrowed')}

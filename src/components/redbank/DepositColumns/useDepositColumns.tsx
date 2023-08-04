@@ -1,4 +1,5 @@
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
+import BigNumber from 'bignumber.js'
 import classNames from 'classnames'
 import { AnimatedNumber, Apr, Button, CellAmount, SVG, TextTooltip } from 'components/common'
 import { convertPercentage } from 'functions'
@@ -53,6 +54,11 @@ export const useDepositColumns = () => {
       }),
       columnHelper.accessor('depositBalance', {
         enableSorting: enableSorting,
+        sortingFn: (a, b): number => {
+          const balanceA = new BigNumber(a.original.depositBalance).shiftedBy(-a.original.decimals)
+          const balanceB = new BigNumber(b.original.depositBalance).shiftedBy(-b.original.decimals)
+          return balanceA.minus(balanceB).toNumber()
+        },
         header: () => (
           <TextTooltip
             text={t('common.deposited')}

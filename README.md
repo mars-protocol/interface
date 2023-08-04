@@ -56,8 +56,8 @@ docker run -it -p 3000:3000 \
       -e URL_OSMOSIS_TEST_REST=https://lcd.osmotest5.osmosis.zone \
       -e URL_OSMOSIS_TEST_RPC=https://rpc.osmotest5.osmosis.zone \
       -e URL_NEUTRON_GQL=https://neutron.rpc.p2p.world/qgrnU6PsQZA8F9S5Fb8Fn3tV3kXmMBl2M9bcc9jWLjQy8p/hive/graphql \
-      -e URL_NEUTRON_REST=https://rest-palvus.pion-1.ntrn.tech \
-      -e URL_NEUTRON_RPC=https://rpc-palvus.pion-1.ntrn.tech \
+      -e URL_NEUTRON_REST=https://rest-kralum.neutron-1.neutron.org \
+      -e URL_NEUTRON_RPC=https://rpc-kralum.neutron-1.neutron.org \
       -e URL_NEUTRON_TEST_GQL=https://testnet-neutron-gql.marsprotocol.io/graphql \
       -e URL_NEUTRON_TEST_REST=https://rest-palvus.pion-1.ntrn.tech \
       -e URL_NEUTRON_TEST_RPC=https://rpc-palvus.pion-1.ntrn.tech marsprotocol/interface:latest

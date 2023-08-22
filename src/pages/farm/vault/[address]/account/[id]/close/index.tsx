@@ -17,6 +17,7 @@ const CloseVaultPosition = () => {
     activeVault,
     isLoading: isLoading || !!data || !!error,
   })
+
   const isValidVault = vaultConfigs.find((vault) => vault.address === vaultAddress)
 
   const ref = useRef(activeVault)

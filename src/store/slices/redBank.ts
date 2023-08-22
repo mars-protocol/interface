@@ -7,6 +7,7 @@ import isEqual from 'lodash.isequal'
 import moment from 'moment'
 import { RedBankSlice } from 'store/interfaces/redBank.interface'
 import { Store } from 'store/interfaces/store.interface'
+import colors from 'styles/_assets.module.scss'
 import { State } from 'types/enums'
 import { GetState } from 'zustand'
 import { NamedSet } from 'zustand/middleware'
@@ -31,7 +32,21 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
 
     const incentiveAssetsInfo = incentives.map((incentive: MarketIncentive) => {
       const incentiveAsset = findAssetByDenom(incentive.denom, assets)
-      if (!incentiveAsset) return
+      if (!incentiveAsset)
+        return {
+          symbol: MARS_SYMBOL,
+          color: colors.mars,
+          apy: 0,
+        }
+      const startTime = incentive.start_time ?? 0
+      const duration = incentive.duration ?? 0
+      const isValid = moment().isBefore(moment(startTime + duration))
+      if (!isValid)
+        return {
+          symbol: incentiveAsset.symbol,
+          color: incentiveAsset.color,
+          apy: 0,
+        }
       const anualEmission = Number(incentive.emission_per_second) * SECONDS_IN_YEAR
       const anualEmissionVaule = convertToBaseCurrency({
         denom: incentive.denom,
@@ -93,7 +108,6 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
         findByDenom(get().marketInfo, asset.denom)?.incentives,
         { denom: asset.denom, amount: depositLiquidity.toString() },
       )
-
       const redBankAsset: RedBankAsset = {
         ...asset,
         walletBalance: assetWallet?.amount.toString(),

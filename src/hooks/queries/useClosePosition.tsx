@@ -12,6 +12,7 @@ interface Props {
 export const useClosePosition = (props: Props) => {
   const getExchangeRate = useStore((s) => s.getExchangeRate)
   const slippage = useStore((s) => s.slippage)
+  const whitelistedAssets = useStore((s) => s.whitelistedAssets)
 
   const actions = useMemo(() => {
     if (!props.activeVault) return []
@@ -19,7 +20,12 @@ export const useClosePosition = (props: Props) => {
       props.activeVault.denoms.primary,
       props.activeVault.denoms.secondary,
     )
-    return getClosePositionActions(props.activeVault, primaryToSecondaryRate, slippage)
+    return getClosePositionActions(
+      props.activeVault,
+      primaryToSecondaryRate,
+      slippage,
+      whitelistedAssets,
+    )
   }, [props.activeVault, getExchangeRate, slippage])
 
   const { data: fee } = useEstimateFarmFee({

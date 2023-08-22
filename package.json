@@ -1,9 +1,9 @@
 {
   "name": "mars",
   "homepage": "./",
-  "version": "1.6.1",
-  "license": "SEE LICENSE IN LICENSE FILE",
+  "version": "1.6.3",
   "private": false,
+  "license": "SEE LICENSE IN LICENSE FILE",
   "scripts": {
     "dev": "next dev -p 3001",
     "build": "yarn test && next build",

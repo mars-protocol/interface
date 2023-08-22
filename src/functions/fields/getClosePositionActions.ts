@@ -1,10 +1,12 @@
 import BigNumber from 'bignumber.js'
+import { findByDenom } from 'functions/findByDenom'
 import { Action, ActionAmount } from 'types/generated/mars-credit-manager/MarsCreditManager.types'
 
 export const getClosePositionActions = (
   vault: ActiveVault,
   primaryToSecondaryRate: number,
   slippage: number,
+  whitelistedAssets: Asset[],
 ): Action[] => {
   const swapMessage: Action[] = []
 
@@ -18,16 +20,25 @@ export const getClosePositionActions = (
       ? 'primary'
       : 'secondary'
 
-  const availableAmountForRepay = vault.position.amounts.lp[borrowType]
+  const supplyType = borrowType === 'primary' ? 'secondary' : 'primary'
+  const borrowAsset = findByDenom(whitelistedAssets, vault.denoms[borrowType])
+  const supplyAsset = findByDenom(whitelistedAssets, vault.denoms[supplyType])
+  const additionalDecimals = Number(borrowAsset?.decimals ?? 6) - Number(supplyAsset?.decimals ?? 6)
 
+  const availableAmountForRepay = vault.position.amounts.lp[borrowType]
   if (availableAmountForRepay < borrowAmount) {
     const swapTargetAmount = borrowAmount - availableAmountForRepay
     const exchangeRate =
       borrowType === 'secondary'
         ? new BigNumber(1).div(primaryToSecondaryRate)
         : new BigNumber(primaryToSecondaryRate)
+
     const swapAmount = Math.max(
-      exchangeRate.times(swapTargetAmount).integerValue(BigNumber.ROUND_CEIL).toNumber(),
+      exchangeRate
+        .times(swapTargetAmount)
+        .shiftedBy(-additionalDecimals)
+        .integerValue(BigNumber.ROUND_CEIL)
+        .toNumber(),
       10,
     )
 

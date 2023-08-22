@@ -7,6 +7,10 @@ export const getPythVaaMessage = (
   pythContractAddress?: string,
   sender?: string,
 ): MsgExecuteContract | undefined => {
+  // Disabled until further notice
+  return
+
+  /*
   if (!sender || pythVaa.data.length === 0 || !pythContractAddress || isLedger) return
 
   return new MsgExecuteContract({
@@ -15,4 +19,5 @@ export const getPythVaaMessage = (
     msg: { update_price_feeds: { data: pythVaa.data } },
     funds: [{ denom: baseCurrencyDenom, amount: String(pythVaa.data.length) }],
   })
+  */
 }

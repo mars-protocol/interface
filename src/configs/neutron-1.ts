@@ -4,6 +4,7 @@ import axlusdc from 'images/axlusdc.svg'
 import mars from 'images/mars.svg'
 import ntrn from 'images/ntrn.svg'
 import osmo from 'images/osmo.svg'
+import statom from 'images/statom.svg'
 import colors from 'styles/_assets.module.scss'
 
 export const ASSETS: NetworkAssets = {
@@ -36,6 +37,15 @@ export const ASSETS: NetworkAssets = {
     logo: atom,
     decimals: 6,
     priceFeedId: 'b00b60f88b03a6a625a8d1c048c3f66653edf217439983d037e7222c4e612819',
+  },
+  statom: {
+    symbol: 'stATOM',
+    name: 'Stride Atom',
+    id: 'stATOM',
+    denom: 'ibc/B7864B03E1B9FD4F049243E92ABD691586F682137037A9F3FCA5222815620B3C',
+    color: colors.statom,
+    logo: statom,
+    decimals: 6,
   },
 }
 
@@ -88,9 +98,16 @@ export const NETWORK_CONFIG: NetworkConfig = {
   },
   assets: {
     base: ASSETS.ntrn,
-    whitelist: [ASSETS.axlusdc, ASSETS.ntrn, ASSETS.atom],
+    whitelist: [ASSETS.axlusdc, ASSETS.ntrn, ASSETS.atom, ASSETS.statom],
     other: [OTHER_ASSETS.usd, OTHER_ASSETS.mars, OTHER_ASSETS.osmo],
-    currencies: [OTHER_ASSETS.usd, ASSETS.axlusdc, ASSETS.ntrn, ASSETS.atom, OTHER_ASSETS.mars],
+    currencies: [
+      OTHER_ASSETS.usd,
+      ASSETS.axlusdc,
+      ASSETS.ntrn,
+      ASSETS.atom,
+      ASSETS.statom,
+      OTHER_ASSETS.mars,
+    ],
   },
   displayCurrency: OTHER_ASSETS.usd,
   appUrl: 'https://neutron.astroport.fi/swap',

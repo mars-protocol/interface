@@ -37,11 +37,13 @@ export const CosmosWalletConnectProvider = ({ children }: Props) => {
       enabledWallets={[
         WalletID.Keplr,
         WalletID.Xdefi,
-        WalletID.Station,
         WalletID.Leap,
+        WalletID.LeapMetaMaskSnap,
+        WalletID.Station,
         WalletID.Cosmostation,
         WalletID.Vectis,
         WalletID.KeplrMobile,
+        WalletID.LeapMobile,
         WalletID.CosmostationMobile,
       ]}
       persistent

@@ -13,13 +13,11 @@ interface Props {
 
 export const Apy = ({ apyData, leverage, borrowRate }: Props) => {
   const { t } = useTranslation()
-
   const totalApy = useMemo(
     () => (apyData.total ?? 0) * leverage - borrowRate ?? 0,
     [apyData, leverage, borrowRate],
   )
   const leveragedApy = useMemo(() => (apyData.total ?? 0) * leverage, [apyData, leverage])
-  const performanceFee = apyData.fees && apyData.fees[0].value > 0 ? apyData.fees[0] : null
 
   return (
     <div className={styles.container}>
@@ -31,16 +29,6 @@ export const Apy = ({ apyData, leverage, borrowRate }: Props) => {
             {formatValue(apyData.total ?? 0, 2, 2, true, false, '%', true)}
           </span>
         </div>
-        <ul className={styles.list}>
-          {apyData.apys
-            ?.filter((apy) => apy.value > 0.009)
-            .map((item, index) => (
-              <li className={styles.listItem} key={index}>
-                <span>- {item.type}</span>
-                <span>{formatValue(item.value, 2, 2, true, false, '%', true)}</span>
-              </li>
-            ))}
-        </ul>
       </div>
       {leverage > 1 && (
         <>
@@ -55,18 +43,10 @@ export const Apy = ({ apyData, leverage, borrowRate }: Props) => {
             </span>
           </div>
           {borrowRate > 0 && (
-            <div className={classNames(styles.item, !performanceFee && styles.border)}>
+            <div className={classNames(styles.item, styles.border)}>
               <span className={styles.label}>{t('fields.borrowRateApy')}</span>
               <span className={styles.value}>
                 {formatValue(borrowRate, 2, 2, true, '-', '%', true)}
-              </span>
-            </div>
-          )}
-          {performanceFee && (
-            <div className={classNames(styles.item, styles.border)}>
-              <span className={styles.label}>{performanceFee.type}</span>
-              <span className={styles.value}>
-                {formatValue(performanceFee.value, 2, 2, true, '-', '%', true)}
               </span>
             </div>
           )}

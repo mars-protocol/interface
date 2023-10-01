@@ -103,13 +103,11 @@ const OTHER_ASSETS: { [denom: string]: OtherAsset } = {
 }
 
 export const NETWORK_CONFIG: NetworkConfig = {
-  name: ChainInfoID.Osmosis1,
-  displayName: 'Osmosis',
-  hiveUrl:
-    process.env.NEXT_PUBLIC_OSMOSIS_GQL ??
-    'https://osmosis.rpc.p2p.world/4dqst8e8Cgd2HMb2HDNkimP7NIkcbjuk/hive/graphql',
-  rpcUrl: process.env.NEXT_PUBLIC_OSMOSIS_RPC ?? 'https://rpc-osmosis.blockapsis.com/',
-  restUrl: process.env.NEXT_PUBLIC_OSMOSIS_REST ?? 'https://lcd-osmosis.blockapsis.com/',
+  name: ChainInfoID.OsmosisDevnet,
+  displayName: 'Osmosis Testnet',
+  hiveUrl: 'https://devnet-osmosis-gql.marsprotocol.io/graphql',
+  rpcUrl: 'https://rpc.devnet.osmosis.zone/',
+  restUrl: 'https://lcd.devnet.osmosis.zone/',
   vaultAprUrl: 'https://api.marsprotocol.io/v1/vaults/osmosis',
   usdPriceUrl: 'https://xc-mainnet.pyth.network/api/',
   chainIcon: osmo,
@@ -118,8 +116,8 @@ export const NETWORK_CONFIG: NetworkConfig = {
     incentives: 'osmo1nkahswfr8shg8rlxqwup0vgahp0dk4x8w6tkv3rra8rratnut36sk22vrm',
     oracle: 'osmo1mhznfr60vjdp2gejhyv2gax9nvyyzhd3z0qcwseyetkfustjauzqycsy2g',
     creditManager: 'osmo1f2m24wktq0sw3c0lexlg7fv4kngwyttvzws3a3r3al9ld2s2pvds87jqvf',
+    params: 'osmo1aye5qcer5n52crrkaf35jprsad2807q6kg3eeeu7k79h4slxfausfqhc9y',
     accountNft: 'osmo1450hrg6dv2l58c0rvdwx8ec2a0r6dd50hn4frk370tpvqjhy8khqw7sw09',
-    pyth: 'osmo13ge29x4e2s63a8ytz2px8gurtyznmue4a69n5275692v3qn3ks8q7cwck7',
   },
   assets: {
     base: ASSETS.osmo,
@@ -147,6 +145,7 @@ export const NETWORK_CONFIG: NetworkConfig = {
   displayCurrency: OTHER_ASSETS.usd,
   appUrl: 'https://app.osmosis.zone',
   isFieldsEnabled: true,
+  hasMultiAssetIncentives: true,
 }
 
 export const VAULT_CONFIGS: Vault[] = [

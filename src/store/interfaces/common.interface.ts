@@ -10,6 +10,8 @@ import { BlockHeightData } from 'hooks/queries/useBlockHeight'
 import { DepositAndDebtData } from 'hooks/queries/useDepositAndDebt'
 import { UserBalanceData } from 'hooks/queries/useUserBalance'
 import { UserIcnsData } from 'hooks/queries/useUserIcns'
+import { MarsParamsQueryClient } from 'types/generated/mars-params/MarsParams.client'
+import { AssetParamsBaseForAddr } from 'types/generated/mars-params/MarsParams.types'
 import { ContractMsg } from 'types/types'
 
 export interface CommonSlice {
@@ -17,6 +19,7 @@ export interface CommonSlice {
   // VARIABLES
   // ------------------
   addressProviderConfig?: AddressProviderConfig
+  assetParams: AssetParamsBaseForAddr[]
   baseAsset?: Asset
   basecampConfig?: BasecampConfig
   baseCurrency: {
@@ -41,6 +44,7 @@ export interface CommonSlice {
   marketDeposits: Coin[]
   networkConfig: NetworkConfig
   otherAssets: OtherAsset[]
+  paramsClient?: MarsParamsQueryClient
   queryErrors: string[]
   acceptedTermsOfService: boolean
   slippage: number
@@ -64,7 +68,6 @@ export interface CommonSlice {
     fee: StdFee
     sender?: string
   }) => Promise<TxBroadcastResult | undefined>
-  getAdditionalDecimals(denom: string): number
   loadNetworkConfig: () => void
   queryContract: <T>(
     contractAddress: string,
@@ -73,9 +76,9 @@ export interface CommonSlice {
     ignoreFailures?: boolean,
   ) => Promise<T | undefined>
   // ------------------
-  // SETTERS
-  // ------------------
   setChainInfo: (chainInfo: SimplifiedChainInfo) => void
+  // ------------------
+  // SETTERS
   setCurrentNetwork: (network: ChainInfoID) => void
   setTutorialStep: (type: 'fields' | 'redbank', step?: number) => void
   setLcdClient: (rpc: string, chainId: string) => void
@@ -83,13 +86,15 @@ export interface CommonSlice {
   setQueryError: (name: string, isError: boolean) => void
   setServerError: (isError: boolean) => void
   // ------------------
-  // QUERY RELATED
-  // ------------------
   previousBlockHeightQueryData?: BlockHeightData
+  // ------------------
+  // QUERY RELATED
   previousUserBalanceQueryData?: UserBalanceData
   previousUserIcnsQueryData?: UserIcnsData
   previousUserUnclaimedBalanceQueryData?: number
   processDepositAndDebtQuery: (data: DepositAndDebtData) => void
   processUserBalanceQuery: (data: UserBalanceData) => void
   processBlockHeightQuery: (data: BlockHeightData) => void
+
+  getAdditionalDecimals(denom: string): number
 }

@@ -30,12 +30,9 @@ We allow the use of environment variables to be passed to the Docker container t
 
 | Variable              | Description                                      | Default                                                                                   |
 | --------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------- |
-| URL_OSMOSIS_GQL       | The Osmosis Hive GraphQL endpoint to use         | https://osmosis-node.marsprotocol.io/GGSFGSFGFG34/osmosis-hive-front/graphql              |
+| URL_OSMOSIS_GQL       | The Osmosis Hive GraphQL endpoint to use         | https://osmosis.rpc.p2p.world/4dqst8e8Cgd2HMb2HDNkimP7NIkcbjuk/hive/graphql               |
 | URL_OSMOSIS_REST      | The Osmosis node REST endpoint to use            | https://lcd-osmosis.blockapsis.com                                                        |
 | URL_OSMOSIS_RPC       | The Osmosis node RPC endpoint to use             | https://rpc-osmosis.blockapsis.com                                                        |
-| URL_OSMOSIS_TEST_GQL  | The Osmosis Testnet Hive GraphQL endpoint to use | https://testnet-osmosis-node.marsprotocol.io/XF32UOOU55CX/osmosis-hive-front/graphql      |
-| URL_OSMOSIS_TEST_REST | The Osmosis Testnet node REST endpoint to use    | https://lcd.osmotest5.osmosis.zone                                                        |
-| URL_OSMOSIS_TEST_RPC  | The Osmosis Testnet node RPC endpoint to use     | https://rpc.osmotest5.osmosis.zone                                                        |
 | URL_NEUTRON_GQL       | The Neutron Hive GraphQL endpoint to use         | https://neutron.rpc.p2p.world/qgrnU6PsQZA8F9S5Fb8Fn3tV3kXmMBl2M9bcc9jWLjQy8p/hive/graphql |
 | URL_NEUTRON_REST      | The Neutron node REST endpoint to use            | https://rest-kralum.neutron-1.neutron.org                                                 |
 | URL_NEUTRON_RPC       | The Neutron node RPC endpoint to use             | https://rpc-kralum.neutron-1.neutron.org                                                  |
@@ -52,9 +49,6 @@ docker run -it -p 3000:3000 \
       -e URL_OSMOSIS_GQL=https://osmosis-node.marsprotocol.io/GGSFGSFGFG34/osmosis-hive-front/graphql \
       -e URL_OSMOSIS_REST=https://lcd-osmosis.blockapsis.com \
       -e URL_OSMOSIS_RPC=https://rpc-osmosis.blockapsis.com \
-      -e URL_OSMOSIS_TEST_GQL=https://testnet-osmosis-node.marsprotocol.io/XF32UOOU55CX/osmosis-hive-front/graphql \
-      -e URL_OSMOSIS_TEST_REST=https://lcd.osmotest5.osmosis.zone \
-      -e URL_OSMOSIS_TEST_RPC=https://rpc.osmotest5.osmosis.zone \
       -e URL_NEUTRON_GQL=https://neutron.rpc.p2p.world/qgrnU6PsQZA8F9S5Fb8Fn3tV3kXmMBl2M9bcc9jWLjQy8p/hive/graphql \
       -e URL_NEUTRON_REST=https://rest-kralum.neutron-1.neutron.org \
       -e URL_NEUTRON_RPC=https://rpc-kralum.neutron-1.neutron.org \

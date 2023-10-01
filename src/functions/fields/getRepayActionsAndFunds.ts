@@ -10,8 +10,10 @@ export const getRepayActionsAndFunds = (coin: Coin): [Action[], Coin[]] => {
       },
       {
         repay: {
-          denom: coin.denom,
-          amount: { exact: coin.amount },
+          coin: {
+            denom: coin.denom,
+            amount: { exact: coin.amount },
+          },
         },
       },
     ],

@@ -22,8 +22,6 @@ export const DEFAULT_POSITION: Position = {
     net: 0,
   },
   apy: {
-    apys: null,
-    fees: null,
     total: 19,
     borrow: 5.2,
     net: 13.8,

@@ -1,7 +1,6 @@
 import BigNumber from 'bignumber.js'
 import { SWAP_THRESHOLD } from 'constants/appConstants'
 import { coinsToActionCoins, orderCoinsByDenom } from 'functions/fields'
-import { useProvideLiquidity } from 'hooks/queries'
 import { useMemo } from 'react'
 import useStore from 'store'
 import { Action, Coin } from 'types/generated/mars-credit-manager/MarsCreditManager.types'
@@ -116,13 +115,8 @@ export const useEditPosition = (props: Props) => {
     props.position.amounts.borrowedSecondary,
   ])
 
-  const { data: minLpToReceive } = useProvideLiquidity({
-    coins: coinsAfterSwap,
-    vault: props.vault,
-  })
-
   const { actions, funds } = useMemo<{ actions: Action[]; funds: Coin[] }>(() => {
-    if (!minLpToReceive || props.isReducingPosition) return { actions: [], funds: [] }
+    if (props.isReducingPosition) return { actions: [], funds: [] }
 
     const coins: { supply: Coin[]; borrow?: Coin } = { supply: [], borrow: undefined }
 
@@ -194,10 +188,6 @@ export const useEditPosition = (props: Props) => {
     }
 
     BigNumber.config({ EXPONENTIAL_AT: [-7, 30] })
-    const minimumReceive = new BigNumber(minLpToReceive)
-      .times(1 - slippage)
-      .integerValue(BigNumber.ROUND_CEIL)
-      .toString()
 
     const actions: Action[] = [
       ...(coins.supply[0]
@@ -214,7 +204,7 @@ export const useEditPosition = (props: Props) => {
         provide_liquidity: {
           coins_in: coinsToActionCoins(coinsAfterSwap),
           lp_token_out: props.vault?.denoms.lpToken || '',
-          minimum_receive: minimumReceive,
+          slippage: slippage.toString(),
         },
       },
       {
@@ -236,7 +226,6 @@ export const useEditPosition = (props: Props) => {
     }
   }, [
     editPosition,
-    minLpToReceive,
     props.vault,
     coinsAfterSwap,
     convertToBaseCurrency,

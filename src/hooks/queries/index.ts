@@ -1,4 +1,5 @@
 // @index(['./*.tsx'], f => `export { ${f.name} } from '${f.path}'`)
+export { useAssetParams } from './useAssetParams'
 export { useBlockHeight } from './useBlockHeight'
 export { useClosePosition } from './useClosePosition'
 export { useDepositAndDebt } from './useDepositAndDebt'
@@ -18,4 +19,5 @@ export { useUserBalance } from './useUserBalance'
 export { useUserCollaterals } from './useUserCollaterals'
 export { useUserDebt } from './useUserDebt'
 export { useUserIcns } from './useUserIcns'
+export { useVaultParams } from './useVaultParams'
 // @endindex

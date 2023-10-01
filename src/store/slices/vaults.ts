@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import { findByDenom } from 'functions'
+import { findByDenom, iterateContractQuery } from 'functions'
 import { getAmountsFromActiveVault, getLeverageFromValues } from 'functions/fields'
 import { convertAprToApy, demagnify, leverageToLtv, magnify } from 'libs/parse'
 import moment from 'moment'
@@ -7,11 +7,12 @@ import { Store } from 'store/interfaces/store.interface'
 import { Options, VaultsSlice } from 'store/interfaces/vaults.interface.'
 import { VaultClient } from 'types/classes'
 import {
-  ArrayOfVaultInfoResponse,
   LockingVaultAmount,
   Positions,
+  VaultBaseForString,
+  VaultUtilizationResponse,
 } from 'types/generated/mars-credit-manager/MarsCreditManager.types'
-import { VaultBaseForString } from 'types/generated/mars-mock-credit-manager/MarsMockCreditManager.types'
+import { ArrayOfVaultInfoResponse } from 'types/generated/mars-mock-credit-manager/MarsMockCreditManager.types'
 import { GetState } from 'zustand'
 import { NamedSet } from 'zustand/middleware'
 
@@ -163,39 +164,25 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
 
     const vaultAddresses = get().vaultConfigs.map((vault) => vault.address)
     const networkConfig = get().networkConfig
-    if (!networkConfig.apolloAprUrl) return null
+    if (!networkConfig.vaultAprUrl) return null
 
     try {
-      const response = await fetch(networkConfig.apolloAprUrl)
+      const response = await fetch(networkConfig.vaultAprUrl)
 
       if (response.ok) {
-        const data: ApolloAprResponse[] = await response.json()
+        const data: AprResponse = await response.json()
 
-        const filteredData = data.filter((aprData) =>
-          vaultAddresses.includes(aprData.contract_address),
+        const filteredData = data.vaults.filter((aprData) =>
+          vaultAddresses.includes(aprData.address),
         )
 
         const newApys: ApyBreakdown[] = filteredData.map((aprData) => {
-          const aprTotal = aprData.apr.aprs.reduce((prev, curr) => Number(curr.value) + prev, 0)
-          const feeTotal = aprData.apr.fees.reduce((prev, curr) => Number(curr.value) + prev, 0)
-          const finalApr = (aprTotal - feeTotal) * 100
-          const finalApy = convertAprToApy(finalApr, 365)
-
-          const apys = aprData.apr.aprs.map((apr) => ({
-            type: apr.type,
-            value: new BigNumber(apr.value).dividedBy(aprTotal).multipliedBy(finalApy).toNumber(),
-          }))
-
-          const fees = aprData.apr.fees.map((fee) => ({
-            type: fee.type,
-            value: new BigNumber(fee.value).dividedBy(feeTotal).multipliedBy(finalApy).toNumber(),
-          }))
+          const aprTotal = aprData.apr.projected_apr * 100
+          const finalApy = convertAprToApy(aprTotal, 365)
 
           return {
-            vaultAddress: aprData.contract_address,
+            vaultAddress: aprData.address,
             total: finalApy,
-            apys,
-            fees,
           }
         })
 
@@ -213,42 +200,74 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
   getCaps: async (options?: Options) => {
     const caps = get().caps
     if (caps && !options?.refetch) return caps
-
+    const networkConfig = get().networkConfig
     const creditManagerClient = get().creditManagerClient
+    const paramsClient = get().paramsClient
 
     if (!creditManagerClient) return []
 
-    let data: VaultCapData[] = []
+    if (networkConfig.contracts?.params) {
+      if (!paramsClient) return []
 
-    const getBatch = async (startAfter?: VaultBaseForString): Promise<void> => {
-      const batch: ArrayOfVaultInfoResponse = await creditManagerClient.query({
-        vaults_info: { limit: 5, start_after: startAfter },
-      })
-
-      const batchProcessed = batch?.map(
-        (vaultInfo) =>
-          ({
-            address: vaultInfo.vault.address,
-            vaultCap: {
-              denom: vaultInfo.config.deposit_cap.denom,
-              used: Number(vaultInfo.utilization.amount),
-              max: Number(vaultInfo.config.deposit_cap.amount),
-            },
-          } as VaultCapData),
+      const utilizationPromises = Promise.all(
+        get().vaultConfigs.map<Promise<VaultUtilizationResponse>>((vaultConfig) =>
+          creditManagerClient.query({
+            vault_utilization: { vault: { address: vaultConfig.address } },
+          }),
+        ),
       )
 
-      data = [...data, ...batchProcessed]
+      const depositCapPromises = iterateContractQuery(paramsClient.allVaultConfigs)
 
-      if (batch.length === 5) {
-        await getBatch({
-          address: batchProcessed[batchProcessed.length - 1].address,
-        } as VaultBaseForString)
+      return Promise.all([utilizationPromises, depositCapPromises]).then(
+        ([vaultUtilizations, depositCaps]) => {
+          return vaultUtilizations.map((utilization) => {
+            const depositCap = depositCaps.find(
+              (depositCap) => depositCap.addr === utilization.vault.address,
+            )
+            return {
+              address: utilization.vault.address,
+              vaultCap: {
+                denom: utilization.utilization.denom,
+                used: Number(utilization.utilization.amount),
+                max: Number(depositCap?.deposit_cap.amount || 0),
+              },
+            }
+          })
+        },
+      )
+    } else {
+      let data: VaultCapData[] = []
+      const getBatch = async (startAfter?: VaultBaseForString): Promise<void> => {
+        const batch: ArrayOfVaultInfoResponse = await creditManagerClient.query({
+          vaults_info: { limit: 5, start_after: startAfter },
+        })
+
+        const batchProcessed = batch?.map(
+          (vaultInfo) =>
+            ({
+              address: vaultInfo.vault.address,
+              vaultCap: {
+                denom: vaultInfo.config.deposit_cap.denom,
+                used: Number(vaultInfo.utilization.amount),
+                max: Number(vaultInfo.config.deposit_cap.amount),
+              },
+            } as VaultCapData),
+        )
+
+        data = [...data, ...batchProcessed]
+
+        if (batch.length === 5) {
+          await getBatch({
+            address: batchProcessed[batchProcessed.length - 1].address,
+          } as VaultBaseForString)
+        }
       }
+
+      await getBatch()
+
+      return data
     }
-
-    await getBatch()
-
-    return data
   },
   getLpTokens: async (options?: Options) => {
     const lpTokens = get().lpTokens
@@ -289,6 +308,7 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
     if (get().isLoading) return
 
     set({ isLoading: true })
+
     const vaultAssets = get().getVaultAssets(options)
     const unlockTimes = get().getUnlockTimes(options)
     const caps = get().getCaps(options)
@@ -305,8 +325,6 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
             )
 
             vaultConfig.apy = {
-              apys: null,
-              fees: null,
               total: null,
               vaultAddress: vaultConfig.address,
             }
@@ -509,8 +527,6 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
                   borrow: trueBorrowRate,
                   total: null,
                   net: null,
-                  apys: null,
-                  fees: null,
                 },
                 currentLeverage: leverage,
                 ltv: leverageToLtv(leverage),

@@ -1,11 +1,11 @@
 import {
+  NETWORK_CONFIG as osmosisDevnetConfig,
+  VAULT_CONFIGS as osmosisDevnetVaultConfig,
+} from '../configs/devnet'
+import {
   NETWORK_CONFIG as neutronMainnetConfig,
   VAULT_CONFIGS as neutronMainnetVaultConfig,
 } from '../configs/neutron-1'
-import {
-  NETWORK_CONFIG as osmosisTestnetConfig,
-  VAULT_CONFIGS as osmosisTestnetVaultConfig,
-} from '../configs/osmo-test-5'
 import {
   NETWORK_CONFIG as osmosisMainnetConfig,
   VAULT_CONFIGS as osmosisMainnetVaultConfig,
@@ -23,8 +23,8 @@ export const getNetworkConfig = (network: string): NetworkConfig => {
       networkConfig = neutronMainnetConfig
       break
 
-    case 'osmo-test-5':
-      networkConfig = osmosisTestnetConfig
+    case 'devnet':
+      networkConfig = osmosisDevnetConfig
       break
 
     case 'pion-1':
@@ -46,8 +46,8 @@ export const getNetworkVaultConfig = (network: string): Vault[] => {
       vaultConfig = neutronMainnetVaultConfig
       break
 
-    case 'osmo-test-5':
-      vaultConfig = osmosisTestnetVaultConfig
+    case 'devnet':
+      vaultConfig = osmosisDevnetVaultConfig
       break
 
     case 'pion-1':

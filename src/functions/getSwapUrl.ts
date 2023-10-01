@@ -14,7 +14,7 @@ export const getSwapUrl = (options: Options) => {
 
   if (!chain) return '#'
 
-  if (chain === ChainInfoID.Osmosis1 || chain === ChainInfoID.OsmosisTestnet) {
+  if (chain === ChainInfoID.Osmosis1 || chain === ChainInfoID.OsmosisDevnet) {
     fromName = from.id
     toName = to.id
 

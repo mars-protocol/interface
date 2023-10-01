@@ -4,7 +4,7 @@ interface NetworkConfig {
   hiveUrl: string
   rpcUrl: string
   restUrl: string
-  apolloAprUrl?: string
+  vaultAprUrl?: string
   usdPriceUrl?: string
   chainIcon: string
   contracts: {
@@ -14,6 +14,7 @@ interface NetworkConfig {
     accountNft?: string
     creditManager?: string
     pyth?: string
+    params?: string
   }
   assets: {
     base: Asset

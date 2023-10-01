@@ -5,10 +5,10 @@
  * and run the @cosmwasm/ts-codegen generate command to regenerate this file.
  */
 
-import * as _5 from './MarsCreditManager.client'
-import * as _6 from './MarsCreditManager.message-composer'
-import * as _7 from './MarsCreditManager.react-query'
-import * as _4 from './MarsCreditManager.types'
+import * as _25 from './MarsParams.client'
+import * as _26 from './MarsParams.message-composer'
+import * as _27 from './MarsParams.react-query'
+import * as _24 from './MarsParams.types'
 export namespace contracts {
-  export const MarsCreditManager = { ..._4, ..._5, ..._6, ..._7 }
+  export const MarsParams = { ..._24, ..._25, ..._26, ..._27 }
 }

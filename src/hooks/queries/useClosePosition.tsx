@@ -26,7 +26,7 @@ export const useClosePosition = (props: Props) => {
       slippage,
       whitelistedAssets,
     )
-  }, [props.activeVault, getExchangeRate, slippage])
+  }, [props.activeVault, getExchangeRate, slippage, whitelistedAssets])
 
   const { data: fee } = useEstimateFarmFee({
     accountId: props.activeVault?.position.accountId,

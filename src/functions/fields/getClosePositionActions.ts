@@ -67,6 +67,7 @@ export const getClosePositionActions = (
     },
     {
       withdraw_liquidity: {
+        slippage: slippage.toString(),
         lp_token: {
           amount: 'account_balance',
           denom: vault.denoms.lpToken,
@@ -78,8 +79,10 @@ export const getClosePositionActions = (
       ? [
           {
             repay: {
-              denom: vault.position.borrowDenom || vault.denoms.secondary,
-              amount: 'account_balance' as ActionAmount,
+              coin: {
+                denom: vault.position.borrowDenom || vault.denoms.secondary,
+                amount: 'account_balance' as ActionAmount,
+              },
             },
           },
         ]

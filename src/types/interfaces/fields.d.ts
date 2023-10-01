@@ -109,21 +109,30 @@ interface PositionApyBreakdown extends ApyBreakdown {
   net: number | null
 }
 
-interface ApyBreakdown {
-  vaultAddress: string
-  apys: { type: string; value: number }[] | null
-  fees: { type: string; value: number }[] | null
-  total: number | null
+interface AprResponse {
+  vaults: AprVault[]
 }
 
-interface ApolloAprResponse {
-  contract_address: string
+interface AprVault {
+  chain: string
+  address: string
   apr: AprBreakdown
 }
 
 interface AprBreakdown {
-  aprs: { type: string; value: number }[]
-  fees: { type: string; value: string | number }[]
+  start_timestamp: number
+  end_timestamp: number
+  period_diff: number
+  start_vault_token_price: number
+  end_vault_token_price: number
+  period_yield: number
+  period_daily_return: number
+  projected_apr: number
+}
+
+interface ApyBreakdown {
+  vaultAddress: string
+  total: number | null
 }
 
 interface VaultCapData {

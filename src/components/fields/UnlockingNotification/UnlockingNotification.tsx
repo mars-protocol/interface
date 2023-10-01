@@ -1,6 +1,6 @@
 import { Notification } from 'components/common'
 import { produceCountdown } from 'libs/parse'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
 import { NotificationType } from 'types/enums'
@@ -69,6 +69,6 @@ export const UnlockingNotification = () => {
       content={unlockedContent()}
       showNotification
       hideCloseBtn
-    ></Notification>
+    />
   )
 }

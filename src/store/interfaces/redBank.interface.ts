@@ -1,5 +1,6 @@
 import { Coin } from '@cosmjs/stargate'
 import { State } from 'types/enums'
+import { AssetParamsBaseForAddr } from 'types/generated/mars-params/MarsParams.types'
 
 export interface RedBankSlice {
   // ------------------
@@ -35,5 +36,9 @@ export interface RedBankSlice {
   // QUERY RELATED
   // ------------------
   previousRedBankQueryData?: RedBankData
-  processRedBankQuery: (data: RedBankData, whitelistedAssets: Asset[]) => void
+  processRedBankQuery: (
+    data: RedBankData,
+    whitelistedAssets: Asset[],
+    assetParams: AssetParamsBaseForAddr[],
+  ) => void
 }

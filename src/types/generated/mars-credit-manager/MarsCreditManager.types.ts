@@ -81,7 +81,9 @@ export type Action =
     }
   | {
       repay: {
-        coin: ActionCoin
+        coin?: ActionCoin
+        amount?: ActionAmount
+        denom?: string
         recipient_account_id?: string | null
       }
     }
@@ -127,13 +129,14 @@ export type Action =
       provide_liquidity: {
         coins_in: ActionCoin[]
         lp_token_out: string
-        slippage: Decimal
+        slippage?: Decimal
+        minimum_receive?: Uint128
       }
     }
   | {
       withdraw_liquidity: {
         lp_token: ActionCoin
-        slippage: Decimal
+        slippage?: Decimal
       }
     }
   | {
@@ -191,7 +194,9 @@ export type CallbackMsg =
   | {
       repay: {
         account_id: string
-        coin: ActionCoin
+        coin?: ActionCoin
+        denom?: string
+        amount?: ActionAmount
       }
     }
   | {
@@ -299,7 +304,8 @@ export type CallbackMsg =
         account_id: string
         coins_in: ActionCoin[]
         lp_token_out: string
-        slippage: Decimal
+        slippage?: Decimal
+        minimum_receive?: Uint128
       }
     }
   | {
@@ -307,6 +313,12 @@ export type CallbackMsg =
         account_id: string
         lp_token: ActionCoin
         slippage: Decimal
+      }
+    }
+  | {
+      withdraw_liquidity: {
+        account_id: string
+        lp_token: ActionCoin
       }
     }
   | {

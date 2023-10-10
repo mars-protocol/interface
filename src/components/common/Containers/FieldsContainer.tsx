@@ -1,3 +1,4 @@
+import { useVaultParams } from 'hooks/queries/useVaultParams'
 import { ReactNode, useEffect } from 'react'
 import useStore from 'store'
 import { AccountNftClient, CreditManagerClient } from 'types/classes'
@@ -7,6 +8,7 @@ interface FieldsContainerProps {
 }
 
 export const FieldsContainer = ({ children }: FieldsContainerProps) => {
+  const { data: vaultParams } = useVaultParams()
   const client = useStore((s) => s.client)
   const currentNetwork = useStore((s) => s.currentNetwork)
   const networkConfig = useStore((s) => s.networkConfig)
@@ -20,6 +22,7 @@ export const FieldsContainer = ({ children }: FieldsContainerProps) => {
   useEffect(() => {
     if (!networkConfig.isFieldsEnabled || !creditManagerAddress || !accountNftContractAddress)
       return
+
     if (!client || client.connectedWallet.network.chainId !== currentNetwork) return
     useStore.setState({
       creditManagerClient: new CreditManagerClient(creditManagerAddress, client),
@@ -35,6 +38,7 @@ export const FieldsContainer = ({ children }: FieldsContainerProps) => {
     creditManagerAddress,
     currentNetwork,
     getVaults,
+    vaultParams,
   ])
 
   useEffect(() => {

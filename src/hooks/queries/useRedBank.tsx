@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { getRedbankQuery } from 'functions/queries'
 import { gql, request } from 'graphql-request'
+import { useAssetParams } from 'hooks/queries'
 import useStore from 'store'
 import { State } from 'types/enums'
 import { QUERY_KEYS } from 'types/enums/queryKeys'
@@ -11,7 +12,7 @@ export const useRedBank = () => {
   const whitelistedAssets = useStore((s) => s.whitelistedAssets)
   const processRedBankQuery = useStore((s) => s.processRedBankQuery)
   const setRedBankState = useStore((s) => s.setRedBankState)
-
+  const { data: assetParams, isLoading } = useAssetParams()
   const hiveUrl = networkConfig.hiveUrl
   const redbankAddress = networkConfig.contracts.redBank
   const incentivesAddress = networkConfig.contracts.incentives
@@ -19,8 +20,8 @@ export const useRedBank = () => {
 
   useQuery<RedBankData>(
     [QUERY_KEYS.REDBANK],
-    async () =>
-      await request(
+    async () => {
+      return await request(
         hiveUrl!,
         gql`
           ${getRedbankQuery(
@@ -31,14 +32,15 @@ export const useRedBank = () => {
             whitelistedAssets,
           )}
         `,
-      ),
+      )
+    },
     {
-      enabled: !!userWalletAddress && !!whitelistedAssets?.length,
+      enabled: !!userWalletAddress && !!whitelistedAssets?.length && !!assetParams && !isLoading,
       staleTime: 30000,
       refetchInterval: 30000,
       onError: () => setRedBankState(State.ERROR),
       onSuccess: (data) => {
-        processRedBankQuery(data, whitelistedAssets!)
+        processRedBankQuery(data, whitelistedAssets!, assetParams || [])
       },
     },
   )

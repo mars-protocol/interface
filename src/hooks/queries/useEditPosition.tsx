@@ -1,12 +1,12 @@
 import BigNumber from 'bignumber.js'
 import { SWAP_THRESHOLD } from 'constants/appConstants'
 import { coinsToActionCoins, orderCoinsByDenom } from 'functions/fields'
-import { useProvideLiquidity } from 'hooks/queries'
 import { useMemo } from 'react'
 import useStore from 'store'
 import { Action, Coin } from 'types/generated/mars-credit-manager/MarsCreditManager.types'
 
 import { useEstimateFarmFee } from './useEstimateFarmFee'
+import { useProvideLiquidity } from './useProvideLiquidity'
 
 interface Props {
   accountId?: null | string
@@ -18,6 +18,8 @@ interface Props {
 }
 
 export const useEditPosition = (props: Props) => {
+  const networkConfig = useStore((s) => s.networkConfig)
+  const isV2 = !!networkConfig.contracts?.params
   const convertToBaseCurrency = useStore((s) => s.convertToBaseCurrency)
   const convertValueToAmount = useStore((s) => s.convertValueToAmount)
   const slippage = useStore((s) => s.slippage)
@@ -122,7 +124,7 @@ export const useEditPosition = (props: Props) => {
   })
 
   const { actions, funds } = useMemo<{ actions: Action[]; funds: Coin[] }>(() => {
-    if (!minLpToReceive || props.isReducingPosition) return { actions: [], funds: [] }
+    if ((!isV2 && !minLpToReceive) || props.isReducingPosition) return { actions: [], funds: [] }
 
     const coins: { supply: Coin[]; borrow?: Coin } = { supply: [], borrow: undefined }
 
@@ -194,10 +196,26 @@ export const useEditPosition = (props: Props) => {
     }
 
     BigNumber.config({ EXPONENTIAL_AT: [-7, 30] })
-    const minimumReceive = new BigNumber(minLpToReceive)
+    const minimumReceive = new BigNumber(isV2 || !minLpToReceive ? 0 : minLpToReceive)
       .times(1 - slippage)
       .integerValue(BigNumber.ROUND_CEIL)
       .toString()
+
+    const provideLiquidity = isV2
+      ? {
+          provide_liquidity: {
+            coins_in: coinsToActionCoins(coinsAfterSwap),
+            lp_token_out: props.vault?.denoms.lpToken || '',
+            slippage: slippage.toString(),
+          },
+        }
+      : {
+          provide_liquidity: {
+            coins_in: coinsToActionCoins(coinsAfterSwap),
+            lp_token_out: props.vault?.denoms.lpToken || '',
+            minimum_receive: minimumReceive,
+          },
+        }
 
     const actions: Action[] = [
       ...(coins.supply[0]
@@ -210,13 +228,7 @@ export const useEditPosition = (props: Props) => {
       ...(coins.supply[1] ? [{ deposit: coins.supply[1] }] : []),
       ...(coins.borrow ? [{ borrow: coins.borrow }] : []),
       ...swapMessage,
-      {
-        provide_liquidity: {
-          coins_in: coinsToActionCoins(coinsAfterSwap),
-          lp_token_out: props.vault?.denoms.lpToken || '',
-          minimum_receive: minimumReceive,
-        },
-      },
+      provideLiquidity,
       {
         enter_vault: {
           coin: {
@@ -236,11 +248,12 @@ export const useEditPosition = (props: Props) => {
     }
   }, [
     editPosition,
-    minLpToReceive,
     props.vault,
     coinsAfterSwap,
     convertToBaseCurrency,
     convertValueToAmount,
+    minLpToReceive,
+    isV2,
     slippage,
     props.isReducingPosition,
   ])

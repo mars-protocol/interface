@@ -17,7 +17,7 @@ export const getCurrentChainId = () => {
         break
 
       case 'testnet-osmosis':
-        chainId = ChainInfoID.OsmosisTestnet
+        chainId = ChainInfoID.OsmosisDevnet
         break
 
       case 'testnet-neutron':

@@ -256,9 +256,11 @@ export const useActiveVaultsColumns = () => {
                 </>
               )
             case 'active':
-              if (row.original.position.apy?.net !== null) {
+              if (
+                row.original.position.apy?.net !== null &&
+                row.original.position.apy?.borrow !== 0
+              ) {
                 const apy = new BigNumber(row.original.position.apy.net).toNumber()
-
                 return (
                   <>
                     <TextTooltip

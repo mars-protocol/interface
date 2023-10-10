@@ -1,8 +1,6 @@
 export const vault: Vault = {
   address: 'test',
   apy: {
-    apys: null,
-    fees: null,
     total: null,
     vaultAddress: '',
   },

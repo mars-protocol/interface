@@ -9,6 +9,7 @@ import { RedBankSlice } from 'store/interfaces/redBank.interface'
 import { Store } from 'store/interfaces/store.interface'
 import colors from 'styles/_assets.module.scss'
 import { State } from 'types/enums'
+import { AssetParamsBaseForAddr } from 'types/generated/mars-params/MarsParams.types'
 import { GetState } from 'zustand'
 import { NamedSet } from 'zustand/middleware'
 
@@ -30,7 +31,7 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
     const convertToBaseCurrency = get().convertToBaseCurrency
     if (!incentives?.length || !marketTotalLiquidity || !assets || !convertToBaseCurrency) return
 
-    const incentiveAssetsInfo = incentives.map((incentive: MarketIncentive) => {
+    return incentives.map((incentive: MarketIncentive) => {
       const incentiveAsset = findAssetByDenom(incentive.denom, assets)
       if (!incentiveAsset)
         return {
@@ -61,8 +62,6 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
         apy: incentiveApr * 100,
       }
     })
-
-    return incentiveAssetsInfo
   },
   computeMarketLiquidity: (denom: string) => {
     return Number(get().marketAssetLiquidity.find((asset) => asset.denom === denom)?.amount) || 0
@@ -128,8 +127,8 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
         incentiveInfo,
         isCollateral: true,
         depositCap: depositCap,
-        borrowEnabled: marketInfo?.borrow_enabled ?? false,
-        depositEnabled: marketInfo?.deposit_enabled ?? false,
+        borrowEnabled: !!marketInfo?.borrow_enabled,
+        depositEnabled: !!marketInfo?.deposit_enabled,
       }
       redBankAsset.subRows = [{ ...redBankAsset }]
       redBankAssets.push(redBankAsset)
@@ -147,7 +146,11 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
   // ------------------
   // QUERY RELATED
   // ------------------
-  processRedBankQuery: (data: RedBankData, whitelistedAssets: Asset[]) => {
+  processRedBankQuery: (
+    data: RedBankData,
+    whitelistedAssets: Asset[],
+    assetParams: AssetParamsBaseForAddr[],
+  ) => {
     if (isEqual(data, get().previousRedBankQueryData) && get().marketInfo.length) return
 
     const marketInfo: Market[] = []
@@ -158,16 +161,26 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
       const denom = asset.denom
       const id = asset.id
       const queryResult = data.rbwasmkey
+
       const marketData: Market = {
         ...queryResult[`${id}Market`],
         denom: denom,
         incentives: [],
       }
 
+      const assetParam = assetParams.find((param) => param.denom === denom)
+
+      if (assetParam) {
+        marketData.borrow_enabled = assetParam.red_bank.borrow_enabled
+        marketData.deposit_enabled = assetParam.red_bank.deposit_enabled
+        marketData.max_loan_to_value = assetParam.max_loan_to_value
+        marketData.liquidation_threshold = assetParam.liquidation_threshold
+        marketData.deposit_cap = assetParam.deposit_cap
+      }
+
       if (hasMultiAssetIncentives) {
-        const marketIncentiveData = queryResult[
-          `${id}MarketIncentive`
-        ] as MultiAssetMarketIncentive[]
+        const marketIncentiveData =
+          (queryResult[`${id}MarketIncentive`] as MultiAssetMarketIncentive[]) ?? []
         marketIncentiveData.forEach((incentive) => {
           marketData.incentives.push({
             denom: incentive.denom,

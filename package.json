@@ -1,7 +1,7 @@
 {
   "name": "mars",
   "homepage": "./",
-  "version": "1.6.5",
+  "version": "1.7.0",
   "private": false,
   "license": "SEE LICENSE IN LICENSE FILE",
   "scripts": {
@@ -22,7 +22,7 @@
     "@cosmjs/launchpad": "^0.27.1",
     "@cosmjs/proto-signing": "^0.31.1",
     "@cosmjs/stargate": "^0.31.1",
-    "@marsprotocol/wallet-connector": "^2.1.2",
+    "@marsprotocol/wallet-connector": "^2.1.3",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
     "@ramonak/react-progress-bar": "^5.0.3",

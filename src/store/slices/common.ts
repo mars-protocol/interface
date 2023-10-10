@@ -28,6 +28,7 @@ const commonSlice = (
   // ------------------
   // VARIABLES
   // ------------------
+  assetParams: [],
   baseCurrency: {
     denom: 'uosmo',
     symbol: 'OSMO',
@@ -198,8 +199,7 @@ const commonSlice = (
       const lcdClient = get().lcdClient
       if (!lcdClient) return
       try {
-        const res = await lcdClient.get(contractAddress, queryMsg)
-        return res
+        return await lcdClient.get(contractAddress, queryMsg)
       } catch (exception: any) {
       } finally {
         attempts += 1

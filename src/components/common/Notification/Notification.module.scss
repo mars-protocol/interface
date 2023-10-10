@@ -4,7 +4,6 @@
   width: 100%;
   min-height: rem-calc(48);
   display: flex;
-  align-items: center;
   @include layoutPopover;
   margin-bottom: space(8) !important;
   @include padding(2, 3);
@@ -22,7 +21,10 @@
   }
 
   .icon {
-    @include margin(0, 4);
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    @include margin(2.5);
   }
 
   &.info {
@@ -59,7 +61,7 @@
     position: absolute;
     right: 0;
     top: 0;
-    @include margin(4, 4, 0, 0);
+    @include margin(3, 3, 0, 0);
     border: none;
     background: transparent;
     @include padding(0);
@@ -72,6 +74,21 @@
     svg {
       width: rem-calc(14);
       height: rem-calc(13);
+    }
+  }
+}
+
+@media only screen and (min-width: $bpMediumHigh) {
+  .notification {
+    align-items: center;
+
+    .icon {
+      align-items: center;
+      @include margin(0, 4);
+    }
+
+    .closeNotification {
+      @include margin(4, 4, 0, 0);
     }
   }
 }

@@ -14,6 +14,8 @@ export const SWAP_THRESHOLD = 10
 export const VAULT_DEPOSIT_BUFFER = 0.99
 export const GAS_ADJUSTMENT = 1.3
 
+export const ITEM_LIMIT_PER_QUERY = 10
+
 /* fields query keys */
 export const CONFIG = 'config'
 export const STATE = 'state'
@@ -38,6 +40,6 @@ export const TERMS_OF_SERVICE = 'termsOfService'
 export const SUPPORTED_CHAINS: { chainId: ChainInfoID; type: 'testnet' | 'mainnet' }[] = [
   { chainId: ChainInfoID.Osmosis1, type: 'mainnet' },
   { chainId: ChainInfoID.Neutron, type: 'mainnet' },
-  { chainId: ChainInfoID.OsmosisTestnet, type: 'testnet' },
+  { chainId: ChainInfoID.OsmosisDevnet, type: 'testnet' },
   { chainId: ChainInfoID.NeutronTestnet, type: 'testnet' },
 ]

@@ -18,4 +18,6 @@ export enum QUERY_KEYS {
   USD_PRICE = 'usdPrice',
   USER_COLLATERAL = 'userCollateral',
   PYTH_VAA = 'pythVaa',
+  ASSET_PARAMS = 'assetParams',
+  VAULT_PARAMS = 'vaultParams',
 }

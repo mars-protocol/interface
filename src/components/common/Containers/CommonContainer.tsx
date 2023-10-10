@@ -17,12 +17,14 @@ import {
   useUserDebt,
   useUserIcns,
 } from 'hooks/queries'
+import { useAssetParams } from 'hooks/queries/useAssetParams'
 import { useMarsPrice } from 'hooks/queries/useMarsPrice'
 import { usePythVaa } from 'hooks/queries/usePythVaa'
 import { useUserCollaterals } from 'hooks/queries/useUserCollaterals'
 import { ReactNode, useEffect, useState } from 'react'
 import useStore from 'store'
 import { State } from 'types/enums'
+import { MarsParamsQueryClient } from 'types/generated/mars-params/MarsParams.client'
 
 import { MigrationInProgress } from '../MigrationInProgress/MigrationInProgress'
 
@@ -31,6 +33,8 @@ interface CommonContainerProps {
 }
 
 export const CommonContainer = ({ children }: CommonContainerProps) => {
+  useAssetParams()
+
   // ------------------
   // EXTERNAL HOOKS
   // ---------------
@@ -52,6 +56,7 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
   const marketDeposits = useStore((s) => s.marketDeposits)
   const marketInfo = useStore((s) => s.marketInfo)
   const migrationInProgress = useStore((s) => s.migrationInProgress)
+  const paramsAddress = useStore((s) => s.networkConfig.contracts.params)
   const redBankState = useStore((s) => s.redBankState)
   const rpc = useStore((s) => s.networkConfig.rpcUrl)
   const userBalances = useStore((s) => s.userBalances)
@@ -76,6 +81,7 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
         client: undefined,
         creditManagerClient: undefined,
         accountNftClient: undefined,
+        paramsClient: undefined,
         userWalletAddress: '',
       })
     }
@@ -132,6 +138,11 @@ export const CommonContainer = ({ children }: CommonContainerProps) => {
       },
     })
   }, [simulate, sign, connectedWallet, cosmWasmClient, broadcast, networkConfig, chainId])
+
+  useEffect(() => {
+    if (!paramsAddress || !cosmWasmClient) return
+    useStore.setState({ paramsClient: new MarsParamsQueryClient(cosmWasmClient, paramsAddress) })
+  }, [cosmWasmClient, paramsAddress])
 
   useEffect(() => {
     setRedBankAssets()

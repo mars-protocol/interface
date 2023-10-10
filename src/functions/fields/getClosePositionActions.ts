@@ -7,6 +7,7 @@ export const getClosePositionActions = (
   primaryToSecondaryRate: number,
   slippage: number,
   whitelistedAssets: Asset[],
+  isV2: boolean,
 ): Action[] => {
   const swapMessage: Action[] = []
 
@@ -56,6 +57,40 @@ export const getClosePositionActions = (
     })
   }
 
+  const withdrawLiquidity = isV2
+    ? {
+        withdraw_liquidity: {
+          slippage: slippage.toString(),
+          lp_token: {
+            amount: 'account_balance' as ActionAmount,
+            denom: vault.denoms.lpToken,
+          },
+        },
+      }
+    : {
+        withdraw_liquidity: {
+          lp_token: {
+            amount: 'account_balance' as ActionAmount,
+            denom: vault.denoms.lpToken,
+          },
+        },
+      }
+
+  const repay = isV2
+    ? {
+        repay: {
+          coin: {
+            denom: vault.position.borrowDenom || vault.denoms.secondary,
+            amount: 'account_balance' as ActionAmount,
+          },
+        },
+      }
+    : {
+        repay: {
+          denom: vault.position.borrowDenom || vault.denoms.secondary,
+          amount: 'account_balance' as ActionAmount,
+        },
+      }
   return [
     {
       exit_vault_unlocked: {
@@ -65,24 +100,10 @@ export const getClosePositionActions = (
         },
       },
     },
-    {
-      withdraw_liquidity: {
-        lp_token: {
-          amount: 'account_balance',
-          denom: vault.denoms.lpToken,
-        },
-      },
-    },
+    withdrawLiquidity,
     ...swapMessage,
     ...(Math.max(vault.position.amounts.borrowedPrimary, vault.position.amounts.borrowedSecondary)
-      ? [
-          {
-            repay: {
-              denom: vault.position.borrowDenom || vault.denoms.secondary,
-              amount: 'account_balance' as ActionAmount,
-            },
-          },
-        ]
+      ? [repay]
       : []),
     { refund_all_coin_balances: {} },
   ]

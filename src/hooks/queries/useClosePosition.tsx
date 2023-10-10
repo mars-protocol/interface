@@ -13,6 +13,8 @@ export const useClosePosition = (props: Props) => {
   const getExchangeRate = useStore((s) => s.getExchangeRate)
   const slippage = useStore((s) => s.slippage)
   const whitelistedAssets = useStore((s) => s.whitelistedAssets)
+  const networkConfig = useStore((s) => s.networkConfig)
+  const isV2 = !!networkConfig.contracts?.params
 
   const actions = useMemo(() => {
     if (!props.activeVault) return []
@@ -25,8 +27,9 @@ export const useClosePosition = (props: Props) => {
       primaryToSecondaryRate,
       slippage,
       whitelistedAssets,
+      isV2,
     )
-  }, [props.activeVault, getExchangeRate, slippage])
+  }, [isV2, props.activeVault, getExchangeRate, slippage, whitelistedAssets])
 
   const { data: fee } = useEstimateFarmFee({
     accountId: props.activeVault?.position.accountId,

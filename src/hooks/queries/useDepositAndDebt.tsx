@@ -19,8 +19,8 @@ export interface DepositAndDebtData {
     JUNODebt: string
     axlUSDCDeposits: string
     axlUSDCDebt: string
-    nUSDCDeposits: string
-    nUSDCDebt: string
+    USDCDeposits: string
+    USDCDebt: string
     axlWBTCDeposits: string
     axlWBTCDebt: string
     axlWETHDeposits: string

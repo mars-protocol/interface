@@ -1,7 +1,7 @@
 {
   "name": "mars",
   "homepage": "./",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "private": false,
   "license": "SEE LICENSE IN LICENSE FILE",
   "scripts": {

@@ -7,6 +7,7 @@ import axlweth from 'images/axlweth.svg'
 import mars from 'images/mars.svg'
 import osmo from 'images/osmo.svg'
 import statom from 'images/statom.svg'
+import usdc from 'images/usdc.svg'
 import colors from 'styles/_assets.module.scss'
 
 const ASSETS: NetworkAssets = {
@@ -79,6 +80,16 @@ const ASSETS: NetworkAssets = {
     logo: statom,
     decimals: 6,
   },
+  usdc: {
+    symbol: 'USDC',
+    name: 'USDC',
+    id: 'USDC',
+    denom: 'ibc/498A0751C798A0D9A389AA3691123DADA57DAA4FE165D5C75894505B876BA6E4',
+    color: colors.usdc,
+    decimals: 6,
+    logo: usdc,
+    priceFeedId: 'eaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a',
+  },
 }
 
 const OTHER_ASSETS: { [denom: string]: OtherAsset } = {
@@ -116,8 +127,9 @@ export const NETWORK_CONFIG: NetworkConfig = {
     incentives: 'osmo1nkahswfr8shg8rlxqwup0vgahp0dk4x8w6tkv3rra8rratnut36sk22vrm',
     oracle: 'osmo1mhznfr60vjdp2gejhyv2gax9nvyyzhd3z0qcwseyetkfustjauzqycsy2g',
     creditManager: 'osmo1f2m24wktq0sw3c0lexlg7fv4kngwyttvzws3a3r3al9ld2s2pvds87jqvf',
-    params: 'osmo1aye5qcer5n52crrkaf35jprsad2807q6kg3eeeu7k79h4slxfausfqhc9y',
     accountNft: 'osmo1450hrg6dv2l58c0rvdwx8ec2a0r6dd50hn4frk370tpvqjhy8khqw7sw09',
+    pyth: 'osmo13ge29x4e2s63a8ytz2px8gurtyznmue4a69n5275692v3qn3ks8q7cwck7',
+    params: 'osmo1aye5qcer5n52crrkaf35jprsad2807q6kg3eeeu7k79h4slxfausfqhc9y',
   },
   assets: {
     base: ASSETS.osmo,
@@ -129,10 +141,13 @@ export const NETWORK_CONFIG: NetworkConfig = {
       ASSETS.axlwbtc,
       ASSETS.axlweth,
       ASSETS.statom,
+      ASSETS.usdc,
     ],
     other: [OTHER_ASSETS.usd, OTHER_ASSETS.mars],
     currencies: [
       OTHER_ASSETS.usd,
+      ASSETS.usdc,
+      ASSETS.axlusdc,
       ASSETS.osmo,
       ASSETS.atom,
       ASSETS.axl,

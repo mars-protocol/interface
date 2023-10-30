@@ -21,8 +21,8 @@ interface RedBankData {
     axlWETHMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     stATOMMarket: Market
     stATOMMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
-    nUSDCMarket: Market
-    nUSDCMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
+    USDCMarket: Market
+    USDCMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     NTRNMarket: Market
     NTRNMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     collateral: UserCollateral[]

@@ -7,6 +7,7 @@ import axlweth from 'images/axlweth.svg'
 import mars from 'images/mars.svg'
 import osmo from 'images/osmo.svg'
 import statom from 'images/statom.svg'
+import usdc from 'images/usdc.svg'
 import colors from 'styles/_assets.module.scss'
 
 const ASSETS: NetworkAssets = {
@@ -79,6 +80,16 @@ const ASSETS: NetworkAssets = {
     logo: statom,
     decimals: 6,
   },
+  usdc: {
+    symbol: 'USDC',
+    name: 'USDC',
+    id: 'USDC',
+    denom: 'ibc/498A0751C798A0D9A389AA3691123DADA57DAA4FE165D5C75894505B876BA6E4',
+    color: colors.usdc,
+    decimals: 6,
+    logo: usdc,
+    priceFeedId: 'eaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a',
+  },
 }
 
 const OTHER_ASSETS: { [denom: string]: OtherAsset } = {
@@ -132,10 +143,13 @@ export const NETWORK_CONFIG: NetworkConfig = {
       ASSETS.axlwbtc,
       ASSETS.axlweth,
       ASSETS.statom,
+      ASSETS.usdc,
     ],
     other: [OTHER_ASSETS.usd, OTHER_ASSETS.mars],
     currencies: [
       OTHER_ASSETS.usd,
+      ASSETS.usdc,
+      ASSETS.axlusdc,
       ASSETS.osmo,
       ASSETS.atom,
       ASSETS.axl,

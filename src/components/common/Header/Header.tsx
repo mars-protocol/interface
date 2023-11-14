@@ -1,14 +1,13 @@
-import { WalletID } from '@marsprotocol/wallet-connector'
 import classNames from 'classnames'
-import { IncentivesButton, Settings, SVG } from 'components/common'
+import { IncentivesButton, Settings, SVG, Wallet } from 'components/common'
 import { getCouncilLink } from 'libs/council'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
+import { WalletID } from 'types/enums/wallet'
 
 import { ChainSelect } from './ChainSelect'
-import { Connect } from './Connect'
 import styles from './Header.module.scss'
 
 export const Header = () => {
@@ -60,7 +59,7 @@ export const Header = () => {
       <div className={styles.connector}>
         <IncentivesButton />
         <ChainSelect />
-        <Connect />
+        <Wallet />
         <Settings />
       </div>
     </header>

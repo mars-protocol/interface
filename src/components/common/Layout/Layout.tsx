@@ -1,6 +1,13 @@
-import { useWallet, useWalletManager, WalletConnectionStatus } from '@marsprotocol/wallet-connector'
+import { useShuttle } from '@delphi-labs/shuttle-react'
 import classNames from 'classnames'
-import { Footer, Header, MobileNav, TermsOfService } from 'components/common'
+import {
+  Footer,
+  Header,
+  MobileNav,
+  TermsOfService,
+  WalletConnecting,
+  WalletSelect,
+} from 'components/common'
 import { FieldsNotConnected } from 'components/fields'
 import { RedbankNotConnected } from 'components/redbank'
 import { TERMS_OF_SERVICE } from 'constants/appConstants'
@@ -16,11 +23,11 @@ type Props = {
 export const Layout = ({ children }: Props) => {
   const alreadyAcceptedTOS = localStorage.getItem(TERMS_OF_SERVICE)
   const currentlyAcceptedROS = useStore((s) => s.acceptedTermsOfService)
-
+  const { wallets } = useShuttle()
   const router = useRouter()
-  const { status } = useWalletManager()
   const currentNetwork = useStore((s) => s.currentNetwork)
-  const { wallets } = useWallet()
+  const userWalletAddress = useStore((s) => s.userWalletAddress)
+  const client = useStore((s) => s.client)
   const [isConnected, setIsConnected] = useState(false)
   const [wasConnectedBefore, setWasConnectedBefore] = useState(false)
   useAnimations()
@@ -30,9 +37,9 @@ export const Layout = ({ children }: Props) => {
   const vaultConfigs = useStore((s) => s.vaultConfigs)
 
   useEffect(() => {
-    setIsConnected(status === WalletConnectionStatus.Connected)
+    setIsConnected(!!userWalletAddress && !!client)
     setWasConnectedBefore(!!wallets.find((w) => w.network.chainId === currentNetwork))
-  }, [status, wallets, currentNetwork])
+  }, [client, userWalletAddress, wallets, currentNetwork])
 
   useEffect(() => {
     if (!isConnected) {
@@ -56,6 +63,8 @@ export const Layout = ({ children }: Props) => {
             <RedbankNotConnected />
           )}
         </div>
+        <WalletSelect />
+        <WalletConnecting />
         <Footer />
         <MobileNav />
       </div>

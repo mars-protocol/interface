@@ -5,7 +5,7 @@ import { DEFAULT_POSITION } from 'constants/defaults'
 import { useAvailableVault } from 'hooks/data'
 import cloneDeep from 'lodash.clonedeep'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
 

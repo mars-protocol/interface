@@ -39,6 +39,7 @@ We allow the use of environment variables to be passed to the Docker container t
 | URL_NEUTRON_TEST_GQL  | The Neutron Testnet Hive GraphQL endpoint to use | https://testnet-neutron-gql.marsprotocol.io/graphql                                       |
 | URL_NEUTRON_TEST_REST | The Neutron Testnet node REST endpoint to use    | https://rest-palvus.pion-1.ntrn.tech                                                      |
 | URL_NEUTRON_TEST_RPC  | The Neutron Testnet node RPC endpoint to use     | https://rpc-palvus.pion-1.ntrn.tech                                                       |
+| WALLET_CONNECT_ID     | Your projecta WalletConnect v2 ID                | 0x0x0x0x0x0x0x0x0x0x0x0x0x0x0x0x0x0x0x0x                                                  |
 
 **Sample Docker run command**
 
@@ -54,7 +55,8 @@ docker run -it -p 3000:3000 \
       -e URL_NEUTRON_RPC=https://rpc-kralum.neutron-1.neutron.org \
       -e URL_NEUTRON_TEST_GQL=https://testnet-neutron-gql.marsprotocol.io/graphql \
       -e URL_NEUTRON_TEST_REST=https://rest-palvus.pion-1.ntrn.tech \
-      -e URL_NEUTRON_TEST_RPC=https://rpc-palvus.pion-1.ntrn.tech marsprotocol/interface:latest
+      -e URL_NEUTRON_TEST_RPC=https://rpc-palvus.pion-1.ntrn.tech \
+      -e WALLET_CONNECT_ID=0x0x0x0x0x0x0x0x0x0x0x0x0x0x0x0x0x0x0x0x marsprotocol/interface:latest
 ```
 
 ## 3. Text and translations

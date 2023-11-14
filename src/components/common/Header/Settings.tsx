@@ -1,4 +1,3 @@
-import { useWalletManager, WalletConnectionStatus } from '@marsprotocol/wallet-connector'
 import { useQueryClient } from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
 import classNames from 'classnames'
@@ -18,14 +17,14 @@ export const Settings = () => {
   const [showDetails, setShowDetails] = useState(false)
   const slippage = useStore((s) => s.slippage)
   const networkConfig = useStore((s) => s.networkConfig)
-  const currencyAssets = useStore((s) => s.currencyAssets)
+  const currencyAssets = networkConfig.assets.currencies
   const calculateExchangeRates = useStore((s) => s.calculateExchangeRates)
   const [customSlippage, setCustomSlippage] = useState<number>(0)
   const [inputRef, setInputRef] = useState<React.RefObject<HTMLInputElement>>()
   const [isCustom, setIsCustom] = useState(false)
   const enableAnimations = useStore((s) => s.enableAnimations)
-  const { status } = useWalletManager()
   const exchangeRates = useStore((s) => s.exchangeRates)
+  const userWalletAddress = useStore((s) => s.userWalletAddress)
 
   const [displayCurrency, setDisplayCurrency] = useState<DisplayCurrency>(
     networkConfig.displayCurrency,
@@ -95,7 +94,7 @@ export const Settings = () => {
       setDisplayCurrency(networkConfig.displayCurrency)
   }, [networkConfig.displayCurrency, displayCurrency])
 
-  if (status !== WalletConnectionStatus.Connected) return null
+  if (!userWalletAddress) return null
 
   return (
     <div className={styles.container}>

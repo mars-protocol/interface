@@ -1,4 +1,3 @@
-import { ChainInfoID } from '@marsprotocol/wallet-connector'
 import atom from 'images/atom.svg'
 import axl from 'images/axl.svg'
 import axlusdc from 'images/axlusdc.svg'
@@ -7,8 +6,11 @@ import axlweth from 'images/axlweth.svg'
 import mars from 'images/mars.svg'
 import osmo from 'images/osmo.svg'
 import statom from 'images/statom.svg'
+import stosmo from 'images/stosmo.svg'
+import tia from 'images/tia.svg'
 import usdc from 'images/usdc.svg'
 import colors from 'styles/_assets.module.scss'
+import { ChainInfoID } from 'types/enums/wallet'
 
 const ASSETS: NetworkAssets = {
   osmo: {
@@ -82,13 +84,32 @@ const ASSETS: NetworkAssets = {
   },
   usdc: {
     symbol: 'USDC',
-    name: 'Noble',
+    name: 'USDC',
     id: 'USDC',
     denom: 'ibc/498A0751C798A0D9A389AA3691123DADA57DAA4FE165D5C75894505B876BA6E4',
     color: colors.usdc,
     decimals: 6,
     logo: usdc,
     priceFeedId: 'eaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a',
+  },
+  tia: {
+    symbol: 'TIA',
+    id: 'TIA',
+    name: 'Celestia',
+    denom: 'ibc/D79E7D83AB399BFFF93433E54FAA480C191248FC556924A2A8351AE2638B3877',
+    logo: tia,
+    color: colors.tia,
+    decimals: 6,
+    priceFeedId: '09f7c1d7dfbb7df2b8fe3d3d87ee94a2259d212da4f30c1f0540d066dfa44723',
+  },
+  stosmo: {
+    symbol: 'stOSMO',
+    id: 'stOSMO',
+    name: 'Stride Osmosis',
+    denom: 'ibc/D176154B0C63D1F9C6DCFB4F70349EBF2E2B5A87A05902F57A6AE92B863E9AEC',
+    color: colors.stosmo,
+    logo: stosmo,
+    decimals: 6,
   },
 }
 
@@ -118,11 +139,11 @@ export const NETWORK_CONFIG: NetworkConfig = {
   displayName: 'Osmosis',
   hiveUrl:
     process.env.NEXT_PUBLIC_OSMOSIS_GQL ??
-    'https://osmosis.rpc.p2p.world/4dqst8e8Cgd2HMb2HDNkimP7NIkcbjuk/hive/graphql',
+    'https://osmosis-node.marsprotocol.io/GGSFGSFGFG34/osmosis-hive-front/graphql/',
   rpcUrl: process.env.NEXT_PUBLIC_OSMOSIS_RPC ?? 'https://rpc-osmosis.blockapsis.com/',
   restUrl: process.env.NEXT_PUBLIC_OSMOSIS_REST ?? 'https://lcd-osmosis.blockapsis.com/',
   vaultAprUrl: 'https://api.marsprotocol.io/v1/vaults/osmosis',
-  usdPriceUrl: 'https://xc-mainnet.pyth.network/api/',
+  usdPriceUrl: 'https://hermes.pyth.network/api/',
   chainIcon: osmo,
   contracts: {
     redBank: 'osmo1c3ljch9dfw5kf52nfwpxd2zmj2ese7agnx0p9tenkrryasrle5sqf3ftpg',
@@ -144,6 +165,8 @@ export const NETWORK_CONFIG: NetworkConfig = {
       ASSETS.axlweth,
       ASSETS.statom,
       ASSETS.usdc,
+      ASSETS.tia,
+      ASSETS.stosmo,
     ],
     other: [OTHER_ASSETS.usd, OTHER_ASSETS.mars],
     currencies: [
@@ -156,6 +179,8 @@ export const NETWORK_CONFIG: NetworkConfig = {
       ASSETS.axlweth,
       ASSETS.axlwbtc,
       ASSETS.statom,
+      ASSETS.stosmo,
+      ASSETS.tia,
       OTHER_ASSETS.mars,
     ],
   },

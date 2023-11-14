@@ -1,15 +1,11 @@
 import { LcdClient } from '@cosmjs/launchpad'
 import { Coin, StdFee } from '@cosmjs/stargate'
-import {
-  ChainInfoID,
-  SimplifiedChainInfo,
-  TxBroadcastResult,
-  WalletClient,
-} from '@marsprotocol/wallet-connector'
+import { BroadcastResult } from '@delphi-labs/shuttle-react'
 import { BlockHeightData } from 'hooks/queries/useBlockHeight'
 import { DepositAndDebtData } from 'hooks/queries/useDepositAndDebt'
 import { UserBalanceData } from 'hooks/queries/useUserBalance'
 import { UserIcnsData } from 'hooks/queries/useUserIcns'
+import { ChainInfoID, WalletID } from 'types/enums/wallet'
 import { MarsParamsQueryClient } from 'types/generated/mars-params/MarsParams.client'
 import { AssetParamsBaseForAddr } from 'types/generated/mars-params/MarsParams.types'
 import { ContractMsg } from 'types/types'
@@ -27,9 +23,8 @@ export interface CommonSlice {
     symbol: string
     decimals: number
   }
-  chainInfo?: SimplifiedChainInfo
+  chainInfo?: ChainInfo
   client?: WalletClient
-  currencyAssets: (Asset | OtherAsset)[]
   currentNetwork: ChainInfoID
   marketDebts: Coin[]
   enableAnimations?: boolean
@@ -43,7 +38,6 @@ export interface CommonSlice {
   isLedger: boolean
   marketDeposits: Coin[]
   networkConfig: NetworkConfig
-  otherAssets: OtherAsset[]
   paramsClient?: MarsParamsQueryClient
   queryErrors: string[]
   acceptedTermsOfService: boolean
@@ -53,9 +47,10 @@ export interface CommonSlice {
   userUnclaimedRewards: Coin[]
   userMarsTokenBalances: Coin[]
   userWalletAddress: string
+  showWalletSelect: boolean
   userIcns?: string
   vaultConfigs: Vault[]
-  whitelistedAssets: Asset[]
+  walletConnecting?: { show: boolean; providerId: WalletID }
   // ------------------
   // GENERAL FUNCTIONS
   // ------------------
@@ -67,7 +62,7 @@ export interface CommonSlice {
     contract: string
     fee: StdFee
     sender?: string
-  }) => Promise<TxBroadcastResult | undefined>
+  }) => Promise<BroadcastResult | undefined>
   loadNetworkConfig: () => void
   queryContract: <T>(
     contractAddress: string,
@@ -76,7 +71,7 @@ export interface CommonSlice {
     ignoreFailures?: boolean,
   ) => Promise<T | undefined>
   // ------------------
-  setChainInfo: (chainInfo: SimplifiedChainInfo) => void
+  setChainInfo: (chainInfo: ChainInfo) => void
   // ------------------
   // SETTERS
   setCurrentNetwork: (network: ChainInfoID) => void

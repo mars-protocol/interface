@@ -18,6 +18,7 @@ interface Props {
   text?: string | ReactNode
   variant?: 'solid' | 'transparent' | 'round'
   onClick?: (e: any) => void
+  children?: ReactNode
 }
 
 export const Button = React.forwardRef<any, Props>(
@@ -36,6 +37,7 @@ export const Button = React.forwardRef<any, Props>(
       text,
       variant = 'solid',
       onClick,
+      children,
     },
     ref,
   ) => {
@@ -56,6 +58,7 @@ export const Button = React.forwardRef<any, Props>(
           ref={ref}
           style={styleOverride}
         >
+          {children && !showProgressIndicator && children}
           {prefix && !showProgressIndicator && <span className={styles.prefix}>{prefix}</span>}
           {text && (
             <span className={styles.text}>

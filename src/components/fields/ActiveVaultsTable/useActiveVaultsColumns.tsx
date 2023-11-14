@@ -34,7 +34,7 @@ export const useActiveVaultsColumns = () => {
   const { t } = useTranslation()
   const router = useRouter()
   const baseCurrency = useStore((s) => s.baseCurrency)
-  const whitelistedAssets = useStore((s) => s.whitelistedAssets)
+  const whitelistedAssets = useStore((s) => s.networkConfig.assets.whitelist)
   const columnHelper = createColumnHelper<ActiveVault>()
   const defaultActiveVaultsColumns: ColumnDef<ActiveVault, any>[] = useMemo(
     () => [

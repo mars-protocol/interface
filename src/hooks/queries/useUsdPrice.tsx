@@ -9,8 +9,8 @@ import { QUERY_KEYS } from 'types/enums/queryKeys'
 export const useUsdPrice = () => {
   let usdPriceUrl = useStore((s) => s.networkConfig.usdPriceUrl)
   let hasPriceFeeds = false
-  const whitelistedAssets = useStore((s) => s.whitelistedAssets)
-  const otherAssets = useStore((s) => s.otherAssets)
+  const whitelistedAssets = useStore((s) => s.networkConfig.assets.whitelist)
+  const otherAssets = useStore((s) => s.networkConfig.assets.other)
   const assetPricesUSD = useStore((s) => s.assetPricesUSD ?? [])
   const basePriceState = useStore((s) => s.basePriceState)
   const baseAsset = useStore((s) => s.networkConfig.assets.base)

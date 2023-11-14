@@ -1,6 +1,5 @@
 import { Button, Notification } from 'components/common'
 import { useRouter } from 'next/router'
-import React from 'react'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
 import { NotificationType } from 'types/enums'

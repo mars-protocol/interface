@@ -3,7 +3,6 @@ import classNames from 'classnames'
 import { InputSlider, Tutorial } from 'components/common'
 import { FIELDS_TUTORIAL_KEY } from 'constants/appConstants'
 import { formatValue, leverageToLtv, ltvToLeverage } from 'libs/parse'
-import React from 'react'
 import { useTranslation } from 'react-i18next'
 import colors from 'styles/_assets.module.scss'
 

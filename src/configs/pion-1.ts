@@ -1,10 +1,10 @@
-import { ChainInfoID } from '@marsprotocol/wallet-connector'
 import atom from 'images/atom.svg'
 import axlusdc from 'images/axlusdc.svg'
 import mars from 'images/mars.svg'
 import ntrn from 'images/ntrn.svg'
 import osmo from 'images/osmo.svg'
 import colors from 'styles/_assets.module.scss'
+import { ChainInfoID } from 'types/enums/wallet'
 
 export const ASSETS: NetworkAssets = {
   ntrn: {
@@ -78,7 +78,7 @@ export const NETWORK_CONFIG: NetworkConfig = {
     'https://testnet-neutron-gql.marsprotocol.io/graphql',
   rpcUrl: process.env.NEXT_PUBLIC_NEUTRON_TEST_RPC ?? 'https://rpc-palvus.pion-1.ntrn.tech/',
   restUrl: process.env.NEXT_PUBLIC_NEUTRON_TEST_REST ?? 'https://rest-palvus.pion-1.ntrn.tech/',
-  usdPriceUrl: 'https://xc-mainnet.pyth.network/api/',
+  usdPriceUrl: 'https://hermes.pyth.network/api/',
   chainIcon: ntrn,
   contracts: {
     redBank: 'neutron1q53jr6wwus0c6g5had2zs6fzzachu5zun0c6etxuyarh5w7phxpq4wf39z',

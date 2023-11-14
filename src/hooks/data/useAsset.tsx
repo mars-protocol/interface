@@ -6,8 +6,8 @@ interface Props {
 }
 
 export const useAsset = (props: Props) => {
-  const whitelistedAssets = useStore((s) => s.whitelistedAssets)
-  const otherAssets = useStore((s) => s.otherAssets)
+  const whitelistedAssets = useStore((s) => s.networkConfig.assets.whitelist)
+  const otherAssets = useStore((s) => s.networkConfig.assets.other)
   const assets = [...whitelistedAssets, ...otherAssets]
 
   if (props.denom) {

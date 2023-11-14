@@ -86,7 +86,10 @@ const RedBank = () => {
   const borrowBalance = Number(balanceSum(redBankAssets, 'borrowBalanceBaseCurrency'))
 
   const showLiquidationWarning =
-    borrowBalance >= maxBorrowLimit && borrowBalance > 0 && redBankState === State.READY
+    borrowBalance >= maxBorrowLimit &&
+    maxBorrowLimit !== 0 &&
+    borrowBalance > 0 &&
+    redBankState === State.READY
 
   const loader = (
     <div className={styles.loader}>

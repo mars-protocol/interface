@@ -1,4 +1,4 @@
-import { MsgExecuteContract } from '@marsprotocol/wallet-connector'
+import { MsgExecuteContract } from '@delphi-labs/shuttle-react'
 
 export const getPythVaaMessage = (
   pythVaa: VaaInformation,

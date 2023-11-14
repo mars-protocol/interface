@@ -1,4 +1,4 @@
-import { ChainInfoID } from '@marsprotocol/wallet-connector'
+import { ChainInfoID } from 'types/enums/wallet'
 
 type Options = {
   from: Asset
@@ -26,7 +26,7 @@ export const getSwapUrl = (options: Options) => {
     return `${baseUrl}?from=${fromName}&to=${toName}`
   }
 
-  if (chain === ChainInfoID.Neutron || chain === ChainInfoID.NeutronTestnet) {
+  if (chain === ChainInfoID.Neutron1 || chain === ChainInfoID.NeutronTestnet) {
     fromName = from.denom.replace('/', '%2F')
     toName = to.denom.replace('/', '%2F')
     return `${baseUrl}?from=${fromName}&to=${toName}`

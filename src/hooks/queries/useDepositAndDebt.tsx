@@ -29,12 +29,16 @@ export interface DepositAndDebtData {
     stATOMDebt: string
     NTRNDeposits: string
     NTRNDebt: string
+    TIADeposits: string
+    TIADebt: string
+    stOSMODeposits: string
+    stOSMODebt: string
   }
 }
 
 export const useDepositAndDebt = () => {
   const hiveUrl = useStore((s) => s.networkConfig.hiveUrl)
-  const whitelistedAssets = useStore((s) => s.whitelistedAssets)
+  const whitelistedAssets = useStore((s) => s.networkConfig.assets.whitelist)
   const redBankAddress = useStore((s) => s.networkConfig.contracts.redBank) || ''
   const marketInfo = useStore((s) => s.marketInfo)
   const processDepositAndDebtQuery = useStore((s) => s.processDepositAndDebtQuery)

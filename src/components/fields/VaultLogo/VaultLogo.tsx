@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const VaultLogo = ({ vault }: Props) => {
-  const whitelistedAssets = useStore((s) => s.whitelistedAssets)
+  const whitelistedAssets = useStore((s) => s.networkConfig.assets.whitelist)
 
   const primaryAsset = whitelistedAssets.find((asset) => asset.denom === vault.denoms.primary)
   const secondaryAsset = whitelistedAssets.find((asset) => asset.denom === vault.denoms.secondary)

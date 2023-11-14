@@ -1,4 +1,4 @@
-import { TxBroadcastResult } from '@marsprotocol/wallet-connector'
+import { BroadcastResult } from '@delphi-labs/shuttle-react'
 import { getTokenValueFromCoins } from 'functions/fields'
 import { useUnlockMessages } from 'hooks/queries'
 import { extractCoinFromLog, parseActionMessages } from 'libs/parse'
@@ -8,7 +8,7 @@ import useStore from 'store'
 import { Coin } from 'types/generated/mars-credit-manager/MarsCreditManager.types'
 
 export const useFieldsActionMessages = (
-  data?: TxBroadcastResult,
+  data?: BroadcastResult,
   vault?: ActiveVault,
 ): {
   depositMessage?: FieldsAction
@@ -18,7 +18,7 @@ export const useFieldsActionMessages = (
   unlockMessages?: FieldsAction[]
   withdrawMessage?: FieldsAction
 } => {
-  const whitelistedAssets = useStore((s) => s.whitelistedAssets)
+  const whitelistedAssets = useStore((s) => s.networkConfig.assets.whitelist)
   const { t } = useTranslation()
   const [vaultTokenAmount, setVaultTokenAmount] = useState('')
   const [depositMessage, setDepositMessage] = useState<FieldsAction>()

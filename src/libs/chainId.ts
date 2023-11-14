@@ -1,5 +1,5 @@
-import { ChainInfoID } from '@marsprotocol/wallet-connector'
 import { CHAIN_ID_KEY, SUPPORTED_CHAINS } from 'constants/appConstants'
+import { ChainInfoID } from 'types/enums/wallet'
 
 export const getCurrentChainId = () => {
   let chainId = SUPPORTED_CHAINS[0].chainId
@@ -13,7 +13,7 @@ export const getCurrentChainId = () => {
         break
 
       case 'neutron':
-        chainId = ChainInfoID.Neutron
+        chainId = ChainInfoID.Neutron1
         break
 
       case 'testnet-osmosis':

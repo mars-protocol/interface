@@ -1,10 +1,10 @@
-import { useWalletManager } from '@marsprotocol/wallet-connector'
 import classNames from 'classnames'
-import { Button, SVG } from 'components/common'
+import { Button, SVG } from 'components/common/'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import useStore from 'store'
 
-import styles from './ConnectButton.module.scss'
+import styles from './WalletConnectButton.module.scss'
 
 interface Props {
   textOverride?: string | ReactNode
@@ -12,8 +12,7 @@ interface Props {
   color?: 'primary' | 'secondary'
 }
 
-export const ConnectButton = ({ textOverride, disabled = false, color }: Props) => {
-  const { connect } = useWalletManager()
+export const WalletConnectButton = ({ textOverride, disabled = false, color }: Props) => {
   const { t } = useTranslation()
 
   return (
@@ -21,7 +20,9 @@ export const ConnectButton = ({ textOverride, disabled = false, color }: Props) 
       <Button
         color={color ? color : 'quaternary'}
         disabled={disabled}
-        onClick={connect}
+        onClick={() => {
+          useStore.setState({ showWalletSelect: true })
+        }}
         className={classNames(styles.button, !color && styles.outline)}
         prefix={<SVG.Wallet className={styles.svg} />}
         text={<span className='overline'>{textOverride || t('common.connectWallet')}</span>}

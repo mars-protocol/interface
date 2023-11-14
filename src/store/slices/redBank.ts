@@ -27,7 +27,7 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
     incentives?: MarketIncentive[] | Record<string, any>,
     marketTotalLiquidity?: Coin,
   ): IncentiveInfo[] | undefined => {
-    const assets = [...get().otherAssets, ...get().whitelistedAssets]
+    const assets = [...get().networkConfig.assets.other, ...get().networkConfig.assets.whitelist]
     const convertToBaseCurrency = get().convertToBaseCurrency
     if (!incentives?.length || !marketTotalLiquidity || !assets || !convertToBaseCurrency) return
 
@@ -81,7 +81,7 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
     if (get().exchangeRatesState !== State.READY || get().userBalancesState !== State.READY) return
     const redBankAssets: RedBankAsset[] = []
     const marketAssetLiquidity: Coin[] = []
-    const whitelistedAssets = get().whitelistedAssets
+    const whitelistedAssets = get().networkConfig.assets.whitelist
 
     if (!whitelistedAssets?.length) return
 
@@ -154,7 +154,7 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
     if (isEqual(data, get().previousRedBankQueryData) && get().marketInfo.length) return
 
     const marketInfo: Market[] = []
-    const assets = [...whitelistedAssets, ...get().otherAssets]
+    const assets = [...whitelistedAssets, ...get().networkConfig.assets.other]
     const MARS_DENOM = lookupDenomBySymbol(MARS_SYMBOL, assets)
     const hasMultiAssetIncentives = get().networkConfig.hasMultiAssetIncentives
     whitelistedAssets?.forEach((asset: Asset) => {
@@ -205,7 +205,7 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
     const userUnclaimedRewards =
       hasMultiAssetIncentives && typeof data.rbwasmkey.unclaimedRewards === 'object'
         ? data.rbwasmkey.unclaimedRewards
-        : [{ denom: MARS_DENOM, amount: data.rbwasmkey.unclaimedRewards }]
+        : ([{ denom: MARS_DENOM, amount: data.rbwasmkey.unclaimedRewards }] as Coin[])
 
     set({
       marketInfo,

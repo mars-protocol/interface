@@ -12,7 +12,7 @@ interface Props {
 export const useClosePosition = (props: Props) => {
   const getExchangeRate = useStore((s) => s.getExchangeRate)
   const slippage = useStore((s) => s.slippage)
-  const whitelistedAssets = useStore((s) => s.whitelistedAssets)
+  const whitelistedAssets = useStore((s) => s.networkConfig.assets.whitelist)
   const networkConfig = useStore((s) => s.networkConfig)
   const isV2 = !!networkConfig.contracts?.params
 

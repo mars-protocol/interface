@@ -27,14 +27,14 @@ const oraclesSlice = (set: NamedSet<Store>, get: GetState<Store>): OraclesSlice 
   // GENERAL FUNCTIONS
   // ------------------
   convertToDisplayCurrency: (coin: Coin) => {
-    const whitelistedAssets = get().whitelistedAssets
+    const whitelistedAssets = get().networkConfig.assets.whitelist
     const exchangeRates = get().exchangeRates
     const assetPricesUSD = get().assetPricesUSD
-    const otherAssets = get().otherAssets
     const networkConfig = get().networkConfig
     const displayCurrency = networkConfig.displayCurrency
     const exchangeRatesState = get().exchangeRatesState
     const assetPricesUSDState = get().assetPricesUSDState
+    const otherAssets = networkConfig.assets.other
     const assets: OtherAsset[] = [...whitelistedAssets, ...otherAssets]
 
     if (
@@ -86,7 +86,7 @@ const oraclesSlice = (set: NamedSet<Store>, get: GetState<Store>): OraclesSlice 
     return amount < 0.001 ? 0 : amount
   },
   getExchangeRate: (denom1: string, denom2?: string) => {
-    const assets = [...get().whitelistedAssets, ...get().otherAssets]
+    const assets = [...get().networkConfig.assets.whitelist, ...get().networkConfig.assets.other]
     if (!denom2) {
       denom2 = get().baseCurrency?.denom
     }
@@ -145,8 +145,8 @@ const oraclesSlice = (set: NamedSet<Store>, get: GetState<Store>): OraclesSlice 
   setPythVaa: (sources: PriceSource[]) => {
     if (!sources || sources.length === 0) return
 
-    const whitelistedAssets = get().whitelistedAssets
-    const otherAssets = get().otherAssets
+    const whitelistedAssets = get().networkConfig.assets.whitelist
+    const otherAssets = get().networkConfig.assets.other
     const allAssets = [...whitelistedAssets, ...otherAssets]
 
     if (allAssets.length === 0) return
@@ -192,7 +192,7 @@ const oraclesSlice = (set: NamedSet<Store>, get: GetState<Store>): OraclesSlice 
     let assetPricesUSD: Coin[] = get().assetPricesUSD ?? []
 
     get()
-      .whitelistedAssets?.filter((asset: Asset) => !!asset.denom)
+      .networkConfig.assets.whitelist.filter((asset: Asset) => !!asset.denom)
       .forEach((asset: Asset) => {
         const denom = asset.denom
         const id = asset.id

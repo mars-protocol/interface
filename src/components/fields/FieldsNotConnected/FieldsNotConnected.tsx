@@ -1,9 +1,8 @@
-import { ConnectButton, SVG } from 'components/common'
-import React from 'react'
+import { SVG, WalletConnectButton } from 'components/common'
+import { AvailableVaults } from 'components/fields'
 import { Trans, useTranslation } from 'react-i18next'
 import { DocURL } from 'types/enums/docURL'
 
-import AvailableVaults from '../AvailableVaultsTable/AvailableVaults'
 import styles from './FieldsNotConnected.module.scss'
 
 export const FieldsNotConnected = () => {
@@ -28,7 +27,7 @@ export const FieldsNotConnected = () => {
             </Trans>
           </div>
         </div>
-        <ConnectButton color={'secondary'} />
+        <WalletConnectButton color={'secondary'} />
       </div>
       <div className={styles.vaults}>
         <AvailableVaults />

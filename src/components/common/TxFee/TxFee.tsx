@@ -19,7 +19,7 @@ export const TxFee = ({
   textStyle = '',
 }: Props) => {
   const { t } = useTranslation()
-  const whitelistedAssets = useStore((s) => s.whitelistedAssets)
+  const whitelistedAssets = useStore((s) => s.networkConfig.assets.whitelist)
 
   if (!txFee) return <></>
   return (

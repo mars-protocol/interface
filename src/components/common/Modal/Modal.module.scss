@@ -1,0 +1,127 @@
+@import 'src/styles/master';
+
+.dialog {
+  width: 100vw;
+  border: none;
+  background: transparent;
+  color: $colorWhite;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+
+  &:focus {
+    outline: none;
+  }
+
+  &::backdrop {
+    background-color: $alphaBlack50;
+  }
+}
+
+.container {
+  @include layoutTile;
+  position: relative;
+  width: 100%;
+  max-height: 100vh;
+  max-width: 100%;
+  overflow-y: auto;
+  width: rem-calc(540);
+  @include padding(4);
+  text-align: center;
+  justify-content: center;
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  max-height: 100%;
+
+  .copy {
+    @include padding(0, 0, 4);
+    @include typoM;
+    color: $alphaWhite40;
+    width: 100%;
+  }
+
+  .header {
+    @include padding(0, 6, 4);
+    display: grid;
+    place-items: center;
+    position: relative;
+    @include typoXXLcaps;
+    width: 100%;
+
+    .actions {
+      display: none;
+    }
+
+    .button {
+      color: $alphaWhite60;
+      background: none;
+      border: none;
+      position: absolute;
+      cursor: pointer;
+      top: space(1);
+      right: space(1);
+      transition: color linear 0.2s;
+
+      &:hover {
+        color: $colorWhite;
+      }
+
+      svg {
+        width: rem-calc(24);
+        height: rem-calc(24);
+      }
+
+      &.back {
+        top: 50%;
+        transform: translateY(-50%);
+        right: unset;
+        left: space(4);
+
+        svg {
+          width: rem-calc(32);
+          height: rem-calc(32);
+        }
+      }
+    }
+
+    .content {
+      width: 100%;
+      color: $colorWhite;
+      min-height: rem-calc(120);
+      @include padding(4, 10);
+    }
+
+    &.border {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+  }
+}
+
+@media screen and (min-width: $bpXSmallLow) {
+  .container {
+    .header {
+      .actions {
+        display: block;
+        margin-top: space(2);
+      }
+    }
+  }
+}
+@media screen and (min-width: $bpLargeLow) {
+  .container {
+    .header {
+      .actions {
+        position: absolute;
+        display: block;
+        right: space(10);
+      }
+    }
+  }
+}

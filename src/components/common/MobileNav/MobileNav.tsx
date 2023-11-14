@@ -1,4 +1,3 @@
-import { WalletID } from '@marsprotocol/wallet-connector'
 import classNames from 'classnames'
 import { SVG } from 'components/common'
 import { getCouncilLink } from 'libs/council'
@@ -6,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
+import { WalletID } from 'types/enums/wallet'
 
 import styles from './MobileNav.module.scss'
 

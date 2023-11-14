@@ -1,9 +1,12 @@
-import { useWalletManager } from '@marsprotocol/wallet-connector'
+import { useShuttle } from '@delphi-labs/shuttle-react'
+import BigNumber from 'bignumber.js'
 import { AnimatedNumber, Button, CircularProgress, DisplayCurrency, SVG } from 'components/common'
 import { SUPPORTED_CHAINS } from 'constants/appConstants'
+import { CHAINS } from 'constants/chains'
 import { findByDenom } from 'functions'
 import { useUserBalance } from 'hooks/queries'
-import { formatValue, lookup } from 'libs/parse'
+import useCurrentWallet from 'hooks/wallet/useCurrentWallet'
+import { formatValue } from 'libs/parse'
 import { truncate } from 'libs/text'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -11,87 +14,92 @@ import useClipboard from 'react-use-clipboard'
 import useStore from 'store'
 import colors from 'styles/_assets.module.scss'
 import { State } from 'types/enums'
+import { ChainInfoID } from 'types/enums/wallet'
 
-import styles from './ConnectedButton.module.scss'
+import styles from './WalletConnectedButton.module.scss'
 
-export const ConnectedButton = () => {
+export const WalletConnectedButton = () => {
   // ---------------
   // EXTERNAL HOOKS
   // ---------------
-  const { disconnect, connectedWallet } = useWalletManager()
-  const { t } = useTranslation()
-
-  // ---------------
-  // STORE
-  // ---------------
-  const baseCurrency = useStore((s) => s.baseCurrency)
+  const currentWallet = useCurrentWallet()
   const chainInfo = useStore((s) => s.chainInfo)
+  const { disconnectWallet } = useShuttle()
   const userWalletAddress = useStore((s) => s.userWalletAddress)
-  const userIcns = useStore((s) => s.userIcns)
+  const baseCurrency = useStore((s) => s.baseCurrency)
+  const network = useStore((s) => s.client?.connectedWallet.network)
+  const networkConfig = useStore((s) => s.networkConfig)
   const [isTestnet, setIsTestnet] = useState(false)
+  const userIcns = useStore((s) => s.userIcns)
+  const { data: walletBalances, isLoading } = useUserBalance()
+  const { t } = useTranslation()
+  const baseAsset = useMemo(() => networkConfig.assets.base, [networkConfig])
 
   // ---------------
   // LOCAL STATE
   // ---------------
+  const [showDetails, setShowDetails] = useState(false)
+  const [walletAmount, setWalletAmount] = useState(new BigNumber(0))
   const [isCopied, setCopied] = useClipboard(userWalletAddress, {
     successDuration: 1000 * 5,
   })
-  const { data, isLoading } = useUserBalance()
   // ---------------
   // VARIABLES
   // ---------------
-  const baseCurrencyBalance = Number(findByDenom(data || [], baseCurrency.denom || '')?.amount || 0)
-  const explorerName = chainInfo ? chainInfo.explorerName : ''
-
-  const [showDetails, setShowDetails] = useState(false)
+  const explorerName = network && CHAINS[network.chainId as ChainInfoID].explorerName
 
   const viewOnFinder = useCallback(() => {
-    const explorerUrl = chainInfo ? chainInfo.explorer : ''
+    const explorerUrl = network && CHAINS[network.chainId as ChainInfoID].explorer
 
     window.open(`${explorerUrl}/account/${userWalletAddress}`, '_blank')
-  }, [chainInfo, userWalletAddress])
+  }, [network, userWalletAddress])
+
+  const onDisconnectWallet = () => {
+    if (currentWallet) disconnectWallet(currentWallet)
+
+    useStore.setState({
+      client: undefined,
+      userWalletAddress: undefined,
+      chainInfo: undefined,
+      userIcns: undefined,
+      marketAssetLiquidity: [],
+      marketInfo: [],
+      redBankAssets: [],
+      redBankState: State.INITIALISING,
+      userBalancesState: State.INITIALISING,
+    })
+  }
 
   const onClickAway = useCallback(() => {
     setShowDetails(false)
   }, [])
 
-  const currentBalanceAmount = lookup(
-    baseCurrencyBalance,
-    baseCurrency.denom,
-    baseCurrency.decimals,
-  )
-
-  const [connectedWalletAddress, connectedWalletIsLedger] = useMemo(() => {
-    if (!connectedWallet?.account) return ['', false]
-    return [connectedWallet.account.address, connectedWallet.account.isLedger]
-  }, [connectedWallet])
-
   useEffect(() => {
     if (!chainInfo) return
     setIsTestnet(
       !!SUPPORTED_CHAINS.find(
-        (chain) => chain.type === 'testnet' && chain.chainId === chainInfo?.chainId,
+        (chain) => chain.type === 'testnet' && chain.chainId === networkConfig.name,
       ),
     )
-  }, [chainInfo])
+  }, [chainInfo, networkConfig.name])
 
   useEffect(() => {
-    if (userWalletAddress === connectedWalletAddress) return
-    useStore.setState({
-      isLedger: connectedWalletIsLedger,
-      userWalletAddress: connectedWalletAddress,
-      marketAssetLiquidity: [],
-      marketInfo: [],
-      userIcns: undefined,
-      redBankAssets: [],
-      redBankState: State.INITIALISING,
-      userBalancesState: State.INITIALISING,
-    })
-  }, [connectedWalletAddress, connectedWalletIsLedger, userWalletAddress])
+    if (!walletBalances) return
+    const newAmount = BigNumber(
+      walletBalances.find((coin: Coin) => coin.denom === baseAsset.denom)?.amount ?? 0,
+    ).dividedBy(10 ** baseAsset.decimals)
+
+    if (walletAmount.isEqualTo(newAmount)) return
+    setWalletAmount(newAmount)
+  }, [walletBalances, baseAsset.denom, baseAsset.decimals, walletAmount])
+
+  const baseCurrencyBalance = Number(
+    findByDenom(walletBalances || [], baseCurrency.denom || '')?.amount || 0,
+  )
 
   return (
     <div className={styles.wrapper}>
-      {isTestnet && <span className={styles.network}>{chainInfo?.chainId}</span>}
+      {isTestnet && <span className={styles.network}>{networkConfig.name}</span>}
       <Button
         className={styles.button}
         onClick={() => {
@@ -105,7 +113,14 @@ export const ConnectedButton = () => {
             </span>
             <span className={`${styles.balance} number`}>
               {!isLoading ? (
-                `${formatValue(currentBalanceAmount, 2, 2, true, false, ` ${baseCurrency.symbol}`)}`
+                `${formatValue(
+                  walletAmount.toNumber(),
+                  2,
+                  2,
+                  true,
+                  false,
+                  ` ${baseCurrency.symbol}`,
+                )}`
               ) : (
                 <CircularProgress className={styles.circularProgress} size={12} />
               )}
@@ -120,7 +135,7 @@ export const ConnectedButton = () => {
               <div className={styles.detailsBalance}>
                 <div className={styles.detailsDenom}>{baseCurrency.symbol}</div>
                 <div className={`${styles.detailsBalanceAmount}`}>
-                  <AnimatedNumber amount={currentBalanceAmount} />
+                  <AnimatedNumber amount={walletAmount.toNumber()} />
                   <DisplayCurrency
                     className='s faded'
                     coin={{
@@ -131,7 +146,11 @@ export const ConnectedButton = () => {
                 </div>
               </div>
               <div className={styles.detailsButton}>
-                <Button color='secondary' onClick={disconnect} text={t('common.disconnect')} />
+                <Button
+                  color='secondary'
+                  onClick={onDisconnectWallet}
+                  text={t('common.disconnect')}
+                />
               </div>
             </div>
             <div className={styles.detailsBody}>

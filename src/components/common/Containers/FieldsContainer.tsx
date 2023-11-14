@@ -2,6 +2,7 @@ import { useVaultParams } from 'hooks/queries/useVaultParams'
 import { ReactNode, useEffect } from 'react'
 import useStore from 'store'
 import { AccountNftClient, CreditManagerClient } from 'types/classes'
+import { MarsParamsQueryClient } from 'types/generated/mars-params/MarsParams.client'
 
 interface FieldsContainerProps {
   children: ReactNode
@@ -27,6 +28,9 @@ export const FieldsContainer = ({ children }: FieldsContainerProps) => {
     useStore.setState({
       creditManagerClient: new CreditManagerClient(creditManagerAddress, client),
       accountNftClient: new AccountNftClient(accountNftContractAddress, client),
+      paramsClient: networkConfig.contracts.params
+        ? new MarsParamsQueryClient(client.cosmWasmClient, networkConfig.contracts.params)
+        : undefined,
       apys: null,
     })
 

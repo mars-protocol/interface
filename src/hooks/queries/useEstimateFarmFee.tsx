@@ -1,4 +1,4 @@
-import { MsgExecuteContract } from '@marsprotocol/wallet-connector'
+import { MsgExecuteContract } from '@delphi-labs/shuttle-react'
 import { useQuery } from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
 import { GAS_ADJUSTMENT } from 'constants/appConstants'

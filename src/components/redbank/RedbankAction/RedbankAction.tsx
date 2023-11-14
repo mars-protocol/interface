@@ -1,4 +1,4 @@
-import { TxBroadcastResult } from '@marsprotocol/wallet-connector'
+import { BroadcastResult } from '@delphi-labs/shuttle-react'
 import { useQueryClient } from '@tanstack/react-query'
 import { Action, Notification, TxResponse } from 'components/common'
 import { findByDenom } from 'functions'
@@ -41,19 +41,19 @@ export const RedbankAction = React.memo(
     const client = useStore((s) => s.client)
     const marketInfo = useStore((s) => s.marketInfo)
     const networkConfig = useStore((s) => s.networkConfig)
-    const otherAssets = useStore((s) => s.otherAssets)
     const redBankAssets = useStore((s) => s.redBankAssets)
     const userBalances = useStore((s) => s.userBalances)
     const userCollateral = useStore((s) => s.userCollateral)
-    const whitelistedAssets = useStore((s) => s.whitelistedAssets)
     const executeMsg = useStore((s) => s.executeMsg)
+    const whitelistedAssets = networkConfig.assets.whitelist
+    const otherAssets = networkConfig.assets.other
 
     // ------------------
     // LOCAL STATE
     // ------------------
     const [amount, setAmount] = useState(0)
     const [submitted, setSubmitted] = useState(false)
-    const [response, setResponse] = useState<TxBroadcastResult>()
+    const [response, setResponse] = useState<BroadcastResult>()
     const [error, setError] = useState<string>()
     const [isMax, setIsMax] = useState<boolean>(false)
     const [capHit, setCapHit] = useState<boolean>(false)

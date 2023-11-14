@@ -1,7 +1,7 @@
 {
   "name": "mars",
   "homepage": "./",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "private": false,
   "license": "SEE LICENSE IN LICENSE FILE",
   "scripts": {
@@ -22,7 +22,8 @@
     "@cosmjs/launchpad": "^0.27.1",
     "@cosmjs/proto-signing": "^0.31.1",
     "@cosmjs/stargate": "^0.31.1",
-    "@marsprotocol/wallet-connector": "^2.1.3",
+    "@delphi-labs/shuttle-react": "^3.10.0",
+    "@keplr-wallet/cosmos": "^0.12.40",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
     "@ramonak/react-progress-bar": "^5.0.3",
@@ -56,6 +57,7 @@
     "react-device-detect": "^2.2.2",
     "react-dom": "^18.2.0",
     "react-i18next": "^12.1.5",
+    "react-qr-code": "^2.0.12",
     "react-spring": "^9.6.1",
     "react-table": "^7.8.0",
     "react-use-clipboard": "^1.0.9",

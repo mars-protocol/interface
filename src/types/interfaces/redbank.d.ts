@@ -25,6 +25,10 @@ interface RedBankData {
     USDCMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     NTRNMarket: Market
     NTRNMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
+    TIAMarket: Market
+    TIAMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
+    stOSMOMarket: Market
+    stOSMOMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     collateral: UserCollateral[]
     unclaimedRewards: string | Coin[]
   }

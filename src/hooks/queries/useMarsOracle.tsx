@@ -8,7 +8,7 @@ import { QUERY_KEYS } from 'types/enums/queryKeys'
 export const useMarsOracle = () => {
   const hiveUrl = useStore((s) => s.networkConfig.hiveUrl)
   const oracleAddress = useStore((s) => s.networkConfig.contracts.oracle)
-  const whitelistedAssets = useStore((s) => s.whitelistedAssets) || []
+  const whitelistedAssets = useStore((s) => s.networkConfig.assets.whitelist) || []
   const processMarsOracleQuery = useStore((s) => s.processMarsOracleQuery)
   const setExchangeRatesState = useStore((s) => s.setExchangeRatesState)
 

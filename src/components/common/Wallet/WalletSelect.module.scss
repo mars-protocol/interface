@@ -1,0 +1,64 @@
+@import 'src/styles/master';
+
+.listContainer {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: space(3);
+  @include padding(2, 0);
+}
+
+.qrButton {
+  min-width: rem-calc(240);
+}
+
+.qrCode {
+  @include padding(2);
+  @include margin(0, 0, 4);
+  background: $colorWhite;
+  border-radius: $borderRadiusS;
+}
+
+.walletOption {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+  @include padding(2);
+  align-items: center;
+  appearance: none;
+  border: none;
+  width: 100%;
+  text-decoration: none;
+  border-radius: $borderRadiusS;
+  cursor: pointer;
+  transition: all 0.5s;
+  color: $colorWhite;
+
+  &:hover {
+    background: $alphaWhite20;
+  }
+
+  .info {
+    display: flex;
+    flex: 0 0 calc(100% - 60px);
+    text-align: left;
+    @include padding(0, 0, 0, 4);
+    flex-wrap: wrap;
+  }
+
+  .name {
+    width: 100%;
+    @include typoLcaps;
+    @include margin(0, 0, 1);
+  }
+
+  .description {
+    @include typoM;
+    color: $alphaWhite40;
+  }
+
+  .arrow {
+    width: space(4);
+    height: space(4);
+  }
+}

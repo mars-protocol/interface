@@ -1,5 +1,4 @@
 import { Coin } from '@cosmjs/stargate'
-import { WalletClient } from '@marsprotocol/wallet-connector'
 import {
   ArrayOfCoin,
   QueryMsg as CreditQueryMsg,

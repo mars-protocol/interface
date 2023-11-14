@@ -1,4 +1,4 @@
-import { ChainInfoID } from '@marsprotocol/wallet-connector'
+import { ChainInfoID } from 'types/enums/wallet'
 
 /* asset:unit */
 export const MARS_SYMBOL = 'MARS'
@@ -39,7 +39,7 @@ export const TERMS_OF_SERVICE = 'termsOfService'
 /* chains */
 export const SUPPORTED_CHAINS: { chainId: ChainInfoID; type: 'testnet' | 'mainnet' }[] = [
   { chainId: ChainInfoID.Osmosis1, type: 'mainnet' },
-  { chainId: ChainInfoID.Neutron, type: 'mainnet' },
+  { chainId: ChainInfoID.Neutron1, type: 'mainnet' },
   { chainId: ChainInfoID.OsmosisDevnet, type: 'testnet' },
   { chainId: ChainInfoID.NeutronTestnet, type: 'testnet' },
 ]

@@ -13,6 +13,7 @@ echo "APP_NEXT_NEUTRON_GQL=$URL_NEUTRON_GQL" >> $envFilename
 echo "APP_NEXT_NEUTRON_TEST_RPC=$URL_NEUTRON_TEST_RPC" >> $envFilename
 echo "APP_NEXT_NEUTRON_TEST_REST=$URL_NEUTRON_TEST_REST" >> $envFilename
 echo "APP_NEXT_NEUTRON_TEST_GQL=$URL_NEUTRON_TEST_GQL" >> $envFilename
+echo "APP_NEXT_WALLET_CONNECT_ID=$WALLET_CONNECT_ID" >> $envFilename
 function apply_path {
   # read all config file  
   while read line; do

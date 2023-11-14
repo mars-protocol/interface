@@ -403,10 +403,10 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
                 get().assetPricesUSD?.find((coin) => coin.denom === vaultConfig.denoms.primary)
                   ?.amount || 1,
               )
-              const primaryAsset = get().whitelistedAssets.find(
+              const primaryAsset = get().networkConfig.assets.whitelist.find(
                 (asset) => asset.denom === vaultConfig.denoms.primary,
               )
-              const secondaryAsset = get().whitelistedAssets.find(
+              const secondaryAsset = get().networkConfig.assets.whitelist.find(
                 (asset) => asset.denom === vaultConfig.denoms.secondary,
               )
 

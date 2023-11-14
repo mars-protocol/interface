@@ -1,14 +1,15 @@
-import { ChainInfoID } from '@marsprotocol/wallet-connector'
 import { useQueryClient } from '@tanstack/react-query'
 import classNames from 'classnames'
 import { Button } from 'components/common'
 import { CHAIN_ID_KEY, SUPPORTED_CHAINS } from 'constants/appConstants'
+import useCurrentWallet from 'hooks/wallet/useCurrentWallet'
 import { getNetworkConfig } from 'libs/networkConfig'
 import Image from 'next/image'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
 import { State } from 'types/enums'
+import { ChainInfoID, WalletID } from 'types/enums/wallet'
 
 import styles from './ChainSelect.module.scss'
 
@@ -54,6 +55,7 @@ export const ChainSelect = () => {
   const networkConfig = useStore((s) => s.networkConfig)
   const currentNetwork = useStore((s) => s.currentNetwork)
   const loadNetworkConfig = useStore((s) => s.loadNetworkConfig)
+  const currentWallet = useCurrentWallet()
 
   const queryClient = useQueryClient()
   const { t } = useTranslation()
@@ -61,6 +63,7 @@ export const ChainSelect = () => {
 
   function handleChainSelect(chainId: ChainInfoID) {
     useStore.setState({
+      userWalletAddress: undefined,
       currentNetwork: chainId,
       exchangeRates: [],
       assetPricesUSD: [],
@@ -68,6 +71,7 @@ export const ChainSelect = () => {
       marketInfo: [],
       userIcns: undefined,
       redBankAssets: [],
+      userUnclaimedRewards: [],
       networkConfig: getNetworkConfig(chainId),
       redBankState: State.INITIALISING,
       userBalancesState: State.INITIALISING,
@@ -76,6 +80,7 @@ export const ChainSelect = () => {
         priceFeeds: [],
         data: [],
       },
+      walletConnecting: { show: true, providerId: currentWallet?.providerId as WalletID },
     })
     loadNetworkConfig()
     localStorage.setItem(CHAIN_ID_KEY, chainId)

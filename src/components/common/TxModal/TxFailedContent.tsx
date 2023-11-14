@@ -1,8 +1,9 @@
-import { ChainInfoID, SimpleChainInfoList } from '@marsprotocol/wallet-connector'
 import { Button, TxLink } from 'components/common'
+import { CHAINS } from 'constants/chains'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
 import { TxStatus } from 'types/enums/RedBankAction'
+import { ChainInfoID } from 'types/enums/wallet'
 
 import { InfoTitle } from './InfoTitle'
 import styles from './TxFailedContent.module.scss'
@@ -15,7 +16,7 @@ interface Props {
 
 export const TxFailedContent = ({ message, hash, handleClose }: Props) => {
   const chainInfo = useStore((s) => s.chainInfo)
-  const explorerUrl = chainInfo && SimpleChainInfoList[chainInfo.chainId as ChainInfoID].explorer
+  const explorerUrl = chainInfo && CHAINS[chainInfo.chainId as ChainInfoID].explorer
   const { t } = useTranslation()
 
   return (

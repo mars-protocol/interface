@@ -1,6 +1,5 @@
 import { TokenBalance } from 'components/common'
 import { SWAP_THRESHOLD } from 'constants/appConstants'
-import React from 'react'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
 

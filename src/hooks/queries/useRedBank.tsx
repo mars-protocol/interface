@@ -9,10 +9,10 @@ import { QUERY_KEYS } from 'types/enums/queryKeys'
 export const useRedBank = () => {
   const networkConfig = useStore((s) => s.networkConfig)
   const userWalletAddress = useStore((s) => s.userWalletAddress)
-  const whitelistedAssets = useStore((s) => s.whitelistedAssets)
   const processRedBankQuery = useStore((s) => s.processRedBankQuery)
   const setRedBankState = useStore((s) => s.setRedBankState)
   const { data: assetParams, isLoading } = useAssetParams()
+  const whitelistedAssets = networkConfig.assets.whitelist
   const hiveUrl = networkConfig.hiveUrl
   const redbankAddress = networkConfig.contracts.redBank
   const incentivesAddress = networkConfig.contracts.incentives

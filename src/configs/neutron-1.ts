@@ -1,4 +1,3 @@
-import { ChainInfoID } from '@marsprotocol/wallet-connector'
 import atom from 'images/atom.svg'
 import axlusdc from 'images/axlusdc.svg'
 import mars from 'images/mars.svg'
@@ -6,6 +5,7 @@ import ntrn from 'images/ntrn.svg'
 import osmo from 'images/osmo.svg'
 import statom from 'images/statom.svg'
 import colors from 'styles/_assets.module.scss'
+import { ChainInfoID } from 'types/enums/wallet'
 
 export const ASSETS: NetworkAssets = {
   ntrn: {
@@ -81,14 +81,14 @@ const OTHER_ASSETS: { [denom: string]: OtherAsset } = {
 }
 
 export const NETWORK_CONFIG: NetworkConfig = {
-  name: ChainInfoID.Neutron,
+  name: ChainInfoID.Neutron1,
   displayName: 'Neutron',
   hiveUrl:
     process.env.NEXT_PUBLIC_NEUTRON_GQL ??
     'https://neutron.rpc.p2p.world/qgrnU6PsQZA8F9S5Fb8Fn3tV3kXmMBl2M9bcc9jWLjQy8p/hive/graphql',
   rpcUrl: process.env.NEXT_PUBLIC_NEUTRON_RPC ?? 'https://rpc-kralum.neutron-1.neutron.org',
   restUrl: process.env.NEXT_PUBLIC_NEUTRON_REST ?? 'https://rest-kralum.neutron-1.neutron.org',
-  usdPriceUrl: 'https://xc-mainnet.pyth.network/api/',
+  usdPriceUrl: 'https://hermes.pyth.network/api/',
   chainIcon: ntrn,
   contracts: {
     redBank: 'neutron1n97wnm7q6d2hrcna3rqlnyqw2we6k0l8uqvmyqq6gsml92epdu7quugyph',

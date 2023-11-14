@@ -1,9 +1,9 @@
-import { WalletID } from '@marsprotocol/wallet-connector'
 import { SVG } from 'components/common'
 import { getCouncilLink } from 'libs/council'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
 import { DocURL } from 'types/enums/docURL'
+import { WalletID } from 'types/enums/wallet'
 
 import packageInfo from '../../../../package.json'
 import styles from './Footer.module.scss'

@@ -1,4 +1,4 @@
-import { TxBroadcastResult } from '@marsprotocol/wallet-connector'
+import { BroadcastResult } from '@delphi-labs/shuttle-react'
 import BigNumber from 'bignumber.js'
 import { DAY_IN_SECONDS, HOUR_IN_SECONDS, MINUTE_IN_SECONDS } from 'constants/timeConstants'
 import moment from 'moment'
@@ -287,7 +287,7 @@ export const extractCoinFromLog = (text: string) => {
   return { amount: arr[0], denom: arr[1] }
 }
 
-export const parseActionMessages = (data: TxBroadcastResult) => {
+export const parseActionMessages = (data: BroadcastResult) => {
   const wasmEvents: [] = data.response.events
     .filter((object: Record<string, string>) => object.type === 'wasm')
     .map((event: Record<string, string>) => event?.attributes)

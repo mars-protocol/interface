@@ -1,4 +1,4 @@
-import { Card, ConnectButton, SVG, Title } from 'components/common'
+import { Card, SVG, Title, WalletConnectButton } from 'components/common'
 import { AssetTable, useBorrowColumns, useDepositColumns } from 'components/redbank'
 import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -18,7 +18,7 @@ export const RedbankNotConnected = () => {
   // ------------------
   // STORE STATE
   // ------------------
-  const whitelistedAssets = useStore((s) => s.whitelistedAssets)
+  const whitelistedAssets = useStore((s) => s.networkConfig.assets.whitelist)
   const convertToBaseCurrency = useStore((s) => s.convertToBaseCurrency)
   // ------------------
   // LOCAL STATE
@@ -70,7 +70,7 @@ export const RedbankNotConnected = () => {
             </Trans>
           </div>
         </div>
-        <ConnectButton color={'secondary'} />
+        <WalletConnectButton color={'secondary'} />
       </div>
 
       <Title text={t('common.theMarkets')} />

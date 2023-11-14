@@ -1,15 +1,17 @@
 import { Coin } from '@cosmjs/stargate'
-import { ChainInfoID, SimpleChainInfoList, TxBroadcastResult } from '@marsprotocol/wallet-connector'
+import { BroadcastResult } from '@delphi-labs/shuttle-react'
 import { Button, InfoTitle, TxFee, TxLink } from 'components/common'
+import { CHAINS } from 'constants/chains'
 import { useTranslation } from 'react-i18next'
 import useStore from 'store'
 import { TxStatus } from 'types/enums/RedBankAction'
+import { ChainInfoID } from 'types/enums/wallet'
 
 import styles from './TxSuccessContent.module.scss'
 
 interface Props {
   title: string
-  response?: TxBroadcastResult | null
+  response?: BroadcastResult | null
   txFee?: Coin
   txStatus: TxStatus
   actions: { label: string; values: string[] }[]
@@ -26,7 +28,7 @@ export const TxSuccessContent = ({
 }: Props) => {
   const { t } = useTranslation()
   const chainInfo = useStore((s) => s.chainInfo)
-  const explorerUrl = chainInfo && SimpleChainInfoList[chainInfo.chainId as ChainInfoID].explorer
+  const explorerUrl = chainInfo && CHAINS[chainInfo.chainId as ChainInfoID].explorer
   const transactionHash = response?.hash || ''
 
   return (

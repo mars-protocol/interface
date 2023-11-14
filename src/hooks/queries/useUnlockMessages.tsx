@@ -16,7 +16,7 @@ export const useUnlockMessages = (props: Props) => {
   const client = useStore((s) => s.client)
   const userWalletAddress = useStore((s) => s.userWalletAddress)
   const creditManagerClient = useStore((s) => s.creditManagerClient)
-  const whitelistedAssets = useStore((s) => s.whitelistedAssets)
+  const whitelistedAssets = useStore((s) => s.networkConfig.assets.whitelist)
 
   return useQuery<FieldsAction[] | null>(
     [QUERY_KEYS.UNLOCK_MESSAGE],

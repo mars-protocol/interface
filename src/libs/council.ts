@@ -1,6 +1,6 @@
-import { ChainInfoID, WalletID } from '@marsprotocol/wallet-connector'
 import { SUPPORTED_CHAINS } from 'constants/appConstants'
 import { DocURL } from 'types/enums/docURL'
+import { ChainInfoID, WalletID } from 'types/enums/wallet'
 
 export function getCouncilLink(currentNetwork: ChainInfoID, currentProvider?: WalletID): string {
   const isTestnet =

@@ -1,11 +1,6 @@
 import { LcdClient } from '@cosmjs/launchpad'
 import { Coin } from '@cosmjs/stargate'
-import {
-  ChainInfoID,
-  MsgExecuteContract,
-  SimplifiedChainInfo,
-  TxBroadcastResult,
-} from '@marsprotocol/wallet-connector'
+import { BroadcastResult, MsgExecuteContract } from '@delphi-labs/shuttle-react'
 import BigNumber from 'bignumber.js'
 import { DISPLAY_CURRENCY_KEY, SUPPORTED_CHAINS } from 'constants/appConstants'
 import { BlockHeightData } from 'hooks/queries/useBlockHeight'
@@ -18,6 +13,7 @@ import isEqual from 'lodash.isequal'
 import { isMobile } from 'react-device-detect'
 import { CommonSlice } from 'store/interfaces/common.interface'
 import { OraclesSlice } from 'store/interfaces/oracles.interface'
+import { ChainInfoID } from 'types/enums/wallet'
 import { GetState } from 'zustand'
 import { NamedSet } from 'zustand/middleware'
 
@@ -34,7 +30,6 @@ const commonSlice = (
     symbol: 'OSMO',
     decimals: 6,
   },
-  currencyAssets: [],
   currentNetwork: SUPPORTED_CHAINS[0].chainId,
   errors: {
     network: false,
@@ -46,7 +41,6 @@ const commonSlice = (
   networkConfig: getNetworkConfig(SUPPORTED_CHAINS[0].chainId),
   marketDeposits: [],
   marketDebts: [],
-  otherAssets: [],
   queryErrors: [],
   acceptedTermsOfService: false,
   slippage: 0.02,
@@ -55,8 +49,8 @@ const commonSlice = (
   userMarsTokenBalances: [],
   userUnclaimedRewards: [],
   userWalletAddress: '',
+  showWalletSelect: false,
   vaultConfigs: [],
-  whitelistedAssets: [],
   // ------------------
   // GENERAL FUNCTIONS
   // ------------------
@@ -64,7 +58,7 @@ const commonSlice = (
     const exchangeRates = get().exchangeRates
     const assetPricesUSD = get().assetPricesUSD
     const baseCurrency = get().baseCurrency
-    const assets = [...get().whitelistedAssets, ...get().otherAssets]
+    const assets = [...get().networkConfig.assets.whitelist, ...get().networkConfig.assets.other]
     const asset = assets.find((asset) => asset.denom === coin.denom)
 
     if (!exchangeRates || !assetPricesUSD || !coin || !asset) return 0
@@ -87,7 +81,7 @@ const commonSlice = (
   convertValueToAmount: (coin: Coin) => {
     const exchangeRates = get().exchangeRates
     const baseCurrency = get().baseCurrency
-    const whitelistedAssets = get().whitelistedAssets
+    const whitelistedAssets = get().networkConfig.assets.whitelist
 
     const asset = whitelistedAssets.find((asset) => asset.denom === coin.denom)
     const additionalDecimals = (asset?.decimals || 6) - baseCurrency.decimals
@@ -108,9 +102,7 @@ const commonSlice = (
       additionalDecimals,
     )
   },
-  executeMsg: async (
-    options: StrategyExecuteMsgOptions,
-  ): Promise<TxBroadcastResult | undefined> => {
+  executeMsg: async (options: StrategyExecuteMsgOptions): Promise<BroadcastResult | undefined> => {
     const client = get().client!
     const networkConfig = get().networkConfig
     const baseCurrencyDenom = networkConfig.assets.base.denom
@@ -124,6 +116,7 @@ const commonSlice = (
     )
 
     if (!options.sender) options.sender = get().userWalletAddress
+    if (!options.sender) return
 
     const messages = [
       new MsgExecuteContract({
@@ -152,7 +145,7 @@ const commonSlice = (
     }
   },
   getAdditionalDecimals: (denom: string) => {
-    const assets = [...get().whitelistedAssets, ...get().otherAssets]
+    const assets = [...get().networkConfig.assets.whitelist, ...get().networkConfig.assets.other]
     const assetDecimals = assets.find((asset) => asset.denom === denom)?.decimals
     const baseCurrencyDecimals = get().baseCurrency.decimals
     if (!assetDecimals) return 0
@@ -181,9 +174,6 @@ const commonSlice = (
 
     set({
       networkConfig: networkConfig,
-      otherAssets: networkConfig.assets.other,
-      whitelistedAssets: networkConfig.assets.whitelist,
-      currencyAssets: networkConfig.assets.currencies,
       vaultConfigs: vaultConfig,
       baseCurrency: networkConfig.assets.base,
       marketDebts: [],
@@ -214,7 +204,7 @@ const commonSlice = (
       lcdClient: new LcdClient(rpc),
     })
   },
-  setChainInfo: (chainInfo: SimplifiedChainInfo) => {
+  setChainInfo: (chainInfo: ChainInfo) => {
     chainInfo.rpc = serializeUrl(get().networkConfig.rpcUrl)
     chainInfo.rest = serializeUrl(get().networkConfig.restUrl)
     set({ chainInfo })
@@ -266,7 +256,7 @@ const commonSlice = (
     set({ previousBlockHeightQueryData: data })
   },
   processDepositAndDebtQuery: (data: DepositAndDebtData) => {
-    const whitelistedAssets = get().whitelistedAssets
+    const whitelistedAssets = get().networkConfig.assets.whitelist
     if (!whitelistedAssets.length) return
 
     const depositCoins: Coin[] = whitelistedAssets.map((asset) => ({

@@ -1,5 +1,5 @@
 import { Coin } from '@cosmjs/stargate'
-import { TxBroadcastResult } from '@marsprotocol/wallet-connector'
+import { BroadcastResult } from '@delphi-labs/shuttle-react'
 import { Card, TxFailedContent, TxSuccessContent } from 'components/common'
 import { getFeeFromResponse } from 'functions'
 import { useEffect, useMemo, useState } from 'react'
@@ -8,7 +8,7 @@ import useStore from 'store'
 import { TxStatus } from 'types/enums/RedBankAction'
 
 interface Props {
-  response?: TxBroadcastResult
+  response?: BroadcastResult
   error?: string
   title: string
   actions?: FieldsAction[]

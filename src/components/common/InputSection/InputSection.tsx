@@ -48,7 +48,7 @@ export const InputSection = ({
   // STORE STATE
   // ------------------
   const baseCurrency = useStore((s) => s.baseCurrency)
-  const whitelistedAssets = useStore((s) => s.whitelistedAssets)
+  const whitelistedAssets = useStore((s) => s.networkConfig.assets.whitelist)
 
   // ------------------
   // LOCAL STATE

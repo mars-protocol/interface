@@ -1,4 +1,4 @@
-import { ChainInfoID, SimpleChainInfoList, TxBroadcastResult } from '@marsprotocol/wallet-connector'
+import { BroadcastResult } from '@delphi-labs/shuttle-react'
 import { useQueryClient } from '@tanstack/react-query'
 import classNames from 'classnames'
 import {
@@ -11,6 +11,7 @@ import {
   TxLink,
 } from 'components/common'
 import { MARS_SYMBOL } from 'constants/appConstants'
+import { CHAINS } from 'constants/chains'
 import { findByDenom } from 'functions'
 import { getClaimUserRewardsMsgOptions } from 'functions/messages'
 import { useEstimateFee } from 'hooks/queries'
@@ -20,6 +21,7 @@ import { useTranslation } from 'react-i18next'
 import useStore from 'store'
 import { State } from 'types/enums'
 import { QUERY_KEYS } from 'types/enums/queryKeys'
+import { ChainInfoID } from 'types/enums/wallet'
 
 import styles from './IncentivesButton.module.scss'
 
@@ -34,8 +36,8 @@ export const IncentivesButton = () => {
   // STORE STATE
   // ---------------
   const client = useStore((s) => s.client)
-  const whitelistedAssets = useStore((s) => s.whitelistedAssets)
-  const otherAssets = useStore((s) => s.otherAssets)
+  const whitelistedAssets = useStore((s) => s.networkConfig.assets.whitelist)
+  const otherAssets = useStore((s) => s.networkConfig.assets.other)
   const userWalletAddress = useStore((s) => s.userWalletAddress)
   const networkConfig = useStore((s) => s.networkConfig)
   const unclaimedRewards = useStore((s) => s.userUnclaimedRewards)
@@ -52,7 +54,7 @@ export const IncentivesButton = () => {
   const [disabled, setDisabled] = useState(true)
   const [fetching, setFetching] = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  const [response, setResponse] = useState<TxBroadcastResult>()
+  const [response, setResponse] = useState<BroadcastResult>()
   const [error, setError] = useState<string>()
   const [hasUnclaimedRewards, setHasUnclaimedRewards] = useState(false)
   const [unclaimedRewardsValue, setUnclaimedRewardsValue] = useState(0)
@@ -60,7 +62,7 @@ export const IncentivesButton = () => {
   // ---------------
   // LOCAL VARIABLES
   // ---------------
-  const explorerUrl = chainInfo && SimpleChainInfoList[chainInfo.chainId as ChainInfoID].explorer
+  const explorerUrl = chainInfo && CHAINS[chainInfo.chainId as ChainInfoID].explorer
   const assets = [...whitelistedAssets, ...otherAssets]
 
   // ---------------

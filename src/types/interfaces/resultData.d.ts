@@ -1,4 +1,4 @@
 interface ResultData {
-  result?: import('@marsprotocol/wallet-connector').TxBroadcastResult
+  result?: import('@delphi-labs/shuttle-react').TxBroadcastResult
   error?: string
 }

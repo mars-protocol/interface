@@ -6,10 +6,10 @@ import {
   BorrowCapacity,
   Button,
   Card,
-  ConnectButton,
   DisplayCurrency,
   ErrorMessage,
   InputSection,
+  WalletConnectButton,
 } from 'components/common'
 import { DEFAULT_SLIPPAGE } from 'constants/appConstants'
 import { findByDenom } from 'functions'
@@ -81,7 +81,7 @@ export const Action = ({
   const marketAssetLiquidity = useStore((s) => s.marketAssetLiquidity)
   const userCollateral = useStore((s) => s.userCollateral)
   const userWalletAddress = useStore((s) => s.userWalletAddress)
-  const whitelistedAssets = useStore((s) => s.whitelistedAssets)
+  const whitelistedAssets = useStore((s) => s.networkConfig.assets.whitelist)
   const convertToBaseCurrency = useStore((s) => s.convertToBaseCurrency)
   const findUserDebt = useStore((s) => s.findUserDebt)
   const enableAnimations = useStore((s) => s.enableAnimations)
@@ -437,7 +437,7 @@ export const Action = ({
   const barChartHeight = 40 * percentData.length + 10
 
   const actionButton = !userWalletAddress ? (
-    <ConnectButton color={'secondary'} />
+    <WalletConnectButton color={'secondary'} />
   ) : (
     produceTabActionButton()
   )

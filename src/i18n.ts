@@ -17,7 +17,7 @@ i18next
     backend: {
       crossDomain: true,
       loadPath() {
-        return 'https://raw.githubusercontent.com/mars-protocol/translations/develop/{{lng}}.json'
+        return 'https://raw.githubusercontent.com/mars-protocol/translations/master/{{lng}}.json'
       },
     },
     react: {

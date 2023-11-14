@@ -55,7 +55,8 @@ docker run -it -p 3000:3000 \
       -e URL_NEUTRON_RPC=https://rpc-kralum.neutron-1.neutron.org \
       -e URL_NEUTRON_TEST_GQL=https://testnet-neutron-gql.marsprotocol.io/graphql \
       -e URL_NEUTRON_TEST_REST=https://rest-palvus.pion-1.ntrn.tech \
-      -e URL_NEUTRON_TEST_RPC=https://rpc-palvus.pion-1.ntrn.tech marsprotocol/interface:latest
+      -e URL_NEUTRON_TEST_RPC=https://rpc-palvus.pion-1.ntrn.tech \
+      -e WALLET_CONNECT_ID=0x0x0x0x0x0x0x0x0x0x0x0x0x0x0x0x0x0x0x0x marsprotocol/interface:latest
 ```
 
 ## 3. Text and translations

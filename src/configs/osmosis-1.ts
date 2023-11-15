@@ -3,12 +3,14 @@ import axl from 'images/axl.svg'
 import axlusdc from 'images/axlusdc.svg'
 import axlwbtc from 'images/axlwbtc.svg'
 import axlweth from 'images/axlweth.svg'
+import inj from 'images/inj.svg'
 import mars from 'images/mars.svg'
 import osmo from 'images/osmo.svg'
 import statom from 'images/statom.svg'
 import stosmo from 'images/stosmo.svg'
 import tia from 'images/tia.svg'
 import usdc from 'images/usdc.svg'
+import usdt from 'images/usdt.svg'
 import colors from 'styles/_assets.module.scss'
 import { ChainInfoID } from 'types/enums/wallet'
 
@@ -84,13 +86,23 @@ const ASSETS: NetworkAssets = {
   },
   usdc: {
     symbol: 'USDC',
-    name: 'USDC',
+    name: 'Noble',
     id: 'USDC',
     denom: 'ibc/498A0751C798A0D9A389AA3691123DADA57DAA4FE165D5C75894505B876BA6E4',
     color: colors.usdc,
     decimals: 6,
     logo: usdc,
     priceFeedId: 'eaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a',
+  },
+  usdt: {
+    symbol: 'USDT',
+    id: 'USDT',
+    name: 'Tether',
+    denom: 'ibc/4ABBEF4C8926DDDB320AE5188CFD63267ABBCEFC0583E4AE05D6E5AA2401DDAB',
+    color: colors.usdt,
+    decimals: 6,
+    logo: usdt,
+    priceFeedId: '0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b',
   },
   tia: {
     symbol: 'TIA',
@@ -101,6 +113,16 @@ const ASSETS: NetworkAssets = {
     color: colors.tia,
     decimals: 6,
     priceFeedId: '09f7c1d7dfbb7df2b8fe3d3d87ee94a2259d212da4f30c1f0540d066dfa44723',
+  },
+  inj: {
+    symbol: 'INJ',
+    id: 'INJ',
+    name: 'Injective',
+    denom: 'ibc/64BA6E31FE887D66C6F8F31C7B1A80C7CA179239677B4088BB55F5EA07DBE273',
+    logo: inj,
+    color: colors.inj,
+    decimals: 18,
+    priceFeedId: '0x7a5bc1d2b56ad029048cd63964b3ad2776eadf812edc1a43a31406cb54bff592',
   },
   stosmo: {
     symbol: 'stOSMO',
@@ -163,8 +185,10 @@ export const NETWORK_CONFIG: NetworkConfig = {
       ASSETS.axlusdc,
       ASSETS.axlwbtc,
       ASSETS.axlweth,
+      ASSETS.inj,
       ASSETS.statom,
       ASSETS.usdc,
+      ASSETS.usdt,
       ASSETS.tia,
       ASSETS.stosmo,
     ],
@@ -172,6 +196,7 @@ export const NETWORK_CONFIG: NetworkConfig = {
     currencies: [
       OTHER_ASSETS.usd,
       ASSETS.usdc,
+      ASSETS.usdt,
       ASSETS.axlusdc,
       ASSETS.osmo,
       ASSETS.atom,

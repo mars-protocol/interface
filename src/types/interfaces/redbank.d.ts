@@ -9,8 +9,8 @@ interface RedBankData {
     ATOMMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     AXLMarket: Market
     AXLMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
-    JUNOMarket: Market
-    JUNOMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
+    INJMarket: Market
+    INJMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     ASTROMarket: Market
     ASTROMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     axlUSDCMarket: Market
@@ -23,6 +23,8 @@ interface RedBankData {
     stATOMMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     USDCMarket: Market
     USDCMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
+    USDTMarket: Market
+    USDTMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     NTRNMarket: Market
     NTRNMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     TIAMarket: Market

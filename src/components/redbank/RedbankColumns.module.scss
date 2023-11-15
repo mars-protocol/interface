@@ -19,13 +19,17 @@
     background-image: $colorGradientAXL;
   }
 
-  &.juno {
-    background-image: $colorGradientJUNO;
+  &.inj {
+    background-image: $colorGradientINJ;
   }
 
   &.axlusdc,
   &.usdc {
-    background-image: $colorGradientAxlUSDC;
+    background-image: $colorGradientUSDC;
+  }
+
+  &.usdt {
+    background-image: $colorGradientUSDT;
   }
 
   &.statom {

@@ -15,12 +15,14 @@ export interface DepositAndDebtData {
     ASTRODebt: string
     AXLDeposits: string
     AXLDebt: string
-    JUNODeposits: string
-    JUNODebt: string
+    INJDeposits: string
+    INJDebt: string
     axlUSDCDeposits: string
     axlUSDCDebt: string
     USDCDeposits: string
     USDCDebt: string
+    USDTDeposits: string
+    USDTDebt: string
     axlWBTCDeposits: string
     axlWBTCDebt: string
     axlWETHDeposits: string

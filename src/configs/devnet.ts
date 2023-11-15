@@ -102,7 +102,7 @@ const ASSETS: NetworkAssets = {
     color: colors.usdt,
     decimals: 6,
     logo: usdt,
-    priceFeedId: '0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b',
+    priceFeedId: '2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b',
   },
   tia: {
     symbol: 'TIA',
@@ -122,7 +122,7 @@ const ASSETS: NetworkAssets = {
     logo: inj,
     color: colors.inj,
     decimals: 18,
-    priceFeedId: '0x7a5bc1d2b56ad029048cd63964b3ad2776eadf812edc1a43a31406cb54bff592',
+    priceFeedId: '7a5bc1d2b56ad029048cd63964b3ad2776eadf812edc1a43a31406cb54bff592',
   },
   stosmo: {
     symbol: 'stOSMO',

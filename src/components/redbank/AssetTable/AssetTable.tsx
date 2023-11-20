@@ -100,8 +100,8 @@ export const AssetTable = ({ data, columns, type, disabled = false }: Props) => 
           if (row.depth === 1) {
             return (
               <React.Fragment key={`${row.id}_subrow`}>
-                <ActionsRow key={`${row.id}_actions`} row={table.getRow(row.id[0])} type={type} />
-                <MetricsRow key={`${row.id}_metrics`} row={table.getRow(row.id[0])} type={type} />
+                <ActionsRow key={`${row.original.id}_actions`} row={row} type={type} />
+                <MetricsRow key={`${row.original.id}_metrics`} row={row} type={type} />
               </React.Fragment>
             )
           }

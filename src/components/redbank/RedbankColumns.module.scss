@@ -11,12 +11,20 @@
     background-image: $colorGradientOSMO;
   }
 
+  &.akt {
+    background-image: $colorGradientAKT;
+  }
+
   &.atom {
     background-image: $colorGradientATOM;
   }
 
   &.axl {
     background-image: $colorGradientAXL;
+  }
+
+  &.dydx {
+    background-image: $colorGradientDYDX;
   }
 
   &.inj {

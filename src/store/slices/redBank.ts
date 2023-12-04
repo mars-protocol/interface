@@ -79,6 +79,7 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
   // ------------------
   setRedBankAssets: () => {
     if (get().exchangeRatesState !== State.READY || get().userBalancesState !== State.READY) return
+    const params = get().assetParams
     const redBankAssets: RedBankAsset[] = []
     const marketAssetLiquidity: Coin[] = []
     const whitelistedAssets = get().networkConfig.assets.whitelist
@@ -94,7 +95,7 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
       const depositBalance = get().findUserDeposit(asset.denom)
       const borrowBalance = get().findUserDebt(asset.denom)
       const marketInfo = get().marketInfo.find((info) => info.denom === asset.denom)
-      const depositCap = Number(marketInfo?.deposit_cap) || 0
+      const depositCap = params.find((param) => param.denom === asset.denom)?.cap
       const depositLiquidity =
         Number(get().marketDeposits.find((coin) => coin.denom === asset.denom)?.amount) || 0
       const debtLiquidity =
@@ -126,7 +127,9 @@ const redBankSlice = (set: NamedSet<Store>, get: GetState<Store>): RedBankSlice 
         marketLiquidity: marketLiquidity,
         incentiveInfo,
         isCollateral: true,
-        depositCap: depositCap,
+        depositCap: depositCap
+          ? depositCap
+          : { amount: marketInfo?.deposit_cap || '0', used: String(depositLiquidity) },
         borrowEnabled: !!marketInfo?.borrow_enabled,
         depositEnabled: !!marketInfo?.deposit_enabled,
       }

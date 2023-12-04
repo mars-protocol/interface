@@ -5,9 +5,11 @@ interface Asset {
   symbol:
     | 'OSMO'
     | 'NTRN'
+    | 'AKT'
     | 'ATOM'
     | 'ASTRO'
     | 'AXL'
+    | 'DYDX'
     | 'INJ'
     | 'USDC.axl'
     | 'USDC'
@@ -20,7 +22,9 @@ interface Asset {
   id:
     | 'OSMO'
     | 'NTRN'
+    | 'AKT'
     | 'axlUSDC'
+    | 'DYDX'
     | 'USDC'
     | 'USDT'
     | 'axlWBTC'
@@ -64,7 +68,7 @@ interface RedBankAsset extends Asset {
   marketLiquidity: string
   isCollateral: boolean
   incentiveInfo?: IncentiveInfo[]
-  depositCap: number
+  depositCap: { amount: string; used: string }
   depositLiquidity: numnber
   borrowEnabled: boolean
   depositEnabled: boolean

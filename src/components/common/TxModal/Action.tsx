@@ -310,7 +310,8 @@ export const Action = ({
 
   if (!currentAsset) return <></>
 
-  const amountUntilDepositCap = currentAsset.depositCap - Number(currentAsset.depositLiquidity)
+  const amountUntilDepositCap =
+    Number(currentAsset.depositCap.amount) - Number(currentAsset.depositCap.used)
 
   const onValueEntered = (microValue: number) => {
     if (microValue >= maxUsableAmount) microValue = maxUsableAmount

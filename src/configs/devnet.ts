@@ -1,8 +1,10 @@
+import akt from 'images/akt.svg'
 import atom from 'images/atom.svg'
 import axl from 'images/axl.svg'
 import axlusdc from 'images/axlusdc.svg'
 import axlwbtc from 'images/axlwbtc.svg'
 import axlweth from 'images/axlweth.svg'
+import dydx from 'images/dydx.svg'
 import inj from 'images/inj.svg'
 import mars from 'images/mars.svg'
 import osmo from 'images/osmo.svg'
@@ -133,6 +135,26 @@ const ASSETS: NetworkAssets = {
     logo: stosmo,
     decimals: 6,
   },
+  akt: {
+    symbol: 'AKT',
+    id: 'AKT',
+    name: 'Akash',
+    denom: 'ibc/1480B8FD20AD5FCAE81EA87584D269547DD4D436843C1D20F15E00EB64743EF4',
+    logo: akt,
+    color: colors.akt,
+    decimals: 6,
+    priceFeedId: '4ea5bb4d2f5900cc2e97ba534240950740b4d3b89fe712a94a7304fd2fd92702',
+  },
+  dydx: {
+    symbol: 'DYDX',
+    id: 'DYDX',
+    name: 'DyDx',
+    denom: 'ibc/831F0B1BBB1D08A2B75311892876D71565478C532967545476DF4C2D7492E48C',
+    logo: dydx,
+    color: colors.dydx,
+    decimals: 18,
+    priceFeedId: '6489800bb8974169adfe35937bf6736507097d13c190d760c557108c7e93a81b',
+  },
 }
 
 const OTHER_ASSETS: { [denom: string]: OtherAsset } = {
@@ -179,10 +201,12 @@ export const NETWORK_CONFIG: NetworkConfig = {
     whitelist: [
       ASSETS.osmo,
       ASSETS.atom,
+      ASSETS.akt,
       ASSETS.axl,
       ASSETS.axlusdc,
       ASSETS.axlwbtc,
       ASSETS.axlweth,
+      ASSETS.dydx,
       ASSETS.inj,
       ASSETS.statom,
       ASSETS.usdc,
@@ -198,9 +222,11 @@ export const NETWORK_CONFIG: NetworkConfig = {
       ASSETS.axlusdc,
       ASSETS.osmo,
       ASSETS.atom,
+      ASSETS.akt,
       ASSETS.axl,
       ASSETS.axlweth,
       ASSETS.axlwbtc,
+      ASSETS.dydx,
       ASSETS.statom,
       ASSETS.stosmo,
       ASSETS.tia,

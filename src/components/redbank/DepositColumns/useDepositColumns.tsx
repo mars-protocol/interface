@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js'
 import classNames from 'classnames'
 import { AnimatedNumber, Apr, Button, CellAmount, SVG, TextTooltip } from 'components/common'
 import { convertPercentage } from 'functions'
-import { formatValue } from 'libs/parse'
+import { demagnify, formatValue } from 'libs/parse'
 import Image from 'next/image'
 import { useMemo } from 'react'
 import { isMobile, isTablet } from 'react-device-detect'
@@ -127,8 +127,12 @@ export const useDepositColumns = () => {
           />
         ),
         cell: ({ row }) => {
-          const depositLiquidity = Number(row.original.depositLiquidity)
-          const percent = convertPercentage((depositLiquidity / row.original.depositCap) * 100)
+          const depositCap = new BigNumber(row.original.depositCap?.amount ?? 0)
+          const depositCapUsed = new BigNumber(row.original.depositCap?.used ?? 0)
+          const percent = depositCap.isZero()
+            ? 0
+            : convertPercentage(depositCapUsed.dividedBy(depositCap).toNumber() * 100)
+
           const percentClasses = classNames(
             's',
             'number',
@@ -139,7 +143,7 @@ export const useDepositColumns = () => {
             <>
               <p className='number'>
                 {formatValue(
-                  row.original.depositCap / 10 ** row.original.decimals,
+                  demagnify(depositCap.toNumber(), row.original.decimals),
                   2,
                   2,
                   true,

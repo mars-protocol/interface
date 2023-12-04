@@ -182,6 +182,10 @@ export interface AssetParamsBaseForAddr {
   max_loan_to_value: Decimal
   protocol_liquidation_fee: Decimal
   red_bank: RedBankSettings
+  cap: {
+    amount: string
+    used: string
+  }
 }
 export interface CmSettingsForAddr {
   hls?: HlsParamsBaseForAddr | null

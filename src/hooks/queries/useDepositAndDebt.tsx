@@ -9,12 +9,16 @@ export interface DepositAndDebtData {
   mdwasmkey: {
     OSMODeposits: string
     OSMODebt: string
+    AKTDeposits: string
+    AKTDebt: string
     ATOMDeposits: string
     ATOMDebt: string
     ASTRODeposits: string
     ASTRODebt: string
     AXLDeposits: string
     AXLDebt: string
+    DYDXDeposits: string
+    DYDXDebt: string
     INJDeposits: string
     INJDebt: string
     axlUSDCDeposits: string

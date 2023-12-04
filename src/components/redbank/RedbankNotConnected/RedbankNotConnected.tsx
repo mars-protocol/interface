@@ -40,7 +40,7 @@ export const RedbankNotConnected = () => {
         isCollateral: true,
         borrowBalanceBaseCurrency: 0,
         depositBalanceBaseCurrency: 0,
-        depositCap: 0,
+        depositCap: { amount: '0', used: '0' },
         depositLiquidity: 0,
         borrowEnabled: true,
         depositEnabled: true,

@@ -5,10 +5,14 @@ interface RedBankData {
   rbwasmkey: {
     OSMOMarket: Market
     OSMOMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
+    AKTMarket: Market
+    AKTMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     ATOMMarket: Market
     ATOMMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     AXLMarket: Market
     AXLMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
+    DYDXMarket: Market
+    DYDXMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     INJMarket: Market
     INJMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     ASTROMarket: Market

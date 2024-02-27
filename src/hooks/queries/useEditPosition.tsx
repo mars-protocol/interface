@@ -195,7 +195,7 @@ export const useEditPosition = (props: Props) => {
       })
     }
 
-    BigNumber.config({ EXPONENTIAL_AT: [-7, 30] })
+    BigNumber.config({ EXPONENTIAL_AT: 1e9 })
     const minimumReceive = new BigNumber(isV2 || !minLpToReceive ? 0 : minLpToReceive)
       .times(1 - slippage)
       .integerValue(BigNumber.ROUND_CEIL)

@@ -119,7 +119,7 @@ export const WalletConnectedButton = () => {
                   2,
                   true,
                   false,
-                  ` ${baseCurrency.symbol}`,
+                  ` ${networkConfig.assets.base.symbol}`,
                 )}`
               ) : (
                 <CircularProgress className={styles.circularProgress} size={12} />

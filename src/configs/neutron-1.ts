@@ -1,9 +1,13 @@
 import atom from 'images/atom.svg'
 import axlusdc from 'images/axlusdc.svg'
+import axlweth from 'images/axlweth.svg'
+import dydx from 'images/dydx.svg'
 import mars from 'images/mars.svg'
 import ntrn from 'images/ntrn.svg'
 import osmo from 'images/osmo.svg'
 import statom from 'images/statom.svg'
+import stkatom from 'images/stkatom.svg'
+import wsteth from 'images/wsteth.svg'
 import colors from 'styles/_assets.module.scss'
 import { ChainInfoID } from 'types/enums/wallet'
 
@@ -46,6 +50,45 @@ export const ASSETS: NetworkAssets = {
     color: colors.statom,
     logo: statom,
     decimals: 6,
+  },
+  stkatom: {
+    symbol: 'stkATOM',
+    id: 'stkATOM',
+    name: 'Persistence Staked Atom',
+    denom: 'ibc/3649CE0C8A2C79048D8C6F31FF18FA69C9BC7EB193512E0BD03B733011290445',
+    logo: stkatom,
+    color: colors.stkatom,
+    decimals: 6,
+  },
+  axlweth: {
+    symbol: 'WETH.axl',
+    id: 'axlWETH',
+    name: 'Axelar Wrapped Ethereum',
+    denom: 'ibc/A585C2D15DCD3B010849B453A2CFCB5E213208A5AB665691792684C26274304D',
+    color: colors.weth,
+    logo: axlweth,
+    decimals: 18,
+    priceFeedId: 'ff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
+  },
+  wsteth: {
+    symbol: 'wstETH',
+    id: 'wstETH',
+    name: 'Lido Wrapped Staked Ethereum',
+    denom: 'factory/neutron1ug740qrkquxzrk2hh29qrlx3sktkfml3je7juusc2te7xmvsscns0n2wry/wstETH',
+    color: colors.wsteth,
+    logo: wsteth,
+    decimals: 18,
+    priceFeedId: '6df640f3b8963d8f8358f791f352b8364513f6ab1cca5ed3f1f7b5448980e784',
+  },
+  dydx: {
+    symbol: 'DYDX',
+    id: 'DYDX',
+    name: 'DyDx',
+    denom: 'ibc/2CB87BCE0937B1D1DFCEE79BE4501AAF3C265E923509AEAC410AD85D27F35130',
+    logo: dydx,
+    color: colors.dydx,
+    decimals: 18,
+    priceFeedId: '6489800bb8974169adfe35937bf6736507097d13c190d760c557108c7e93a81b',
   },
 }
 
@@ -98,7 +141,16 @@ export const NETWORK_CONFIG: NetworkConfig = {
   },
   assets: {
     base: ASSETS.ntrn,
-    whitelist: [ASSETS.axlusdc, ASSETS.ntrn, ASSETS.atom, ASSETS.statom],
+    whitelist: [
+      ASSETS.axlusdc,
+      ASSETS.ntrn,
+      ASSETS.atom,
+      ASSETS.statom,
+      ASSETS.stkatom,
+      ASSETS.axlweth,
+      ASSETS.wsteth,
+      ASSETS.dydx,
+    ],
     other: [OTHER_ASSETS.usd, OTHER_ASSETS.mars, OTHER_ASSETS.osmo],
     currencies: [
       OTHER_ASSETS.usd,
@@ -106,6 +158,10 @@ export const NETWORK_CONFIG: NetworkConfig = {
       ASSETS.ntrn,
       ASSETS.atom,
       ASSETS.statom,
+      ASSETS.stkatom,
+      ASSETS.axlweth,
+      ASSETS.wsteth,
+      ASSETS.dydx,
       OTHER_ASSETS.mars,
     ],
   },

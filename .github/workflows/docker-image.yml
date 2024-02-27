@@ -22,4 +22,4 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: marsprotocol/interface:latest, marsprotocol/interface:${{ github.run_number }}
+          tags: marsprotocol/interface:${{ github.run_number }}

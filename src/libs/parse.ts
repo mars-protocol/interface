@@ -7,8 +7,7 @@ import { ViewType } from 'types/enums'
 
 import { countDecimals } from './math'
 
-BigNumber.config({ EXPONENTIAL_AT: [-24, 20] })
-
+BigNumber.config({ EXPONENTIAL_AT: 1e9 })
 type Formatter = (amount: string, symbol: string, decimals: number) => string
 
 const rm = BigNumber.ROUND_HALF_CEIL

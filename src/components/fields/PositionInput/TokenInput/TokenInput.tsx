@@ -10,7 +10,7 @@ import useStore from 'store'
 
 import styles from './TokenInput.module.scss'
 
-BigNumber.config({ EXPONENTIAL_AT: [-24, 20] })
+BigNumber.config({ EXPONENTIAL_AT: 1e9 })
 
 interface Props {
   tokens: string[]

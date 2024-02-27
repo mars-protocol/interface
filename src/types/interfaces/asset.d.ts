@@ -19,6 +19,8 @@ interface Asset {
     | 'WETH.axl'
     | 'TIA'
     | 'stOSMO'
+    | 'wstETH'
+    | 'stkATOM'
   id:
     | 'OSMO'
     | 'NTRN'
@@ -36,6 +38,8 @@ interface Asset {
     | 'stATOM'
     | 'TIA'
     | 'stOSMO'
+    | 'wstETH'
+    | 'stkATOM'
   prefix?: string
   contract_addr?: string
   logo: string

@@ -35,6 +35,10 @@ interface RedBankData {
     TIAMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     stOSMOMarket: Market
     stOSMOMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
+    wstETHMarket: Market
+    wstETHMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
+    stkATOMMarket: Market
+    stkATOMMarketIncentive: MarketIncentive | MultiAssetMarketIncentive[]
     collateral: UserCollateral[]
     unclaimedRewards: string | Coin[]
   }

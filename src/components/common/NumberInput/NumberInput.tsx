@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 
 import styles from './NumberInput.module.scss'
 
-BigNumber.config({ EXPONENTIAL_AT: [-24, 20] })
+BigNumber.config({ EXPONENTIAL_AT: 1e9 })
 
 interface Props {
   value: number

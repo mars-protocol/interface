@@ -85,7 +85,7 @@ export const vaultsSlice = (set: NamedSet<Store>, get: GetState<Store>): VaultsS
 
     const promises = lpTokens.map(async (lpToken) => {
       // Needed as lpTokenValues are very large from vaults
-      BigNumber.config({ EXPONENTIAL_AT: [-7, 30] })
+      BigNumber.config({ EXPONENTIAL_AT: 1e9 })
 
       const amount = new BigNumber(lpToken.locked)
         .plus(lpToken.unlocked || 0)

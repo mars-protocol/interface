@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js'
 import { FEE_EST_AMOUNT } from 'constants/appConstants'
 
 export const getRedbankRepayMsgOptions = (
@@ -27,7 +28,7 @@ export const getRedbankRepayMsgOptions = (
     funds: [
       {
         denom,
-        amount: adjustedAmount === 0 ? FEE_EST_AMOUNT : adjustedAmount.toFixed(0),
+        amount: adjustedAmount === 0 ? FEE_EST_AMOUNT : new BigNumber(adjustedAmount).toFixed(0),
       },
     ],
   }

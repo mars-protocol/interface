@@ -39,6 +39,10 @@ export interface DepositAndDebtData {
     TIADebt: string
     stOSMODeposits: string
     stOSMODebt: string
+    wstETHDeposits: string
+    wstETHDebt: string
+    stkATOMDeposits: string
+    stkATOMDebt: string
   }
 }
 

@@ -1,7 +1,7 @@
 {
   "name": "mars",
   "homepage": "./",
-  "version": "1.7.5",
+  "version": "1.7.6",
   "private": false,
   "license": "SEE LICENSE IN LICENSE FILE",
   "scripts": {
@@ -18,11 +18,11 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
-    "@cosmjs/cosmwasm-stargate": "^0.31.1",
+    "@cosmjs/cosmwasm-stargate": "^0.32.2",
     "@cosmjs/launchpad": "^0.27.1",
-    "@cosmjs/proto-signing": "^0.31.1",
-    "@cosmjs/stargate": "^0.31.1",
-    "@delphi-labs/shuttle-react": "^3.10.0",
+    "@cosmjs/proto-signing": "^0.32.2",
+    "@cosmjs/stargate": "^0.32.2",
+    "@delphi-labs/shuttle-react": "^3.19.1",
     "@keplr-wallet/cosmos": "^0.12.40",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",

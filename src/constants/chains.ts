@@ -9,7 +9,7 @@ export const CHAINS: ChainInfos = {
     explorerName: 'Mintscan',
     chainId: ChainInfoID.Osmosis1,
     name: 'Osmosis',
-    gasPrice: '0.003uosmo',
+    gasPrice: '0.0035uosmo',
     bech32Config: Bech32Address.defaultBech32Config('osmo'),
     defaultCurrency: {
       coinDenom: 'OSMO',
@@ -17,8 +17,8 @@ export const CHAINS: ChainInfos = {
       coinDecimals: 6,
       coinGeckoId: 'osmosis',
       gasPriceStep: {
-        low: 0.0025,
-        average: 0.003,
+        low: 0.003,
+        average: 0.0035,
         high: 0.04,
       },
     },
@@ -31,7 +31,7 @@ export const CHAINS: ChainInfos = {
     explorerName: 'Mintscan',
     chainId: ChainInfoID.OsmosisDevnet,
     name: 'Osmosis Devnet',
-    gasPrice: '0.003uosmo',
+    gasPrice: '0.0035uosmo',
     bech32Config: Bech32Address.defaultBech32Config('osmo'),
     defaultCurrency: {
       coinDenom: 'OSMO',
@@ -39,8 +39,8 @@ export const CHAINS: ChainInfos = {
       coinDecimals: 6,
       coinGeckoId: 'osmosis',
       gasPriceStep: {
-        low: 0.0025,
-        average: 0.003,
+        low: 0.003,
+        average: 0.0035,
         high: 0.04,
       },
     },
